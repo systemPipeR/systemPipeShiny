@@ -13,7 +13,7 @@ You can install the released version of systemPipeShiny from Github with:
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install("systemPipeR/systemPipeR", build_vignettes=TRUE, dependencies=TRUE)
+BiocManager::install("systemPipeR/systemPipeS", build_vignettes=TRUE, dependencies=TRUE)
 ```
 
 ## Example
