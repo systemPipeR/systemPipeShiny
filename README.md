@@ -1,21 +1,19 @@
 
-# systemPipeShiny
+# systemPipeS
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of systemPipeShiny is to ...
+The goal of systemPipeS is to ...
 
 ## Installation
 
-You can install the released version of systemPipeShiny from [CRAN](https://CRAN.R-project.org) with:
-
 You can install the released version of systemPipeShiny from Github with:
 
-You can install the released version of systemPipeShiny from [Bioconductor](https://bioconductor.org) with:
-
 ``` r
-install.packages("systemPipeShiny")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("systemPipeR/systemPipeR", build_vignettes=TRUE, dependencies=TRUE)
 ```
 
 ## Example
@@ -23,8 +21,7 @@ install.packages("systemPipeShiny")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(systemPipeShiny)
+library(systemPipeS)
 ## basic example code
-runShiny()
 ```
 
