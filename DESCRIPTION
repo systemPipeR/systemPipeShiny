@@ -1,25 +1,14 @@
-Package: systemPipeShiny
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: MIT + file LICENSE
+Package: systemPipeS
+Title: systemPipeS
+Version: 0.0.9
+Authors@R: c(
+    person(given = "Daniela", family = "Cassol", role = c("aut", "cre"), email = "danielac@ucr.edu"),
+    person(given = "Thomas", family = "Girke", role = c("aut"), email = "thomas.girke@ucr.edu"), 
+    person(given = "Le", family = "Zhang", role = c("aut"), email = "zhan140@ucr.edu"), 
+    person(given = "Ponmathi", family = "Ramasamy", role = c("aut"), email = "prama008@ucr.edu"))
+Description: systemPipeS
+License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
-Depends: 
-    shiny,
-    shinydashboard,
-    shinydashboardPlus,
-    shinyWidgets,
-    pushbar,
-    rhandsontable,
-    magrittr,
-    shinyjs,
-    shinyTree,
-    networkD3,
-    plotly
+Depends: shiny, shinydashboard, shinydashboardPlus, shinyWidgets, pushbar, rhandsontable, magrittr, shinyjs, shinyTree, networkD3, plotly, systemPipeR, systemPipeRdata
+URL: http://girke.bioinformatics.ucr.edu/systemPipeR/
