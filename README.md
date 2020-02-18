@@ -8,7 +8,7 @@ The goal of systemPipeS is to ...
 
 ## Installation
 
-You can install the released version of systemPipeShiny from Github with:
+You can install the released version of systemPipeS from Github with:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
@@ -23,5 +23,6 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(systemPipeS)
 ## basic example code
+## To be added...
 ```
 
