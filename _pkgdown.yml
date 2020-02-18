@@ -1,0 +1,43 @@
+title: systemPipeS
+url: http://girke.bioinformatics.ucr.edu/systemPipeR/
+
+authors:
+   Daniela Cassol:
+     href: https://www.dcassol.com/
+   Thomas Girke:
+     href: http://girke.bioinformatics.ucr.edu/
+
+home:
+  links:
+  - text: Download from Bioconductor
+    href: http://www.bioconductor.org/packages/release/bioc/html/systemPipeR.html
+  - text: Ask a question about systemPipeR
+    href: https://support.bioconductor.org/
+  - text: Report a bug
+    href: https://github.com/tgirke/systemPipeR/issues
+
+template:
+  params:
+    docsearch:
+#      api_key: 
+#      index_name: 
+       bootswatch: flatly
+#    ganalytics: UA-
+
+navbar:
+  structure:
+    left:
+    - home
+    right: 
+    - github
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    reference:
+    - title: "systemPipeR"
+      desc: >
+        Find here help...
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/tgirke/systemPipeR

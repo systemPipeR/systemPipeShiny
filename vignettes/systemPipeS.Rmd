@@ -42,7 +42,7 @@ suppressPackageStartupMessages({
 
 # Introduction
 
-```{r}
+```{r, eval=FALSE}
 shiny::runApp("../")
 ```
 
