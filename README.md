@@ -26,3 +26,10 @@ library(systemPipeS)
 ## To be added...
 ```
 
+## Internal 
+
+Run to update the website (./docs/ folder)
+
+``` r
+pkgdown::build_site()
+```
