@@ -33,7 +33,7 @@ target_tabUI <- function(id, subtab_name, upload_text){
                         ),
                  ), 
                  column(9,
-                        fileInput(
+                          fileInput(
                           ns("target_file"), upload_text,
                           multiple = FALSE,
                           accept = c("text/tsv",
@@ -55,7 +55,7 @@ target_tabUI <- function(id, subtab_name, upload_text){
                                        style = "color: #fff; background-color: #337ab7; border-color: #2e6da4")
                           ),
                         h4("Targets header"),
-                        p("You can edit your target file header below. All lines should start with ??#????a line of ??# <CMP> xxx?? is required."),
+                        p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
                         aceEditor(
                           outputId = ns("ace_target_header"),
                           selectionId = "selection",
@@ -66,17 +66,6 @@ target_tabUI <- function(id, subtab_name, upload_text){
                         p("You can edit your targets (metadata) below."),
                         p("Columns of 'FileName1', 'FileName2' are required for pair-end or 'FileName' for single-end. 'SampleName', 'Factor' are required for both."),
                         p("Columns names should be on the first row."),
-                        fileInput(ns("target_file"), upload_text,
-                                  multiple = FALSE,
-                                  accept = c("text/tsv",
-                                             "text/comma-separated-values,text/plain",
-                                             ".tsv", ".txt")),
-                        radioButtons(ns("but_pese"), label = "Choose one:", choices = c("Pair-End","Single-End"), inline = TRUE),
-                        fluidRow(
-                          downloadButton(ns("down_targets"), "Save"),
-                          actionButton("run", "Add to task", icon("paper-plane"), 
-                                       style = "color: #fff; background-color: #337ab7; border-color: #2e6da4")
-                          ),
                         rHandsontableOutput(ns("targets_df"))
                  )
              )
@@ -183,7 +172,7 @@ hot_target <- function(targets_df, targets_p=NULL, ifexample=FALSE, pe=TRUE, for
 
 load_target <- function(targets_p, ifexample, pe) {
     empty <- FALSE; if ((!ifexample) & is.null(targets_p)) empty <- TRUE
-    if (is.null(targets_p)) {if (pe) {targets_p <- 'shiny_data/targetsPE.txt'} else {targets_p <- 'shiny_data/targets.txt'}}
+    if (is.null(targets_p)) {if (pe) {targets_p <- 'inst/extdata/targetsPE.txt'} else {targets_p <- 'inst/extdata/targets.txt'}}
     df <- read.csv(targets_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)
     if (empty) df[2:nrow(df), ] <- ""
     return(df)
