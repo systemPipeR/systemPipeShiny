@@ -30,7 +30,7 @@ target_tabUI <- function(id, subtab_name, upload_text){
                                 selectInput(ns("column_check"), "Choose a column to check files:",
                                             choices = "Disabled before uploading targets"),
                                 verbatimTextOutput(ns("missing_files"))
-                        ),
+                        )
                  ), 
                  column(9,
                           fileInput(

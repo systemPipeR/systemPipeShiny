@@ -1,10 +1,13 @@
 # library(glmpca)
+# library(DESeq2, quietly = TRUE)
+# library(ggplot2)
 
 run_GLM <- function(countDF, targets, colData) {
   ## Create full DESeqDataSet object
   dds <- DESeqDataSetFromMatrix(countData = countDF, colData = colData, 
                                 design = ~condition)
   count_mat <- counts(dds)
+  ##glmpca is performed on raw counts
   nozero <- count_mat[which(rowSums(count_mat) > 0),]  
   gpca <- glmpca(nozero, L=2)
   gpca.dat <- gpca$factors
