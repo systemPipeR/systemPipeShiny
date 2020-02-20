@@ -19,16 +19,16 @@ uploadUI <- function(id){
 ## server
 uploadServer <- function(input, output, session, shared = shared){
   observe({
-  if (all(!is.null(input$count_input), !is.null(input$count_targets), !input$demo)){
-    count_list <<- load_count(targets_file = input$count_targets$datapath, count_table = input$count_input$datapath)
-    output$count_table <- renderRHandsontable({rhandsontable(count_df)})
-    shared$count_table <- count_list$countDF
-    shared$count_list <- count_list
-  } else if (input$demo == T) {
-    count_list <<- load_count(targets_file = 'shiny_data/targetsPE.txt', count_table = 'shiny_data/countDFeByg.xls')
-    output$count_table <- renderRHandsontable({rhandsontable(count_df)})
-    shared$count_table <- count_list$countDF
-    shared$count_list <- count_list
-  }
+    if (all(!is.null(input$count_input), !is.null(input$count_targets), !input$demo)){
+      count_list <<- load_count(targets_file = input$count_targets$datapath, count_table = input$count_input$datapath)
+      output$count_table <- renderRHandsontable({rhandsontable(count_df)})
+      shared$count_table <- count_list$countDF
+      shared$count_list <- count_list
+    } else if (input$demo == T) {
+      count_list <<- load_count(targets_file = 'inst/extdata/targetsPE.txt', count_table = 'inst/extdata/countDFeByg.xls')
+      output$count_table <- renderRHandsontable({rhandsontable(count_df)})
+      shared$count_table <- count_list$countDF
+      shared$count_list <- count_list
+    }
   })
 }
