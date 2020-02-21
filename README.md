@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of systemPipeS is to ...
+An online demo of [SystempipeS](https://lezhang.shinyapps.io/systemPipeS/). This application is hosted by a small server. Please do not use it for production activities. Heavy taks will crash and disconnect you from it. 
 
 ## Installation
 
