@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-An online demo of [SystempipeS](https://lezhang.shinyapps.io/systemPipeS/). This application is hosted by a small server. Please do not use it for production activities. Heavy taks will crash and disconnect you from it. 
+An online demo of [SystempipeS](https://lezhang.shinyapps.io/systemPipeS/). This application is hosted by a small server. Please do not use it for production activities. Heavy taks will crash it and disconnect you from it. 
 
 ## Installation
 
