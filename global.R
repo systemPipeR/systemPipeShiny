@@ -12,7 +12,7 @@ library(shinyTree)
 library(networkD3)
 library(plotly)
 library(shinyAce)
-## for functions
+## for functions 
 library(DESeq2, quietly = TRUE)
 library(edgeR, quietly = TRUE)
 library(ape, warn.conflicts = FALSE)
@@ -26,6 +26,7 @@ library(stringr)
 library(assertthat)
 library(DOT)
 library(rsvg)
+library(dplyr)
 
 ({
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
