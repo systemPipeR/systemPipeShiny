@@ -4,70 +4,69 @@ targetUI <- function(id){
     tagList(
         tabBox(title = "TARGETS", id = ns("targets"),
                width = 12,
-               target_tabUI(ns("upload"), subtab_name = "Upload targets", upload_text = "Choose target file"),
-               target_tabUI(ns("example"), subtab_name = "Use example targets", upload_text = "You can't use this in this tab"),
-               target_tabUI(ns("new"), subtab_name = "Start from empty", upload_text = "You can't use this in this tab")
+               target_tabUI(ns("upload"))
         )
     )
 }
 ## submodule UI
-target_tabUI <- function(id, subtab_name, upload_text){
+target_tabUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = subtab_name,
+    tabPanel(title = "Upload targets",
              h2("Targets"),
              fluidRow(
-                 column(3, 
-                        fluidRow(
-                            valueBox(width = 12,textOutput(ns("box_samples")), "Number of Samples", icon = icon("vials"))
-                        ),
-                        fluidRow(
-                            valueBox(width = 12, textOutput(ns("box_ncol")), "Number of columns", icon = icon("columns"), color = "purple")
-                        ),
-                        fluidRow(
-                            uiOutput(ns("box_missing_ui"))
-                        ),
-                        boxPlus("Missing files (first row is treated as column names)", width = 12,
-                                selectInput(ns("column_check"), "Choose a column to check files:",
-                                            choices = "Disabled before uploading targets"),
-                                verbatimTextOutput(ns("missing_files"))
-                        )
-                 ), 
-                 column(9,
-                          fileInput(
-                          ns("target_file"), upload_text,
-                          multiple = FALSE,
-                          accept = c("text/tsv",
-                                     "text/comma-separated-values,text/plain",
-                                     ".tsv", ".txt"),
-                          placeholder = if (str_detect(ns(""), "upload")) "Choose your target file path" else "Disabled"
-                                    ),
-                        radioButtons(
-                          ns("but_pese"),
-                          label = if (!str_detect(ns(""), "upload")) "Choose one:" else "Disabled",
-                          choices = c("Pair-End","Single-End"),
-                          inline = TRUE
-                                    ),
-                        fluidRow(
-                          downloadButton(ns("down_targets"), "Save"),
-                          actionButton(ns("to_task_target"),
-                                       label = if (str_detect(ns(""), "upload")) "Add to task" else "Disabled", 
-                                       icon("paper-plane"), 
-                                       style = "color: #fff; background-color: #337ab7; border-color: #2e6da4")
-                          ),
-                        h4("Targets header"),
-                        p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
-                        aceEditor(
-                          outputId = ns("ace_target_header"),
-                          selectionId = "selection",
-                          theme = "Chrome",
-                          value = if (!str_detect(ns(""), "upload")) ace_target_header_init else "",
-                          placeholder = "Target header lines", height = "100px"
-                        ),
-                        p("You can edit your targets (metadata) below."),
-                        p("Columns of 'FileName1', 'FileName2' are required for pair-end or 'FileName' for single-end. 'SampleName', 'Factor' are required for both."),
-                        p("Columns names should be on the first row."),
-                        rHandsontableOutput(ns("targets_df"))
-                 )
+               column(3, 
+                      fluidRow(
+                        valueBox(width = 12,textOutput(ns("box_samples")), "Number of Samples", icon = icon("vials"))
+                      ),
+                      fluidRow(
+                        valueBox(width = 12, textOutput(ns("box_ncol")), "Number of columns", icon = icon("columns"), color = "purple")
+                      ),
+                      fluidRow(
+                        uiOutput(ns("box_missing_ui"))
+                      ),
+                      boxPlus("Missing files (first row is treated as column names)", width = 12,
+                              selectInput(ns("column_check"), "Choose a column to check files:",
+                                          choices = "Disabled before uploading targets"),
+                              verbatimTextOutput(ns("missing_files"))
+                      )
+               ), 
+               column(9,
+                      fileInput(
+                        ns("target_file"), "Choose target file",
+                        multiple = FALSE,
+                        accept = c("text/tsv",
+                                   "text/comma-separated-values,text/plain",
+                                   ".tsv", ".txt"),
+                        placeholder = "Choose your target file path"
+                      ),
+                      radioButtons(
+                        ns("but_pese"),
+                        label = "Choose one:",
+                        choices = c("Pair-End","Single-End"),
+                        inline = TRUE
+                      ),
+                      fluidRow(
+                        downloadButton(ns("down_targets"), "Save"),
+                        actionButton(ns("to_task_target"),
+                                     label = "Add to task", 
+                                     icon("paper-plane"), 
+                                     style = "color: #fff; background-color: #337ab7; border-color: #2e6da4")
+                      ),
+                      h4("Targets header"),
+                      p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
+                      aceEditor(
+                        outputId = ns("ace_target_header"),
+                        selectionId = "selection",
+                        theme = "Chrome",
+                        value = "",
+                        placeholder = "Target header lines", height = "100px"
+                      ),
+                      p("You can edit your targets (metadata) below."),
+                      p("Columns of 'FileName1', 'FileName2' are required for pair-end or 'FileName' for single-end. 'SampleName', 'Factor' are required for both."),
+                      p("Columns names should be on the first row."),
+                      rHandsontableOutput(ns("targets_df"))
+               )
+               
              )
     )
 }
@@ -81,8 +80,6 @@ ace_target_header_init <-
 ## server
 targetServer <- function(input, output, session, shared){
     callModule(targetMod, "upload", upload = TRUE, shared = shared)
-    callModule(targetMod, "example", ifexample = TRUE, shared = shared)
-    callModule(targetMod, "new", shared = shared)
 }
 ## submodule server
 targetMod <- function(input, output, session, upload = FALSE, ifexample=FALSE, shared){
@@ -159,7 +156,11 @@ targetMod <- function(input, output, session, upload = FALSE, ifexample=FALSE, s
   observeEvent(input$targets_df, {
     if (str_detect(ns(""), "upload")) shared$target_upload <- hot_to_r(input$targets_df)
   })
-  
+  observeEvent(input$to_task_target, {
+    shared$to_task$target <- input$to_task_target
+    print(shared$to_task$target)
+  })
+
 }
 
 
