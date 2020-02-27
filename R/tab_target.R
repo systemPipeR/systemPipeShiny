@@ -8,7 +8,7 @@ targetUI <- function(id){
         )
     )
 }
-## submodule UI
+## submodule target UI
 target_tabUI <- function(id){
     ns <- NS(id)
     tabPanel(title = "Upload targets",
@@ -31,19 +31,19 @@ target_tabUI <- function(id){
                       )
                ), 
                column(9,
-                      fileInput(
-                        ns("target_file"), "Choose target file",
-                        multiple = FALSE,
-                        accept = c("text/tsv",
-                                   "text/comma-separated-values,text/plain",
-                                   ".tsv", ".txt"),
-                        placeholder = "Choose your target file path"
+                      radioGroupButtons(
+                          inputId = ns("target_source"), label = "Choose target source:", 
+                          selected = "upload",
+                          choiceNames = c("Upload", "Example PE", "Example SE"), 
+                          choiceValues = c("upload", "pe", "se"),
+                          justified = TRUE, status = "primary",
+                          checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
                       ),
-                      radioButtons(
-                        ns("but_pese"),
-                        label = "Choose one:",
-                        choices = c("Pair-End","Single-End"),
-                        inline = TRUE
+                      fileInput(
+                          ns("target_upload"), "If upload, choose your target file here:",
+                          multiple = FALSE,
+                          accept = c(".tsv", ".txt"),
+                          placeholder = "Choose your target file path"
                       ),
                       fluidRow(
                         downloadButton(ns("down_targets"), "Save"),
@@ -79,103 +79,94 @@ ace_target_header_init <-
 "
 ## server
 targetServer <- function(input, output, session, shared){
-    callModule(targetMod, "upload", upload = TRUE, shared = shared)
+    callModule(targetMod, "upload", shared = shared)
 }
 ## submodule server
-targetMod <- function(input, output, session, upload = FALSE, ifexample=FALSE, shared){
-  ns <- session$ns
-  disable('column_check')
-  disable("down_targets")
-  if (upload) disable("but_pese") else {disable("target_file"); disable("to_task_target")}
-  flags <- reactiveValues(new_file = FALSE)
-  observeEvent(input$but_pese,{
-    flags$pe <- if (!input$but_pese == "Pair-End") FALSE else TRUE
-    flags$force_load <- TRUE
-  })
-  observeEvent(input$target_file, {
-    flags$new_file <- TRUE
-  })
-    
-  observeEvent({input$but_pese; input$targets_df; input$target_file; input$column_check}, {
-    if ((!is.null(input$target_file)) | (!upload)){
-      t.df <- hot_target(targets_df = input$targets_df, targets_p = input$target_file$datapath,
-                         ifexample = ifexample, pe = flags$pe,
-                         force_load = flags$force_load, new_file = flags$new_file)
-      t.df.check <- t.df[-1, ] %>% as.data.frame()
-      
-      output$box_samples <- renderText({nrow(t.df.check)})
-      output$box_ncol <- renderText({ncol(t.df.check)})
-      if (upload) {
-        updateSelectInput(session, "column_check", choices = names(t.df), selected = input$column_check)
+targetMod <- function(input, output, session, shared){
+    ns <- session$ns
+    # some reactive values to pass around observe
+    choice_old <- reactiveVal("upload")
+    targets_p_old <- reactiveVal("")
+    t.df <- reactiveVal(data.frame())
+    # force to reload targets if change target_source or file uploaded
+    observeEvent(c(input$target_source, input$target_upload), {# only c work here, dont know why
+        t.df(
+            hot_target(targets_df = input$targets_df,
+                       targets_p = input$target_upload$datapath, 
+                       targets_p_old = targets_p_old(),
+                       choice = input$target_source,
+                       choice_old = choice_old())
+        )
+        output$targets_df <- renderRHandsontable({
+            rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+                hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
+        })
+        if (!is.null(input$targets_df)) df <- hot_to_r(input$targets_df)
+        if (choice_old() != input$target_source) choice_old(input$target_source)
+        if (!is.null(input$target_upload$datapath)) targets_p_old(input$target_upload$datapath)
+        if (choice_old() != "upload") disable("target_upload") else enable("target_upload")
+    })
+    # store interactively modified table, update left check bar
+    observeEvent({input$targets_df; input$column_check}, {
+        if (!is.null(input$targets_df)) t.df(hot_to_r(input$targets_df))
+        output$targets_df <- renderRHandsontable({
+            rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+                hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
+        })
+        
+        t.df.check <- t.df()[-1, ] %>% as.data.frame()
+        output$box_samples <- renderText({nrow(t.df.check)})
+        output$box_ncol <- renderText({ncol(t.df.check)})
+        updateSelectInput(session, "column_check", choices = names(t.df()), selected = input$column_check)
         not_missing_index <- sapply(as.character(t.df.check[[input$column_check]]), file.exists)
         missing_names <- t.df.check[[input$column_check]][!not_missing_index]
         output$missing_files <-  renderPrint({cat(paste0(row.names(t.df.check)[!not_missing_index], " ", missing_names, collapse = '\n'))})
         box_missing_val <- "NA"
         if (input$column_check %in% names(t.df.check)){
-          box_missing_val <- as.character(nrow(t.df.check) - sum(not_missing_index))
+            box_missing_val <- as.character(nrow(t.df.check) - sum(not_missing_index))
         }
         output$box_missing <- renderText({box_missing_val})
         output$box_missing_ui <- renderUI({
-          valueBox(width = 12,
-                   textOutput(ns("box_missing")),
-                   "Missing files in selected column",
-                   icon = if (box_missing_val %in% c("NA", "0")) icon("check") else icon("times"),
-                   color = if (box_missing_val %in% c("NA", "0")) 'green' else 'red'
-          )
+            valueBox(width = 12,
+                     textOutput(ns("box_missing")),
+                     "Missing files in selected column",
+                     icon = if (box_missing_val %in% c("NA", "0")) icon("check") else icon("times"),
+                     color = if (box_missing_val %in% c("NA", "0")) 'green' else 'red'
+            )
         })
-      }
-      
-      output$targets_df <- renderRHandsontable({
-        rhandsontable(t.df, selectCallback = TRUE, useTypes = FALSE) %>%
-          hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
-      })
-    } else {
-      # before uploading table
-      output$box_samples <- renderText({"NA"})
-      output$box_ncol <- renderText({"NA"})
-    }
-    # disale some ui
-    if (!is.null(input$target_file)) {
-      enable("down_targets")
-      enable('column_check')
-    } 
-    if (!upload) {enable("down_targets")}
-    
-    flags$force_load <- FALSE
-    flags$new_file <- FALSE
-    return(flags)
-  })
-  
-  output$down_targets <- downloadHandler(
-    filename <- function() {
-      "targets.txt"
-    },
-    content <- function(filename) {
-      write.table(hot_to_r(input$targets_df), filename, sep = "\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
     })
-  observeEvent(input$targets_df, {
-    if (str_detect(ns(""), "upload")) shared$target_upload <- hot_to_r(input$targets_df)
-  })
-  observeEvent(input$to_task_target, {
-    shared$to_task$target <- input$to_task_target
-    print(shared$to_task$target)
-  })
+    # download button
+    output$down_targets <- downloadHandler(
+      filename <- function() {
+        "targets.txt"
+      },
+      content <- function(filename) {
+        write.table(hot_to_r(input$targets_df), filename, sep = "\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
+      })
+    observeEvent(input$targets_df, {
+      if (str_detect(ns(""), "upload")) shared$targets$df <- hot_to_r(input$targets_df)
+    })
+    observeEvent(input$to_task_target, {
+      shared$to_task$target <- input$to_task_target
+      print(shared$to_task$target)
+    })
 
 }
 
 
-hot_target <- function(targets_df, targets_p=NULL, ifexample=FALSE, pe=TRUE, force_load = FALSE, new_file = FALSE){
-    if (is.null(targets_df)) df <- load_target(targets_p, ifexample, pe) else df <- hot_to_r(targets_df)
-    if (force_load | new_file) df <- load_target(targets_p, ifexample, pe)
-    names(df) <- paste0("V", 1:ncol(df))
-    return(df)
+hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, choice_old){
+
+    targets_p <- switch(choice,
+                        "upload" = targets_p,
+                        "pe" = "inst/extdata/targetsPE.txt",
+                        "se" = "inst/extdata/targets.txt"
+                        )
+    if (is.null(targets_p)) return(data.frame(matrix("", 8,8), stringsAsFactors = FALSE))
+    if ((choice != choice_old) | (targets_p != targets_p_old)) {
+        df.t <- read.csv(targets_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)
+    } 
+    names(df.t) <- paste0("X", 1:ncol(df.t))
+    return(df.t)
 }
 
-load_target <- function(targets_p, ifexample, pe) {
-    empty <- FALSE; if ((!ifexample) & is.null(targets_p)) empty <- TRUE
-    if (is.null(targets_p)) {if (pe) {targets_p <- 'inst/extdata/targetsPE.txt'} else {targets_p <- 'inst/extdata/targets.txt'}}
-    df <- read.csv(targets_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)
-    if (empty) df[2:nrow(df), ] <- ""
-    return(df)
-}
 
