@@ -7,6 +7,9 @@ rightUI <- function(id){
 ## server
 rightServer <- function(input, output, session, shared){
     ns <- session$ns
+    observeEvent(shared$to_task$target,{
+        if (!is.null(shared$to_task$target)) shared$wf_flags$targets_ready = TRUE
+    })
     observeEvent(TRUE, {
         output$right_bar <- renderUI({
             boxPlus(title = "Workflow Status", width = 12, closable = FALSE, solidHeader = TRUE,
