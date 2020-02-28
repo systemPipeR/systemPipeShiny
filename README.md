@@ -33,3 +33,9 @@ Run to update the website (./docs/ folder)
 ``` r
 pkgdown::build_site()
 ```
+
+## ToDo List
+ - Documentation showing how to deploy app on user shiny.io account
+ - Documentation describing all the features
+  - Setting up the data
+  - Launching the interface
