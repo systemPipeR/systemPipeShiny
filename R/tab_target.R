@@ -56,7 +56,6 @@ target_tabUI <- function(id){
                       p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
                       aceEditor(
                         outputId = ns("ace_target_header"),
-                        selectionId = "selection",
                         theme = "Chrome",
                         value = "",
                         placeholder = "Target header lines", height = "100px"
@@ -90,6 +89,7 @@ targetMod <- function(input, output, session, shared){
     t.df <- reactiveVal(data.frame())
     # force to reload targets if change target_source or file uploaded
     observeEvent(c(input$target_source, input$target_upload), {# only c work here, dont know why
+        # update df
         t.df(
             hot_target(targets_df = input$targets_df,
                        targets_p = input$target_upload$datapath, 
@@ -101,14 +101,26 @@ targetMod <- function(input, output, session, shared){
             rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
                 hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
         })
-        if (!is.null(input$targets_df)) df <- hot_to_r(input$targets_df)
+        # header
+        header_lines <- ""
+        if (!is.null(input$target_upload$datapath)) {
+            header_lines <- readLines(input$target_upload$datapath, warn = FALSE) %>% .[str_detect(.,"^#")] %>% paste(collapse = "\n")
+            if (length(header_lines) == 0) header_lines <- ""
+            targets_p_old(input$target_upload$datapath)
+        }
+        if (input$target_source != "upload") header_lines <- ace_target_header_init
+        updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
+        # other server end updates
+        shared$targets$df <- t.df()
         if (choice_old() != input$target_source) choice_old(input$target_source)
-        if (!is.null(input$target_upload$datapath)) targets_p_old(input$target_upload$datapath)
         if (choice_old() != "upload") disable("target_upload") else enable("target_upload")
     })
     # store interactively modified table, update left check bar
     observeEvent({input$targets_df; input$column_check}, {
-        if (!is.null(input$targets_df)) t.df(hot_to_r(input$targets_df))
+        if (!is.null(input$targets_df)) {
+            t.df(hot_to_r(input$targets_df))
+            shared$targets$df <- t.df()
+            }
         output$targets_df <- renderRHandsontable({
             rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
                 hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
@@ -143,19 +155,22 @@ targetMod <- function(input, output, session, shared){
       content <- function(filename) {
         write.table(hot_to_r(input$targets_df), filename, sep = "\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
       })
-    observeEvent(input$targets_df, {
-      if (str_detect(ns(""), "upload")) shared$targets$df <- hot_to_r(input$targets_df)
-    })
+    # observeEvent(input$targets_df, {
+    #   if (str_detect(ns(""), "upload")) 
+    # })
     observeEvent(input$to_task_target, {
-      shared$to_task$target <- input$to_task_target
-      print(shared$to_task$target)
+        shared$targets$file <- tempfile(pattern = "target", fileext = ".txt")
+        # check header
+        header_lines <- isolate(input$ace_target_header)
+        print(str_detect(header_lines, "# <CMP>"))
+        # check df
+        
     })
 
 }
 
 
 hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, choice_old){
-
     targets_p <- switch(choice,
                         "upload" = targets_p,
                         "pe" = "inst/extdata/targetsPE.txt",

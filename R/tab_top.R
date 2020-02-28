@@ -81,9 +81,9 @@ topServer <- function(input, output, session, shared){
     ns <- session$ns
     observeEvent(input$top_target_btn, {
         pushbar_open(id = ns("top_target_push"))
-        if (!is.null(shared$target_upload)){
+        if (!is.null(shared$targets$df)){
             output$targets_df <- renderRHandsontable({
-                rhandsontable(shared$target_upload, readOnly = TRUE) %>%
+                rhandsontable(shared$targets$df, readOnly = TRUE) %>%
                 hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE)
             })
         }

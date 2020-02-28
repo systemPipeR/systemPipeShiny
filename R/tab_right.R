@@ -7,6 +7,7 @@ rightUI <- function(id){
 ## server
 rightServer <- function(input, output, session, shared){
     ns <- session$ns
+    shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE)
     observeEvent(shared$to_task$target,{
         if (!is.null(shared$to_task$target)) shared$wf_flags$targets_ready = TRUE
     })
