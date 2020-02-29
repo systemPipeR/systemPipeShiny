@@ -74,8 +74,7 @@ ace_target_header_init <-
 "# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
 # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
 # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
-# <CMP> CMPset2: ALL
-"
+# <CMP> CMPset2: ALL"
 ## server
 targetServer <- function(input, output, session, shared){
     callModule(targetMod, "upload", shared = shared)
@@ -87,33 +86,52 @@ targetMod <- function(input, output, session, shared){
     choice_old <- reactiveVal("upload")
     targets_p_old <- reactiveVal("")
     t.df <- reactiveVal(data.frame())
+    target_init <- reactiveVal(TRUE)
     # force to reload targets if change target_source or file uploaded
     observeEvent(c(input$target_source, input$target_upload), {# only c work here, dont know why
-        # update df
-        t.df(
-            hot_target(targets_df = input$targets_df,
-                       targets_p = input$target_upload$datapath, 
-                       targets_p_old = targets_p_old(),
-                       choice = input$target_source,
-                       choice_old = choice_old())
-        )
-        output$targets_df <- renderRHandsontable({
-            rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
-                hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
-        })
-        # header
-        header_lines <- ""
-        if (!is.null(input$target_upload$datapath)) {
-            header_lines <- readLines(input$target_upload$datapath, warn = FALSE) %>% .[str_detect(.,"^#")] %>% paste(collapse = "\n")
-            if (length(header_lines) == 0) header_lines <- ""
-            targets_p_old(input$target_upload$datapath)
+        confirmSweetAlert(
+            session,inputId = "sweet_changetarget_confirm", 
+            title = "Do you want to change target Source?", 
+            text = "If you change target source, target data will be reset in this tab and 'Task' tab. You will LOSE unsaved data", type = "warning"
+            )
+    })
+    observeEvent(input$sweet_changetarget_confirm, {
+        print("sweet")
+        print(input$sweet_changetarget_confirm)
+        print("init")
+        print(target_init())
+        if (input$sweet_changetarget_confirm | target_init()) {
+            # update df
+            t.df(
+                hot_target(targets_df = input$targets_df,
+                           targets_p = input$target_upload$datapath, 
+                           targets_p_old = targets_p_old(),
+                           choice = input$target_source,
+                           choice_old = choice_old())
+            )
+            output$targets_df <- renderRHandsontable({
+                rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+                    hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
+            })
+            # header
+            header_lines <- ""
+            if (!is.null(input$target_upload$datapath)) {
+                header_lines <- readLines(input$target_upload$datapath, warn = FALSE) %>% .[str_detect(.,"^#")] %>% paste(collapse = "\n")
+                if (length(header_lines) == 0) header_lines <- ""
+                targets_p_old(input$target_upload$datapath)
+            }
+            if (input$target_source != "upload") header_lines <- ace_target_header_init
+            updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
+            # other server end updates
+            shared$targets$df <- t.df()
+            if (choice_old() != input$target_source) {
+                toastr_info(paste0("Changed target source to ", input$target_source, ". Target reset"),
+                            closeButton = TRUE, position = "bottom-right", timeOut = 2000)
+                choice_old(input$target_source)
+            }
+            if (choice_old() != "upload") disable("target_upload") else enable("target_upload")
+            target_init(FALSE)
         }
-        if (input$target_source != "upload") header_lines <- ace_target_header_init
-        updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
-        # other server end updates
-        shared$targets$df <- t.df()
-        if (choice_old() != input$target_source) choice_old(input$target_source)
-        if (choice_old() != "upload") disable("target_upload") else enable("target_upload")
     })
     # store interactively modified table, update left check bar
     observeEvent({input$targets_df; input$column_check}, {
@@ -153,23 +171,40 @@ targetMod <- function(input, output, session, shared){
         "targets.txt"
       },
       content <- function(filename) {
-        write.table(hot_to_r(input$targets_df), filename, sep = "\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
+          writeLines(c(isolate(input$ace_target_header), apply(hot_to_r(input$targets_df), 1, paste, collapse = "\t")), filename)
       })
-    # observeEvent(input$targets_df, {
-    #   if (str_detect(ns(""), "upload")) 
-    # })
+    # add to task
     observeEvent(input$to_task_target, {
         shared$targets$file <- tempfile(pattern = "target", fileext = ".txt")
-        # check header
+        # check col_names, header lines
         header_lines <- isolate(input$ace_target_header)
-        print(str_detect(header_lines, "# <CMP>"))
-        # check df
-        
+        check_results <- check_target(col_names = shared$targets$df[1, ], headerlines = header_lines)
+        if (all(check_results)) {
+            sendSweetAlert(
+                session = session, 
+                title = "Added to Task",
+                text = "All target check passed, target added to task\n You can see workflow status by clicking top right",
+                type = "success"
+            )
+            writeLines(c(header_lines, apply(shared$targets$df, 1, paste, collapse = "\t")), shared$targets$file)
+            shared$wf_flags$targets_ready = TRUE
+        } else {
+            sendSweetAlert(
+                session = session, 
+                title = "Some requirements are missing",
+                text =tags$b(
+                    HTML(paste0("<i class='fa fa-file'></i>Your target should have ", names(check_results[check_results == FALSE]), collapse = "<br>")),
+                    style = "color: #FA5858;"
+                ),
+                html = TRUE,
+                type = "error"
+            )
+        }
     })
 
 }
-
-
+# paste0("<span>", paste0("Your target should have ", names(check_results[check_results == FALSE]), collapse = "<br>"), "</span>")
+# load target file
 hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, choice_old){
     targets_p <- switch(choice,
                         "upload" = targets_p,
@@ -184,4 +219,14 @@ hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, c
     return(df.t)
 }
 
-
+# target checkers
+check_target <- function(col_names, headerlines) {
+    checker1 <- function(col_names) all(c("FileName1", "FileName2") %in% col_names ) | "FileName" %in% col_names
+    checker2 <- function(col_names)  "SampleName" %in% col_names 
+    checker3 <- function(col_names)  "Factor" %in% col_names 
+    checker4 <- function(headerlines) any(str_detect(headerlines, "#.?<CMP>"))
+    check_results <- sapply(c(checker1, checker2, checker3), function(x) x(col_names)) %>% 
+        append(checker4(headerlines))
+    names(check_results) <- c("both 'FileName1' 'FileName2' or 'FileName'", "SampleName", "Factor", "header with # &ltCMP&gt")
+    return(check_results)
+}

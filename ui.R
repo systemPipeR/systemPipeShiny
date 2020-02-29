@@ -28,6 +28,7 @@ dashboardSidebar <-  dashboardSidebar(
 dashboardBody <- dashboardBody(
     useShinyjs(),
     useSweetAlert(),
+    useToastr(),
     tabItems(
         tabItem(tabName = "dashboard", dashboardUI("dashboard")),
         tabItem(tabName = "Targets", targetUI("targets")),
