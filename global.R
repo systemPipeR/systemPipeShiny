@@ -30,9 +30,8 @@ library(stringr)
 library(assertthat)
 library(DOT)
 library(rsvg)
-library(dplyr)
 
-({
+({ 
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
 }) %>% invisible()
 

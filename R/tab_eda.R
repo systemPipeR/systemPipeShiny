@@ -4,16 +4,15 @@ edaUI <- function(id) {
   tagList(
     h2("Exploratory Data Analysis"),
     fluidRow(
-      boxPlus(title = "Plots", width = 12, closable = FALSE,
-              radioButtons(ns("norm"), "Normalization method", choices = c("rlog", "vst")),
+      boxPlus(title = "Specifications", closable = FALSE,
+              radioButtons(ns("norm"), "Normalization method", choices = c( "rlog", "vst"))),
+      boxPlus(title = "Plot Types",closable = F,
               checkboxInput(ns("PCA"), "PCA"),
               checkboxInput(ns("GLM"), "GLM-PCA"),
               checkboxInput(ns("TSNE"), "t-SNE"),
               checkboxInput(ns("MDS"), "MDS"),
               checkboxInput(ns("HCLUST"), "Hierarchical Clustering"),
-              checkboxInput(ns("HEAT"), "Heat Map of Hierarchical Clustering")
-              
-      )
+              checkboxInput(ns("HEAT"), "Heat Map of Hierarchical Clustering"))
     ),
     fluidRow(title = "Plot Output",
              uiOutput(ns("PCA")),
@@ -21,31 +20,18 @@ edaUI <- function(id) {
              uiOutput(ns("TSNE")),
              uiOutput(ns("MDS")),
              uiOutput(ns("HCLUST")),
-             uiOutput(ns("HMAP")),
-             textOutput(ns("value"))
-             #rHandsontableOutput(ns("count_table"))
-             
+             uiOutput(ns("HMAP"))
     )
-    
   )
-  
 }
 
 ## server
 
 edaServer <- function(input, output, session, shared){
   ns <- session$ns
-  output$value <- renderText({ input$norm })
-  
   observe({
     
     if (!is.null(shared$count_list)){ 
-      # count_list <<- load_count(targets_file = input$count_targets$datapath, count_table = input$count_input$datapath)
-      # 
-      # output$count_table <- renderRHandsontable({rhandsontable(count_df)})
-      # shared$count_table <- count_list$countDF
-      # shared$count_list <- count_list
-      # 
       ## GLM 
       output$GLM <- renderUI({
         if (input$GLM == T) {

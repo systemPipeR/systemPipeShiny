@@ -1,8 +1,8 @@
 # library(DESeq2, quietly = TRUE)
 deg_deseq2 <- function(countDF, targets, Fold, FDR, cmpset, cmp, plot = T) {
-  degseqDF <- run_DESeq2(countDF = countDF, targets = targets, cmp = cmp[[cmpset]], 
+  degseqDF <- systemPipeR::run_DESeq2(countDF = countDF, targets = targets, cmp = cmp[[cmpset]], 
                          independent = FALSE)
-  DEG_list <- filterDEGs(degDF = degseqDF, filter = c(Fold = Fold, FDR = FDR), plot = F)
+  DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = Fold, FDR = FDR), plot = F)
   if (plot == T){
     df <- DEG_list$Summary
     filter <- c(Fold = Fold, FDR = FDR)
