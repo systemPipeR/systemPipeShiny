@@ -1,7 +1,6 @@
 ####### Server 
 server <- function(input, output, session) {
-    shared <- reactiveValues(space0 = NULL) # declare a space share objects
-    shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE) # needed for rightside bar
+    shared <- reactiveValues() 
     callModule(dashboardServer, "dashboard")
     callModule(targetServer, "targets", shared = shared)
     callModule(wfServer, "wf")

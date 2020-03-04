@@ -12,12 +12,17 @@ library(shinyTree)
 library(networkD3)
 library(plotly)
 library(shinyAce)
-## for functions
+# BiocManager::install("timelyportfolio/sweetalertR")
+# library(sweetalertR) # use alert from shinyWeidgets for now, if no more advanced function required
+# source("https://install-github.me/mangothecat/shinytoastr")
+library(shinytoastr) # need to install use the script above
+## for functions 
 library(DESeq2, quietly = TRUE)
 library(edgeR, quietly = TRUE)
 library(ape, warn.conflicts = FALSE)
 library(glmpca)
-library("RColorBrewer")
+library(RColorBrewer)
+library(pheatmap)
 library(limma)
 library(Rtsne)
 library(ggplot2)

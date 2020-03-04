@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of systemPipeS is to ...
+An online demo of [SystempipeS](https://lezhang.shinyapps.io/systemPipeS/). This application is hosted by a small server. Please do not use it for production activities. Heavy taks will crash it and disconnect you from it. 
 
 ## Installation
 
@@ -33,3 +33,9 @@ Run to update the website (./docs/ folder)
 ``` r
 pkgdown::build_site()
 ```
+
+## ToDo List
+ - Documentation showing how to deploy app on user shiny.io account
+ - Documentation describing all the features
+  - Setting up the data
+  - Launching the interface
