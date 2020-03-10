@@ -25,6 +25,8 @@ target_tabUI <- function(id){
                         uiOutput(ns("box_missing_ui"))
                       ),
                       boxPlus("Missing files (first row is treated as column names)", width = 12,
+                              p("Write down your path prefix if you use relative path the targets"),
+                              clearableTextInput(ns("target_data_path"), label = "Add path prefix", placeholder = "long path"),
                               selectInput(ns("column_check"), "Choose a column to check files:",
                                           choices = "Disabled before uploading targets"),
                               verbatimTextOutput(ns("missing_files"))
@@ -43,14 +45,13 @@ target_tabUI <- function(id){
                           ns("target_upload"), "If upload, choose your target file here:",
                           multiple = FALSE,
                           accept = c(".tsv", ".txt"),
-                          placeholder = "Choose your target file path"
+                          placeholder = "Choose your target file path",
                       ),
                       fluidRow(
                         downloadButton(ns("down_targets"), "Save"),
                         actionButton(ns("to_task_target"),
                                      label = "Add to task", 
-                                     icon("paper-plane"), 
-                                     style = "color: #fff; background-color: #337ab7; border-color: #2e6da4")
+                                     icon("paper-plane"))
                       ),
                       h4("Targets header"),
                       p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
@@ -83,36 +84,37 @@ targetServer <- function(input, output, session, shared){
 targetMod <- function(input, output, session, shared){
     ns <- session$ns
     # some reactive values to pass around observe
-    choice_old <- reactiveVal("upload")
+    selected_old <- reactiveVal("upload")
+    selected_flag <- reactiveVal(TRUE)
     targets_p_old <- reactiveVal("")
-    t.df <- reactiveVal(data.frame())
-    target_init <- reactiveVal(TRUE)
-    # force to reload targets if change target_source or file uploaded
-    observeEvent(c(input$target_source, input$target_upload), {# only c work here, dont know why
-        confirmSweetAlert(
-            session,inputId = "sweet_changetarget_confirm", 
-            title = "Do you want to change target Source?", 
-            text = "If you change target source, target data will be reset in this tab and 'Task' tab. You will LOSE unsaved data", type = "warning"
-            )
+    t.df <- reactiveVal(data.frame(matrix("", 8,8), stringsAsFactors = FALSE))
+    # update table
+    output$targets_df <- renderRHandsontable({
+        rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+            hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
     })
-    observeEvent(input$sweet_changetarget_confirm, {
-        print("sweet")
-        print(input$sweet_changetarget_confirm)
-        print("init")
-        print(target_init())
-        if (input$sweet_changetarget_confirm | target_init()) {
+
+    observeEvent({input$target_source; input$target_upload$datapath}, ignoreInit = TRUE, {# only c work here, dont know why
+        if (selected_flag() == TRUE) {
+            confirmSweetAlert(
+                session,inputId = "sweet_changetarget_confirm", 
+                title = "Do you want to change target Source?", 
+                text = "If you change target source or load new file, target data will be reset in this tab and 'Task' tab. You will LOSE unsaved data", type = "warning"
+            )
+        } else {
+            selected_flag(TRUE)
+        }
+    })
+    observeEvent(input$sweet_changetarget_confirm, ignoreNULL = TRUE,{
+        if (isTRUE(input$sweet_changetarget_confirm)) {
             # update df
             t.df(
                 hot_target(targets_df = input$targets_df,
                            targets_p = input$target_upload$datapath, 
                            targets_p_old = targets_p_old(),
                            choice = input$target_source,
-                           choice_old = choice_old())
+                           choice_old = selected_old())
             )
-            output$targets_df <- renderRHandsontable({
-                rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
-                    hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
-            })
             # header
             header_lines <- ""
             if (!is.null(input$target_upload$datapath)) {
@@ -124,16 +126,21 @@ targetMod <- function(input, output, session, shared){
             updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
             # other server end updates
             shared$targets$df <- t.df()
-            if (choice_old() != input$target_source) {
-                toastr_info(paste0("Changed target source to ", input$target_source, ". Target reset"),
-                            closeButton = TRUE, position = "bottom-right", timeOut = 2000)
-                choice_old(input$target_source)
-            }
-            if (choice_old() != "upload") disable("target_upload") else enable("target_upload")
-            target_init(FALSE)
+
+            toastr_info(paste0("Changed target source to ", input$target_source, ". Target reset"),
+                        closeButton = TRUE, position = "bottom-right", timeOut = 2000)
+            shared$wf_flags$targets_ready = FALSE
+            if (input$target_source != "upload") disable("target_upload") else enable("target_upload")
+            selected_old(input$target_source)
+        } else {
+            #if cancelled alert
+            updateRadioGroupButtons(session, "target_source", selected = selected_old(),
+                                    checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
+                                    )
+            selected_flag(FALSE)
         }
     })
-    # store interactively modified table, update left check bar
+    # left side checkers behaviors
     observeEvent({input$targets_df; input$column_check}, {
         if (!is.null(input$targets_df)) {
             t.df(hot_to_r(input$targets_df))
@@ -148,11 +155,12 @@ targetMod <- function(input, output, session, shared){
         output$box_samples <- renderText({nrow(t.df.check)})
         output$box_ncol <- renderText({ncol(t.df.check)})
         updateSelectInput(session, "column_check", choices = names(t.df()), selected = input$column_check)
-        not_missing_index <- sapply(as.character(t.df.check[[input$column_check]]), file.exists)
-        missing_names <- t.df.check[[input$column_check]][!not_missing_index]
+        cheching_path <- file.path(input$target_data_path, as.character(t.df.check[[input$column_check]]))
+        not_missing_index <- sapply(cheching_path, file.exists)
+        missing_names <- cheching_path[!not_missing_index]
         output$missing_files <-  renderPrint({cat(paste0(row.names(t.df.check)[!not_missing_index], " ", missing_names, collapse = '\n'))})
         box_missing_val <- "NA"
-        if (input$column_check %in% names(t.df.check)){
+        if (input$column_check %in% names(t.df.check)) {
             box_missing_val <- as.character(nrow(t.df.check) - sum(not_missing_index))
         }
         output$box_missing <- renderText({box_missing_val})
@@ -192,7 +200,7 @@ targetMod <- function(input, output, session, shared){
             sendSweetAlert(
                 session = session, 
                 title = "Some requirements are missing",
-                text =tags$b(
+                text = tags$b(
                     HTML(paste0("<i class='fa fa-file'></i>Your target should have ", names(check_results[check_results == FALSE]), collapse = "<br>")),
                     style = "color: #FA5858;"
                 ),
@@ -203,7 +211,6 @@ targetMod <- function(input, output, session, shared){
     })
 
 }
-# paste0("<span>", paste0("Your target should have ", names(check_results[check_results == FALSE]), collapse = "<br>"), "</span>")
 # load target file
 hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, choice_old){
     targets_p <- switch(choice,

@@ -29,6 +29,13 @@ dashboardBody <- dashboardBody(
     useShinyjs(),
     useSweetAlert(),
     useToastr(),
+    tags$style(
+        glue('
+             .btn {
+               @{btn_style}@;
+             }
+             ', .open = "@{", .close = "}@")
+    ),
     tabItems(
         tabItem(tabName = "dashboard", dashboardUI("dashboard")),
         tabItem(tabName = "Targets", targetUI("targets")),
