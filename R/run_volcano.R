@@ -1,6 +1,4 @@
 # library(ggplot2)
-# library(ggrepel)
-# library(dplyr)
 
 run_volcano <- function(DF, FDR, Fold, comparison) {
   pval <- DF[, grep("_FDR$", colnames(DF)), drop=FALSE]
@@ -9,7 +7,7 @@ run_volcano <- function(DF, FDR, Fold, comparison) {
   # pval <- DF[, grep("_FDR$", colnames(DF)), drop=FALSE]
   pval1 <- pval[,paste0(comparison,"_FDR")] ##DF of FDR's(p.adj) for sample comparison
   log2FoldChange <- sample1[,paste0(comparison,"_logFC")]
-  Significance <- if_else(pval1 < FDR & abs(log2FoldChange) > Fold, "Significant", "Insignificant")
+  Significance <- ifelse(pval1 < FDR & abs(log2FoldChange) > Fold, "Significant", "Insignificant")
   sample1$Significance <- Significance ##adding column of significant/insignificant
   
   p <- ggplot(sample1) +

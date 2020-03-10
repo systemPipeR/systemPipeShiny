@@ -34,7 +34,7 @@ library(glue)
 library(dplyr)
 
 
-({
+({ 
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
 }) %>% invisible()
 

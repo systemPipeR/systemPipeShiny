@@ -1,9 +1,9 @@
 # library(edgeR, quietly = TRUE)
 
 deg_edgeR <- function(countDF, targets, Fold, FDR, cmpset, cmp, plot = T) {
-  edgeDF <- run_edgeR(countDF = countDF, targets = targets, cmp = cmp[[cmpset]], independent = FALSE, 
+  edgeDF <- systemPipeR::run_edgeR(countDF = countDF, targets = targets, cmp = cmp[[cmpset]], independent = FALSE, 
                       mdsplot = "")
-  DEG_list <- filterDEGs(degDF = edgeDF, filter = c(Fold = Fold, FDR = FDR), plot = F)
+  DEG_list <-  systemPipeR::filterDEGs(degDF = edgeDF, filter = c(Fold = Fold, FDR = FDR), plot = F)
   if (plot == T) {
     df <- DEG_list$Summary
     filter <- c(Fold = Fold, FDR = FDR)

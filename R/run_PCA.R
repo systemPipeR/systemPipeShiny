@@ -12,6 +12,10 @@ run_PCA <- function(countDF, targets, colData, method) {
     normdata <- rlog(dds, blind=TRUE)
   } else if (method == "vst") {
     normdata <- varianceStabilizingTransformation(dds, blind = T)   
+  } else if (method == "raw") {
+    dds <- estimateSizeFactors(dds)
+  se <-  SummarizedExperiment(dds, colData = colData(dds))
+  normdata <- DESeqTransform(se)
   }
   pcaData <- plotPCA(normdata, intgroup="condition", returnData=TRUE)
   percentVar <- round(100 * attr(pcaData, "percentVar"))

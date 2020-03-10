@@ -1,19 +1,14 @@
-# library(DESeq2, quietly = TRUE)
 
-deg_venn <- function(count_table, targets_file, Fold, FDR) {
-  
-  targetspath <- targets_file
-  targets <- read.delim(targetspath, comment = "#")
-  cmp <- readComp(file = targetspath, format = "matrix", delim = "-")
-  countDFeBygpath <- count_table
-  countDFeByg <- read.delim(countDFeBygpath, row.names = 1)
-  degseqDF <- run_DESeq2(countDF = countDFeByg, targets = targets, cmp = cmp[[1]], 
-                         independent = FALSE)
-  DEG_list <- filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10), plot = F)
-
-vennsetup <- overLapper(DEG_list$Up[6:9], type = "vennsets")
-vennsetdown <- overLapper(DEG_list$Down[6:9], type = "vennsets")
-vennPlot(list(vennsetup, vennsetdown), mymain = "", mysub = "", 
+deg_venn <- function(DF, FDR, Fold, cmp_list) {
+DEG_list <- systemPipeR::filterDEGs(degDF = DF, filter = c(Fold = Fold, FDR = FDR), plot = F)
+up <- DEG_list$Up
+down <- DEG_list$Down
+index.up <- which(names(DEG_list$Up) %in% cmp_list)
+index.down <- which(names(DEG_list$Down) %in% cmp_list)
+listup <- DEG_list$Up[index.up]
+listdown <- DEG_list$Down[index.down]
+vennsetup <- systemPipeR::overLapper(listup, type = "vennsets")
+vennsetdown <- systemPipeR::overLapper(listdown, type = "vennsets")
+systemPipeR::vennPlot(list(vennsetup, vennsetdown), mymain = "", mysub = "", 
          colmode = 2, ccol = c("blue", "red"))
-## vconfusing plot results
 }
