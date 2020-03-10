@@ -1,0 +1,43 @@
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#searchinput').keyup(function() {
+        $('#searchclear').toggle(Boolean($(this).val()));
+      });
+      $('#searchclear').toggle(Boolean($("#searchinput").val()));
+      $('#searchclear').click(function() {
+        $('#searchinput').val('').focus();
+        $(this).hide();
+      });
+    });
+  </script>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
+  
+  <style>
+    #searchinput {
+      width: 200px;
+    }
+
+    #searchclear {
+      position: absolute;
+      right: 5px;
+      top: 0;
+      bottom: 0;
+      height: 14px;
+      margin: auto;
+      font-size: 14px;
+      cursor: pointer;
+      color: #ccc;
+    }
+  </style>
+
+  <div class="btn-group">
+    <input id="searchinput" type="search"
+           class="form-control"
+           placeholder="Type something..."
+           value="">
+    <span id="searchclear" class="glyphicon glyphicon-remove-circle"></span>
+  </div>
+
+
