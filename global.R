@@ -1,4 +1,5 @@
 # shiny and shiny visual
+
 library(shiny)
 library(shinydashboard)
 library(shinydashboardPlus)
@@ -33,8 +34,8 @@ library(rsvg)
 library(glue)
 library(dplyr)
 
-
-({ 
+# options(shiny.autoload.r = FALSE)
+({
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
 }) %>% invisible()
 

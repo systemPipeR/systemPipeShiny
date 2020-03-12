@@ -76,6 +76,8 @@ ace_target_header_init <-
 # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
 # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
 # <CMP> CMPset2: ALL"
+df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
+
 ## server
 targetServer <- function(input, output, session, shared){
     callModule(targetMod, "upload", shared = shared)
@@ -87,14 +89,14 @@ targetMod <- function(input, output, session, shared){
     selected_old <- reactiveVal("upload")
     selected_flag <- reactiveVal(TRUE)
     targets_p_old <- reactiveVal("")
-    t.df <- reactiveVal(data.frame(matrix("", 8,8), stringsAsFactors = FALSE))
+    t.df <- reactiveVal(df_init)
     # update table
     output$targets_df <- renderRHandsontable({
         rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
             hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
     })
 
-    observeEvent({input$target_source; input$target_upload$datapath}, ignoreInit = TRUE, {# only c work here, dont know why
+    observeEvent(c(input$target_source, input$target_upload$datapath), ignoreInit = TRUE, {# only c work here, dont know why
         if (selected_flag() == TRUE) {
             confirmSweetAlert(
                 session,inputId = "sweet_changetarget_confirm", 
@@ -113,7 +115,8 @@ targetMod <- function(input, output, session, shared){
                            targets_p = input$target_upload$datapath, 
                            targets_p_old = targets_p_old(),
                            choice = input$target_source,
-                           choice_old = selected_old())
+                           choice_old = selected_old(),
+                           df_init = df_init)
             )
             # header
             header_lines <- ""
@@ -125,8 +128,6 @@ targetMod <- function(input, output, session, shared){
             if (input$target_source != "upload") header_lines <- ace_target_header_init
             updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
             # other server end updates
-            shared$targets$df <- t.df()
-
             toastr_info(paste0("Changed target source to ", input$target_source, ". Target reset"),
                         closeButton = TRUE, position = "bottom-right", timeOut = 2000)
             shared$wf_flags$targets_ready = FALSE
@@ -144,7 +145,6 @@ targetMod <- function(input, output, session, shared){
     observeEvent({input$targets_df; input$column_check}, {
         if (!is.null(input$targets_df)) {
             t.df(hot_to_r(input$targets_df))
-            shared$targets$df <- t.df()
             }
         output$targets_df <- renderRHandsontable({
             rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
@@ -186,7 +186,7 @@ targetMod <- function(input, output, session, shared){
         shared$targets$file <- tempfile(pattern = "target", fileext = ".txt")
         # check col_names, header lines
         header_lines <- isolate(input$ace_target_header)
-        check_results <- check_target(col_names = shared$targets$df[1, ], headerlines = header_lines)
+        check_results <- check_target(col_names = t.df()[1, ], headerlines = header_lines)
         if (all(check_results)) {
             sendSweetAlert(
                 session = session, 
@@ -194,6 +194,7 @@ targetMod <- function(input, output, session, shared){
                 text = "All target check passed, target added to task\n You can see workflow status by clicking top right",
                 type = "success"
             )
+            shared$targets$df <- t.df()
             writeLines(c(header_lines, apply(shared$targets$df, 1, paste, collapse = "\t")), shared$targets$file)
             shared$wf_flags$targets_ready = TRUE
         } else {
@@ -209,16 +210,15 @@ targetMod <- function(input, output, session, shared){
             )
         }
     })
-
 }
 # load target file
-hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, choice_old){
+hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, choice_old, df_init){
     targets_p <- switch(choice,
                         "upload" = targets_p,
                         "pe" = "inst/extdata/targetsPE.txt",
                         "se" = "inst/extdata/targets.txt"
                         )
-    if (is.null(targets_p)) return(data.frame(matrix("", 8,8), stringsAsFactors = FALSE))
+    if (is.null(targets_p)) return(df_init)
     if ((choice != choice_old) | (targets_p != targets_p_old)) {
         df.t <- read.csv(targets_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)
     } 

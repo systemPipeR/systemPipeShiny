@@ -4,6 +4,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+This tool is under devleopment...
+
 An online demo of [SystempipeShiny](https://lezhang.shinyapps.io/systemPipeS/). This application is hosted by a small server. Please do not use it for production activities. Heavy taks will crash it and disconnect you from it. 
 
 ## Installation
@@ -21,7 +23,7 @@ BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, depend
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(systemPipeS)
+library(systemPipeShiny)
 ## basic example code
 ## To be added...
 ```
