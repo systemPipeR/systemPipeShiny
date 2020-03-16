@@ -13,6 +13,8 @@ run_HEAT <- function(countDF, targets, colData, method) {
     normdata <- rlog(dds, blind=TRUE)
   } else if (method == "vst") {
     normdata <- varianceStabilizingTransformation(dds, blind = T)   
+  } else if (method == "raw") {
+    normdata <- DESeqTransform(dds)
   }
   d <- cor(assay(normdata), method = "spearman")
   plot_ly(x = colnames(d), y = rownames(d), z = d, color="Greys", type = "heatmap")
