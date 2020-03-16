@@ -4,15 +4,14 @@ edaUI <- function(id) {
   tagList(
     h2("Exploratory Data Analysis"),
     fluidRow(
-      boxPlus(title = "Specifications", closable = FALSE,
-              radioButtons(ns("norm"), "Normalization method", choices = c( "rlog", "vst"))),
+      tabBox(title = tagList(shiny::icon("database"), "Specifications"), id = "Tab1",width = 12,
+             tabPanel("Normalization",
+                      radioButtons(ns("norm"), "Normalization methods", choices = c("raw","rlog", "vst"))
+                      )                   
+            ),
       boxPlus(title = "Plot Types",closable = F,
-              checkboxInput(ns("PCA"), "PCA"),
-              checkboxInput(ns("GLM"), "GLM-PCA"),
-              checkboxInput(ns("TSNE"), "t-SNE"),
-              checkboxInput(ns("MDS"), "MDS"),
-              checkboxInput(ns("HCLUST"), "Hierarchical Clustering"),
-              checkboxInput(ns("HEAT"), "Heat Map of Hierarchical Clustering"))
+              uiOutput(ns("plot_types"))
+              ),
     ),
     fluidRow(title = "Plot Output",
              uiOutput(ns("PCA")),
@@ -29,6 +28,35 @@ edaUI <- function(id) {
 
 edaServer <- function(input, output, session, shared){
   ns <- session$ns
+  observe({
+  output$plot_types <- renderUI({
+    if (input$norm == "raw") {
+      fluidRow(
+      checkboxInput(ns("GLM"), "GLM-PCA"),
+      checkboxInput(ns("TSNE"), "t-SNE"),
+      checkboxInput(ns("PCA"), "PCA"),
+      checkboxInput(ns("MDS"), "MDS"),
+      checkboxInput(ns("HCLUST"), "Hierarchical Clustering"),
+      checkboxInput(ns("HEAT"), "Heat Map of Hierarchical Clustering")
+      )
+    } else if (input$norm == "rlog") {
+      fluidRow(
+      checkboxInput(ns("PCA"), "PCA"),
+      checkboxInput(ns("MDS"), "MDS"),
+      checkboxInput(ns("HCLUST"), "Hierarchical Clustering"),
+      checkboxInput(ns("HEAT"), "Heat Map of Hierarchical Clustering")
+      )
+    } else if (input$norm == "vst") {
+      fluidRow(
+      checkboxInput(ns("PCA"), "PCA"),
+      checkboxInput(ns("MDS"), "MDS"),
+      checkboxInput(ns("HCLUST"), "Hierarchical Clustering"),
+      checkboxInput(ns("HEAT"), "Heat Map of Hierarchical Clustering")
+      )
+    } 
+  })  
+  })
+  
   observe({
     
     if (!is.null(shared$count_list)){ 

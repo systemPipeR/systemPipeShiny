@@ -13,9 +13,7 @@ run_PCA <- function(countDF, targets, colData, method) {
   } else if (method == "vst") {
     normdata <- varianceStabilizingTransformation(dds, blind = T)   
   } else if (method == "raw") {
-    dds <- estimateSizeFactors(dds)
-  se <-  SummarizedExperiment(dds, colData = colData(dds))
-  normdata <- DESeqTransform(se)
+  normdata <- DESeqTransform(dds)
   }
   pcaData <- plotPCA(normdata, intgroup="condition", returnData=TRUE)
   percentVar <- round(100 * attr(pcaData, "percentVar"))
@@ -25,6 +23,5 @@ run_PCA <- function(countDF, targets, colData, method) {
     xlab(paste0("PC1: ",percentVar[1],"% variance")) +
     ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
     coord_fixed() + ggtitle("Principal Component Analysis (PCA)")
-  ggplotly(g)  
-  
+  ggplotly(g)
 }
