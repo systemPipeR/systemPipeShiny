@@ -5,6 +5,14 @@ wfUI <- function(id){
         h2("Workflow"),
         fluidRow(
             boxPlus(title = "Display Rmd", width = 12, closable = FALSE,
+                    radioGroupButtons(
+                        inputId = ns("wf_source"), label = "Choose Workflow source:", 
+                        selected = "upload",
+                        choiceNames = c("Upload", "Example Rmd"), 
+                        choiceValues = c("upload", "eg"),
+                        justified = TRUE, status = "primary",
+                        checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
+                    ),
                     fileInput(ns("rmd_file"), "Choose R markdown File",
                               multiple = FALSE,
                               accept = c(".Rmd")),
@@ -26,13 +34,18 @@ wfUI <- function(id){
 wfServer <- function(input, output, session){
     ns <- session$ns
     rmd <- reactive({ capture.output(df <- subsetRmd(p = input$rmd_file$datapath)) %>% invisible(); df })
-    # top display
-    observe({
+    output$wf_D3 <- renderDiagonalNetwork({
         if (!is.null(input$rmd_file)){
             rmd_steps <- rmd()
-            output$wf_D3 <- renderDiagonalNetwork({
-                diagonalNetwork(step2listD3(rmd_steps$t_lvl, paste(rmd_steps$t_number, rmd_steps$t_text)), fontSize = 15)
-            })
+            diagonalNetwork(step2listD3(rmd_steps$t_lvl, paste(rmd_steps$t_number, rmd_steps$t_text)), fontSize = 15)
+        }
+    })
+    # top display
+    observeEvent(input$wf_source, {
+        if (input$wf_source == "eg") {
+            
+            session$sendInputMessage("rmd_file", list(datapath = "inst/extdata/systemPipeRNAseq.Rmd"))
+            print(class(input$rmd_file))
         }
     })
     # bottom left display
