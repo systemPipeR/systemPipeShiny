@@ -20,8 +20,7 @@ topUI <- function(id){
                     ),
                 fluidRow(
                     boxPlus(title = "Targets", width = 12, closable = FALSE,
-                            p("You need to load your targets first at the 'Targets' tab, otherwise nothing will show up here."),
-                            rHandsontableOutput(ns("targets_df"))
+                            uiOutput(ns("top_target_table"))
                             )
                 )
             )
@@ -81,11 +80,16 @@ topServer <- function(input, output, session, shared){
     ns <- session$ns
     observeEvent(input$top_target_btn, {
         pushbar_open(id = ns("top_target_push"))
-        if (!is.null(shared$targets$df)){
+        if (shared$wf_flags$targets_ready) {
+            output$top_target_table <- renderUI({
+                rHandsontableOutput(ns("targets_df"))
+            })
             output$targets_df <- renderRHandsontable({
-                rhandsontable(shared$targets$df, readOnly = TRUE) %>%
+                rhandsontable(head(shared$targets$df, 100), readOnly = TRUE, height = 500, width = 1000) %>%
                 hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE)
             })
+        } else {
+            output$top_target_table <- renderUI({p("You need to add your targets to task in the 'Files' tab, otherwise nothing will show up here.")})
         }
     })
     observeEvent(input$top_ct_btn, {
