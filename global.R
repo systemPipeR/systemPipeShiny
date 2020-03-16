@@ -13,8 +13,6 @@ library(shinyTree)
 library(networkD3)
 library(plotly)
 library(shinyAce)
-# BiocManager::install("timelyportfolio/sweetalertR")
-# library(sweetalertR) # use alert from shinyWeidgets for now, if no more advanced function required
 # source("https://install-github.me/mangothecat/shinytoastr")
 library(shinytoastr) # need to install use the script above
 ## for functions 
@@ -34,13 +32,14 @@ library(rsvg)
 library(glue)
 library(dplyr)
 
+# for debugging
+# options(shiny.reactlog = TRUE) 
 # options(shiny.autoload.r = FALSE)
+
+# source all functions
 ({
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
 }) %>% invisible()
-
-# css of buttons, default is too ugly, see UI.R
-btn_style <- "color: #fff; background-color: #337ab7; border-color: #2e6da4"
 
 ################ test
 

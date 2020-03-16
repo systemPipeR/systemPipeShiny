@@ -2,6 +2,10 @@
 ## valid colors: 
 ## red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black
 
+# css
+btn_style <- "color: #fff; background-color: #337ab7; border-color: #2e6da4" # buttons, default is too ugly, see UI.R
+widget_user_style <- "overflow-y:auto"
+
 # header
 dashboardHeader <- dashboardHeaderPlus(
     title = "SystemPipeR",
@@ -33,6 +37,9 @@ dashboardBody <- dashboardBody(
         glue('
              .btn {
                @{btn_style}@;
+             }
+             .widget-user {
+               @{widget_user_style}@;
              }
              ', .open = "@{", .close = "}@")
     ),
