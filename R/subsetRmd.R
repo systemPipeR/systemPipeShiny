@@ -36,10 +36,21 @@ subsetRmd <- function(p, input_steps=NULL, exclude_steps=NULL, p_out=NULL, save_
             names(t_lvl)[step_main] <- names(step_main) <- seq_along(step_main)
             step_main <- append(step_main, 9999)
         }
-        step_sub <- which(t_lvl == lvl + 1)
-        for (i in seq_along(step_main[-1])){
+        sub_lvl <- lvl
+        while (sub_lvl <= max(t_lvl)) {
+            step_sub <- which(t_lvl == sub_lvl + 1)
+            if (length(step_sub) < 1) {
+                sub_lvl <- sub_lvl + 1
+            } else {
+                break()
+            }
+        }
+        jump_step_glue <- if (sub_lvl - lvl == 0) "." else rep(".1.", sub_lvl - lvl) %>%
+            paste0(collapse = "") %>%
+            str_replace_all("\\.\\.", "\\.")
+        for (i in seq_along(step_main[-1])) {
             subs <- step_sub[step_sub > step_main[i] & step_sub < step_main[i + 1]]
-            names(t_lvl)[subs] <- names(step_sub)[step_sub %in% subs] <- paste0(names(step_main[i]), ".", seq_along(subs))
+            names(t_lvl)[subs] <- names(step_sub)[step_sub %in% subs] <- paste0(names(step_main[i]), jump_step_glue, seq_along(subs))
         }
         step_main <- append(step_sub, 9999)
     }

@@ -69,7 +69,7 @@ library(dplyr)
 #     observeEvent(input$close, {
 #         pushbar_close()
 #     })  
-#     
+#       
 #     output$ev <- renderPrint({
 #         input$myPushbar_pushbar_opened
 #     })

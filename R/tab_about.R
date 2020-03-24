@@ -65,7 +65,7 @@ aboutUI <- function(id){
             )
         ),
         h3("About SystemPipeR"),
-        tags$iframe(src="http://girke.bioinformatics.ucr.edu/systemPipeR/mydoc_systemPipeR_2.html",
+        tags$iframe(src="https://girke.bioinformatics.ucr.edu/systemPipeR/mydoc_systemPipeR_2.html",
                     style="border: 1px solid #AAA; width: 100%; height: 700px"),
         br(),
         tags$a(href="https://bioconductor.org/packages/release/bioc/html/systemPipeR.html",

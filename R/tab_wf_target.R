@@ -1,17 +1,8 @@
-## UI
+
+## submodule target UI
 targetUI <- function(id){
     ns <- NS(id)
-    tagList(
-        tabBox(title = "TARGETS", id = ns("targets"),
-               width = 12,
-               target_tabUI(ns("upload"))
-        )
-    )
-}
-## submodule target UI
-target_tabUI <- function(id){
-    ns <- NS(id)
-    tabPanel(title = "Upload targets",
+    tabPanel(title = "Targets",
              h2("Targets"),
              fluidRow(
                column(3, 
@@ -47,7 +38,7 @@ target_tabUI <- function(id){
                           accept = c(".tsv", ".txt"),
                           placeholder = "Choose your target file path",
                       ),
-                      fluidRow(
+                      column(12, style = "padding: 0;",
                         downloadButton(ns("down_targets"), "Save"),
                         actionButton(ns("to_task_target"),
                                      label = "Add to task", 
@@ -78,10 +69,7 @@ ace_target_header_init <-
 # <CMP> CMPset2: ALL"
 df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
 
-## server
-targetServer <- function(input, output, session, shared){
-    callModule(targetMod, "upload", shared = shared)
-}
+
 ## submodule server
 targetMod <- function(input, output, session, shared){
     ns <- session$ns

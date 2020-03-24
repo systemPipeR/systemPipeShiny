@@ -34,7 +34,7 @@ rightServer <- function(input, output, session, shared){
                                        border = FALSE
                                    ),
                                    timelineLabel("Ready to run", color = if (shared$wf_flags %>% as.logical() %>% all()) "olive" else "orange"),
-                                   timelineStart(color = "gray", icon = "check")
+                                   timelineStart(icon = "check", color = if (shared$wf_flags %>% as.logical() %>% all()) "olive" else "gray")
                     )
             )
         })
