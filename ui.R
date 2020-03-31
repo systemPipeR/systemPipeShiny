@@ -24,9 +24,8 @@ dashboardSidebar <-  dashboardSidebar(
         menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap"),
                  badgeLabel = "Main", badgeColor = "red"),
         menuItem("Workflow Mangement", icon = icon("tasks"), tabName = "Workflow"),
-        menuItem("Upload", icon = icon("tasks"), tabName = "Upload"),
-        menuItem("Exploratory Data Analysis", icon = icon("tasks"), tabName = "EDA"),
-        menuItem("DEG Analysis", icon = icon("tasks"), tabName = "DEG"),
+        menuItem("Visualization", icon = icon("tasks"), tabName = "vs"),
+        menuItem("Collection of plots", icon = icon("tasks"), tabName = "vs_main"),
         menuItem("About", icon = icon("info"), tabName = "about")
     )
 )
@@ -54,7 +53,9 @@ dashboardBody <- dashboardBody(
         tabItem(tabName = "Upload", uploadUI("upload")),
         tabItem(tabName = "EDA", edaUI("eda")),
         tabItem(tabName = "DEG", degUI("deg")),
-        tabItem(tabName = "about", aboutUI("about"))
+        tabItem(tabName = "about", aboutUI("about")),
+        tabItem(tabName = "vs", vs_listUI("vs_list")),
+        tabItem(tabName = "vs_main", vs_mainUI("vs_main"))
     )
 )
 # right side bar
