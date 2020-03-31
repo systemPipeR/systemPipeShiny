@@ -24,3 +24,14 @@
     - in each *tab* file, there should be one `UI` function and one `server` function and give both functions and name space the same ID as the file name: 
     e.g. a file named `tab_sub1.R`, UI function will be `sub1UI`, server will be `sub1Server` and in top level UI and server call them `sub1UI("sub1", ...)`, `callModule(tab1Server, "tab1", ...)`.
 
+## 4. Standard for visualization
+1. file uploading:
+    - Default uploading size is 5MB. Meanwhile, some files, like count table are larger than 5, in this case, need to use `Textinput` bar to specify a path or customize a function using `file.choose()`. (We can only choose one, need to be discussed)
+    
+2. Workflows
+    - Workflows only work like dictionaries to direct users to different. 
+    
+3. Plots
+    - In princple, datasets should be plotting ready (no need to preprocess data). 
+    - For some plots that are very specific to some workflows, simple preprocess is okay.
+    - Always use a button to update (re-plot) the graph, realtime rendering can be expensive. 
