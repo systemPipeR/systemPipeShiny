@@ -1,7 +1,7 @@
 ## UI 
 plot1UI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "Plot 1",
+    tabPanel(title = "Plot 1", 
              h2("Make a xx plot"),
              fluidRow(
                  radioGroupButtons(

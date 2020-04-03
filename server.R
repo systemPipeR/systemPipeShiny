@@ -14,7 +14,7 @@ server <- function(input, output, session) {
     callModule(vs_mainServer, "vs_main", shared = shared)
     # main server logic
     onclick("sidebarItemExpanded", {
-        if (input$left_sidebar == "Workflow") addClass(selector = "body", class = "sidebar-collapse")
+        # if (input$left_sidebar == "Workflow") addClass(selector = "body", class = "sidebar-collapse")
     })
 
 }

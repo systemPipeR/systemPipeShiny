@@ -1,5 +1,11 @@
-#library(shiny)
+################## A Collections of HTML components#############################
 
+## use on top of shiny
+
+
+
+# input with a "X" button in the end to clear the entire typed text
+# work the same as Textinput
 clearableTextInput <- function(inputId, label, value = "", placeholder = "input text"){
     tagList(tags$div(
         tags$label(label, `for` = inputId),

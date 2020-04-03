@@ -5,7 +5,7 @@ vs_mainUI <- function(id){
         tabBox(title = toupper("Collection of plots"), id = ns("targets"),
                width = 12,
                plot1UI(ns("plot_1")),
-               tabPanel(title = "Plot 1"),
+               tabPanel(title = "Plot 1", value = "hahaha"),
                tabPanel(title = "Plot 2"),
                tabPanel(title = "Plot 3"),
                tabPanel(title = "Plot 4"),

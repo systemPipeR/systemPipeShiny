@@ -21,9 +21,13 @@ dashboardSidebar <-  dashboardSidebar(
     sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
                       label = "Search..."),
     sidebarMenu(id = "left_sidebar",
-        menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap"),
-                 badgeLabel = "Main", badgeColor = "red"),
-        menuItem("Workflow Mangement", icon = icon("tasks"), tabName = "Workflow"),
+        menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap")),
+                # badgeLabel = "Main", badgeColor = "red",
+                 # menuSubItem(text = "Targets", href = "#shiny-tab-vs_main")),
+        menuItem(
+            "Workflow Mangement", icon = icon("tasks"), tabName = "Workflow"
+           
+                 ),
         menuItem("Visualization", icon = icon("tasks"), tabName = "vs"),
         menuItem("Collection of plots", icon = icon("tasks"), tabName = "vs_main"),
         menuItem("About", icon = icon("info"), tabName = "about")
@@ -47,6 +51,7 @@ dashboardBody <- dashboardBody(
              }
              ', .open = "@{", .close = "}@")
     ),
+    includeScript("www/sps.js"),
     tabItems(
         tabItem(tabName = "dashboard", dashboardUI("dashboard")),
         tabItem(tabName = "Workflow", wf_mainUI("wf_main")),
