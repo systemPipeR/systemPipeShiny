@@ -43,6 +43,7 @@ suppressPackageStartupMessages({
 # Introduction
 
 Describe the package
+Motivation 
 
 ```{r, eval=FALSE}
 library(systemPipeShiny)
