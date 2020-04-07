@@ -2,23 +2,22 @@
 vs_mainUI <- function(id){
     ns <- NS(id)
     tagList(
-        tabBox(title = toupper("Collection of plots"), id = ns("targets"),
-               width = 12,
-               plot1UI(ns("plot_1")),
-               tabPanel(title = "Plot 1"),
-               tabPanel(title = "Plot 2"),
-               tabPanel(title = "Plot 3"),
-               tabPanel(title = "Plot 4"),
-               tabPanel(title = "Plot 5"),
-               tabPanel(title = "Plot 6"),
-               tabPanel(title = "Plot 7"),
-               tabPanel(title = "Plot 8")
-        )
+        h2("VS main"),
+        p("Instructions on how to use the vs utilities."),
+        h4("For different workflows, you can choose data types to work with plotting"),
+        p("RNAseq: "),
+        a(href = "#shiny-tab-df_raw",  "Raw Count"),
+        a(href = "",  "df2"),
+        a(href = "",  "df3"),
+        br(),
+        p("DNAAseq: "),
+        a(href = "#shiny-tab-df_raw",  "Raw Variant"),
+        a(href = "",  "df2"),
+        a(href = "",  "df3"),
     )
 }
 
 ## server
 vs_mainServer <- function(input, output, session, shared){
-    callModule(plot1Server, "plot_1", shared = shared)
 
 }
