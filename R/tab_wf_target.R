@@ -71,7 +71,7 @@ df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
 
 
 ## submodule server
-targetMod <- function(input, output, session, shared){
+targetServer <- function(input, output, session, shared){
     ns <- session$ns
     # some reactive values to pass around observe
     selected_old <- reactiveVal("upload")
