@@ -34,3 +34,25 @@ $(document).ready(function() {
 $(document).ready(function() {
   $(".treeview-menu").css("display", "block");
 });
+
+
+// js for clearableTextInput                
+function clearText(clear_input_id) {
+  var textInput = document.getElementById(clear_input_id);
+  var clearBtn = textInput.nextElementSibling;
+  var textInputBox = textInput.parentElement;
+  textInput.onkeyup = function() {
+    clearBtn.style.visibility = (this.value.length) ? "visible" : "hidden";
+  };
+  clearBtn.onclick = function() {
+    this.style.visibility = "hidden";
+    textInput.value = "";
+    Shiny.setInputValue(clear_input_id, "");
+  };
+  textInput.addEventListener("focus", function() {
+    textInputBox.classList.add("text-input-focused");
+  }, false);
+  textInput.addEventListener("blur", function() {
+    textInputBox.classList.remove("text-input-focused");
+  }, false);
+}

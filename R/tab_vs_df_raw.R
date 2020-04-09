@@ -11,12 +11,7 @@ df_rawUI <- function(id){
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
         ),
-        fileInput(
-            ns("df_upload"), "If upload, choose your df file here:",
-            multiple = FALSE,
-            accept = c("txt", "csv", "tsv"),
-            placeholder = "Choose your df file path",
-        ),
+        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title="Specify your data path", label="Upload"),
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
@@ -24,7 +19,7 @@ df_rawUI <- function(id){
                             icon("paper-plane"))
         ),
         rHandsontableOutput(ns("df")),
-        fluidRow(id = "plot_options",
+        fluidRow(id = ns("plot_options"),
                  a("Scatter Plot", href = "#shiny-tab-plot_point"),
                  a("plot2"),
                  a("plot3"),
@@ -45,6 +40,7 @@ df_rawServer <- function(input, output, session, shared){
     })
     onclick("to_task", shinyjs::show(id = "plot_options")) 
     observeEvent(input$to_task, {
+        shinyjs::show("plot_options")
         sendSweetAlert(
             session = session, type = "success", 
             title = "Data added", text = "Choose a plot type"

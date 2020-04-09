@@ -21,6 +21,14 @@ targetUI <- function(id){
                               selectInput(ns("column_check"), "Choose a column to check files:",
                                           choices = "Disabled before uploading targets"),
                               verbatimTextOutput(ns("missing_files"))
+                      ),
+                      tags$style(
+                          glue(
+                          '#@{ns("missing_files")}@{
+                            height: 800px;
+                          }',
+                          .open = "@{", .close = "}@"
+                          )
                       )
                ), 
                column(9,
@@ -55,7 +63,7 @@ targetUI <- function(id){
                       p("You can edit your targets (metadata) below."),
                       p("Columns of 'FileName1', 'FileName2' are required for pair-end or 'FileName' for single-end. 'SampleName', 'Factor' are required for both."),
                       p("Columns names should be on the first row."),
-                      rHandsontableOutput(ns("targets_df"))
+                      rHandsontableOutput(ns("targets_df"), height = "800px")
                )
                
              )
@@ -63,10 +71,10 @@ targetUI <- function(id){
 }
 
 ace_target_header_init <- 
-"# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
-# The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
-# <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
-# <CMP> CMPset2: ALL"
+    "# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
+    # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
+    # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
+    # <CMP> CMPset2: ALL"
 df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
 
 
