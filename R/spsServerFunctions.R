@@ -4,6 +4,8 @@
 
 # library(shiny)
 # library(toastr)
+# library(stringr)
+# library(magrittr)
 
 # display the error, warning, message text by a toastr bar on the app
 # position = c("top-right", "top-center", "top-left",
@@ -25,25 +27,87 @@ shinyCatch <- function(expr, position = "bottom-right") {
             toastr_info(message = m$message, position = position, closeButton = TRUE, timeOut = 3000)
         })
 }
-# @example
-# ui <- fluidPage(
-#     useToastr(),
-#     actionButton("btn1","Click me1"),
-#     actionButton("btn2","Click me2"),
-#     actionButton("btn3","Click me3"),
-#     
-#     textOutput("text")
-# )
-# server <- function(input, output, session) {
-#     observeEvent(input$btn1, {
-#         shinyCatch(stop("stop"))
-#     })
-#     observeEvent(input$btn2, {
-#         shinyCatch(warning("warning"))
-#     })
-#     observeEvent(input$btn3, {
-#         shinyCatch(message("message"))
-#     })
-# }
-# shinyApp(ui, server)
+#' @ example
+#' ui <- fluidPage(
+#'     useToastr(),
+#'     actionButton("btn1","Click me1"),
+#'     actionButton("btn2","Click me2"),
+#'     actionButton("btn3","Click me3"),
+#' 
+#'     textOutput("text")
+#' )
+#' server <- function(input, output, session) {
+#'     observeEvent(input$btn1, {
+#'         shinyCatch(stop("stop"))
+#'     })
+#'     observeEvent(input$btn2, {
+#'         shinyCatch(warning("warning"))
+#'     })
+#'     observeEvent(input$btn3, {
+#'         shinyCatch(message("message"))
+#'     })
+#' }
+#' shinyApp(ui, server)
+
+
+# check name space and pop up warnings in shiny if package is missing
+## github package must specify user name, c("user1/pkg1", "user2/pkg2")
+shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NULL, quietly = FALSE) {
+    missing_cran <- checkNameSpace(cran_pkg, quietly, from = "CRAN")
+    missing_bioc <- checkNameSpace(bioc_pkg, quietly, from = "BioC")
+    github_pkg <- github %>% str_remove("^.*/")
+    missing_github_pkg <- checkNameSpace(github_pkg, quietly, from = "GitHub")
+    missing_github <- github[github_pkg %in% missing_github_pkg]
+    cran_cmd <- if (length(missing_cran) < 1) "" else 
+        paste0("install.packages(c('", paste0(missing_cran, collapse = "', '"), "'))")
+    bioc_cmd <- if (length(missing_bioc) < 1) "" else 
+        paste0(
+        'if (!requireNamespace("BiocManager", quietly=TRUE))
+        install.packages("BiocManager")\n',
+        "BiocManager::install(c('", paste0(missing_bioc, collapse = "', '"), "'))"
+        )
+    github_cmd <- if (length(missing_github) < 1) "" else 
+        paste0(
+            'if (!requireNamespace("BiocManager", quietly=TRUE))
+                install.packages("BiocManager")\n',
+            "BiocManager::install(c('", paste0(missing_github, collapse = "', '"), "'))"
+        )
+
+    if (length(missing_cran) + length(missing_bioc) + length(missing_github) > 0) {
+        shinyWidgets::sendSweetAlert(
+            session = session, 
+            title = "Please install required packages manually",
+            text = tags$div(style = "
+                        background-color: #FA5858;
+                        text-align: left;
+                        overflow: auto;
+                        white-space: pre;
+                        color: black;
+                        
+                        ",
+                    p(cran_cmd),
+                    p(bioc_cmd),
+                    p(github_cmd)
+                    ),
+            html = TRUE,
+            type = "error"
+        )
+        return(FALSE)
+    } else {
+        shinyWidgets::sendSweetAlert(
+            session = session, 
+            title = "No package missing",
+            text = "You have all required package(s).",
+            type = "success"
+        )
+        return(TRUE)
+    }
+}
+#' @ example
+#' shinyApp(ui = shinyUI(
+#'     fluidPage(actionButton("haha", "haha"))
+#' ), server = function(input, output, session) {
+#'     observeEvent(input$haha, shinyCheckSpace(session, cran_pkg = "1", bioc_pkg = "haha", github = "sdasdd/asdsad"))
+#' })
+
 

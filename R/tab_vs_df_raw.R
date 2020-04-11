@@ -1,8 +1,26 @@
+# Description of this tab in markdown format
+## xx_desc is loading to global env, please make sure it is unique
+xx_desc <- 
+"
+#### Some Description of this data
+- you should ...
+    1. eg 1.
+    2. eg 2.
+- **Notice**: ...`this` ...
+
+
+```
+some code
+```
+"
+
 ## UI
-df_rawUI <- function(id){
+df_rawUI <- function(id, description = xx_desc){
     ns <- NS(id)
     tagList(
-        h4("From this dataframe, you can plot:"),
+        h2("Title for this kind of dataframe"),
+        HTML(markdown::renderMarkdown(text = glue(description))),
+        
         radioGroupButtons(
             inputId = ns("plot_source"), label = "Choose your plot file source:", 
             selected = "upload",
@@ -11,7 +29,7 @@ df_rawUI <- function(id){
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
         ),
-        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title="Specify your data path", label="Upload"),
+        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
