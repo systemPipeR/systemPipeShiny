@@ -1,4 +1,5 @@
-
+# library(stringr)
+# library(magrittr)
 
 # Take steps output from subsetRmd and change to a nested list structure
 # t_lvl: positive integers, vector, levels of all title levels in Rmd
@@ -117,4 +118,13 @@ quiet <- function(x) {
     invisible(force(x)) 
 } 
 
+
+# check namespace 
+checkNameSpace <- function(packages, quietly = FALSE, from = "") {
+    missing_pkgs <- lapply(packages, function(pkg) {
+        if (!requireNamespace(pkg, quietly = TRUE)) pkg
+    }) %>% unlist()
+    if (!quietly) message(glue::glue("These packages are missing from {from}: {glue::glue_collapse(missing_pkgs, sep = ',')}"))
+    return(missing_pkgs)
+}
 

@@ -46,7 +46,7 @@ configServer <- function(input, output, session, shared){
     })
     observeEvent(rmd_file_path(), {
         updateAceEditor(session, editorId = "ace_config", value = {
-            readLines(rmd_file_path(), warn = FALSE) %>% paste(collapse = "\n")
+            shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"))
         })
     })
 
