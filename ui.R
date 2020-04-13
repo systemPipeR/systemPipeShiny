@@ -51,7 +51,7 @@ dashboardSidebar <-  dashboardSidebar(
                 text = "Collection of plots",
                 ## vs plot add to sidebar
                 menuSubItem(text = "Scatter Plot", tabName = "plot_point"),
-                menuSubItem(text = "xx1 Plot", tabName = "plot_xx1"),
+                menuSubItem(text = "PCA Plot", tabName = "plot_pca"),
                 menuSubItem(text = "xx2 Plot", tabName = "plot_xx1"),
                 menuSubItem(text = "xx3 Plot", tabName = "plot_xx1")
                 )
@@ -74,6 +74,7 @@ dashboardBody <- dashboardBody(
         tabItem(tabName = "df_raw", df_rawUI("df_raw")),
         ## vs plots
         tabItem(tabName = "plot_point", plot_pointUI("plot_point")),
+        tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),
         # other tabs
         tabItem(tabName = "about", aboutUI("about"))
     )

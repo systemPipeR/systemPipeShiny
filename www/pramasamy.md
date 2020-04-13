@@ -1,4 +1,4 @@
 ## About Me
 ***
-+ Undergraduate student with a major in xxx at University of California Riverside
-+ blabla
++ Fourth year Undergraduate student with a major in Bioengineering at University of California Riverside
+

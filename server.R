@@ -14,6 +14,7 @@ server <- function(input, output, session) {
     callModule(df_rawServer, "df_raw", shared = shared)
     ## plots 
     callModule(plot_pointServer, "plot_point", shared = shared)
+    callModule(plot_pcaServer, "plot_pca", shared = shared)
     # other tabs
     callModule(topServer, "top", shared = shared)
     callModule(rightServer, "right", shared = shared)
