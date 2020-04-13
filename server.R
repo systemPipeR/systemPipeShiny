@@ -1,4 +1,5 @@
 ####### Server 
+# please do not delete comments starting with '##' 
 server <- function(input, output, session) {
     shared <- reactiveValues() 
     callModule(dashboardServer, "dashboard")

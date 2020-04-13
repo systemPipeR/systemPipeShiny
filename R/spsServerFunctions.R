@@ -15,15 +15,18 @@ shinyCatch <- function(expr, position = "bottom-right") {
     tryCatch(
         {expr},
         error = function(e) {
+            print(glue("{Sys.time()} There is a(n) error:\n {e$message}"))
             toastr_error(
                 message = e$message, position = position, closeButton = TRUE, timeOut = 0, 
                 title = "There is an error", hideDuration = 300,
                     )
         },
         warning = function(w) {
+            print(glue("{Sys.time()} There is a(n) warning:\n {w$message}"))
             toastr_warning(message = w$message, position = position, closeButton = TRUE, timeOut = 5000)
         },
         message = function(m) {
+            print(glue("{Sys.time()} There is a(n) message:\n {m$message}"))
             toastr_info(message = m$message, position = position, closeButton = TRUE, timeOut = 3000)
         })
 }

@@ -1,6 +1,8 @@
 ####### UI 
-## valid colors: 
-## red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black
+# valid colors: 
+# red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black
+
+# please do not delete comments starting with '##' 
 
 # header
 dashboardHeader <- dashboardHeaderPlus(
@@ -40,12 +42,14 @@ dashboardSidebar <-  dashboardSidebar(
             tags$script("sidebarSpanJump('Visualization', 'vs_main');"),
             menuItem(
                 text = "Prepare dataset",
+                ## vs df add to sidebar
                 menuSubItem(text = "Raw data", tabName = "df_raw"),
                 menuSubItem(text = "xx1 data", tabName = "df_xx1"),
                 menuSubItem(text = "xx2 data", tabName = "df_xx2")
                 ),
             menuItem(
                 text = "Collection of plots",
+                ## vs plot add to sidebar
                 menuSubItem(text = "Scatter Plot", tabName = "plot_point"),
                 menuSubItem(text = "xx1 Plot", tabName = "plot_xx1"),
                 menuSubItem(text = "xx2 Plot", tabName = "plot_xx1"),
