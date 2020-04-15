@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-This tool is under devleopment...
+This tool is under devleopment, please do not install for now...
 
 An online demo of [SystempipeShiny](https://lezhang.shinyapps.io/systemPipeS/). This application is hosted by a small server. Please do not use it for production activities. Heavy taks will crash it and disconnect you from it. 
 

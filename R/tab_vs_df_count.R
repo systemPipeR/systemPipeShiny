@@ -1,5 +1,5 @@
 ## UI
-df_rawUI <- function(id){
+df_countUI <- function(id){
     ns <- NS(id)
     tagList(
         h4("From this dataframe, you can plot:"),
@@ -30,11 +30,11 @@ df_rawUI <- function(id){
                  a("plot3"),
                  p("...")
         )
-        )
+    )
 }
 
 ## server
-df_rawServer <- function(input, output, session, shared){
+df_countServer <- function(input, output, session, shared){
     df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
     ns <- session$ns
     shinyjs::hide(id = "plot_options")
@@ -53,60 +53,60 @@ df_rawServer <- function(input, output, session, shared){
     # })
     
     output$df <- renderRHandsontable({
-      rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
-        hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
+        rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+            hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
     })
     
     onclick("to_task", shinyjs::show(id = "plot_options")) 
     check_results <- T
     observeEvent(input$to_task, {
-      shared$count$file <- tempfile(pattern = "countDFeByg", fileext = ".xls")
-      if (all(check_results)) {  
-        sendSweetAlert(
-            session = session, type = "success", 
-            title = "Data added", text = "Choose a plot type"
+        shared$count$file <- tempfile(pattern = "countDFeByg", fileext = ".xls")
+        if (all(check_results)) {  
+            sendSweetAlert(
+                session = session, type = "success", 
+                title = "Data added", text = "Choose a plot type"
             )
-        shared$count$df <- t.df()
-        writeLines(apply(shared$count$df, 1, paste, collapse = "\t"), shared$count$file)
-      }
+            shared$count$df <- t.df()
+            writeLines(apply(shared$count$df, 1, paste, collapse = "\t"), shared$count$file)
+        }
     })
     observeEvent(c(input$plot_source, input$df_upload$datapath), ignoreInit = TRUE, {# only c work here, dont know why
-      if (selected_flag() == TRUE) { 
-        confirmSweetAlert(
-          session,inputId = "sweet_changecount_confirm", 
-          title = "Do you want to change data frame Source?", 
-          text = "If you change the data frame source or load a new file, Data frame data will be reset in this tab and 'Task' tab. You will LOSE unsaved data", type = "warning"
-        )
-      } else {
-        selected_flag(TRUE) 
-      }
+        if (selected_flag() == TRUE) { 
+            confirmSweetAlert(
+                session,inputId = "sweet_changecount_confirm", 
+                title = "Do you want to change data frame Source?", 
+                text = "If you change the data frame source or load a new file, Data frame data will be reset in this tab and 'Task' tab. You will LOSE unsaved data", type = "warning"
+            )
+        } else {
+            selected_flag(TRUE) 
+        }
     })
     # update df
     observeEvent(input$sweet_changecount_confirm, ignoreNULL = TRUE, {
-      if (isTRUE(input$sweet_changecount_confirm)) {
-        t.df(
-          hot_count(count_df = input$df,
-                count_p = input$df_upload$datapath, 
-                count_p_old = count_p_old(), 
-                choice = input$plot_source, 
-                choice_old = selected_old() 
-          )
-        )
-        print("test")
-      }
+        if (isTRUE(input$sweet_changecount_confirm)) {
+            t.df(
+                hot_count(count_df = input$df,
+                          count_p = input$df_upload$datapath, 
+                          count_p_old = count_p_old(), 
+                          choice = input$plot_source, 
+                          choice_old = selected_old() 
+                )
+            )
+            print("test")
+        }
     })
 }
 
 # load raw count file
 hot_count <- function(count_df, count_p=NULL, count_p_old=NULL, choice, choice_old){
-  count_p <- switch(choice,
-                    "upload" = count_p,
-                    "eg" = "inst/extdata/countDFeByg.xls"
-  )
-  if (is.null(count_p)) return("")
-  if ((choice != choice_old) | (count_p != count_p_old)) {
-    df.t <- as.matrix(read.table(count_p), stringsAsFactors = FALSE, header = FALSE)
+    count_p <- switch(choice,
+                      "upload" = count_p,
+                      "eg" = "inst/extdata/countDFeByg.xls"
+    )
+    if (is.null(count_p)) return("")
+    if ((choice != choice_old) | (count_p != count_p_old)) {
+        df.t <- as.matrix(read.table(count_p), stringsAsFactors = FALSE, header = FALSE)
     } 
-  #names(df.t) <- paste0("X", 1:ncol(df.t))
-  return(df.t)
+    #names(df.t) <- paste0("X", 1:ncol(df.t))
+    return(df.t)
 }

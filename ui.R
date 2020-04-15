@@ -44,7 +44,7 @@ dashboardSidebar <-  dashboardSidebar(
                 text = "Prepare dataset",
                 ## vs df add to sidebar
                 menuSubItem(text = "Raw data", tabName = "df_raw"),
-                menuSubItem(text = "xx1 data", tabName = "df_xx1"),
+                menuSubItem(text = "Count table", tabName = "df_count"),
                 menuSubItem(text = "xx2 data", tabName = "df_xx2")
                 ),
             menuItem(
@@ -72,6 +72,7 @@ dashboardBody <- dashboardBody(
         tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         ## vs df
         tabItem(tabName = "df_raw", df_rawUI("df_raw")),
+        tabItem(tabName = "df_count", df_countUI("df_count")),
         ## vs plots
         tabItem(tabName = "plot_point", plot_pointUI("plot_point")),
         tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),
