@@ -14,6 +14,7 @@ vs_mainUI <- function(id){
         a(href = "#shiny-tab-df_raw",  "Raw Variant"),
         a(href = "",  "df2"),
         a(href = "",  "df3"),
+        gallery(texts = texts, hrefs = hrefs, images = images, image_size = 3)
     )
 }
 
