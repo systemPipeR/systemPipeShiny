@@ -1,8 +1,13 @@
+count_desc <- 
+    "
+#### Here you can upload the raw count data frame
+"
 ## UI
-df_countUI <- function(id){
+df_countUI <- function(id, description = count_desc){
     ns <- NS(id)
     tagList(
-        h4("From this dataframe, you can plot:"),
+        h2("Raw Count Data Frame"),
+        HTML(markdown::renderMarkdown(text = glue(description))),
         radioGroupButtons(
             inputId = ns("plot_source"), label = "Choose your plot file source:", 
             selected = "upload",
@@ -11,25 +16,20 @@ df_countUI <- function(id){
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
         ),
-        fileInput(
-            ns("df_upload"), "If upload, choose your df file here:",
-            multiple = FALSE,
-            accept = c("txt", "csv", "tsv"),
-            placeholder = "Choose your df file path",
-        ),
+        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
                             label = "Add to task", 
                             icon("paper-plane"))
         ),
-        rHandsontableOutput(ns("df")),
         fluidRow(id = "plot_options",
                  a("Scatter Plot", href = "#shiny-tab-plot_point"),
                  a("plot2"),
                  a("plot3"),
                  p("...")
-        )
+        ),
+        rHandsontableOutput(ns("df"))
     )
 }
 
@@ -41,16 +41,23 @@ df_countServer <- function(input, output, session, shared){
     selected_old <- reactiveVal("upload")
     selected_flag <- reactiveVal(TRUE)
     count_p_old <- reactiveVal("")
-    t.df <- reactiveVal(df_init)
+    t.df <- reactiveVal(df_init)    
+    # start the tab
+    shinyjs::hide(id = "tab_main")
+    observeEvent(input$validate, {
+        if (shinyCheckSpace(
+            session = session#, 
+            # cran_pkg = "pkg-1",
+            # bioc_pkg = c("pkg-1", "pkg-2"), 
+            # github = "haha/pkg-3"
+        )) {
+            shinyjs::show(id = "tab_main")
+        }
+    })
     # update table
-    # output$df <- renderRHandsontable({
-    #     rhandsontable(
-    #         # data.frame(matrix("", 8,8), stringsAsFactors = FALSE), selectCallback = TRUE, useTypes = FALSE) %>%
-    #         #     hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
-    #         data.frame(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
-    #           hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
-    #     )
-    # })
+    observeEvent(c(input$plot_source, input$df_path) , {
+        if (input$plot_source == "upload" & input$df_path == "") shinyjs::hide("df") else shinyjs::show("df")
+    })
     
     output$df <- renderRHandsontable({
         rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
@@ -70,7 +77,7 @@ df_countServer <- function(input, output, session, shared){
             writeLines(apply(shared$count$df, 1, paste, collapse = "\t"), shared$count$file)
         }
     })
-    observeEvent(c(input$plot_source, input$df_upload$datapath), ignoreInit = TRUE, {# only c work here, dont know why
+    observeEvent(c(input$plot_source, input$upload), ignoreInit = TRUE, {# only c work here, dont know why
         if (selected_flag() == TRUE) { 
             confirmSweetAlert(
                 session,inputId = "sweet_changecount_confirm", 
@@ -86,13 +93,12 @@ df_countServer <- function(input, output, session, shared){
         if (isTRUE(input$sweet_changecount_confirm)) {
             t.df(
                 hot_count(count_df = input$df,
-                          count_p = input$df_upload$datapath, 
+                          count_p = input$df_path, 
                           count_p_old = count_p_old(), 
                           choice = input$plot_source, 
                           choice_old = selected_old() 
                 )
             )
-            print("test")
         }
     })
 }
@@ -105,8 +111,9 @@ hot_count <- function(count_df, count_p=NULL, count_p_old=NULL, choice, choice_o
     )
     if (is.null(count_p)) return("")
     if ((choice != choice_old) | (count_p != count_p_old)) {
-        df.t <- as.matrix(read.table(count_p), stringsAsFactors = FALSE, header = FALSE)
+        df.t <- read.csv(count_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)
+        #df.t <- read.delim(count_p, row.names = 2, col.names = 2)
     } 
-    #names(df.t) <- paste0("X", 1:ncol(df.t))
+    names(df.t) <- paste0("X", 1:ncol(df.t))
     return(df.t)
 }

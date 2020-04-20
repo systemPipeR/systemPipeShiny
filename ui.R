@@ -44,7 +44,7 @@ dashboardSidebar <-  dashboardSidebar(
                 text = "Prepare dataset",
                 ## vs df add to sidebar
                 menuSubItem(text = "Raw data", tabName = "df_raw"),
-                menuSubItem(text = "Count table", tabName = "df_count"),
+                menuSubItem(text = "Count data", tabName = "df_count"),
                 menuSubItem(text = "xx2 data", tabName = "df_xx2")
                 ),
             menuItem(

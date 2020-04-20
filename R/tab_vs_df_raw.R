@@ -72,7 +72,7 @@ df_rawServer <- function(input, output, session, shared){
     })
   
     output$df <- renderRHandsontable({
-      rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+      rhandsontable(df_init, selectCallback = TRUE, useTypes = FALSE) %>%
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
     })
     
@@ -85,7 +85,4 @@ df_rawServer <- function(input, output, session, shared){
             title = "Data added", text = "Choose a plot type"
             )
     })
-
-
 }
-
