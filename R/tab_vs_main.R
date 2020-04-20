@@ -1,3 +1,25 @@
+gallery_plot <- data.frame(
+    texts = c(
+        "Bar Plot",
+        "PCA Plot",
+        "Point Plot",
+        "T-SNE Plot"
+    ),
+    hrefs = c(
+        "",
+        "#shiny-tab-plot_pca",
+        "",
+        ""
+    ),
+    images = c(
+        "plot_list/plot_bar.png",
+        "plot_list/plot_pca.png",
+        "plot_list/plot_point.png",
+        "plot_list/plot_tsne.jpg"
+    )
+)
+
+
 ## UI
 vs_mainUI <- function(id){
     ns <- NS(id)
@@ -14,7 +36,7 @@ vs_mainUI <- function(id){
         a(href = "#shiny-tab-df_raw",  "Raw Variant"),
         a(href = "",  "df2"),
         a(href = "",  "df3"),
-        gallery(texts = texts, hrefs = hrefs, images = images, image_size = 3)
+        gallery(title = "Gallery of Plots", texts = gallery_plot$texts, hrefs = gallery_plot$hrefs, images = gallery_plot$images, image_size = 4)
     )
 }
 
@@ -22,3 +44,4 @@ vs_mainUI <- function(id){
 vs_mainServer <- function(input, output, session, shared){
 
 }
+    
