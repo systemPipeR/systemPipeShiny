@@ -34,13 +34,16 @@ library(glue)
 library(dplyr)
 
 # for debugging
-# options(shiny.reactlog = TRUE) 
+# option    s(shiny.reactlog = TRUE) 
 # options(shiny.autoload.r = FALSE)
-
+# options(shiny.trace = TRUE)
+# options(shiny.fullstacktrace = TRUE)
+# options(shiny.error = browser)
+options(shiny.autoreload = TRUE)
+        
 # source all functions
 ({
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
 }) %>% invisible()
 
 ################ test
-

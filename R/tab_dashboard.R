@@ -7,8 +7,7 @@ dashboardUI <- function(id){
         p("If you cannot click some buttons, that means they are disabled at current tab or you need to do other things first, e.g. upload a file."),
         
         fluidRow(
-            column(3),
-            carousel(
+            carousel(width = 12,
                 id = "dashcarousel",
                 carouselItem(
                     caption = "SPS",
@@ -18,8 +17,7 @@ dashboardUI <- function(id){
                     caption = "Preview",
                     tags$img(src = "sps_wf.png")
                 )
-            ),
-            column(3)
+            )
         ),
 
     )
