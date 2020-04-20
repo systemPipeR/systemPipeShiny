@@ -12,6 +12,7 @@ server <- function(input, output, session) {
     callModule(vs_mainServer, "vs_main", shared = shared)
     ## data
     callModule(df_rawServer, "df_raw", shared = shared)
+    callModule(df_countServer, "df_count", shared = shared)
     ## plots 
     callModule(plot_pointServer, "plot_point", shared = shared)
     callModule(plot_pcaServer, "plot_pca", shared = shared)
