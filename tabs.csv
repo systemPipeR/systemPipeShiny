@@ -1,0 +1,16 @@
+# List of SPS tabs,,
+# It is suggested to use spsNewtab to add more tabs to this file ,,
+,,
+Tab_name,Display_label,image
+dashboard,Home,
+wf_main,Workflow Main Page,
+wf_targets,Workflow Metadata,
+wf_wf,Workflow Steps,
+wf_config,Workflow Config,
+wf_run,Run Workflow,
+vs_main,Visualization Main Page,
+df_raw,Raw Data,
+df_count,Count Table,
+plot_point,Scatter Plot,plot_list/plot_point.png
+plot_pca,PCA Plot,plot_list/plot_pca.png
+about,About this App,
