@@ -148,6 +148,13 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
     wf <- wf %>% .[-move_line_num] %>% append(move_lines, after = plot_start) 
     return(wf)
 }
+## Function used on this code:
+# importFrom(magrittr,"%>%")
+# importFrom("assertthat", "assert_that", "is.count")
+# importFrom("stringr", "str_replace_all", "str_split", "str_remove", "str_which", "str_remove_all")
+# importFrom("DOT", "dot")
+# importFrom(assertthat,"is.writeable")
+# importFrom("rsvg,"rsvg_svg", "rsvg_png")
 
 # #test code
 # source("subsetRmd.R")
