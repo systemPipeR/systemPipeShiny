@@ -13,8 +13,7 @@ dashboardHeader <- dashboardHeaderPlus(
             useShinyjs(),
             useSweetAlert(),
             useToastr(),
-            includeCSS("www/sps.css"),
-            includeScript("www/sps.js"),
+            useSps(),
         )
     ),
     enable_rightsidebar = TRUE,

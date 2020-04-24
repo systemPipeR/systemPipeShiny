@@ -2,11 +2,27 @@
 
 ## use on top of shiny
 
+#' @import shiny  stringr magrittr glue htmltools shinyWidgets shinytoastr
+NULL
 
+
+#' Use SystemPipeShiny javascripts and css style
+#' call it in your header section
+#' @return
+#' @export
+#'
+#' @examples
+useSps <- function(){
+    # addResourcePath("sps", system.file("www", package = "systemPipeShiny"))
+    addResourcePath("sps", "www")
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", 
+                        href = "sps/sps.css"), 
+              tags$script(src = "sps/sps.js"))
+}
 
 #' Input component with a "X" button in the end to clear the entire typed text
 #' work the same as `Textinput`
-#' must be used together with the js and css file
+#' must be call `useSps` at header
 #' 
 #' @param inputId ID
 #' @param label text label above
@@ -17,6 +33,18 @@
 #' @export
 #'
 #' @examples
+#' library(shiny)
+#' 
+#' ui <- fluidPage(
+#'     useSps(),
+#'     clearableTextInput("input1", "This is a input box")
+#' )
+#' 
+#' server <- function(input, output, session) {
+#'   
+#' }
+#' 
+#' shinyApp(ui, server)
 clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
     tagList(tags$div(
         tags$label(label, `for` = inputId),
@@ -31,12 +59,18 @@ clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
     )
 }
 
-# Text input with a button next to
-# textId: text box id
-# btnId: action button id
-# title: title of this group
-# label: button text 
-# icon: btn icon
+#' Text input with a button right next to
+#'
+#' @param textId text box id
+#' @param btnId action button id
+#' @param title title of this group
+#' @param label button text 
+#' @param icon button icon
+#'
+#' @return a row element
+#' @export
+#'
+#' @examples
 textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plane"){
     fluidRow( 
         column(
