@@ -46,4 +46,8 @@ options(shiny.autoreload = TRUE)
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
 }) %>% invisible()
 
-################ test
+# load tab info
+tab_info <- suppressMessages(readr::read_csv("tabs.csv", comment = "#", na = character()))
+
+
+    ################ test

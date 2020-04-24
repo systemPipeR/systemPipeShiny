@@ -61,8 +61,8 @@ systemPipeShiny CSS Styles
   transition: opacity 0.5s;
 }
 
-/*for gallery */
-.tab-href {
+/*for sps hyperlink button */
+.href-button {
   background-color: #0275d8;
   border: none;
   border-radius: 10px 10px;
@@ -77,21 +77,19 @@ systemPipeShiny CSS Styles
   cursor: pointer;
          }
 
-.tab-href:hover {    
+.href-button:hover {    
   opacity: 0.9;
   text-decoration: none;
   color: white;
   transition: opacity 0.5s;
 }
 
-.tab-href:active {
+.href-button:active {
   transform: translateY(2px);
 }
 
-.tab-group:hover {
-  background-color:#f5f5f5;
-}
-
-.table-href {
-  border-bottom: 2px solid #ddd;
+.table-href td:first-child{
+  width: 1px;
+  vertical-align: middle;
+  white-space: nowrap;
 }

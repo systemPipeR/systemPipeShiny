@@ -114,3 +114,39 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
 #' })
 
 
+
+
+#' Find tab information from tabs.csv
+#'
+#' @param tabnames vector of strings, tab names you want to get
+#'
+#' @return a list contains tab labels, tab hyper reference, images
+#' @export
+#'
+#' @examples
+#' tabnames <- c("wf_wf", "d", "sas")
+#' findTabInfo(tabnames)
+findTabInfo <- function(tabnames) {
+    assert_that(is.character(tabnames))
+    tabs <- if (exists("tab_info")) {
+        tab_info
+    } else {
+        assertthat::is.readable("tabs.csv")
+        readr::read_csv("tabs.csv", comment = "#", na = character())
+    }
+    tabnames %in% tabs$Tab_name %>% {
+        glue("Tab {tabnames[!.]} is not in the tab list") %>% lapply(warning, call. = FALSE) %>% quiet()
+        list(
+            tab_labels = tabs$Display_label[.],
+            hrefs = glue("#shiny-tab-{tabs$Tab_name[.]}"),
+            images = tabs$image[.]
+        )
+    } %>% return()
+}
+
+
+genGallery <- function(tabnames, Id = NULL, title = "Gallery",
+                       title_color = "#0275d8", image_frame_size = 4, img_height = "300px",
+                       img_width = "480px") {
+    
+}

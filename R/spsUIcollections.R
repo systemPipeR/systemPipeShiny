@@ -39,7 +39,10 @@ clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
 # icon: btn icon
 textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plane"){
     fluidRow( 
-        column(9, style = "padding-right: 0; bottom: 10px", clearableTextInput(inputId = textId, label = title)),
+        column(
+            9, style = "padding-right: 0; bottom: 10px",
+            clearableTextInput(inputId = textId, label = title)
+               ),
             column(3, style = "padding-left: 10px; bottom: 10px",
                    br(),
                    actionButton(btnId, label = label, icon(icon)))
@@ -87,7 +90,10 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #' }
 #' 
 #' shinyApp(ui, server)
-gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts, hrefs, images, image_frame_size = 4, img_height = "300px", img_width = "480px"){
+gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts,
+                    hrefs, images, image_frame_size = 4, img_height = "300px",
+                    img_width = "480px"
+                    ){
     if (is.null(Id)) Id <- glue("gallery{sample(1000:100000, 1)}")
     assert_that(length(texts) == length(hrefs) & length(hrefs) == length(images), 
                 msg = "texts, hrefs and images must have the same length")
@@ -121,7 +127,7 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #' @examples
 #' ui <- fluidPage(
 #' includeCSS("www/sps.css"),
-#' TabHref(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"), hrefs = c("https://google.com/", "b", "c"))
+#' TabHref(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"), hrefs = c("https://google.com/", "", ""))
 #' )
 #' 
 #' server <- function(input, output, session) {
@@ -129,16 +135,18 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #' }
 #' 
 #' shinyApp(ui, server)
-TabHref <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8", label_text, hrefs, ...) {
+TabHref <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8",
+                    label_text, hrefs, ...
+                    ){
     if (is.null(Id)) Id <- glue("list-tab{sample(1000:100000, 1)}")
     assert_that(length(label_text) == length(hrefs), 
                 msg = "texts and hrefs must have the same length")
     tags$div(
-        id = Id, class = "col tab-group", ... ,
-        p(class = "text-center h4",  style = glue("color: {title_color}; text-align: left;"), title),
+        id = Id, class = "col", ... ,
+        p(class = "h4",  style = glue("color: {title_color}; text-align: left;"), title),
         tags$div(
             HTML(glue('
-                <a href="{hrefs}" class="tab-href">{label_text}</a>\n
+                <a href="{hrefs}" class="href-button">{label_text}</a>\n
                 '))
         )
     )
@@ -164,9 +172,9 @@ TabHref <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
 #' 
 #' ui <- fluidPage(
 #'     includeCSS("www/sps.css"),
-#'     TableHref(item_titles = c("worflow 1", "workflow 2"),
-#'               item_labels = list(c("tab 1", "tab 2"), c("tab 3", "tab 4")),
-#'               item_hrefs = list(c("https://www.google.com/", ""), c("", "")),
+#'     TableHref(item_titles = c("workflow 1", "workflow 2"),
+#'               item_labels = list(c("tab 1"), c("tab 3", "tab 4")),
+#'               item_hrefs = list(c("https://www.google.com/"), c("", "")),
 #'     )
 #'     
 #' )
@@ -176,17 +184,46 @@ TabHref <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
 #' }
 #' 
 #' shinyApp(ui, server)
-TableHref <- function(Id = NULL, title = "A Table of list of tabs", text_color = "#0275d8", item_titles, item_labels, item_hrefs, ...) {
+TableHref <- function(Id = NULL, title = "A Table of list of tabs", 
+                      text_color = "#0275d8", item_titles, item_labels, 
+                      item_hrefs, ...
+                      ){
     if (is.null(Id)) Id <- glue("list-table{sample(1000:100000, 1)}")
     assert_that(is.list(item_labels)); assert_that(is.list(item_hrefs))
     assert_that(length(item_titles) == length(item_labels) & length(item_labels) == length(item_hrefs), 
                 msg = "item_titles, item_labels and item_hrefs must have the same length")
-    tags$div(
-        id = Id, class = "col",
-        p(class = "text-center h2",  style = glue("color: {text_color};"), title),
-        tags$hr(style="height:1px; background-color:gray;"),
-        lapply(1:length(item_titles), function(n) {
-            TabHref(title = item_titles[n], title_color = text_color, label_text = item_labels[[n]], hrefs = item_hrefs[[n]], class = "table-href")
-        })    
+    mapply(
+        function(label, href) {
+            assert_that(length(href) == length(label),
+                        msg = paste0("'", paste0(label, collapse = ", "), 
+                                     "' must have the same length as '",
+                                     paste0(href, collapse = ", "), "'")
+                        )
+            },
+        item_labels, item_hrefs
+        )
+    btns <- mapply(
+        function(label, href) {
+            glue('<a href="{href}" class="href-button">{label}</a>') %>% glue_collapse()
+            },
+        item_labels, item_hrefs
+        )
+    tags$table(
+        id = Id, class = "table table-hover table-href table-striped", 
+        tags$caption(class = "text-center h2",  style = glue("color: {text_color};"), title),
+        HTML('<thead>
+                <tr class="info">
+                  <th>Category</th>
+                  <th>Options</th>
+                </tr>
+              </thead>'),
+       tags$tbody(HTML(glue(
+       '
+          <tr>
+            <td class="h4" style="color: {text_color};">{item_titles}</td>
+            <td>{btns}</td>
+          </tr>\n
+        '
+        ))),
     )
 }    
