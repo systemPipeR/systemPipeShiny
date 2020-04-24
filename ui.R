@@ -13,8 +13,7 @@ dashboardHeader <- dashboardHeaderPlus(
             useShinyjs(),
             useSweetAlert(),
             useToastr(),
-            includeCSS("www/sps.css"),
-            includeScript("www/sps.js"),
+            useSps(),
         )
     ),
     enable_rightsidebar = TRUE,
@@ -42,20 +41,21 @@ dashboardSidebar <-  dashboardSidebar(
             tags$script("sidebarSpanJump('Visualization', 'vs_main');"),
             menuItem(
                 text = "Prepare dataset",
-                ## vs df add to sidebar
+                ## vs dfs add to sidebar
                 menuSubItem(text = "Raw data", tabName = "df_raw"),
                 menuSubItem(text = "Count data", tabName = "df_count"),
                 menuSubItem(text = "xx2 data", tabName = "df_xx2")
                 ),
             menuItem(
                 text = "Collection of plots",
-                ## vs plot add to sidebar
+                ## vs plots add to sidebar
                 menuSubItem(text = "Scatter Plot", tabName = "plot_point"),
                 menuSubItem(text = "PCA Plot", tabName = "plot_pca"),
                 menuSubItem(text = "xx2 Plot", tabName = "plot_xx1"),
                 menuSubItem(text = "xx3 Plot", tabName = "plot_xx1")
                 )
         ),
+        ## add other tabs
         menuItem("About", icon = icon("info"), tabName = "about")
     )
 )
@@ -70,13 +70,13 @@ dashboardBody <- dashboardBody(
         tabItem(tabName = "wf_config", configUI("wf_config")),
         # VS tabs
         tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
-        ## vs df
+        ## vs dfs
         tabItem(tabName = "df_raw", df_rawUI("df_raw")),
         tabItem(tabName = "df_count", df_countUI("df_count")),
         ## vs plots
         tabItem(tabName = "plot_point", plot_pointUI("plot_point")),
         tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),
-        # other tabs
+        ## other tabs
         tabItem(tabName = "about", aboutUI("about"))
     )
 )

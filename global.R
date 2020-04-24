@@ -13,7 +13,6 @@ library(shinyTree) # js tree veiw
 library(networkD3) # network plots
 library(plotly) # plotly plots
 library(shinyAce) # Ace editor
-# source("https://install-github.me/mangothecat/shinytoastr")
 library(shinytoastr) # need to install use the script above
 library(shinyjqui) # jQuery UI
 ## for functions 
@@ -45,5 +44,8 @@ options(shiny.autoreload = TRUE)
 ({
   list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
 }) %>% invisible()
+
+# load tab info
+tab_info <- suppressMessages(readr::read_csv("tabs.csv", comment = "#", na = character()))
 
 ################ test

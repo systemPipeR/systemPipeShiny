@@ -14,15 +14,15 @@ library(magrittr)
 library(stringr)
 plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='default', height=NULL, width=NULL){
     # pre checks
-    assert_that(out_type %in% c('html', 'png', 'svg', 'shiny'), msg = "out_type needs to be one of 'html', 'png', 'svg'")
-    assert_that(plot_style %in% c('detect', 'none', 'linear'), msg = "out_type needs to be one of 'detect', 'none', 'linear'")
+    assert_that(out_type %in% c('html', 'png', 'svg', 'shiny'), msg = "output type needs to be one of 'html', 'png', 'svg'")
+    assert_that(plot_style %in% c('detect', 'none', 'linear'), msg = "plot style needs to be one of 'detect', 'none', 'linear'")
     assert_that(is.data.frame(df_wf))
     all(c("t_lvl", "t_number", "t_text", "selected", "no_run", "no_success", "link_to") %in% names(df_wf)) %>% 
         assert_that(msg='One of following columns is missing: "t_lvl" "t_number" "t_text" "selected" "no_run" "no_success" "link_to"')
     if (out_path == 'default' & !out_type %in% c('html', 'shiny')){
         assert_that(is.writeable(out_path))
         assert_that(is.count(height) | is.null(height))
-        assert_that(is.count(width) | is.null(width))
+            assert_that(is.count(width) | is.null(width))
         out_path = switch(out_type,
                           'svg' = paste0('wfplot', format(Sys.time(), "%Y%m%d%H%M%S"), '.svg'),
                           'png' = paste0('wfplot', format(Sys.time(), "%Y%m%d%H%M%S"), '.png')
@@ -42,8 +42,8 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
     plot <- switch(out_type,
            'shiny' = dot(wf, return = "verbatim"),
            'html' = dot(wf),
-           'svg' = dot(wf, return = "verbatim") %>% rsvg_svg(file = out_path, height = height, width = width),
-           'png' = dot(wf, return = "verbatim") %>% charToRaw() %>% rsvg_png(file = out_path, height = height, width = width)
+                               'svg' = dot(wf, return = "verbatim") %>% rsvg_svg(file = out_path, height = height, width = width),
+               'png' = dot(wf, return = "verbatim") %>% charToRaw() %>% rsvg_png(file = out_path, height = height, width = width)
     )
     return(plot)
 }
@@ -70,7 +70,7 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
     link_to_list <- str_split(link_to, ",") %>% lapply(function(x) str_remove_all(x, " "))
     names(link_to_list) <- t_number
     last_step <- list(length(t_number))
-    track_list <- track_back(t_number, link_to, last_step)
+            track_list <- track_back(t_number, link_to, last_step)
     long <- sapply(track_list, function(x) all(c(1, length(t_number)) %in% x)) %>% 
         track_list[.] %>% sapply(length) %>% which.max() %>% track_list[.] %>% unlist()
     return(long)
@@ -135,12 +135,12 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
 
 .change_branch <- function(df_wf, wf){
     long <- .find_long_branch(df_wf$t_number, df_wf$link_to)
-    plot_start <- wf %>% str_which("digraph")
+                    plot_start <- wf %>% str_which("digraph")
     sub_start <- wf %>% str_which("subgraph ")
     sub_steps_lines <- wf %>% str_which(" -> [^\\[]") %>% .[. > sub_start]
     sub_number <- wf[sub_steps_lines] %>% 
         str_remove_all("[->;\n]") %>% str_remove("^.*[ ]+") %>% 
-        str_remove("n") %>% str_replace_all("_", "\\.") %>%
+                str_remove("n") %>% str_replace_all("_", "\\.") %>%
         sapply(function(x) df_wf$t_number[df_wf$t_number == x]) %>% unlist()
     move_line_num <- sub_steps_lines[!sub_number %in% df_wf$t_number[long]]
     if (length(move_line_num) == 0) return(wf)
@@ -158,7 +158,7 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
 
 # #test code
 # source("subsetRmd.R")
-# df_wf = subsetRmd("../systemPipeR_testing/cwl_testing/systemPipeR.Rmd")
+# df_wf = subsetRmd("YOUR.Rmd")
 # df_wf$no_success[3:8] = 1
 # df_wf$no_run[3:5] = 10
 # df_wf$no_run[6:8] = 1
@@ -171,9 +171,9 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
 # df_wf$link_to[14] = NA
 # df_wf = df_wf[1:17,]
 # df_wf$link_to[8] = "3, 2.5"
+# df_wf$selected = TRUE
 # plotWF(df_wf, plot_style = "linear")
-# 
-# .find_long_branch(df_wf$t_number, df_wf$link_to)
+    
 
 
 
