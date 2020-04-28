@@ -14,6 +14,7 @@ dashboardHeader <- dashboardHeaderPlus(
             useSweetAlert(),
             useToastr(),
             useSps(),
+
         )
     ),
     enable_rightsidebar = TRUE,

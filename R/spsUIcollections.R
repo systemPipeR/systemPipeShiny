@@ -2,7 +2,7 @@
 
 ## use on top of shiny
 
-#' @import shiny  stringr magrittr glue htmltools shinyWidgets shinytoastr
+#' @import shiny  stringr magrittr glue htmltools 
 NULL
 
 
@@ -15,9 +15,16 @@ NULL
 useSps <- function(){
     # addResourcePath("sps", system.file("www", package = "systemPipeShiny"))
     addResourcePath("sps", "www")
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", 
-                        href = "sps/sps.css"), 
-              tags$script(src = "sps/sps.js"))
+    tagList(
+        tags$head(tags$link(rel = "stylesheet", type = "text/css", 
+                            href = "sps/sps.css"), 
+                  tags$script(src = "sps/sps.js")),
+        HTML('
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/css/uikit.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit-icons.min.js"></script>
+             ')
+    )
 }
 
 #' Input component with a "X" button in the end to clear the entire typed text
@@ -88,7 +95,7 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #' A shiny gallery component
 #' `texts`, `hrefs`, `images` Must have the same length
 #' Must be used with Bootstrap3 and sps.css file
-#'
+#' @importFrom assertthat assert_that
 #' @param Id ID of this gallery
 #' @param title Title of gallery
 #' @param texts label under each image
@@ -132,12 +139,12 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
     assert_that(length(texts) == length(hrefs) & length(hrefs) == length(images), 
                 msg = "texts, hrefs and images must have the same length")
     tags$div(
-        id = Id, class = "col",
+        id = Id, class = "col uk-overflow-hidden uk-overlay", `uk-scrollspy`="cls: uk-animation-slide-bottom; target: img; delay: 300; repeat: true",
         p(class = "text-center h2", style = glue("color: {title_color};"), title),
         tags$div(
             class = "row",
             HTML(glue('
-                <a href="{hrefs}"  class="col-sm-{image_frame_size} style="right: 5px;" >
+                <a href="{hrefs}"  class="col-sm-{image_frame_size} style="right: 5px;">
                   <img src="{images}" class="img-gallery" style="height: {img_height}; width: {img_width};">
                   <p class="text-center h4">{texts}</p>
                 </a>
@@ -149,6 +156,7 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 
 #' Show a list of tabs in buttons
 #' `label_text`, `hrefs` must be the same length
+#' @importFrom assertthat assert_that
 #' @param Id optional
 #' @param title Item title
 #' @param title_color title color
@@ -190,6 +198,7 @@ TabHref <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
 #' A table of lists of hyper reference buttons 
 #' `item_titles`, `item_labels`, `item_hrefs` must have the same length
 #' nth item in `item_labels`, `item_hrefs` must have the same length
+#' @importFrom assertthat assert_that
 #' @param Id optional
 #' @param title title of this table
 #' @param text_color text color
@@ -261,3 +270,10 @@ TableHref <- function(Id = NULL, title = "A Table of list of tabs",
         ))),
     )
 }    
+
+
+genGallery <- function(tabnames, Id = NULL, title = "Gallery",
+                       title_color = "#0275d8", image_frame_size = 4, img_height = "300px",
+                       img_width = "480px") {
+    
+}

@@ -4,3 +4,5 @@
 .Ruserdata
 .swp
 
+packrat/lib*/
+packrat/src/

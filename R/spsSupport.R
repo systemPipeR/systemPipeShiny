@@ -145,9 +145,8 @@ quiet <- function(x) {
 } 
 
 
-# check namespace 
-#' Title
-#'
+#' check namespace 
+#' Help you to check if you have certain packages and return missing package names
 #' @param packages vector of strings
 #' @param quietly bool, give you error on fail?
 #' @param from  string, where this package is from like, "CRAN", "GitHub", only
@@ -165,3 +164,30 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
     return(missing_pkgs)
 }
 
+#' Find tab information from tabs.csv
+#'
+#' @importFrom readr read_csv
+#' @param tabnames vector of strings, tab names you want to get
+#'
+#' @return a list contains tab labels, tab hyper reference, images
+#' @export
+#'
+#' @examples
+#' tabnames <- c("wf_wf", "d", "sas")
+#' findTabInfo(tabnames)
+findTabInfo <- function(tabnames) {
+    assert_that(is.character(tabnames))
+    tabs <- if (exists("tab_info")) {
+        tab_info
+    } else {
+        read_csv("tabs.csv", comment = "#", na = character())
+    }
+    tabnames %in% tabs$Tab_name %>% {
+        glue("Tab {tabnames[!.]} is not in the tab list") %>% lapply(warning, call. = FALSE) %>% quiet()
+        list(
+            tab_labels = tabs$Display_label[.],
+            hrefs = glue("#shiny-tab-{tabs$Tab_name[.]}"),
+            images = tabs$image[.]
+        )
+    } %>% return()
+}

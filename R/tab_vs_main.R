@@ -53,11 +53,13 @@ vs_mainUI <- function(id){
         </ol>
              '),
         br(),
-        p("DNAAseq: "),
-        a(href = "#shiny-tab-df_raw",  "Raw Variant"),
-        a(href = "",  "df2"),
-        a(href = "",  "df3"),
+        TableHref(item_titles = c("workflow 1", "workflow 2", "workflow 3"),
+                  item_labels = list(c("tab 1"), c("tab 3", "tab 4") ,c("tab 5", "tab 6", "tab 7")),
+                  item_hrefs = list(c("https://www.google.com/"), c("", ""), c("", "", "")),
+        ),
+        br(),
         gallery(title = "Gallery of Plots", texts = gallery_plot$texts, hrefs = gallery_plot$hrefs, images = gallery_plot$images, image_frame_size = 3)
+        
     )
 }
 
