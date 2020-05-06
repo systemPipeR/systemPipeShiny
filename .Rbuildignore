@@ -2,3 +2,13 @@
 ^\.Rproj\.user$
 .gitignore
 .Rhistory
+^packrat/
+^\.Rprofile$
+^rsconnect/
+^.git/
+^.idea/
+^docs/
+
+manifest.json
+_pkgdown.yml
+

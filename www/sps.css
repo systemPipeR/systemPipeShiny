@@ -1,4 +1,4 @@
-/*  
+/*
 systemPipeShiny CSS Styles
 */
 
@@ -50,16 +50,20 @@ systemPipeShiny CSS Styles
 }
 
 /*for gallery */
-.img-gallery{
+img-gallery{
   max-width:100%;
   height:auto;
   object-fit: cover;
+  vertical-align: middle;
+  text-align: center;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.img-gallery:hover {    
+
+img-gallery:hover {
   opacity: 0.7;
   transition: opacity 0.5s;
 }
+
 
 /*for sps hyperlink button */
 .href-button {
@@ -77,7 +81,7 @@ systemPipeShiny CSS Styles
   cursor: pointer;
          }
 
-.href-button:hover {    
+.href-button:hover {
   opacity: 0.9;
   text-decoration: none;
   color: white;
@@ -92,4 +96,39 @@ systemPipeShiny CSS Styles
   width: 1px;
   vertical-align: middle;
   white-space: nowrap;
+}
+
+/* about tab background */
+.widget-user-header {
+	background: linear-gradient(-45deg, #428bca, #ccccff, #b3b3b3);
+	background-size: 400% 400%;
+	animation: gradient 10s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+
+#particles-js {
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	background-position: 50% 50%;
+	position: fixed;
+	z-index: 0;
+}
+
+#particles-js canvas{
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }

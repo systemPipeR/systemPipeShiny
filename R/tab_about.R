@@ -1,7 +1,7 @@
 ## UI
 aboutUI <- function(id){
     ns <- NS(id)
-    tagList(
+    tags$div(id = ns("particles-js"), style = "background-color: black;",
         h2("About this app"),
         tags$p("Designed by xxx, xxx"),
         h3("Support"),
@@ -12,8 +12,6 @@ aboutUI <- function(id){
                 type = NULL,
                 width = 12,
                 src = "https://avatars3.githubusercontent.com/u/1336916?s=400&v=4",
-                background = TRUE,
-                backgroundUrl = "https://bashooka.com/wp-content/uploads/2018/04/scg-canvas-background-animation-24.jpg",
                 closable = FALSE,
                 collapsible = FALSE,
                 HTML('Thomas Girke <a href="mailto:tgirke@ucr.edu">&lt;tgirke@ucr.edu&gt;</a>'),
@@ -28,8 +26,6 @@ aboutUI <- function(id){
                 width = 6,
                 height = 500,
                 src = "https://avatars0.githubusercontent.com/u/35240440?s=460&v=4",
-                background = TRUE,
-                backgroundUrl = "https://bashooka.com/wp-content/uploads/2018/04/scg-canvas-background-animation-24.jpg",
                 closable = FALSE,
                 collapsible = FALSE,
                 HTML('Le Zhang <a href="mailto:le.zhang001@email.ucr.edu">&lt;le.zhang001@email.ucr.edu&gt;</a>'),
@@ -42,8 +38,6 @@ aboutUI <- function(id){
                 width = 6,
                 height = 500,
                 src = "https://avatars2.githubusercontent.com/u/45085174?s=400&v=4",
-                background = TRUE,
-                backgroundUrl = "https://bashooka.com/wp-content/uploads/2018/04/scg-canvas-background-animation-24.jpg",
                 closable = FALSE,
                 collapsible = FALSE,
                 HTML('Ponmathi Ramasamy <a href="mailto:prama008@ucr.edu">&lt;prama008@ucr.edu&gt;</a>'),
@@ -56,8 +50,6 @@ aboutUI <- function(id){
                 width = 6,
                 height = 500,footer_padding = FALSE,
                 src = "https://avatars2.githubusercontent.com/u/12722576?s=400&v=4",
-                background = TRUE,
-                backgroundUrl = "https://bashooka.com/wp-content/uploads/2018/04/scg-canvas-background-animation-24.jpg",
                 closable = FALSE,
                 collapsible = FALSE,
                 HTML('Daniela Cassol <a href="mailto:danielac@ucr.edu">&lt;danielac@ucr.edu&gt;</a>'),
@@ -71,10 +63,18 @@ aboutUI <- function(id){
         tags$a(href="https://bioconductor.org/packages/release/bioc/html/systemPipeR.html",
                "Visist Bioconductor page")
     )
-    
+
 }
 
 ## server
 aboutServer <- function(input, output, session){
-    
+    delay(ms = 3000,
+          shinyjs::runjs(
+              "
+        $(document).ready(function(){
+        particlesJS('about-particles-js');
+        });
+        ")
+          )
+
 }

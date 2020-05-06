@@ -72,7 +72,7 @@ wfServer <- function(input, output, session, shared){
     ns <- session$ns
     
     rmd_file_path <- reactive({
-        if (input$wf_source == "eg") "inst/extdata/systemPipeRNAseq.Rmd" else input$rmd_file$datapath
+        if (input$wf_source == "eg") "inst/extdata/systemPipeRNAseq.md" else input$rmd_file$datapath
     })
     
     rmd <- reactive({
@@ -111,7 +111,6 @@ wfServer <- function(input, output, session, shared){
             # rmd_tree_selected <- reactive(NULL)
             updateTree(session = session, treeId = "rmd_tree", data = list(""))
         } else {
-            print("here")
             runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = ""')
         }
 

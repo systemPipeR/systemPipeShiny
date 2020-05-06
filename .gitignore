@@ -3,4 +3,7 @@
 .RData
 .Ruserdata
 .swp
-
+.idea
+packrat/lib*/
+packrat/src/
+rsconnect/
