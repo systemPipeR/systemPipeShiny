@@ -1,8 +1,8 @@
 ## UI 
-plot_pcaUI <- function(id){
+plot_mdsUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "PCA", 
-             h2("Make a PCA plot"),
+    tabPanel(title = "MDS", 
+             h2("Make a MDS plot"),
              fluidRow(
                  actionButton(
                      ns("op_1"),
@@ -30,7 +30,7 @@ plot_pcaUI <- function(id){
 }
 
 ## server
-plot_pcaServer <- function(input, output, session, shared){
+plot_mdsServer <- function(input, output, session, shared){
     ns <- session$ns
     observeEvent(input$render, {
         targets <- data.frame(shared$df$target)
@@ -48,10 +48,10 @@ plot_pcaServer <- function(input, output, session, shared){
         countDF[] <- lapply(countDF, function(x) as.numeric(x))
         countDF <- as.matrix(countDF)
         output$plot_ui <- renderUI(
-            plotlyOutput(ns("pca"))
+            plotlyOutput(ns("mds"))
         )
-        output$pca <- renderPlotly({
-            run_PCA(countDF = countDF, targets = targets, colData = colData, method = "raw")
+        output$mds <- renderPlotly({
+            run_MDS(countDF = countDF, targets = targets, colData = colData, method = "rlog")
         })
     })
 }

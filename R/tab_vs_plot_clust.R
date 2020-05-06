@@ -1,8 +1,8 @@
 ## UI 
-plot_pcaUI <- function(id){
+plot_clustUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "PCA", 
-             h2("Make a PCA plot"),
+    tabPanel(title = "Hierarchical Clustering Dendrogram", 
+             h2("Make a Hierarchical Clustering Dendrogram plot"),
              fluidRow(
                  actionButton(
                      ns("op_1"),
@@ -30,7 +30,7 @@ plot_pcaUI <- function(id){
 }
 
 ## server
-plot_pcaServer <- function(input, output, session, shared){
+plot_clustServer <- function(input, output, session, shared){
     ns <- session$ns
     observeEvent(input$render, {
         targets <- data.frame(shared$df$target)
@@ -48,10 +48,10 @@ plot_pcaServer <- function(input, output, session, shared){
         countDF[] <- lapply(countDF, function(x) as.numeric(x))
         countDF <- as.matrix(countDF)
         output$plot_ui <- renderUI(
-            plotlyOutput(ns("pca"))
+            plotOutput(ns("clust"))
         )
-        output$pca <- renderPlotly({
-            run_PCA(countDF = countDF, targets = targets, colData = colData, method = "raw")
+        output$clust <- renderPlot({
+            run_CLUST(countDF = countDF, targets = targets, colData = colData, method = "raw")
         })
     })
 }

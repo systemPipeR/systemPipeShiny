@@ -11,11 +11,21 @@ server <- function(input, output, session) {
     # VS tabs
     callModule(vs_mainServer, "vs_main", shared = shared)
     ## data
+    callModule(df_targetsServer, "df_targets", shared = shared)
     callModule(df_rawServer, "df_raw", shared = shared)
     callModule(df_countServer, "df_count", shared = shared)
+    callModule(df_degcountServer, "df_degcount", shared = shared)
+    callModule(df_edgeRServer, "df_edgeR", shared = shared)
     ## plots 
     callModule(plot_pointServer, "plot_point", shared = shared)
     callModule(plot_pcaServer, "plot_pca", shared = shared)
+    callModule(plot_boxServer, "plot_box", shared = shared)
+    callModule(plot_tsneServer, "plot_tsne", shared = shared)
+    callModule(plot_glmServer, "plot_glm", shared = shared)
+    callModule(plot_mdsServer, "plot_mds", shared = shared)
+    callModule(plot_heatServer, "plot_heat", shared = shared)
+    callModule(plot_clustServer, "plot_clust", shared = shared)
+    callModule(plot_volcanoServer, "plot_volcano", shared = shared)
     # other tabs
     callModule(topServer, "top", shared = shared)
     callModule(rightServer, "right", shared = shared)
