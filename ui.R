@@ -13,7 +13,7 @@ dashboardHeader <- dashboardHeaderPlus(
             useShinyjs(),
             useSweetAlert(),
             useToastr(),
-            useSps(),
+            useSps()
         )
     ),
     enable_rightsidebar = TRUE,
@@ -42,17 +42,24 @@ dashboardSidebar <-  dashboardSidebar(
             menuItem(
                 text = "Prepare dataset",
                 ## vs dfs add to sidebar
+                menuSubItem(text = "Targets", tabName = "df_targets"),
                 menuSubItem(text = "Raw data", tabName = "df_raw"),
                 menuSubItem(text = "Count data", tabName = "df_count"),
-                menuSubItem(text = "xx2 data", tabName = "df_xx2")
+                menuSubItem(text = "DEG Count data", tabName = "df_degcount"),
+                menuSubItem(text = "EdgeR data", tabName = "df_edgeR")
                 ),
             menuItem(
                 text = "Collection of plots",
                 ## vs plots add to sidebar
                 menuSubItem(text = "Scatter Plot", tabName = "plot_point"),
                 menuSubItem(text = "PCA Plot", tabName = "plot_pca"),
-                menuSubItem(text = "xx2 Plot", tabName = "plot_xx1"),
-                menuSubItem(text = "xx3 Plot", tabName = "plot_xx1")
+                menuSubItem(text = "Box Plot", tabName = "plot_box"),
+                menuSubItem(text = "t-SNE", tabName = "plot_tsne"),
+                menuSubItem(text = "MDS", tabName = "plot_mds"),
+                menuSubItem(text = "GLM-PCA", tabName = "plot_glm"),
+                menuSubItem(text = "heat map", tabName = "plot_heat"),
+                menuSubItem(text = "H-Clust", tabName = "plot_clust"),
+                menuSubItem(text = "Volcano", tabName = "plot_volcano")
                 )
         ),
         ## add other tabs
@@ -71,11 +78,21 @@ dashboardBody <- dashboardBody(
         # VS tabs
         tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         ## vs dfs
+        tabItem(tabName = "df_targets", df_targetsUI("df_targets")),
         tabItem(tabName = "df_raw", df_rawUI("df_raw")),
         tabItem(tabName = "df_count", df_countUI("df_count")),
+        tabItem(tabName = "df_degcount", df_degcountUI("df_degcount")),
+        tabItem(tabName = "df_edgeR", df_edgeRUI("df_edgeR")),
         ## vs plots
         tabItem(tabName = "plot_point", plot_pointUI("plot_point")),
         tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),
+        tabItem(tabName = "plot_box", plot_boxUI("plot_box")),
+        tabItem(tabName = "plot_tsne", plot_tsneUI("plot_tsne")),
+        tabItem(tabName = "plot_mds", plot_mdsUI("plot_mds")),
+        tabItem(tabName = "plot_glm", plot_glmUI("plot_glm")),
+        tabItem(tabName = "plot_heat", plot_heatUI("plot_heat")),
+        tabItem(tabName = "plot_clust", plot_clustUI("plot_clust")),
+        tabItem(tabName = "plot_volcano", plot_volcanoUI("plot_volcano")),
         ## other tabs
         tabItem(tabName = "about", aboutUI("about"))
     )
