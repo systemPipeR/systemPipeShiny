@@ -1,57 +1,48 @@
 ## UI 
-plot_pcaUI <- function(id){
+plot_volcanoUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "PCA", 
-             h2("Make a PCA plot"),
+    tabPanel(title = "Volcano Plot", 
+             h2("Make a Volcano plot"),
              fluidRow(
                  actionButton(
                      ns("op_1"),
-                     label = "Raw", 
+                     label = "Fold", 
                      icon("cog")
                  ),
                  actionButton(
                      ns("op_2"),
-                     label = "R-log", 
+                     label = "FDR", 
                      icon("cog")
                  ),
                  actionButton(
                      ns("op_3"),
-                     label = "VST", 
+                     label = "Comparison", 
                      icon("cog")
                  )
              ),
              fluidRow(
                  actionButton(ns("render"),
                               label = "Render the plot", 
-                              icon("paper-plane")),
+                              icon("paper-plane"))
              ),
              uiOutput(ns("plot_ui"))
     )
 }
 
 ## server
-plot_pcaServer <- function(input, output, session, shared){
+plot_volcanoServer <- function(input, output, session, shared){
     ns <- session$ns
     observeEvent(input$render, {
-        targets <- data.frame(shared$df$target)
         countDF <- data.frame(shared$count$df)
         colnames(countDF) <- countDF[1,]
-        colnames(targets) <- targets[1,]
         countDF <- countDF[-1,]
-        targets <- targets[-1,]
         rownames(countDF) <- countDF[,1]
         countDF <- countDF[,-1]
-        rownames(targets) <- targets[,1]
-        targets <- targets[,-1]
-        colData <- data.frame(row.names = targets$SampleName, 
-                              condition = targets$Factor)
-        countDF[] <- lapply(countDF, function(x) as.numeric(x))
-        countDF <- as.matrix(countDF)
         output$plot_ui <- renderUI(
-            plotlyOutput(ns("pca"))
+            plotlyOutput(ns("volcano"))
         )
-        output$pca <- renderPlotly({
-            run_PCA(countDF = countDF, targets = targets, colData = colData, method = "raw")
+        output$volcano <- renderPlotly({
+            run_volcano(DF = countDF,FDR = 10, Fold = 2, comparison = "M1-A1")
         })
     })
 }

@@ -13,10 +13,10 @@ run_CLUST <- function(countDF, targets, colData, method) {
     normdata <- varianceStabilizingTransformation(dds, blind = T)   
   } else if (method == "raw") {
     normdata <- DESeqTransform(dds)
-  }
+  } 
   d <- cor(assay(normdata), method = "spearman")
   hc <- hclust(dist(1 - d))
   plot.phylo(as.phylo(hc), type = "p", edge.col = "blue", edge.width = 2, 
-             show.node.label = TRUE, no.margin = TRUE)
+             show.node.label = TRUE, no.margin = TRUE) 
   
 }

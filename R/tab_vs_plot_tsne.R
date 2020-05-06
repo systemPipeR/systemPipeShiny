@@ -1,8 +1,8 @@
 ## UI 
-plot_pcaUI <- function(id){
+plot_tsneUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "PCA", 
-             h2("Make a PCA plot"),
+    tabPanel(title = "t-SNE", 
+             h2("Make a t-SNE plot"),
              fluidRow(
                  actionButton(
                      ns("op_1"),
@@ -30,8 +30,9 @@ plot_pcaUI <- function(id){
 }
 
 ## server
-plot_pcaServer <- function(input, output, session, shared){
+plot_tsneServer <- function(input, output, session, shared){
     ns <- session$ns
+ 
     observeEvent(input$render, {
         targets <- data.frame(shared$df$target)
         countDF <- data.frame(shared$count$df)
@@ -43,15 +44,13 @@ plot_pcaServer <- function(input, output, session, shared){
         countDF <- countDF[,-1]
         rownames(targets) <- targets[,1]
         targets <- targets[,-1]
-        colData <- data.frame(row.names = targets$SampleName, 
-                              condition = targets$Factor)
         countDF[] <- lapply(countDF, function(x) as.numeric(x))
         countDF <- as.matrix(countDF)
         output$plot_ui <- renderUI(
-            plotlyOutput(ns("pca"))
+            plotlyOutput(ns("tsne"))
         )
-        output$pca <- renderPlotly({
-            run_PCA(countDF = countDF, targets = targets, colData = colData, method = "raw")
+        output$tsne <- renderPlotly({
+            run_TSNE(countDF = countDF, targets = targets)
         })
     })
 }
