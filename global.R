@@ -1,9 +1,11 @@
-# shiny and shiny visual
+# use runApp() or click right top button in Rstudio to start app,
+# do not write this code in script, type it in console
 
+
+# shiny and js
 library(shiny)
 library(shinydashboard) # main UI structure
 library(shinydashboardPlus) # additional features on shinydashboard
-library(shinyWidgets) # UI elements 
 library(pushbar) # drop down bars
 library(rhandsontable) # handsontable js for table
 library(magrittr) # pipe
@@ -13,9 +15,16 @@ library(shinyTree) # js tree veiw
 library(networkD3) # network plots
 library(plotly) # plotly plots
 library(shinyAce) # Ace editor
-library(shinytoastr) # need to install use the script above
+library(shinytoastr) # toastr js
 library(shinyjqui) # jQuery UI
-## for functions 
+# general processing
+library(ggplot2)
+library(stringr)
+library(assertthat)
+library(glue)
+library(dplyr)
+library(vroom)
+## for functions
 library(DESeq2, quietly = TRUE)
 library(edgeR, quietly = TRUE)
 library(ape, warn.conflicts = FALSE)
@@ -24,28 +33,20 @@ library(RColorBrewer)
 library(pheatmap)
 library(limma)
 library(Rtsne)
-library(ggplot2)
-library(stringr)
-library(assertthat)
 library(DOT)
 library(rsvg)
-library(glue)
-library(dplyr)
 
+options(shiny.maxRequestSize = 5*1024^2)
 # for debugging
-# option    s(shiny.reactlog = TRUE) 
+# options(shiny.reactlog = TRUE)
 # options(shiny.autoload.r = FALSE)
 # options(shiny.trace = TRUE)
 # options(shiny.fullstacktrace = TRUE)
 # options(shiny.error = browser)
-options(shiny.autoreload = TRUE)
-        
-# source all functions
-({
-  list.files("R", pattern = "*.R") %>% paste0("R/", .) %>% sapply(source, .GlobalEnv)
-}) %>% invisible()
-
+# options(shiny.autoreload.r = TRUE)
+options(shiny.autoreload = TRUE) # takes some computer power, you may consider turn it off
 # load tab info
-tab_info <- suppressMessages(readr::read_csv("tabs.csv", comment = "#", na = character()))
+tab_info <- suppressMessages(vroom::vroom("tabs.csv", comment = "#", na = character()))
+
 
 ################ test

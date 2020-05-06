@@ -1,24 +1,23 @@
-####### UI 
-# valid colors: 
+####### UI
+# valid colors:
 # red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black
 
-# please do not delete comments starting with '##' 
-
+# please do not delete comments starting with '##'
 # header
 dashboardHeader <- dashboardHeaderPlus(
     title = tagList(
-        span(class = "logo-lg", "systemPipeShiny"), 
+        span(class = "logo-lg", "systemPipeShiny"),
         img(src = "systemPipe_small.png"),
         tags$div(
             useShinyjs(),
             useSweetAlert(),
             useToastr(),
-            useSps(),
+            useSps()
 
         )
     ),
     enable_rightsidebar = TRUE,
-    rightSidebarIcon = "clipboard-check", 
+    rightSidebarIcon = "clipboard-check",
     left_menu = topUI("top")
 )
 # side bar
@@ -87,7 +86,18 @@ rightsidebar <- rightSidebar(
     rightUI("right")
 )
 # merge everything together
-ui <- dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
-                        body =  dashboardBody, rightsidebar = rightsidebar)
+ui <- fluidPage(
+    div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
+        dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
+                          body =  dashboardBody, rightsidebar = rightsidebar)
+    ),
+    div(id = "loading-screen", style="height: 100vh; width: 100vw",
+        tags$script(src="double-helix.js", type="text/javascript"),
+        img(src = "systemPipeR_site.png", width = 400, height = 400,style = "left: 35%; top: 35%; position:fixed"),
+        div(id="helix", style="height: 300px; width: 300px; left: 55%; top: 35%; position:relative")
+    )
+
+
+)
 
 

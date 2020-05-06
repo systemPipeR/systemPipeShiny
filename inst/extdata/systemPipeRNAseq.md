@@ -13,7 +13,6 @@ vignette: |
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 fontsize: 14pt
-bibliography: bibtex.bib
 ---
 
 ```{css, echo=FALSE}

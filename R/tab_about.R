@@ -1,7 +1,7 @@
 ## UI
 aboutUI <- function(id){
     ns <- NS(id)
-    tagList(
+    tags$div(id = ns("particles-js"), style = "background-color: black;",
         h2("About this app"),
         tags$p("Designed by xxx, xxx"),
         h3("Support"),
@@ -63,10 +63,18 @@ aboutUI <- function(id){
         tags$a(href="https://bioconductor.org/packages/release/bioc/html/systemPipeR.html",
                "Visist Bioconductor page")
     )
-    
+
 }
 
 ## server
 aboutServer <- function(input, output, session){
-    
+    delay(ms = 3000,
+          shinyjs::runjs(
+              "
+        $(document).ready(function(){
+        particlesJS('about-particles-js');
+        });
+        ")
+          )
+
 }

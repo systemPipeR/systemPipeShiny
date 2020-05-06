@@ -1,7 +1,7 @@
-####### Server 
-# please do not delete comments starting with '##' 
+####### Server
+# please do not delete comments starting with '##'
 server <- function(input, output, session) {
-    shared <- reactiveValues() 
+    shared <- reactiveValues()
     callModule(dashboardServer, "dashboard")
     # WF tabs server
     callModule(wf_mainServer, "wf_main", shared = shared)
@@ -13,7 +13,7 @@ server <- function(input, output, session) {
     ## data
     callModule(df_rawServer, "df_raw", shared = shared)
     callModule(df_countServer, "df_count", shared = shared)
-    ## plots 
+    ## plots
     callModule(plot_pointServer, "plot_point", shared = shared)
     callModule(plot_pcaServer, "plot_pca", shared = shared)
     # other tabs
@@ -27,6 +27,9 @@ server <- function(input, output, session) {
     })
     # onevent("mouseenter", "sidebarCollapsed", shinyjs::removeCssClass(selector = "body", class = "sidebar-collapse"))
     # onevent("mouseleave", "sidebarCollapsed", shinyjs::addCssClass(selector = "body", class = "sidebar-collapse"))
+    onclick('loading-screen', {
+        shinyjs::hide("loading-screen", anim = TRUE, animType = "fade")
+        shinyjs::show("app-main", anim = TRUE, animType = "fade")
+    })
 
 }
-
