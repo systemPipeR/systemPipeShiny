@@ -109,8 +109,8 @@ ui <- fluidPage(
     ),
     div(id = "loading-screen", style="height: 100vh; width: 100vw",
         tags$script(src="double-helix.js", type="text/javascript"),
-        img(src = "systemPipeR_site.png", width = 400, height = 400,style = "left: 35%; top: 35%; position:fixed"),
-        div(id="helix", style="height: 300px; width: 300px; left: 55%; top: 35%; position:relative")
+        img(src = "systemPipeR_site.png", width = 300, height = 300,style = "left: 45%; top: 35%; position:fixed"),
+        div(id="helix", style="height: 300px; width: 300px; left: 45%; top: 52%; position:relative")
     )
 
 
