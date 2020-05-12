@@ -37,9 +37,5 @@ server <- function(input, output, session) {
     })
     # onevent("mouseenter", "sidebarCollapsed", shinyjs::removeCssClass(selector = "body", class = "sidebar-collapse"))
     # onevent("mouseleave", "sidebarCollapsed", shinyjs::addCssClass(selector = "body", class = "sidebar-collapse"))
-    onclick('loading-screen', {
-        shinyjs::hide("loading-screen", anim = TRUE, animType = "fade")
-        shinyjs::show("app-main", anim = TRUE, animType = "fade")
-    })
-
+    serverLoadingScreen(input, output, session)
 }

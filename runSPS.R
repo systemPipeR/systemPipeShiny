@@ -18,8 +18,7 @@ resolveOptions <- function(appDir = "."){
     ops <- options()$sps
     sps_options <- yaml::yaml.load_file(glue("{appDir}/config/sps_options.yaml"))
     sps_defaults <- sapply(names(sps_options), function(x) sps_options[[x]][['default']], simplify = F)
-    message(glue("{Sys.time()} App has {length(sps_defaults)} default configs, resolving {length(ops)} custom configs"))
-    if (!is.list(ops)) {message("Options are not in a list, reset all"); return(options(sps = sps_defaults))}
+    if (!is.list(ops)) {message("Options are not in a list, reset"); options(sps = sps_defaults)} # return
     # check length
     for (x in seq_along(ops)) {
         if (length(ops[[x]]) != 1) {
@@ -29,13 +28,7 @@ resolveOptions <- function(appDir = "."){
     }
     # check if in option list
     for (x in names(ops)){
-        opt_value <- if (!ops[[x]] %in% sps_options[[x]] %>% unlist) {
-            message(glue("
-                 option'{x}' has unknown value '{ops[[x]]}', set to default.
-                 valid values are {glue_collapse(sps_options[[x]], sep=', ')}
-                         "))
-            sps_defaults[[x]]
-            } else {ops[[x]]}
+        opt_value <- if (!ops[[x]] %in% sps_options[[x]] %>% unlist) sps_defaults[[x]] else ops[[x]]
         if (is.null(opt_value)) message(glue("option'{x}' unknown, not used"))
         ops[[x]] <- opt_value
     }

@@ -237,7 +237,7 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
 #' @param text_color text color
 #' @param item_titles vector string, a vector of titles for table items
 #' @param item_labels list, a list of button lables in each table item
-#' @param item_hrefs list, a llist of hrefs for each button
+#' @param item_hrefs list, a list of hrefs for each button
 #' @param ... other HTML args
 #'
 #' @return
@@ -329,4 +329,51 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table of list of tabs",
     hrefTable(Id = Id, title = title,
               text_color = text_color, item_titles = names(rows),
               item_labels = tab_list[1,], item_hrefs = tab_list[2,], ...)
+}
+
+
+
+#' Render tab description
+#'
+#' @param desc one string in markdown format
+#'
+#' @examples
+#' desc <-
+#' "
+#' # Some desc
+#' - xxxx
+#' "
+#' renderDesc(desc)
+renderDesc <- function(desc) {
+    HTML(markdown::renderMarkdown(text = glue(desc)))
+}
+
+
+#' render the app UI
+#' Combine mainUI defined in ui.R and add the loading screen and more
+#' @param mainUI a normal shiny page ui
+#'
+#' @return a `fluidPage`
+#'
+#' @examples
+#' ui <- fluidPage()
+#' server <- function(input, output, session) {}
+#' mainUI <- shinyApp(ui, server)
+#' spsUI(mainUI)
+spsUI <- function(mainUI){
+    fluidPage(
+        if (getOption("sps")$loading_screen)
+        {tagList(
+            div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
+                mainUI
+            ),
+            div(id = "loading-screen", style="height: 100vh; width: 100vw",
+                renderLoading()
+            )
+        )}
+        else
+        {
+            div(id = "app-main", mainUI)
+        }
+    )
 }

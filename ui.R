@@ -101,19 +101,10 @@ rightsidebar <- rightSidebar(
     background = "light", icon = "clipboard-check", width = 400,
     rightUI("right")
 )
+# app main UI
+mainUI <- dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
+                            body =  dashboardBody, rightsidebar = rightsidebar)
 # merge everything together
-ui <- fluidPage(
-    div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
-        dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
-                          body =  dashboardBody, rightsidebar = rightsidebar)
-    ),
-    div(id = "loading-screen", style="height: 100vh; width: 100vw",
-        tags$script(src="double-helix.js", type="text/javascript"),
-        img(src = "systemPipeR_site.png", width = 300, height = 300,style = "left: 45%; top: 35%; position:fixed"),
-        div(id="helix", style="height: 300px; width: 300px; left: 45%; top: 52%; position:relative")
-    )
-
-
-)
+ui <- spsUI(mainUI)
 
 

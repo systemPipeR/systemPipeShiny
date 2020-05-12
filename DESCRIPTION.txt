@@ -1,13 +1,13 @@
-Package: systemPipeS
-Title: systemPipeS
+Package: systemPipeShiny
+Title: systemPipeShiny
 Version: 0.0.9
 Date: 2020-02-18
 Authors@R: c(
     person(given = "Daniela", family = "Cassol", role = c("aut", "cre"), email = "danielac@ucr.edu"),
-    person(given = "Thomas", family = "Girke", role = c("aut"), email = "thomas.girke@ucr.edu"), 
-    person(given = "Le", family = "Zhang", role = c("aut"), email = "zhan140@ucr.edu"), 
+    person(given = "Thomas", family = "Girke", role = c("aut"), email = "thomas.girke@ucr.edu"),
+    person(given = "Le", family = "Zhang", role = c("aut"), email = "zhan140@ucr.edu"),
     person(given = "Ponmathi", family = "Ramasamy", role = c("aut"), email = "prama008@ucr.edu"))
-Description: systemPipeS
+Description: systemPipeShiny
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
