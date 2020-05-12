@@ -1,0 +1,14 @@
+appDir:
+    default: "."
+
+mode:
+    default: local
+    other: [server]
+
+loading_screen:
+    default: true
+    other: [false]
+
+loading_theme:
+    default: 404
+    other: [vhelix]

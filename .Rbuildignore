@@ -6,9 +6,9 @@
 ^\.Rprofile$
 ^rsconnect/
 ^.git/
-^.idea/
+.idea/
 ^docs/
-
+*\.swp
 manifest.json
 _pkgdown.yml
 

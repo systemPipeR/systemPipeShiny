@@ -158,6 +158,9 @@ quiet <- function(x) {
 #' checkNameSpace("ggplot2")
 checkNameSpace <- function(packages, quietly = FALSE, from = "") {
     missing_pkgs <- lapply(packages, function(pkg) {
+        if (!requireNamespace(pkg, quietly = TRUE)) pkg
+    })
+    missing_pkgs <- lapply(packages, function(pkg) {
         if (!eval(parse(text = "requireNamespace(pkg, quietly = TRUE)"))) pkg
     }) %>% unlist()
     if (!quietly) message(glue("These packages are missing from {from}: {glue::glue_collapse(missing_pkgs, sep = ',')}"))
@@ -177,10 +180,11 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' findTabInfo(tabnames)
 findTabInfo <- function(tabnames) {
     assert_that(is.character(tabnames))
+    appDir <- options()$sps$appDir
     tabs <- if (exists("tab_info")) {
         tab_info
     } else {
-        vroom("tabs.csv", comment = "#", na = character())
+        vroom(glue("{appDir}/config/tabs.csv"), comment = "#", na = character())
     }
     tab_nos <- sapply(tabnames, function(x) {
         tab_no <- str_which(glue("^{x}$"), tabs$Tab_name)

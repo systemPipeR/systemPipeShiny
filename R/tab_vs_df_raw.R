@@ -18,7 +18,7 @@ df_rawUI <- function(id){
     "
     tagList(
         h2("Title for this kind of dataframe"),
-        HTML(markdown::renderMarkdown(text = glue(desc))),
+        renderDesc(desc),
         # first validate required packages and other prerequisites
         actionButton(inputId = ns("validate"), label = "Start with this tab"),
         div(
