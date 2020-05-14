@@ -8,7 +8,7 @@ NULL
 
 #' Catch  error, warning, message text by a toastr bar on shiny
 #'
-#' @param expr 
+#' @param expr
 #' @param position c("top-right", "top-center", "top-left",
 # "top-full-width", "bottom-right", "bottom-center", "bottom-left",
 # "bottom-full-width")
@@ -22,7 +22,7 @@ NULL
 #'     actionButton("btn1","Click me1"),
 #'     actionButton("btn2","Click me2"),
 #'     actionButton("btn3","Click me3"),
-#' 
+#'
 #'     textOutput("text")
 #' )
 #' server <- function(input, output, session) {
@@ -43,7 +43,7 @@ shinyCatch <- function(expr, position = "bottom-right") {
         error = function(e) {
             print(glue("{Sys.time()} There is a(n) error:\n {e$message}"))
             toastr_error(
-                message = e$message, position = position, closeButton = TRUE, timeOut = 0, 
+                message = e$message, position = position, closeButton = TRUE, timeOut = 0,
                 title = "There is an error", hideDuration = 300,
                     )
         },
@@ -61,7 +61,7 @@ shinyCatch <- function(expr, position = "bottom-right") {
 
 #' check name space in server
 #' check name space and pop up warnings in shiny if package is missing
-#' 
+#'
 #' @param session shiny session
 #' @param cran_pkg vector of strings
 #' @param bioc_pkg vector of strings
@@ -83,15 +83,15 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
     github_pkg <- github %>% str_remove("^.*/")
     missing_github_pkg <- checkNameSpace(github_pkg, quietly, from = "GitHub")
     missing_github <- github[github_pkg %in% missing_github_pkg]
-    cran_cmd <- if (length(missing_cran) < 1) "" else 
+    cran_cmd <- if (length(missing_cran) < 1) "" else
         paste0("install.packages(c('", paste0(missing_cran, collapse = "', '"), "'))")
-    bioc_cmd <- if (length(missing_bioc) < 1) "" else 
+    bioc_cmd <- if (length(missing_bioc) < 1) "" else
         paste0(
         'if (!requireNamespace("BiocManager", quietly=TRUE))
         install.packages("BiocManager")\n',
         "BiocManager::install(c('", paste0(missing_bioc, collapse = "', '"), "'))"
         )
-    github_cmd <- if (length(missing_github) < 1) "" else 
+    github_cmd <- if (length(missing_github) < 1) "" else
         paste0(
             'if (!requireNamespace("BiocManager", quietly=TRUE))
                 install.packages("BiocManager")\n',
@@ -100,7 +100,7 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
 
     if (length(missing_cran) + length(missing_bioc) + length(missing_github) > 0) {
         shinyWidgets::sendSweetAlert(
-            session = session, 
+            session = session,
             title = "Please install required packages manually",
             text = tags$div(style = "
                         background-color: #FA5858;
@@ -108,7 +108,7 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
                         overflow: auto;
                         white-space: pre;
                         color: black;
-                        
+
                         ",
                     p(cran_cmd),
                     p(bioc_cmd),
@@ -120,7 +120,7 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
         return(FALSE)
     } else {
         shinyWidgets::sendSweetAlert(
-            session = session, 
+            session = session,
             title = "No package missing",
             text = "You have all required package(s).",
             type = "success"
@@ -129,4 +129,53 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
     }
 }
 
-
+#' Server side function for dynamicFile
+#'
+#' @param input shiny server input
+#' @param session shiny server session
+#' @param id input file element ID
+#'
+#' @return reactive dataframe, need to extract the value inside reactive
+#' expression, observe, or inside `isolate`
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' library(shinyFiles)
+#' library(shinyjs)
+#' options(sps = list(mode='server'))
+#' ui <- fluidPage(
+#' useShinyjs(),
+#' dynamicFile("getFile"),
+#' textOutput("txt_file")
+#' )
+#'
+#' server <- function(input,output,session){
+#'     runjs('$(".sps-file input").attr("readonly", true)')
+#'     myfile <- dynamicFileServer(input,output,session, id = "getFile")
+#'     observe({
+#'         print(myfile()) # remember to use `()` for reactive value
+#'     })
+#' }
+#' shinyApp(ui = ui, server = server)
+dynamicFileServer <- function(input,session, id){
+    file_return <- reactiveVal(NULL)
+    if (getOption("sps")$mode == "local") {
+        roots <- c(getVolumes()(), current=getwd())
+        shinyFileChoose(input, id, roots = roots, session = session)
+        observeEvent(input[[id]],
+            file_return({
+                req(is.list(input[[id]]))
+                file_selected <- parseFilePaths(roots, input[[id]])
+                updateTextInput(inputId = glue("{id}-text"),
+                                session = session,
+                                placeholder = unname(file_selected$datapath))
+                as.data.frame(file_selected)
+            })
+        )
+        file_return
+    } else {
+        observe(file_return(input[[id]]))
+        file_return
+    }
+}

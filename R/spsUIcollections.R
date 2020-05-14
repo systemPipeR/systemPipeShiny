@@ -373,7 +373,68 @@ spsUI <- function(mainUI){
         )}
         else
         {
-            div(id = "app-main", mainUI)
+            div(id = "app-main", style='position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px;', mainUI)
         }
     )
+}
+
+
+#' dynamically generate select file input
+#' depending on the mode in options, render similar UI but server side works
+#' differently. `local` mode will not copy file, directly use a path pointer,
+#' `server` mode upload file and store in temp. Expect similar behavior as
+#' `fileInput`.
+#' @param id element id
+#' @param title element title
+#' @param label upload button label
+#' @param icon button icon, only works for `local` mode
+#' @param style additional button style, only works for `local` mode
+#' @param multiple multiple files allowed
+#' `shinyFilesButton`
+#'
+#' @return div
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' library(shinyFiles)
+#' library(shinyjs)
+#' options(sps = list(mode='server'))
+#' ui <- fluidPage(
+#' useShinyjs(),
+#' dynamicFile("getFile"),
+#' textOutput("txt_file")
+#' )
+#'
+#' server <- function(input,output,session){
+#'     runjs('$(".sps-file input").attr("readonly", true)')
+#'     myfile <- dynamicFileServer(input,output,session, id = "getFile")
+#'     observe({
+#'         print(myfile())
+#'     })
+#' }
+#' shinyApp(ui = ui, server = server)
+dynamicFile <- function(id, title = "Select your file:",
+                        label = "Browse", icon = NULL, style = "",
+                        multiple = FALSE){
+    icon <- if(is.empty(icon)) icon("upload")
+    if (getOption("sps")$mode == "local") {
+        div(class = "form-group shiny-input-container sps-file",
+            tags$label(class="control-label", `for`=id, title),
+            div(class="input-group",
+                tags$label(class="input-group-btn input-group-prepend",
+                           shinyFilesButton(id, label,
+                                            title = title, multiple = multiple,
+                                            buttonType = "btn btn-primary", icon = icon,
+                                            style = style)
+                ),
+                textInput(inputId = glue("{id}-text"), label = NULL, placeholder="No file selected")
+            )
+
+        )
+
+    } else {
+        fileInput(inputId = id, label = title,
+                  multiple = multiple, buttonLabel = label)
+    }
 }

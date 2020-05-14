@@ -10,8 +10,6 @@ library(pushbar) # drop down bars
 library(rhandsontable) # handsontable js for table
 library(magrittr) # pipe
 library(shinyjs) # general js functions
-library(dplyr)
-library(ggplot2)
 library(shinyWidgets) # additional UI elements, alerts
 library(shinyTree) # js tree veiw
 library(networkD3) # network plots
@@ -19,6 +17,7 @@ library(plotly) # plotly plots
 library(shinyAce) # Ace editor
 library(shinytoastr) # toastr js
 library(shinyjqui) # jQuery UI
+library(shinyFiles) # local mode select input file
 # general processing
 library(ggplot2)
 library(stringr)
@@ -45,16 +44,16 @@ library(rsvg)
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
 options(sps = list(
     appDir = ".",
-    mode = "server",
-    loading_screen = TRUE,
-    loading_theme = "vhelixs"
+    mode = "local",
+    loading_screen = FALSE,
+    loading_theme = "vhelix"
 ))
+
 source("R/runSPS.R")
 resolveOptions()
 # other useful shiny options
 # max upload size, default 5MB
 options(shiny.maxRequestSize = 5*1024^2)
-
 
 
 # for debugging
@@ -70,5 +69,5 @@ tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na =
 
 
 
-################ test
+####### you can add additional code #########
 

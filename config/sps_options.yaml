@@ -12,3 +12,8 @@ loading_screen:
 loading_theme:
     default: 404
     other: [vhelix]
+
+
+dog_or_cat:
+    default: dog
+    other: [cat, bird]
