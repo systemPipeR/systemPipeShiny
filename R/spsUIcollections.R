@@ -21,7 +21,6 @@ useSps <- function(){
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit-icons.min.js"></script>
              '),
-        tags$script(src = "particles.js"),
         tags$link(rel = "stylesheet", type = "text/css",
                             href = "sps/sps.css"),
                   tags$script(src = "sps/sps.js")
@@ -367,8 +366,25 @@ spsUI <- function(mainUI){
             div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
                 mainUI
             ),
-            div(id = "loading-screen", style="height: 100vh; width: 100vw",
-                renderLoading()
+            div(id = "loading-screen", style="height: 100vh; width: 100vw; overflow: hidden;",
+                    sytle="z-index:100; position:absolute;",
+                    tags$style('
+                    #toapp{
+                      border: none;
+                      background: none;
+                      z-index:100;
+                        top: 85%;
+                        left: 50%;
+                      position:absolute;
+                      display:block;
+                      transform: translate(-50%, -50%);
+                    }
+                    #toapp:active {
+                      transform: translate(-50%, -10%);
+                    }
+                               '),
+                    actionBttn(inputId = "toapp", "Continue to app", icon = icon("angle-double-right"), size = "lg"),
+                    renderLoading()
             )
         )}
         else

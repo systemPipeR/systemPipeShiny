@@ -8,23 +8,25 @@ renderLoading <- function(){
 }
 # Use this on server
 serverLoadingScreen <- function(input, output, session){
-    onclick('loading-screen', {
+    observeEvent(input$toapp,{
         shinyjs::hide("loading-screen", anim = TRUE, animType = "fade")
         shinyjs::show("app-main", anim = TRUE, animType = "fade")
     })
 }
 
 
-
+#### loading screen collections
 loading404 <- function(){
     includeHTML("www/nyan.html")
 }
 
-
 loadingVhelix <- function(){
     tagList(
-        tags$script(src="double-helix.js", type="text/javascript"),
-        img(src = "systemPipeR_site.png", width = 300, height = 300,style = "left: 45%; top: 35%; position:fixed"),
-        div(id="helix", style="height: 300px; width: 300px; left: 45%; top: 52%; position:relative")
+        includeHTML("www/vhelix.html"),
+        particlesjs::particles(
+            target_id ="loading-screen",
+            element_id = "particles",
+            config = "www/particlesjs-config.json"
+        )
     )
 }

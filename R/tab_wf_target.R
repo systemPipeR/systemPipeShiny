@@ -244,5 +244,3 @@ check_target <- function(col_names, headerlines) {
     names(check_results) <- c("both 'FileName1' 'FileName2' or 'FileName'", "SampleName", "Factor", "header with # &ltCMP&gt")
     return(check_results)
 }
-
-tryCatch({vroom("~/Downloads/1.png",  delim = "\t", comment = "#", n_max = 10000, col_names = FALSE, col_types = cols())}, error= function(e) {warning(e); test})

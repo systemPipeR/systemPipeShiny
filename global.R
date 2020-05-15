@@ -18,6 +18,7 @@ library(shinyAce) # Ace editor
 library(shinytoastr) # toastr js
 library(shinyjqui) # jQuery UI
 library(shinyFiles) # local mode select input file
+# remotes::install_github("dreamRs/particlesjs") # particlesjs for loading theme
 # general processing
 library(ggplot2)
 library(stringr)
@@ -45,8 +46,8 @@ library(rsvg)
 options(sps = list(
     appDir = ".",
     mode = "local",
-    loading_screen = FALSE,
-    loading_theme = "vhelix"
+    loading_screen = TRUE,
+    loading_theme = "vhelixsss"
 ))
 
 source("R/runSPS.R")

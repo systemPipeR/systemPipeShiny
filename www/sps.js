@@ -66,3 +66,8 @@ $(document).ready(function() {
   $(".sps-file input").attr("readonly", true);
 });
 
+//$("#toapp").click(function(){
+//  $("#app-main").removeClass("shinyjs-hide");
+//  $("#loading-screen").hide();
+//  $('a[href="#shiny-tab-dashboard"]').tab('show');
+//});
