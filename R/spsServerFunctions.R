@@ -16,7 +16,7 @@ NULL
 #' @return toastr pop-up
 #' @export
 #'
-#' @ example
+#' @example
 #' ui <- fluidPage(
 #'     useToastr(),
 #'     actionButton("btn1","Click me1"),
@@ -83,15 +83,15 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
     github_pkg <- github %>% str_remove("^.*/")
     missing_github_pkg <- checkNameSpace(github_pkg, quietly, from = "GitHub")
     missing_github <- github[github_pkg %in% missing_github_pkg]
-    cran_cmd <- if (length(missing_cran) < 1) "" else
+    cran_cmd <- if (is.empty(missing_cran)) "" else
         paste0("install.packages(c('", paste0(missing_cran, collapse = "', '"), "'))")
-    bioc_cmd <- if (length(missing_bioc) < 1) "" else
+    bioc_cmd <- if (is.empty(missing_bioc)) "" else
         paste0(
         'if (!requireNamespace("BiocManager", quietly=TRUE))
         install.packages("BiocManager")\n',
         "BiocManager::install(c('", paste0(missing_bioc, collapse = "', '"), "'))"
         )
-    github_cmd <- if (length(missing_github) < 1) "" else
+    github_cmd <- if (is.empty(missing_github)) "" else
         paste0(
             'if (!requireNamespace("BiocManager", quietly=TRUE))
                 install.packages("BiocManager")\n',
@@ -119,21 +119,18 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
         )
         return(FALSE)
     } else {
-        shinyWidgets::sendSweetAlert(
-            session = session,
-            title = "No package missing",
-            text = "You have all required package(s).",
-            type = "success"
-        )
+        shinytoastr::toastr_success(
+            message = "You have all required packages for this tab",
+            position = "bottom-right")
         return(TRUE)
     }
 }
 
 #' Server side function for dynamicFile
-#'
 #' @param input shiny server input
 #' @param session shiny server session
-#' @param id input file element ID
+#' @param id input file element ID.
+#' Do not us `ns()` to wrap the id on server side if inside module
 #'
 #' @return reactive dataframe, need to extract the value inside reactive
 #' expression, observe, or inside `isolate`
@@ -152,7 +149,7 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
 #'
 #' server <- function(input,output,session){
 #'     runjs('$(".sps-file input").attr("readonly", true)')
-#'     myfile <- dynamicFileServer(input,output,session, id = "getFile")
+#'     myfile <- dynamicFileServer(input,session, id = "getFile")
 #'     observe({
 #'         print(myfile()) # remember to use `()` for reactive value
 #'     })
@@ -161,7 +158,7 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
 dynamicFileServer <- function(input,session, id){
     file_return <- reactiveVal(NULL)
     if (getOption("sps")$mode == "local") {
-        roots <- c(getVolumes()(), current=getwd())
+        roots <- c(current=getwd(), getVolumes()())
         shinyFileChoose(input, id, roots = roots, session = session)
         observeEvent(input[[id]],
             file_return({
@@ -179,3 +176,78 @@ dynamicFileServer <- function(input,session, id){
         file_return
     }
 }
+
+
+#' Load tibbles to server
+#' @description load a file to server end. Designed to be used with the input
+#' file source switch button. Use `vroom` to load the file
+#' @param choice where this file comes from, from 'upload' or example 'eg'?
+#' @param df_init a tibble to return if `upload_path` or `eg_path` is not
+#' provided. Return a 8x8 empty tibble if not provided
+#' @param upload_path when `choice` is "upload", where to load the file, will
+#' return `df_init` if this param is not provided
+#' @param eg_path when `choice` is "eg", where to load the file, will
+#' return `df_init` if this param is not provided
+#' @param comment comment characters when load the file, see help file of `vroom`
+#' @param delim delimiter characters when load the file, see help file of `vroom`
+#' @param col_types columns specifications, see help file of `vroom`
+#' @param ... other params for vroom, see help file of `vroom`
+#'
+#' @return a tibble
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' library(shinyWidgets)
+#' ui <- fluidPage(
+#'     shinyWidgets::radioGroupButtons(
+#'         inputId = "data_source", label = "Choose your data file source:",
+#'         selected = "upload",
+#'         choiceNames = c("Upload", "Example"),
+#'         choiceValues = c("upload", "eg")
+#'     ),
+#'     fileInput("df_path", label = "input file"),
+#'     dataTableOutput("df")
+#' )
+#'
+#' server <- function(input, output, session) {
+#'     tmp_file <- tempfile(fileext = ".csv")
+#'     write.csv(iris, file = tmp_file)
+#'     data_df <- reactive({
+#'         loadDF(choice = input$data_source, upload_path = input$df_path$datapath,
+#'                delim = ",", eg_path = tmp_file)
+#'     })
+#'     output$df <- renderDataTable(data_df())
+#' }
+#' shinyApp(ui, server)
+loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
+                      comment = "#", delim = "\t",
+                      col_types = cols(), ...){
+    shinyCatch({
+        choice <- match.arg(choice, c("upload", "eg"))
+        df_init <-
+            if(is.empty(df_init)) {
+                data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
+                    tibble::as_tibble()
+                }
+            else {df_init}
+        if(!any(class(df_init) %in% c("tbl_df", "tbl", "data.frame"))) {
+            stop("df_init need to be dataframe or tibble")
+        }
+        df_init <- tibble::as_tibble(df_init)
+        if (choice == "upload" & is.empty(upload_path)) return(df_init)
+        # if (choice == "eg" & is.empty(eg_path)) return(df_init)
+
+        upload_path <- switch(choice,
+                              "upload" = upload_path,
+                              "eg" = eg_path,
+        )
+        df <- suppressMessages(vroom(
+            upload_path,  delim = delim, comment = comment,
+            col_types = col_types, ...
+        ))
+        if(is.null(df)){warning("Can't read file, return empty"); return(df_init)}
+        return(df)
+    })
+}
+

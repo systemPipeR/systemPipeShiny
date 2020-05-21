@@ -1,5 +1,5 @@
 # use runApp() or click right top button in Rstudio to start app,
-# do not write this code in script, type it in console
+# but do not write this code in script, type it in console
 
 
 # shiny and js
@@ -38,24 +38,33 @@ library(Rtsne)
 library(DOT)
 library(rsvg)
 
+# suggested to install:
+# remotes::install_github("dreamRs/particlesjs") # particlesjs for loading theme
+# install.packages("crayon") # colorful terminal message
+# library(particlesjs)
+# library(crayon)
+
+
 # SPS options
-# appDir: app folder - path
 # mode: running mode - local, server
 # loading_screen: to show loading screen? - TRUE, FALSE
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
+# loading_particles: particle effects on loading, loading_screen must be TRUE - TRUE, FALSE
+# use_crayon: Do you want colorful terminal messages? must install `crayon`- TRUE, FALSE
 options(sps = list(
-    appDir = ".",
     mode = "local",
     loading_screen = TRUE,
-    loading_theme = "vhelixsss"
+    loading_theme = "vhelix",
+    loading_particles = TRUE,
+    use_crayon = TRUE
 ))
 
 source("R/runSPS.R")
-resolveOptions()
+resolveOptions(appDir = getwd())
+
 # other useful shiny options
 # max upload size, default 5MB
 options(shiny.maxRequestSize = 5*1024^2)
-
 
 # for debugging
 # options(shiny.reactlog = TRUE)
@@ -65,10 +74,9 @@ options(shiny.maxRequestSize = 5*1024^2)
 # options(shiny.error = browser)
 # options(shiny.autoreload.r = TRUE)
 options(shiny.autoreload = TRUE) # takes some computer power, you may consider turn it off
+
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-
-
 
 ####### you can add additional code #########
 

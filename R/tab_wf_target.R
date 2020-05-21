@@ -74,16 +74,14 @@ targetUI <- function(id){
     )
 }
 
-ace_target_header_init <-
+## submodule server
+targetServer <- function(input, output, session, shared){
+    ace_target_header_init <-
     "# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
     # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
     # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
     # <CMP> CMPset2: ALL"
-df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>% tibble::as_tibble()
-
-
-## submodule server
-targetServer <- function(input, output, session, shared){
+    df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>% tibble::as_tibble()
     ns <- session$ns
     # some reactive values to pass around observe
     selected_old <- reactiveVal("upload")

@@ -157,6 +157,7 @@ quiet <- function(x) {
 #' @examples
 #' checkNameSpace("ggplot2")
 checkNameSpace <- function(packages, quietly = FALSE, from = "") {
+    if (is.empty(packages)) return(NULL)
     missing_pkgs <- lapply(packages, function(pkg) {
         if (!requireNamespace(pkg, quietly = TRUE)) pkg
     })
@@ -197,3 +198,41 @@ findTabInfo <- function(tabnames) {
         images = tabs$image[tab_nos]
         ) %>% return()
 }
+
+
+#' SPS terminal message
+#' @description If `crayon` is installed, the message will be colorful.
+#' @param msg a character string of message
+#' @param level one of "INFO", "WARNING", "ERROR", lower case OK
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' msg("this is info")
+#' msg("this is warning", "warning")
+#' msg("this is error", "error")
+msg <- function(msg, level = "INFO") {
+    info <- warn <- err <- function(msg){return(msg)}
+    if(is.null(getOption('sps')$use_crayon)) {
+        options(sps = getOption("sps") %>% {.[['use_crayon']] <- TRUE; .})
+    }
+    if (getOption('sps')$use_crayon){
+        if (!requireNamespace("crayon", quietly = TRUE)) {
+            options(sps = getOption("sps") %>% {.[['use_crayon']] <- FALSE; .})
+            message(glue("[INFO] {Sys.time()} If you want colorful systemPipeShiny messages, try install 'crayon' package"))
+        } else{
+            info <- crayon::blue$bold
+            warn <- crayon::yellow$bold
+            err <- crayon::red$bold
+        }
+    }
+    level <- match.arg(toupper(level), c("INFO", "WARNING", "ERROR"))
+    msg <- glue("[{level}] {Sys.time()} {msg[1]}")
+    switch (level,
+        "WARNING" = warning(warn(msg), call. = FALSE, immediate. = TRUE),
+        "ERROR" = stop(err(msg), call. = FALSE),
+        message(info(msg))
+    )
+}
+

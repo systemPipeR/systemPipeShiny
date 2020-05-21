@@ -21,12 +21,5 @@ loading404 <- function(){
 }
 
 loadingVhelix <- function(){
-    tagList(
-        includeHTML("www/vhelix.html"),
-        particlesjs::particles(
-            target_id ="loading-screen",
-            element_id = "particles",
-            config = "www/particlesjs-config.json"
-        )
-    )
+        includeHTML("www/vhelix.html")
 }

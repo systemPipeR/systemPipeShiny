@@ -384,7 +384,20 @@ spsUI <- function(mainUI){
                     }
                                '),
                     actionBttn(inputId = "toapp", "Continue to app", icon = icon("angle-double-right"), size = "lg"),
-                    renderLoading()
+                    renderLoading(),
+                    if(getOption('sps')$loading_particles) {
+                        if (requireNamespace("particlesjs", quietly = TRUE)){
+                            msg("Option loading_particles is `true` but package particlesjs is not installed. Try `remotes::install_github('dreamRs/particlesjs')`",
+                                "warning")
+                            div()
+                        } else {
+                            particlesjs::particles(
+                                target_id ="loading-screen",
+                                element_id = "particles",
+                                config = "www/particlesjs-config.json"
+                            )
+                        }
+                    }
             )
         )}
         else
@@ -424,7 +437,7 @@ spsUI <- function(mainUI){
 #'
 #' server <- function(input,output,session){
 #'     runjs('$(".sps-file input").attr("readonly", true)')
-#'     myfile <- dynamicFileServer(input,output,session, id = "getFile")
+#'     myfile <- dynamicFileServer(input,session, id = "getFile")
 #'     observe({
 #'         print(myfile())
 #'     })
@@ -444,7 +457,8 @@ dynamicFile <- function(id, title = "Select your file:",
                                             buttonType = "btn btn-primary", icon = icon,
                                             style = style)
                 ),
-                textInput(inputId = glue("{id}-text"), label = NULL, placeholder="No file selected")
+                textInput(inputId = glue("{id}-text"), label = NULL,
+                          placeholder="No file selected", width = "100%")
             )
 
         )

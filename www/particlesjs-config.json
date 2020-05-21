@@ -3,8 +3,8 @@
     "number": {
       "value": 120,
       "density": {
-        "enable": false,
-        "value_area": 800
+        "enable": true,
+        "value_area": 3000
       }
     },
     "color": {
@@ -71,7 +71,7 @@
     "detect_on": "canvas",
     "events": {
       "onhover": {
-        "enable": true,
+        "enable": false,
         "mode": "grab"
       },
       "onclick": {

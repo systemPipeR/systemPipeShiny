@@ -1,6 +1,3 @@
-appDir:
-    default: "."
-
 mode:
     default: local
     other: [server]
@@ -14,6 +11,10 @@ loading_theme:
     other: [vhelix]
 
 
-dog_or_cat:
-    default: dog
-    other: [cat, bird]
+loading_particles:
+    default: true
+    other: [false]
+
+use_crayon:
+    default: true
+    other: [false]
