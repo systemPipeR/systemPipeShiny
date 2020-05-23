@@ -6,14 +6,19 @@
 NULL
 
 
-#' Catch  error, warning, message text by a toastr bar on shiny
-#'
-#' @param expr
-#' @param position c("top-right", "top-center", "top-left",
+#' Catch  error, warning, message text catcher
+#' @description Catch error, warning, message by a toastr bar on shiny front end
+#' also log the text on backend console
+#' @param expr expression
+#' @param position toastr position: c("top-right", "top-center", "top-left",
 # "top-full-width", "bottom-right", "bottom-center", "bottom-left",
 # "bottom-full-width")
+#' @param non_blocking If encounter any error, warning or message, continue or
+#' stop
 #'
-#' @return toastr pop-up
+#' @return if `non-blocking`,  warning or message return original value, error
+#' return `NULL`. If `blocking`, any error, warning, message will return NULL,
+#' otherwise original value
 #' @export
 #'
 #' @example
@@ -37,27 +42,53 @@ NULL
 #'     })
 #' }
 #' shinyApp(ui, server)
-shinyCatch <- function(expr, position = "bottom-right") {
-    tryCatch(
-        {expr},
-        error = function(e) {
-            print(glue("{Sys.time()} There is a(n) error:\n {e$message}"))
-            toastr_error(
-                message = e$message, position = position, closeButton = TRUE, timeOut = 0,
-                title = "There is an error", hideDuration = 300,
-                    )
-        },
-        warning = function(w) {
-            print(glue("{Sys.time()} There is a(n) warning:\n {w$message}"))
-            toastr_warning(message = w$message, position = position, closeButton = TRUE, timeOut = 5000)
-        },
-        message = function(m) {
-            print(glue("{Sys.time()} There is a(n) message:\n {m$message}"))
-            toastr_info(message = m$message, position = position, closeButton = TRUE, timeOut = 3000)
-        })
+shinyCatch <- function(expr, position = "bottom-right", non_blocking = TRUE) {
+    if (non_blocking) {
+        tryCatch(
+            withCallingHandlers(
+                expr,
+                warning = function(w) {
+                    toastr_warning(message = remove_ANSI(w$message), position = position,
+                                   closeButton = TRUE, timeOut = 5000)
+                },
+                message = function(m) {
+                    toastr_info(message = remove_ANSI(m$message), position = position,
+                                closeButton = TRUE, timeOut = 3000)
+                }
+            ),
+            error = function(e) {
+                msg(e$message, "SPS-ERROR", "red")
+                toastr_error(
+                    message = remove_ANSI(e$message), position = position,
+                    closeButton = TRUE, timeOut = 0,
+                    title = "There is an error", hideDuration = 300,
+                )
+                return(NULL)
+            }
+        )
+    } else {
+        tryCatch(
+            expr,
+            error = function(e) {
+                msg(e$message, "SPS-ERROR", "red")
+                toastr_error(
+                    message = remove_ANSI(e$message), position = position,
+                    closeButton = TRUE, timeOut = 0,
+                    title = "There is an error", hideDuration = 300,
+                )
+            },
+            warning = function(w) {
+                msg(w$message, "SPS-WARNING", "orange")
+                toastr_warning(message = remove_ANSI(w$message), position = position,
+                               closeButton = TRUE, timeOut = 5000)
+            },
+            message = function(m) {
+                msg(m$message, "SPS-INFO", "blue")
+                toastr_info(message = remove_ANSI(m$message), position = position,
+                            closeButton = TRUE, timeOut = 3000)
+            })
+    }
 }
-
-
 
 #' check name space in server
 #' check name space and pop up warnings in shiny if package is missing
@@ -223,7 +254,7 @@ dynamicFileServer <- function(input,session, id){
 loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
                       comment = "#", delim = "\t",
                       col_types = cols(), ...){
-    shinyCatch({
+    df <- shinyCatch({
         choice <- match.arg(choice, c("upload", "eg"))
         df_init <-
             if(is.empty(df_init)) {
@@ -236,18 +267,19 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
         }
         df_init <- tibble::as_tibble(df_init)
         if (choice == "upload" & is.empty(upload_path)) return(df_init)
-        # if (choice == "eg" & is.empty(eg_path)) return(df_init)
-
+        if (choice == "eg" & is.empty(eg_path)) return(df_init)
         upload_path <- switch(choice,
                               "upload" = upload_path,
                               "eg" = eg_path,
         )
-        df <- suppressMessages(vroom(
+        df <- shinyCatch(vroom(
             upload_path,  delim = delim, comment = comment,
             col_types = col_types, ...
         ))
-        if(is.null(df)){warning("Can't read file, return empty"); return(df_init)}
-        return(df)
+        if(is.null(df)){msg("Can't read file, return empty", "error")}
+        if(!names(df) %>% validUTF8() %>% all()){
+            msg("non UTF-8 coding detected, return empty", "error")}
     })
+    return(df)
 }
 

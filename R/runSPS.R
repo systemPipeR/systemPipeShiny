@@ -52,6 +52,14 @@ resolveOptions <- function(appDir = getwd()){
     for (x in names(ops)){
         sps_defaults[[x]] <- ops[[x]]
     }
+    # check options of suggested packages
+    if (sps_defaults[["display_code"]]) {
+        if (!requireNamespace("shinymeta", quietly = TRUE)) {
+            msg("Option use_shinymeta is `TRUE` but package shinymeta is not installed, turn off this option",
+                level = "SPS-WARNING", .other_color = "orange")
+            sps_defaults[["display_code"]] <- FALSE
+        }
+    }
     # add hidden appdir
     sps_defaults[['appDir']] <- appDir
     # replace global env

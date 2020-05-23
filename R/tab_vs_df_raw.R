@@ -36,20 +36,33 @@ df_rawUI <- function(id){
             fluidRow(
                 column(width = 5, dynamicFile(id = ns("file_upload"))),
                 column(width = 3,
-                       selectizeInput(
+                       pickerInput(
                            inputId = ns("delim"), label = "File delimiter",
-                           choices = c(Tab="\t", space=" ", `,`=",", `|`="|", `:`=":", `;`=";")
+                           choices = c(Tab="\t", space=" ", `,`=",", `|`="|", `:`=":", `;`=";"),
+                           options = list(style = "btn-primary")
                 )),
                 column(width = 3, clearableTextInput(ns("comment"), "File comments", value = "#")),
             ),
             fluidRow(h4("Input Data", style="text-align: center;")),
             div(style = "background-color: #F1F1F1;", DT::DTOutput(ns("df"))),
-            hr(), h4("Choose a proprocessing method"),
-            p("Depending on different ways of preprocessing, different plotting options will be available"),
+            fluidRow(
+                hr(), h4("Choose a proprocessing method"),
+                p("Depending on different ways of preprocessing, different plotting options will be available"),
+                column(5,
+                    pickerInput(
+                        inputId = ns("select_prepro"), label = "Choose a method",
+                        choices = c(Tab="\t", space=" ", `,`=",", `|`="|", `:`=":", `;`=";"),
+                        options = list(style = "btn-primary")
+                    )
+                ),
+                column(2, style = "padding-left: 0px; padding-top: 15px;",
+                      actionButton(ns("preprocess"), label = "Preprocess", icon("paper-plane"))
+                ),
+            ),
             column(
-                width = 12, style = "padding-top: 15px; text-align: center;",
+                width = 12,
                 # actionButton(ns("df_reload"), label = "Load/Reload Data Input", icon("redo-alt")),
-                actionButton(ns("to_task"), label = "Add to task", icon("paper-plane"))
+
             ),
             fluidRow(id = ns("plot_options"),
                      a("Scatter Plot", href = "#shiny-tab-plot_point"),
@@ -81,7 +94,8 @@ df_rawServer <- function(input, output, session, shared){
     # get upload path, note path is in upload_path()$datapath
     upload_path <- dynamicFileServer(input,session, id = "file_upload")
     observe({
-        # print(input$delim )
+        print(data_df() %>% class)
+        print(data_df())
         # print(input$df_rows_all)
         # print(data_df()[input$df_rows_all, ])
         })
@@ -93,15 +107,19 @@ df_rawServer <- function(input, output, session, shared){
                   eg_path = "inst/extdata/iris.csv")
     })
     # display table
-    output$df <- DT::renderDT(DT::datatable(
-        data_df(), style = "bootstrap", class = "compact",  filter = "top",
-        extensions = c( 'Scroller','Buttons'), options = list(
-            dom = 'Bfrtip',
-            buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-            deferRender = TRUE, scrollY = 600, scrollX = TRUE, scroller = TRUE,
-            columnDefs = list(list(className = 'dt-center', targets = "_all"))
+    output$df <- DT::renderDT({
+        validate(
+            need(not_empty(data_df()), "Data file cannot be not loaded")
         )
-    ))
+        DT::datatable(
+            data_df(), style = "bootstrap", class = "compact",  filter = "top",
+            extensions = c( 'Scroller','Buttons'), options = list(
+                dom = 'Bfrtip',
+                buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                deferRender = TRUE, scrollY = 580, scrollX = TRUE, scroller = TRUE,
+                columnDefs = list(list(className = 'dt-center', targets = "_all"))
+            ))
+    })
 
     # preprocess
     observeEvent(input$to_task, {

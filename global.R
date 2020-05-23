@@ -38,12 +38,10 @@ library(Rtsne)
 library(DOT)
 library(rsvg)
 
-# suggested to install:
+# suggested to install, no need to library them:
 # remotes::install_github("dreamRs/particlesjs") # particlesjs for loading theme
 # install.packages("crayon") # colorful terminal message
-# library(particlesjs)
-# library(crayon)
-
+# remotes::install_github("Rstudio/shinymeta") # particlesjs for loading theme
 
 # SPS options
 # mode: running mode - local, server
@@ -51,15 +49,18 @@ library(rsvg)
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
 # loading_particles: particle effects on loading, loading_screen must be TRUE - TRUE, FALSE
 # use_crayon: Do you want colorful terminal messages? must install `crayon`- TRUE, FALSE
+# display_code: use `shinymeta` to display preprocess and plotting code? - TRUE, FALSE
 options(sps = list(
     mode = "local",
-    loading_screen = TRUE,
+    loading_screen = FALSE,
     loading_theme = "vhelix",
     loading_particles = TRUE,
-    use_crayon = TRUE
+    use_crayon = TRUE,
+    display_code = TRUE
 ))
 
 source("R/runSPS.R")
+source("R/spsSupport.R")
 resolveOptions(appDir = getwd())
 
 # other useful shiny options

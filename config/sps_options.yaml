@@ -7,14 +7,18 @@ loading_screen:
     other: [false]
 
 loading_theme:
-    default: 404
+    default: "404"
     other: [vhelix]
 
 
 loading_particles:
-    default: true
-    other: [false]
+    default: false
+    other: [true]
 
 use_crayon:
-    default: true
-    other: [false]
+    default: false
+    other: [true]
+
+display_code:
+    default: false
+    other: [true]

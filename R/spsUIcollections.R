@@ -157,13 +157,15 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 
 #' generate gallery by only providing tab names
 #'
-#' @param tabnames tab names
+#' @param tabnames tab names, string vector
+#' will be included
 #' @param Id div ID
 #' @param title gallery title
 #' @param title_color title color
 #' @param image_frame_size integer, 1-12
 #' @param img_height css style like '300px'
 #' @param img_width css style like '480px'
+#' @param type filter by tab type, then tabnames will be ignored: core, wf, data, vs
 #'
 #' @return gallery div
 #'
@@ -176,10 +178,10 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #'
 #' }
 #' shinyApp(ui, server)
-genGallery <- function(tabnames, Id = NULL, title = "Gallery",
+genGallery <- function(tabnames, Id = NULL, title = "Gallery", type = "vs",
                        title_color = "#0275d8", image_frame_size = 4, img_height = "300px",
                        img_width = "480px") {
-    tabs <- findTabInfo(tabnames)
+    tabs <- findTabInfo(tabnames, type)
     gallery(Id = Id, title = title, title_color = title_color,
             image_frame_size = image_frame_size, img_height = img_height,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
@@ -304,9 +306,9 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 }
 
 #' generate a table of lists of hyper reference buttons by using tab config file
+#'
 #' @param rows a list of rows, each item name in the list will be the row name,
 #' each item is a vector of tab names
-#'
 #' @param Id element ID
 #' @param title table title
 #' @param text_color text color for table
@@ -346,67 +348,6 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table of list of tabs",
 renderDesc <- function(desc) {
     HTML(markdown::renderMarkdown(text = glue(desc)))
 }
-
-
-#' render the app UI
-#' Combine mainUI defined in ui.R and add the loading screen and more
-#' @param mainUI a normal shiny page ui
-#'
-#' @return a `fluidPage`
-#'
-#' @examples
-#' ui <- fluidPage()
-#' server <- function(input, output, session) {}
-#' mainUI <- shinyApp(ui, server)
-#' spsUI(mainUI)
-spsUI <- function(mainUI){
-    fluidPage(
-        if (getOption("sps")$loading_screen)
-        {tagList(
-            div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
-                mainUI
-            ),
-            div(id = "loading-screen", style="height: 100vh; width: 100vw; overflow: hidden;",
-                    sytle="z-index:100; position:absolute;",
-                    tags$style('
-                    #toapp{
-                      border: none;
-                      background: none;
-                      z-index:100;
-                        top: 85%;
-                        left: 50%;
-                      position:absolute;
-                      display:block;
-                      transform: translate(-50%, -50%);
-                    }
-                    #toapp:active {
-                      transform: translate(-50%, -10%);
-                    }
-                               '),
-                    actionBttn(inputId = "toapp", "Continue to app", icon = icon("angle-double-right"), size = "lg"),
-                    renderLoading(),
-                    if(getOption('sps')$loading_particles) {
-                        if (requireNamespace("particlesjs", quietly = TRUE)){
-                            msg("Option loading_particles is `true` but package particlesjs is not installed. Try `remotes::install_github('dreamRs/particlesjs')`",
-                                "warning")
-                            div()
-                        } else {
-                            particlesjs::particles(
-                                target_id ="loading-screen",
-                                element_id = "particles",
-                                config = "www/particlesjs-config.json"
-                            )
-                        }
-                    }
-            )
-        )}
-        else
-        {
-            div(id = "app-main", style='position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px;', mainUI)
-        }
-    )
-}
-
 
 #' dynamically generate select file input
 #' depending on the mode in options, render similar UI but server side works
