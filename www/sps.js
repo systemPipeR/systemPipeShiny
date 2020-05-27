@@ -59,3 +59,15 @@ function clearText(clear_input_id) {
 
 // js for particles-js
 
+// change fileInput color to bs primary
+// change text bar in file input local mode to read only
+$(document).ready(function() {
+  $('.btn-file').removeClass('btn-default').addClass('btn-primary');
+  $(".sps-file input").attr("readonly", true);
+});
+
+//$("#toapp").click(function(){
+//  $("#app-main").removeClass("shinyjs-hide");
+//  $("#loading-screen").hide();
+//  $('a[href="#shiny-tab-dashboard"]').tab('show');
+//});

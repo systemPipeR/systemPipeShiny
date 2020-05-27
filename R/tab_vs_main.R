@@ -60,7 +60,7 @@ vs_mainUI <- function(id){
         genHrefTable(rows = list(wf1 = c("df_raw", "df_count"), wf2 =  c("df_raw"))),
         br(),
         gallery(title = "Gallery of Plots", texts = gallery_plot$texts, hrefs = gallery_plot$hrefs, images = gallery_plot$images, image_frame_size = 3),
-        genGallery(tabnames = c("plot_point", "plot_pca"))
+        genGallery(tabnames = "all")
 
     )
 }

@@ -5,7 +5,7 @@ targetUI <- function(id){
     tabPanel(title = "Targets",
              h2("Targets"),
              fluidRow(
-               column(3, 
+               column(3,
                       fluidRow(
                         valueBox(width = 12,textOutput(ns("box_samples")), "Number of Samples", icon = icon("vials"))
                       ),
@@ -16,11 +16,18 @@ targetUI <- function(id){
                         uiOutput(ns("box_missing_ui"))
                       ),
                       boxPlus("Missing files (first row is treated as column names)", width = 12,
-                              p("Write down your path prefix if you use relative path the targets"),
+                              p("Write down your path prefix if you use relative path in targets"),
                               clearableTextInput(ns("target_data_path"), label = "Add path prefix", placeholder = "long path"),
-                              selectInput(ns("column_check"), "Choose a column to check files:",
-                                          choices = "Disabled before uploading targets"),
-                              verbatimTextOutput(ns("missing_files"))
+                              if (getOption('sps')$mode == 'server') {
+                                  h5("File checking is disabled on 'server' mode")
+                              } else {
+                                  tagList(
+                                    selectInput(ns("column_check"), "Choose a column to check files:",
+                                              choices = "Disabled before uploading targets"),
+                                    verbatimTextOutput(ns("missing_files"))
+                                  )
+                              }
+
                       ),
                       tags$style(
                           glue(
@@ -30,26 +37,23 @@ targetUI <- function(id){
                           .open = "@{", .close = "}@"
                           )
                       )
-               ), 
+               ),
                column(9,
                       radioGroupButtons(
-                          inputId = ns("target_source"), label = "Choose target source:", 
+                          inputId = ns("target_source"), label = "Choose target source:",
                           selected = "upload",
-                          choiceNames = c("Upload", "Example PE", "Example SE"), 
+                          choiceNames = c("Upload", "Example PE", "Example SE"),
                           choiceValues = c("upload", "pe", "se"),
                           justified = TRUE, status = "primary",
                           checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
                       ),
-                      fileInput(
-                          ns("target_upload"), "If upload, choose your target file here:",
-                          multiple = FALSE,
-                          accept = c(".tsv", ".txt"),
-                          placeholder = "Choose your target file path",
-                      ),
+                      dynamicFile(ns("target_upload"),
+                                  "If upload, choose your target file here:",
+                                  multiple = FALSE),
                       column(12, style = "padding: 0;",
                         downloadButton(ns("down_targets"), "Save"),
                         actionButton(ns("to_task_target"),
-                                     label = "Add to task", 
+                                     label = "Add to task",
                                      icon("paper-plane"))
                       ),
                       h4("Targets header"),
@@ -65,38 +69,37 @@ targetUI <- function(id){
                       p("Columns names should be on the first row."),
                       rHandsontableOutput(ns("targets_df"), height = "800px")
                )
-               
+
              )
     )
 }
 
-ace_target_header_init <- 
+## submodule server
+targetServer <- function(input, output, session, shared){
+    ace_target_header_init <-
     "# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
     # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
     # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
     # <CMP> CMPset2: ALL"
-df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
-
-
-## submodule server
-targetServer <- function(input, output, session, shared){
+    df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>% tibble::as_tibble()
     ns <- session$ns
     # some reactive values to pass around observe
     selected_old <- reactiveVal("upload")
     selected_flag <- reactiveVal(TRUE)
     targets_p_old <- reactiveVal("")
     t.df <- reactiveVal(df_init)
+    target_upload <- dynamicFileServer(input, session, id = "target_upload")
     # update table
     output$targets_df <- renderRHandsontable({
         rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
             hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
     })
 
-    observeEvent(c(input$target_source, input$target_upload$datapath), ignoreInit = TRUE, {# only c work here, dont know why
+    observeEvent(c(input$target_source, not_empty(target_upload())), ignoreInit = TRUE, ignoreNULL = TRUE, {# only c work here, dont know why
         if (selected_flag() == TRUE) {
             confirmSweetAlert(
-                session,inputId = "sweet_changetarget_confirm", 
-                title = "Do you want to change target Source?", 
+                session,inputId = "sweet_changetarget_confirm",
+                title = "Do you want to change target Source?",
                 text = "If you change target source or load new file, target data will be reset in this tab and 'Task' tab. You will LOSE unsaved data", type = "warning"
             )
         } else {
@@ -108,7 +111,7 @@ targetServer <- function(input, output, session, shared){
             # update df
             t.df(
                 hot_target(targets_df = input$targets_df,
-                           targets_p = input$target_upload$datapath, 
+                           targets_p = target_upload()$datapath,
                            targets_p_old = targets_p_old(),
                            choice = input$target_source,
                            choice_old = selected_old(),
@@ -116,10 +119,10 @@ targetServer <- function(input, output, session, shared){
             )
             # header
             header_lines <- ""
-            if (!is.null(input$target_upload$datapath)) {
-                header_lines <- readLines(input$target_upload$datapath, warn = FALSE) %>% .[str_detect(.,"^#")] %>% paste(collapse = "\n")
+            if (!is.null(target_upload()$datapath)) {
+                header_lines <- readLines(target_upload()$datapath, warn = FALSE) %>% .[str_detect(.,"^#")] %>% paste(collapse = "\n")
                 if (length(header_lines) == 0) header_lines <- ""
-                targets_p_old(input$target_upload$datapath)
+                targets_p_old(target_upload()$datapath)
             }
             if (input$target_source != "upload") header_lines <- ace_target_header_init
             updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
@@ -146,12 +149,13 @@ targetServer <- function(input, output, session, shared){
             rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
                 hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
         })
-        
+
         t.df.check <- t.df()[-1, ] %>% as.data.frame()
         output$box_samples <- renderText({nrow(t.df.check)})
         output$box_ncol <- renderText({ncol(t.df.check)})
         updateSelectInput(session, "column_check", choices = names(t.df()), selected = input$column_check)
-        cheching_path <- file.path(input$target_data_path, as.character(t.df.check[[input$column_check]]))
+        long_path <- if (is.empty(input$target_data_path)) "." else input$target_data_path
+        cheching_path <- file.path(long_path, as.character(t.df.check[[input$column_check]]))
         not_missing_index <- sapply(cheching_path, file.exists)
         missing_names <- cheching_path[!not_missing_index]
         output$missing_files <-  renderPrint({cat(paste0(row.names(t.df.check)[!not_missing_index], " ", missing_names, collapse = '\n'))})
@@ -185,7 +189,7 @@ targetServer <- function(input, output, session, shared){
         check_results <- check_target(col_names = t.df()[1, ], headerlines = header_lines)
         if (all(check_results)) {
             sendSweetAlert(
-                session = session, 
+                session = session,
                 title = "Added to Task",
                 text = "All target check passed, target added to task\n You can see workflow status by clicking top right",
                 type = "success"
@@ -195,7 +199,7 @@ targetServer <- function(input, output, session, shared){
             shared$wf_flags$targets_ready = TRUE
         } else {
             sendSweetAlert(
-                session = session, 
+                session = session,
                 title = "Some requirements are missing",
                 text = tags$b(
                     HTML(paste0("<i class='fa fa-file'></i>Your target should have ", names(check_results[check_results == FALSE]), collapse = "<br>")),
@@ -216,8 +220,13 @@ hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, c
                         )
     if (is.null(targets_p)) return(df_init)
     if ((choice != choice_old) | (targets_p != targets_p_old)) {
-        df.t <- read.csv(targets_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)
-    } 
+        df.t <- shinyCatch(vroom(
+            targets_p,  delim = "\t",
+            comment = "#", n_max = 10000,
+            col_names = FALSE, col_types = cols()
+        ))
+        if(is.null(df.t)){warning("Can't read file, return empty"); return(df_init)}
+    }
     names(df.t) <- paste0("X", 1:ncol(df.t))
     return(df.t)
 }
@@ -225,10 +234,10 @@ hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, c
 # target checkers
 check_target <- function(col_names, headerlines) {
     checker1 <- function(col_names) all(c("FileName1", "FileName2") %in% col_names ) | "FileName" %in% col_names
-    checker2 <- function(col_names)  "SampleName" %in% col_names 
-    checker3 <- function(col_names)  "Factor" %in% col_names 
+    checker2 <- function(col_names)  "SampleName" %in% col_names
+    checker3 <- function(col_names)  "Factor" %in% col_names
     checker4 <- function(headerlines) any(str_detect(headerlines, "#.?<CMP>"))
-    check_results <- sapply(c(checker1, checker2, checker3), function(x) x(col_names)) %>% 
+    check_results <- sapply(c(checker1, checker2, checker3), function(x) x(col_names)) %>%
         append(checker4(headerlines))
     names(check_results) <- c("both 'FileName1' 'FileName2' or 'FileName'", "SampleName", "Factor", "header with # &ltCMP&gt")
     return(check_results)

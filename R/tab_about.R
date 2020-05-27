@@ -1,7 +1,7 @@
 ## UI
 aboutUI <- function(id){
     ns <- NS(id)
-    tags$div(id = ns("particles-js"), style = "background-color: black;",
+    tags$div(id = ns("particles-js"), style = "",
         h2("About this app"),
         tags$p("Designed by xxx, xxx"),
         h3("Support"),
@@ -68,13 +68,13 @@ aboutUI <- function(id){
 
 ## server
 aboutServer <- function(input, output, session){
-    delay(ms = 3000,
-          shinyjs::runjs(
-              "
-        $(document).ready(function(){
-        particlesJS('about-particles-js');
-        });
-        ")
-          )
+    # delay(ms = 3000,
+    #       shinyjs::runjs(
+    #           "
+    #     $(document).ready(function(){
+    #     particlesJS('about-particles-js');
+    #     });
+    #     ")
+    #       )
 
 }

@@ -21,7 +21,6 @@ useSps <- function(){
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit-icons.min.js"></script>
              '),
-        tags$script(src = "particles.js"),
         tags$link(rel = "stylesheet", type = "text/css",
                             href = "sps/sps.css"),
                   tags$script(src = "sps/sps.js")
@@ -158,13 +157,15 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 
 #' generate gallery by only providing tab names
 #'
-#' @param tabnames tab names
+#' @param tabnames tab names, string vector
+#' will be included
 #' @param Id div ID
 #' @param title gallery title
 #' @param title_color title color
 #' @param image_frame_size integer, 1-12
 #' @param img_height css style like '300px'
 #' @param img_width css style like '480px'
+#' @param type filter by tab type, then tabnames will be ignored: core, wf, data, vs
 #'
 #' @return gallery div
 #'
@@ -177,10 +178,10 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #'
 #' }
 #' shinyApp(ui, server)
-genGallery <- function(tabnames, Id = NULL, title = "Gallery",
+genGallery <- function(tabnames, Id = NULL, title = "Gallery", type = "vs",
                        title_color = "#0275d8", image_frame_size = 4, img_height = "300px",
                        img_width = "480px") {
-    tabs <- findTabInfo(tabnames)
+    tabs <- findTabInfo(tabnames, type)
     gallery(Id = Id, title = title, title_color = title_color,
             image_frame_size = image_frame_size, img_height = img_height,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
@@ -305,9 +306,9 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 }
 
 #' generate a table of lists of hyper reference buttons by using tab config file
+#'
 #' @param rows a list of rows, each item name in the list will be the row name,
 #' each item is a vector of tab names
-#'
 #' @param Id element ID
 #' @param title table title
 #' @param text_color text color for table
@@ -348,32 +349,63 @@ renderDesc <- function(desc) {
     HTML(markdown::renderMarkdown(text = glue(desc)))
 }
 
-
-#' render the app UI
-#' Combine mainUI defined in ui.R and add the loading screen and more
-#' @param mainUI a normal shiny page ui
+#' dynamically generate select file input
+#' depending on the mode in options, render similar UI but server side works
+#' differently. `local` mode will not copy file, directly use a path pointer,
+#' `server` mode upload file and store in temp. Expect similar behavior as
+#' `fileInput`.
+#' @param id element id
+#' @param title element title
+#' @param label upload button label
+#' @param icon button icon, only works for `local` mode
+#' @param style additional button style, only works for `local` mode
+#' @param multiple multiple files allowed
+#' `shinyFilesButton`
 #'
-#' @return a `fluidPage`
+#' @return div
+#' @export
 #'
 #' @examples
-#' ui <- fluidPage()
-#' server <- function(input, output, session) {}
-#' mainUI <- shinyApp(ui, server)
-#' spsUI(mainUI)
-spsUI <- function(mainUI){
-    fluidPage(
-        if (getOption("sps")$loading_screen)
-        {tagList(
-            div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
-                mainUI
-            ),
-            div(id = "loading-screen", style="height: 100vh; width: 100vw",
-                renderLoading()
+#' library(shiny)
+#' library(shinyFiles)
+#' library(shinyjs)
+#' options(sps = list(mode='server'))
+#' ui <- fluidPage(
+#' useShinyjs(),
+#' dynamicFile("getFile"),
+#' textOutput("txt_file")
+#' )
+#'
+#' server <- function(input,output,session){
+#'     runjs('$(".sps-file input").attr("readonly", true)')
+#'     myfile <- dynamicFileServer(input,session, id = "getFile")
+#'     observe({
+#'         print(myfile())
+#'     })
+#' }
+#' shinyApp(ui = ui, server = server)
+dynamicFile <- function(id, title = "Select your file:",
+                        label = "Browse", icon = NULL, style = "",
+                        multiple = FALSE){
+    icon <- if(is.empty(icon)) icon("upload")
+    if (getOption("sps")$mode == "local") {
+        div(class = "form-group shiny-input-container sps-file",
+            tags$label(class="control-label", `for`=id, title),
+            div(class="input-group",
+                tags$label(class="input-group-btn input-group-prepend",
+                           shinyFilesButton(id, label,
+                                            title = title, multiple = multiple,
+                                            buttonType = "btn btn-primary", icon = icon,
+                                            style = style)
+                ),
+                textInput(inputId = glue("{id}-text"), label = NULL,
+                          placeholder="No file selected", width = "100%")
             )
-        )}
-        else
-        {
-            div(id = "app-main", mainUI)
-        }
-    )
+
+        )
+
+    } else {
+        fileInput(inputId = id, label = title,
+                  multiple = multiple, buttonLabel = label)
+    }
 }

@@ -157,20 +157,26 @@ quiet <- function(x) {
 #' @examples
 #' checkNameSpace("ggplot2")
 checkNameSpace <- function(packages, quietly = FALSE, from = "") {
+    if (is.empty(packages)) return(NULL)
     missing_pkgs <- lapply(packages, function(pkg) {
         if (!requireNamespace(pkg, quietly = TRUE)) pkg
     })
     missing_pkgs <- lapply(packages, function(pkg) {
         if (!eval(parse(text = "requireNamespace(pkg, quietly = TRUE)"))) pkg
     }) %>% unlist()
-    if (!quietly) message(glue("These packages are missing from {from}: {glue::glue_collapse(missing_pkgs, sep = ',')}"))
+    if (!quietly) {
+        msg(glue("These packages are missing from",
+                 "{from}: {glue::glue_collapse(missing_pkgs, sep = ',')}"))
+        }
     return(missing_pkgs)
 }
 
 #' Find tab information from tabs.csv
 #'
 #' @importFrom vroom vroom
+#'
 #' @param tabnames vector of strings, tab names you want to get
+#' @param type tab type, one of : core, wf, data, vs
 #'
 #' @return a list contains `tab_labels`, `hrefs` reference, `images`
 #' @export
@@ -178,7 +184,7 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' @examples
 #' tabnames <- c("wf_wf", "d", "sas")
 #' findTabInfo(tabnames)
-findTabInfo <- function(tabnames) {
+findTabInfo <- function(tabnames, type = NULL) {
     assert_that(is.character(tabnames))
     appDir <- options()$sps$appDir
     tabs <- if (exists("tab_info")) {
@@ -186,14 +192,78 @@ findTabInfo <- function(tabnames) {
     } else {
         vroom(glue("{appDir}/config/tabs.csv"), comment = "#", na = character())
     }
-    tab_nos <- sapply(tabnames, function(x) {
-        tab_no <- str_which(glue("^{x}$"), tabs$Tab_name)
-        if (!not_empty(tab_no)) warning(glue("Tab {x} is not in the tab list"))
-        tab_no
-    })
+    if(not_empty(type)) {
+        tabs <- tabs[tabs$type %in% type, ]
+        tab_nos <- seq_len(nrow(tabs))
+    } else {
+        tab_nos <- sapply(tabnames, function(x) {
+            tab_no <- str_which(glue("^{x}$"), tabs$Tab_name)
+            if (!not_empty(tab_no)) warning(glue("Tab {x} is not in the tab list"))
+            tab_no
+        })
+    }
     list(
         tab_labels = tabs$Display_label[tab_nos],
         hrefs = glue("#shiny-tab-{tabs$Tab_name[tab_nos]}"),
         images = tabs$image[tab_nos]
         ) %>% return()
+}
+
+
+#' SPS terminal message
+#' @description If `crayon` is installed, the message will be colorful.
+#' "INFO" level spawns `message`, "WARNING" is `warning`, "ERROR" spawns `stop`,
+#' other levels use `cat`
+#'
+#' @param msg a character string of message or a vector of character strings,
+#' each item in the vector presents one line of words
+#' @param .other_color hex color code or named colors, when levels are not in
+#' "INFO", "WARNING", "ERROR", this value will be used
+#' @param level typically, one of "INFO", "WARNING", "ERROR", lower case OK.
+#' Other levels ok.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' msg("this is info")
+#' msg("this is warning", "warning")
+#' msg("this is error", "error")
+#' msg("this is other", "error")
+msg <- function(msg, level = "INFO", .other_color="white") {
+    msg <- paste0(msg, collapse = "")
+    info <- warn <- err <- other <- function(msg){return(msg)}
+    if(is.null(getOption('sps')$use_crayon)) {
+        options(sps = getOption("sps") %>% {.[['use_crayon']] <- TRUE; .})
+    }
+    if (getOption('sps')$use_crayon){
+        if (!requireNamespace("crayon", quietly = TRUE)) {
+            options(sps = getOption("sps") %>% {.[['use_crayon']] <- FALSE; .})
+            message(glue("[INFO] {Sys.time()} If you want colorful",
+                         "systemPipeShiny messages, try install 'crayon'",
+                         "package"))
+        } else{
+            info <- crayon::blue$bold
+            warn <- crayon::make_style("orange")$bold
+            err <- crayon::red$bold
+            other <- crayon::make_style(.other_color)$bold
+        }
+    }
+    msg <- glue("[{level}] {Sys.time()} {msg}")
+    switch (toupper(level),
+        "WARNING" = warning(warn(msg), call. = FALSE, immediate. = TRUE),
+        "ERROR" = stop(err(msg), call. = FALSE),
+        "INFO" = message(info(msg)),
+        cat(other(msg), sep = "\n")
+    )
+}
+
+#' Remove ANSI color code
+#' @description borrowed from crayon package, since this package is not required
+#' by SPS, use some code from crayon
+#' @param string string
+remove_ANSI <- function(string) {
+    ANSI <- paste0("(?:(?:\\x{001b}\\[)|\\x{009b})(?:(?:[0-9]{1,3})?(?:",
+                   "(?:;[0-9]{0,3})*)?[A-M|f-m])|\\x{001b}[A-M]")
+    gsub(ANSI, "", string, perl = TRUE)
 }

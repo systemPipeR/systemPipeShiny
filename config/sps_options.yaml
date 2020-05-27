@@ -1,6 +1,3 @@
-appDir:
-    default: "."
-
 mode:
     default: local
     other: [server]
@@ -10,5 +7,18 @@ loading_screen:
     other: [false]
 
 loading_theme:
-    default: 404
+    default: "404"
     other: [vhelix]
+
+
+loading_particles:
+    default: false
+    other: [true]
+
+use_crayon:
+    default: false
+    other: [true]
+
+display_code:
+    default: false
+    other: [true]

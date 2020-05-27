@@ -47,13 +47,14 @@
 }
 
 .rainbow {
-  position: absolute;
-  left: 35%;
   top: 50%;
-  margin-top: -35px;
+  left: 40%;
+  position:fixed;
+  display:block;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
   width: 25%;
   height: 65px;
-  overflow: hidden;
 }
 .rainbow span {
   display: block;
@@ -466,7 +467,14 @@
 
 .nyan404 h1{
     text-align: center;
-    margin-top: 30%;
     position: relative;
     color: #68b3fd;
+}
+
+.nyan404 {
+    top: 50%;
+    left: 50%;
+    position:fixed;
+    display:block;
+    transform: translate(-50%, -50%);
 }
