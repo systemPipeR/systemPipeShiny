@@ -282,6 +282,7 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
         if(is.null(df)){msg("Can't read file, return empty", "error")}
         if(!names(df) %>% validUTF8() %>% all()){
             msg("non UTF-8 coding detected, return empty", "error")}
+        df
     })
     return(df)
 }
@@ -291,9 +292,9 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @description Useful to check if a input dataframe, list or other things
 #' meet the requirement. If any validation fails, it will show a pop-up message
 #' and block any further code execution, similar to `shiny::req()`
-#' @param validate_list a list of function which only returns a single value of
-#' TRUE or FALSE. this value needs to be named. This name will be used as error
-#' message
+#' @param validate_list a list of function which are in a named list and only
+#' returns a single value of TRUE or FALSE. this return value needs to be named.
+#' This return name will be used as error message.
 #' @param args a `named`(very important) list of arguments that will be used in
 #' different function in  `validate_list`. `...` argument is not supported.
 #' Have to specify the name of argument, position argument also is not working.
@@ -341,6 +342,7 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 spsValidator <- function(validate_list, args = list()){
     if(!is.list(args)) msg("Args must be in a list", "error")
     if(!is.list(validate_list)) msg("Validate_list must be in a list", "error")
+    if(any(is.null(validate_list))) msg("All functions need to be named", "error")
     arg_names <- names(args)
     if(any(is.null(arg_names))) msg("All args must be named", "error")
 
@@ -361,10 +363,15 @@ spsValidator <- function(validate_list, args = list()){
         arg_names  %in% names(each_vd_args)
     }, simplify = FALSE)
 
-    results <- sapply(seq_along(validate_list), function(index){
-        result <- do.call(
+    sapply(seq_along(validate_list), function(index){
+        result <- shinyCatch(do.call(
             validate_list[[index]], args = args[inject_args[[index]]]
-        )
+        ))
+        if (is.null(result)) {
+            shinyCatch(stop(glue("Error(s) while running through validator: ",
+                                 "{names(validate_list)[index]} ")),
+                       non_blocking = FALSE)
+        }
         if (!is_bool(result) | length(result) > 1) {
             msg(glue("Function {names(validate_list)[index]}",
                      "should only return `SINGLE` TRUE or FALSE"),
@@ -372,11 +379,18 @@ spsValidator <- function(validate_list, args = list()){
         if (is.null(names(result))) {
             msg(glue("Function {names(validate_list)[index]}",
                      "return needs to be named"), "error")}
-        result
-    }, simplify = F)
+        if (!result) {
+            failed_msg <- result %>% names %>%
+                c("Validation Failed: ", .) %>%
+                glue_collapse(sep = "\n- ")
+            shinyCatch(stop(failed_msg), non_blocking = FALSE)
+        }
+    }) %>% invisible()
 
-    failed <- unlist(results) %>% {.[!.]} %>% names %>%
-        c("Validation Failed: ", .) %>%
-        glue_collapse(sep = "\n- ")
-    shinyCatch(stop(failed), non_blocking = FALSE)
+    if (getOption("sps")$verbose) {
+        toastr_success("Validation Passed", position = "bottom-right",
+                       timeOut = 1500)
+        }
+    return(invisible())
+
 }

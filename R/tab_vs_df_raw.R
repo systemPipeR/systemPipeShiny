@@ -38,7 +38,7 @@ df_rawUI <- function(id){
                 column(width = 3,
                        pickerInput(
                            inputId = ns("delim"), label = "File delimiter",
-                           choices = c(Tab="\t", space=" ", `,`=",", `|`="|", `:`=":", `;`=";"),
+                           choices = c(`,`=",", space=" ", Tab="\t", `|`="|", `:`=":", `;`=";"),
                            options = list(style = "btn-primary")
                 )),
                 column(width = 3, clearableTextInput(ns("comment"), "File comments", value = "#"))
@@ -92,7 +92,7 @@ df_rawServer <- function(input, output, session, shared){
     })
     observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
     # get upload path, note path is in upload_path()$datapath
-    upload_path <- dynamicFileServer(input,session, id = "file_upload")
+    upload_path <- dynamicFileServer(input, session, id = "file_upload")
     observe({
         print(data_df() %>% class)
         print(data_df())
@@ -141,9 +141,6 @@ df_rawServer <- function(input, output, session, shared){
             n <- 10
 
             for (i in 1:n) {
-                validate(
-                    c(sapply(aaa, function(each) need(each, names(each))) %>% unlist, "asasas")
-                )
                 # Increment the progress bar, and update the detail text.
                 incProgress(1/n, detail = paste("Doing part", i))
 
