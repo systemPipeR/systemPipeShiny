@@ -20,6 +20,8 @@ library(shinyjqui) # jQuery UI
 library(shinyFiles) # local mode select input file
 library(waiter)
 # remotes::install_github("dreamRs/particlesjs") # particlesjs for loading theme
+# install.packages("crayon")
+
 # general processing
 library(ggplot2)
 library(stringr)
