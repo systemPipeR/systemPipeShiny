@@ -76,16 +76,19 @@ shinyCatch <- function(expr, position = "bottom-right", non_blocking = TRUE) {
                     closeButton = TRUE, timeOut = 0,
                     title = "There is an error", hideDuration = 300,
                 )
+                shiny:::reactiveStop(class = "validation")
             },
             warning = function(w) {
                 msg(w$message, "SPS-WARNING", "orange")
                 toastr_warning(message = remove_ANSI(w$message), position = position,
                                closeButton = TRUE, timeOut = 5000)
+                shiny:::reactiveStop(class = "validation")
             },
             message = function(m) {
                 msg(m$message, "SPS-INFO", "blue")
                 toastr_info(message = remove_ANSI(m$message), position = position,
                             closeButton = TRUE, timeOut = 3000)
+                shiny:::reactiveStop(class = "validation")
             })
     }
 }
@@ -283,3 +286,97 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
     return(df)
 }
 
+
+#' Validate some inputs
+#' @description Useful to check if a input dataframe, list or other things
+#' meet the requirement. If any validation fails, it will show a pop-up message
+#' and block any further code execution, similar to `shiny::req()`
+#' @param validate_list a list of function which only returns a single value of
+#' TRUE or FALSE. this value needs to be named. This name will be used as error
+#' message
+#' @param args a `named`(very important) list of arguments that will be used in
+#' different function in  `validate_list`. `...` argument is not supported.
+#' Have to specify the name of argument, position argument also is not working.
+#'
+#' @return if any validation function returns FALSE, a error pop-up will show
+#' in the shiny app.
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' library(shinytoastr)
+#' df_validate_common <- list(
+#'     vd1 = function(df, apple){
+#'         print(apple)
+#'         if (is(df, "data.frame")) {result <- c(" " = TRUE)}
+#'         else {result <- c("Input is not dataframe or tibble" = FALSE)}
+#'         return(result)
+#'     },
+#'     vd2 = function(df, banana, orange="orange"){
+#'         print(banana)
+#'         print(orange)
+#'         if (nrow(df) > 10) {result <- c(" " = TRUE)}
+#'         else {result <- c("Need more than 10 rows" = FALSE)}
+#'         return(result)
+#'     }
+#' )
+#'
+#'
+#' ui <- fluidPage(
+#'     actionButton("btn", "this btn"),
+#'     useToastr()
+#' )
+#'
+#' server <- function(input, output, session) {
+#'     observeEvent(input$btn, {
+#'         spsValidator(df_validate_common,
+#'                      args = list(df = data.frame(),
+#'                                  apple = "apple",
+#'                                  banana = "banana"))
+#'         print(123)
+#'     })
+#' }
+#'
+#' shinyApp(ui, server)
+spsValidator <- function(validate_list, args = list()){
+    if(!is.list(args)) msg("Args must be in a list", "error")
+    if(!is.list(validate_list)) msg("Validate_list must be in a list", "error")
+    arg_names <- names(args)
+    if(any(is.null(arg_names))) msg("All args must be named", "error")
+
+    inject_args <- sapply(seq_along(validate_list), function(each_vd) {
+        if(!is.function(validate_list[[each_vd]])) {
+            msg("Each item in `validate_list` must be a function")}
+        each_vd_args <- formals(validate_list[[each_vd]])
+        sapply(seq_along(each_vd_args), function(each_arg) {
+            required_arg <- rlang::is_missing(each_vd_args[[each_arg]])
+            if(required_arg & !names(each_vd_args)[[each_arg]] %in% arg_names) {
+                msg(glue("Validation function ",
+                         "`{names(validate_list)[each_vd]}`",
+                         " requires arg `{names(each_vd_args)[[each_arg]]}` ",
+                         "with no defaults but it is not in your args list"),
+                    "error")
+            }
+        })
+        arg_names  %in% names(each_vd_args)
+    }, simplify = FALSE)
+
+    results <- sapply(seq_along(validate_list), function(index){
+        result <- do.call(
+            validate_list[[index]], args = args[inject_args[[index]]]
+        )
+        if (!is_bool(result) | length(result) > 1) {
+            msg(glue("Function {names(validate_list)[index]}",
+                     "should only return `SINGLE` TRUE or FALSE"),
+                "error")}
+        if (is.null(names(result))) {
+            msg(glue("Function {names(validate_list)[index]}",
+                     "return needs to be named"), "error")}
+        result
+    }, simplify = F)
+
+    failed <- unlist(results) %>% {.[!.]} %>% names %>%
+        c("Validation Failed: ", .) %>%
+        glue_collapse(sep = "\n- ")
+    shinyCatch(stop(failed), non_blocking = FALSE)
+}

@@ -18,6 +18,7 @@ library(shinyAce) # Ace editor
 library(shinytoastr) # toastr js
 library(shinyjqui) # jQuery UI
 library(shinyFiles) # local mode select input file
+library(waiter)
 # remotes::install_github("dreamRs/particlesjs") # particlesjs for loading theme
 # general processing
 library(ggplot2)
@@ -26,6 +27,7 @@ library(assertthat)
 library(glue)
 library(dplyr)
 library(vroom)
+library(rlang)
 ## for functions
 library(DESeq2, quietly = TRUE)
 library(edgeR, quietly = TRUE)
@@ -49,14 +51,14 @@ library(rsvg)
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
 # loading_particles: particle effects on loading, loading_screen must be TRUE - TRUE, FALSE
 # use_crayon: Do you want colorful terminal messages? must install `crayon`- TRUE, FALSE
-# display_code: use `shinymeta` to display preprocess and plotting code? - TRUE, FALSE
+# verbose: display some info during processing? - TRUE, FALSE
 options(sps = list(
     mode = "local",
     loading_screen = FALSE,
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
-    display_code = TRUE
+    verbose = TRUE
 ))
 
 source("R/runSPS.R")

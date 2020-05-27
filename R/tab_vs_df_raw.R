@@ -41,29 +41,29 @@ df_rawUI <- function(id){
                            choices = c(Tab="\t", space=" ", `,`=",", `|`="|", `:`=":", `;`=";"),
                            options = list(style = "btn-primary")
                 )),
-                column(width = 3, clearableTextInput(ns("comment"), "File comments", value = "#")),
+                column(width = 3, clearableTextInput(ns("comment"), "File comments", value = "#"))
             ),
             fluidRow(h4("Input Data", style="text-align: center;")),
             div(style = "background-color: #F1F1F1;", DT::DTOutput(ns("df"))),
             fluidRow(
                 hr(), h4("Choose a proprocessing method"),
                 p("Depending on different ways of preprocessing, different plotting options will be available"),
-                column(5,
+                column(4,
                     pickerInput(
-                        inputId = ns("select_prepro"), label = "Choose a method",
-                        choices = c(Tab="\t", space=" ", `,`=",", `|`="|", `:`=":", `;`=";"),
+                        inputId = ns("select_prepro"),
+                        choices = c(`Do Nothing`='nothing', `Take log`='log'),
                         options = list(style = "btn-primary")
                     )
                 ),
-                column(2, style = "padding-left: 0px; padding-top: 15px;",
+                column(2,
                       actionButton(ns("preprocess"), label = "Preprocess", icon("paper-plane"))
-                ),
+                )
             ),
-            column(
-                width = 12,
-                # actionButton(ns("df_reload"), label = "Load/Reload Data Input", icon("redo-alt")),
-
-            ),
+            # column(
+            #     width = 12,
+            #     actionButton(ns("df_reload"), label = "Load/Reload Data Input", icon("redo-alt")),
+            #
+            # ),
             fluidRow(id = ns("plot_options"),
                      a("Scatter Plot", href = "#shiny-tab-plot_point"),
                      a("plot2"),
@@ -122,7 +122,36 @@ df_rawServer <- function(input, output, session, shared){
     })
 
     # preprocess
-    observeEvent(input$to_task, {
+    df_validator_common <- list(
+        vd1 = function(df, ...){
+            if (is(df, "data.frame")) {result <- c(" " = TRUE)}
+            else {result <- c("Input is not dataframe or tibble" = FALSE)}
+            return(result)
+        },
+        vd2 = function(df, ...){
+            if (ncol(df) > 1) {result <- c(" " = TRUE)}
+            else {result <- c("Input is not dataframe or tibble" = FALSE)}
+            return(result)
+        }
+    )
+
+    observeEvent(input$preprocess, {
+        withProgress(message = 'Making plot', value = 0, {
+            # Number of times we'll go through the loop
+            n <- 10
+
+            for (i in 1:n) {
+                validate(
+                    c(sapply(aaa, function(each) need(each, names(each))) %>% unlist, "asasas")
+                )
+                # Increment the progress bar, and update the detail text.
+                incProgress(1/n, detail = paste("Doing part", i))
+
+                # Pause for 0.1 seconds to simulate a long computation.
+                Sys.sleep(0.1)
+            }
+        })
+
         check_results <- T
         if(!all(check_results)) {
 
