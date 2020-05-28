@@ -8,90 +8,138 @@ NULL
 
 #' Catch  error, warning, message text catcher
 #' @description Catch error, warning, message by a toastr bar on shiny front end
-#' also log the text on backend console
+#' also log the text on backend console. Will return original value if not
+#' blocking at "warning" "message" level, and return `NULL` at error level.
+#' If blocks at `error`, function will be stopped and other code in the same
+#' reactive context will be blocked. If blocks at `warning` level, warning and
+#' error will be blocked; `message` level blocks will 3 levels.
 #' @param expr expression
 #' @param position toastr position: c("top-right", "top-center", "top-left",
 # "top-full-width", "bottom-right", "bottom-center", "bottom-left",
 # "bottom-full-width")
-#' @param non_blocking If encounter any error, warning or message, continue or
+#' @param blocking If encounter any error, warning or message, continue or
 #' stop
+#' @param blocking_level if `non_blocking` is FALSE, at what level you want to
+#' block the execution, one of "error", "warning", "message"
 #'
-#' @return if `non-blocking`,  warning or message return original value, error
-#' return `NULL`. If `blocking`, any error, warning, message will return NULL,
-#' otherwise original value
+#' @return see description
+#'
 #' @export
 #'
 #' @example
 #' ui <- fluidPage(
 #'     useToastr(),
-#'     actionButton("btn1","Click me1"),
-#'     actionButton("btn2","Click me2"),
-#'     actionButton("btn3","Click me3"),
+#'     actionButton("btn1","error and blocking"),
+#'     actionButton("btn2","error no blocking"),
+#'     actionButton("btn3","warning but still returns value"),
+#'     actionButton("btn4","warning but blocking returns"),
+#'     actionButton("btn5","message"),
 #'
 #'     textOutput("text")
 #' )
 #' server <- function(input, output, session) {
+#'     fn_warning <- function() {
+#'          warning("this is a warning!")
+#'          return(1)
+#'          }
 #'     observeEvent(input$btn1, {
-#'         shinyCatch(stop("stop"))
+#'         shinyCatch(stop("error with blocking"), blocking_level = "error")
+#'          print("You shouldn't see me")
 #'     })
 #'     observeEvent(input$btn2, {
-#'         shinyCatch(warning("warning"))
+#'         shinyCatch(stop("error without blocking"))
+#'         print("I am not blocked by error")
 #'     })
 #'     observeEvent(input$btn3, {
+#'         return_value <- shinyCatch(fn_warning())
+#'         print(return_value)
+#'     })
+#'     observeEvent(input$btn4, {
+#'         return_value <- shinyCatch(fn_warning(), blocking_level = "warning")
+#'         print(return_value)
+#'         print("other things")
+#'     })
+#'     observeEvent(input$btn5, {
 #'         shinyCatch(message("message"))
 #'     })
 #' }
 #' shinyApp(ui, server)
-shinyCatch <- function(expr, position = "bottom-right", non_blocking = TRUE) {
-    if (non_blocking) {
-        tryCatch(
-            withCallingHandlers(
-                expr,
-                warning = function(w) {
-                    toastr_warning(message = remove_ANSI(w$message), position = position,
-                                   closeButton = TRUE, timeOut = 5000)
-                },
-                message = function(m) {
-                    toastr_info(message = remove_ANSI(m$message), position = position,
-                                closeButton = TRUE, timeOut = 3000)
-                }
-            ),
-            error = function(e) {
-                msg(e$message, "SPS-ERROR", "red")
-                toastr_error(
-                    message = remove_ANSI(e$message), position = position,
-                    closeButton = TRUE, timeOut = 0,
-                    title = "There is an error", hideDuration = 300,
-                )
-                return(NULL)
-            }
-        )
-    } else {
-        tryCatch(
-            expr,
-            error = function(e) {
-                msg(e$message, "SPS-ERROR", "red")
-                toastr_error(
-                    message = remove_ANSI(e$message), position = position,
-                    closeButton = TRUE, timeOut = 0,
-                    title = "There is an error", hideDuration = 300,
-                )
-                shiny:::reactiveStop(class = "validation")
-            },
-            warning = function(w) {
-                msg(w$message, "SPS-WARNING", "orange")
-                toastr_warning(message = remove_ANSI(w$message), position = position,
-                               closeButton = TRUE, timeOut = 5000)
-                shiny:::reactiveStop(class = "validation")
-            },
-            message = function(m) {
-                msg(m$message, "SPS-INFO", "blue")
-                toastr_info(message = remove_ANSI(m$message), position = position,
-                            closeButton = TRUE, timeOut = 3000)
-                shiny:::reactiveStop(class = "validation")
-            })
-    }
+shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none") {
+    if (tolower(blocking_level) %in% c("message", "warning", "error")) {
+        blocking = TRUE
+    } else {blocking = FALSE}
+    toastr_actions <- list(
+        message = function(m) {
+            msg(m$message, "SPS-INFO", "blue")
+            toastr_info(message = remove_ANSI(m$message), position = position,
+                        closeButton = TRUE, timeOut = 3000)
+        },
+        warning = function(m) {
+            msg(m$message, "SPS-WARNING", "orange")
+            toastr_warning(message = remove_ANSI(m$message), position = position,
+                           closeButton = TRUE, timeOut = 5000)
+        },
+        error = function(m) {
+            msg(m$message, "SPS-ERROR", "red")
+            toastr_error(
+                message = remove_ANSI(m$message), position = position,
+                closeButton = TRUE, timeOut = 0,
+                title = "There is an error", hideDuration = 300,
+            )
+        }
+    )
+    switch(tolower(blocking_level),
+           "error" = tryCatch(
+               suppressMessages(suppressWarnings(withCallingHandlers(
+                   expr,
+                   message = function(m) toastr_actions$message(m),
+                   warning = function(m) toastr_actions$warning(m)
+               ))),
+               error = function(m) {
+                   toastr_actions$error(m)
+                   shiny:::reactiveStop(class = "validation")
+               }),
+           "warning" = tryCatch(
+               suppressMessages(withCallingHandlers(
+                   expr,
+                   message = function(m) toastr_actions$message(m)
+               )),
+               warning = function(m) {
+                   toastr_actions$warning(m)
+                   shiny:::reactiveStop(class = "validation")
+                   },
+               error = function(m) {
+                   if(!is.empty(m$message)) toastr_actions$error(m)
+                   shiny:::reactiveStop(class = "validation")
+               }),
+           "message" = tryCatch(
+               expr,
+               message = function(m) {
+                   message = toastr_actions$message(m)
+                   shiny:::reactiveStop(class = "validation")
+                   },
+               warning = function(m) {
+                   toastr_actions$warning(m)
+                   shiny:::reactiveStop(class = "validation")
+                   },
+               error = function(m) {
+                   if(!is.empty(m$message)) toastr_actions$error(m)
+                   shiny:::reactiveStop(class = "validation")
+               }),
+           tryCatch(
+               suppressMessages(suppressWarnings(withCallingHandlers(
+                   expr,
+                   message = function(m) toastr_actions$message(m),
+                   warning = function(m) toastr_actions$warning(m)
+               ))),
+               error = function(m) {
+                   toastr_actions$error(m)
+                   return(NULL)
+               }
+           )
+    )
 }
+
 
 #' check name space in server
 #' check name space and pop up warnings in shiny if package is missing
@@ -370,7 +418,7 @@ spsValidator <- function(validate_list, args = list()){
         if (is.null(result)) {
             shinyCatch(stop(glue("Error(s) while running through validator: ",
                                  "{names(validate_list)[index]} ")),
-                       non_blocking = FALSE)
+                       blocking = "error")
         }
         if (!is_bool(result) | length(result) > 1) {
             msg(glue("Function {names(validate_list)[index]}",
@@ -383,7 +431,7 @@ spsValidator <- function(validate_list, args = list()){
             failed_msg <- result %>% names %>%
                 c("Validation Failed: ", .) %>%
                 glue_collapse(sep = "\n- ")
-            shinyCatch(stop(failed_msg), non_blocking = FALSE)
+            shinyCatch(stop(failed_msg), blocking = "error")
         }
     }) %>% invisible()
 

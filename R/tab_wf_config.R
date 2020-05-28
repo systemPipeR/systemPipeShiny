@@ -5,9 +5,9 @@ configUI <- function(id){
         h2("Workflow Configuration"),
         fluidRow(
             radioGroupButtons(
-                inputId = ns("config_source"), label = "Choose your config file source:", 
+                inputId = ns("config_source"), label = "Choose your config file source:",
                 selected = "upload",
-                choiceNames = c("Upload", "Example"), 
+                choiceNames = c("Upload", "Example"),
                 choiceValues = c("upload", "eg"),
                 justified = TRUE, status = "primary",
                 checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
@@ -21,7 +21,7 @@ configUI <- function(id){
             column(width = 12, style = "padding-left: 0;",
                    downloadButton(ns("down_config"), "Save"),
                    actionButton(ns("to_task_config"),
-                                label = "Add to task", 
+                                label = "Add to task",
                                 icon("paper-plane"))
             )
         ),
@@ -40,13 +40,13 @@ configUI <- function(id){
 configServer <- function(input, output, session, shared){
     ns <- session$ns
     down_clicked <- reactiveValues(flag = 0)
-    
+
     rmd_file_path <- reactive({
         if (input$config_source == "eg") "inst/extdata/config.yaml" else input$config_upload$datapath
     })
     observeEvent(rmd_file_path(), {
         updateAceEditor(session, editorId = "ace_config", value = {
-            shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"))
+            shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"), blocking = "error")
         })
     })
 
@@ -54,12 +54,12 @@ configServer <- function(input, output, session, shared){
         shared$config$file <- tempfile(pattern = "target", fileext = ".txt")
         writeLines(isolate(input$ace_config), shared$config$file)
     })
-    
+
     observeEvent(input$to_task_config, {
         if (!is.null(shared$config$file)) {
             shared$wf_flags$wf_conf_ready = TRUE
             sendSweetAlert(
-                session = session, 
+                session = session,
                 title = "Config added to Task",
                 text = "You can see workflow status by clicking top right",
                 type = "success"
