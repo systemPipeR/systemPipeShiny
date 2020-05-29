@@ -21,7 +21,7 @@ function sidebarSpanJump(span_text, link_tab){
 
 // Enable a tag to change tab by clicking text with links
 $(document).ready(function() {
-  $('a').click(function(e) {
+  $('.sps-tab-link').click(function(e) {
     var link = $(this).attr('href');
     if (link.match('#')) {
       e.preventDefault();
@@ -57,7 +57,6 @@ function clearText(clear_input_id) {
   }, false);
 }
 
-// js for particles-js
 
 // change fileInput color to bs primary
 // change text bar in file input local mode to read only
@@ -66,8 +65,4 @@ $(document).ready(function() {
   $(".sps-file input").attr("readonly", true);
 });
 
-//$("#toapp").click(function(){
-//  $("#app-main").removeClass("shinyjs-hide");
-//  $("#loading-screen").hide();
-//  $('a[href="#shiny-tab-dashboard"]').tab('show');
-//});
+

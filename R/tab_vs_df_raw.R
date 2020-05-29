@@ -18,7 +18,7 @@ df_rawUI <- function(id){
     "
     tagList(
         h2("Title for this kind of dataframe"),
-        renderDesc(desc),
+        renderDesc(id = ns("desc"), desc),
         # first validate required packages and other prerequisites
         div(style = "text-align: center;",
             actionButton(inputId = ns("validate_start"), label = "Start with this tab")
