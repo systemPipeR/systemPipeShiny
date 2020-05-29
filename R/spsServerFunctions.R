@@ -354,6 +354,7 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @examples
 #' library(shiny)
 #' library(shinytoastr)
+#' options(sps = list(verbose = TRUE))
 #' df_validate_common <- list(
 #'     vd1 = function(df, apple){
 #'         print(apple)
@@ -364,8 +365,10 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #'     vd2 = function(df, banana, orange="orange"){
 #'         print(banana)
 #'         print(orange)
-#'         if (nrow(df) > 10) {result <- c(" " = TRUE)}
+#'         # change < to > in next line to see failure
+#'         if (nrow(df) < 10) {result <- c(" " = TRUE)}
 #'         else {result <- c("Need more than 10 rows" = FALSE)}
+#'         Sys.sleep(1)
 #'         return(result)
 #'     }
 #' )
@@ -373,7 +376,8 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #'
 #' ui <- fluidPage(
 #'     actionButton("btn", "this btn"),
-#'     useToastr()
+#'     useToastr(),
+#'     use_waitress()
 #' )
 #'
 #' server <- function(input, output, session) {
@@ -388,12 +392,14 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #'
 #' shinyApp(ui, server)
 spsValidator <- function(validate_list, args = list()){
+    on.exit(if(exists("vd_progress")) vd_progress$close())
+    # pre checks
     if(!is.list(args)) msg("Args must be in a list", "error")
     if(!is.list(validate_list)) msg("Validate_list must be in a list", "error")
     if(any(is.null(validate_list))) msg("All functions need to be named", "error")
     arg_names <- names(args)
     if(any(is.null(arg_names))) msg("All args must be named", "error")
-
+    # check if all required args are provided
     inject_args <- sapply(seq_along(validate_list), function(each_vd) {
         if(!is.function(validate_list[[each_vd]])) {
             msg("Each item in `validate_list` must be a function")}
@@ -410,8 +416,16 @@ spsValidator <- function(validate_list, args = list()){
         })
         arg_names  %in% names(each_vd_args)
     }, simplify = FALSE)
-
-    sapply(seq_along(validate_list), function(index){
+    # set up progress bar
+    sapces <- rep('&nbsp', 16) %>% glue_collapse()
+    vd_progress <- Waitress$new(theme = "overlay-opacity",
+                             min = 0, max = length(validate_list))
+    vd_progress$notify(
+        html = HTML(glue("<h4>{sapces}Validating{sapces}</h4>")),
+        position = "tr",
+        text_color = "#3071a9"
+        )
+    for(index in seq_along(validate_list)){
         result <- shinyCatch(do.call(
             validate_list[[index]], args = args[inject_args[[index]]]
         ))
@@ -433,12 +447,10 @@ spsValidator <- function(validate_list, args = list()){
                 glue_collapse(sep = "\n- ")
             shinyCatch(stop(failed_msg), blocking = "error")
         }
-    }) %>% invisible()
-
-    if (getOption("sps")$verbose) {
-        toastr_success("Validation Passed", position = "bottom-right",
-                       timeOut = 1500)
-        }
+        vd_progress$inc(1) # update progress
+    }
+    vd_progress$set(100)
+    toastr_success("Validation Passed", position = "bottom-right",
+                   timeOut = 1500)
     return(invisible())
-
 }

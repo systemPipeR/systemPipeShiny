@@ -65,7 +65,7 @@ img-gallery:hover {
 }
 
 
-/*for sps hyperlink button */
+/*for sps hyperlink button  and tables*/
 .href-button {
   background-color: #0275d8;
   border: none;
@@ -117,3 +117,24 @@ img-gallery:hover {
 	}
 }
 
+/* sps description container*/
+.desc-body.collapse {
+  display: block;
+  height: 150px;
+  overflow: hidden;
+}
+.desc-body.in {
+  height: auto;
+}
+.desc a.collapsed:after  {
+    content: '+ Show More Description';
+}
+.desc a:not(.collapsed):after {
+    content: '- Collapse Description';
+}
+.desc a {
+  font-size: 1.5em;
+}
+.desc a:link {
+  text-decoration: none;
+}

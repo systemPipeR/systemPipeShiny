@@ -145,7 +145,7 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
         tags$div(
             class = "row",
             HTML(glue('
-                <a href="{hrefs}"  class="col-sm-{image_frame_size} style="right: 5px;">
+                <a href="{hrefs}"  class="col-sm-{image_frame_size} sps-tab-link" style="right: 5px;">
                   <img src="{images}" class="img-gallery" style="height: {img_height}; width: {img_width};">
                   <p class="text-center h4">{texts}</p>
                 </a>
@@ -281,7 +281,7 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
         )
     btns <- mapply(
         function(label, href) {
-            glue('<a href="{href}" class="href-button">{label}</a>') %>% glue_collapse()
+            glue('<a href="{href}" class="href-button sps-tab-link">{label}</a>') %>% glue_collapse()
             },
         item_labels, item_hrefs
         )
@@ -344,9 +344,19 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table of list of tabs",
 #' # Some desc
 #' - xxxx
 #' "
-#' renderDesc(desc)
-renderDesc <- function(desc) {
-    HTML(markdown::renderMarkdown(text = glue(desc)))
+#' renderDesc(desc, id = "desc")
+renderDesc <- function(id, desc) {
+    HTML(glue('
+      <div class="desc">
+        <div class="collapse desc-body" id="{id}" aria-expanded="false">
+         {HTML(markdown::renderMarkdown(text = glue(desc)))}
+        </div>
+        <a role="button" class="collapsed" data-toggle="collapse"
+           href="#{id}" aria-expanded="false"
+           aria-controls="{id}">
+        </a>
+      </div>
+    '))
 }
 
 #' dynamically generate select file input

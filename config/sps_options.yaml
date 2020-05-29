@@ -22,3 +22,7 @@ use_crayon:
 display_code:
     default: false
     other: [true]
+
+verbose:
+    default: false
+    other: [true]
