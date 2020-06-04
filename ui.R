@@ -7,13 +7,7 @@
 dashboardHeader <- dashboardHeaderPlus(
     title = tagList(
         span(class = "logo-lg", "systemPipeShiny"),
-        img(src = "systemPipe_small.png"),
-        tags$div(
-            useShinyjs(),
-            useSweetAlert(),
-            useToastr(),
-            useSps()
-        )
+        img(src = "systemPipe_small.png")
     ),
     enable_rightsidebar = TRUE,
     rightSidebarIcon = "clipboard-check",
@@ -27,9 +21,8 @@ dashboardSidebar <-  dashboardSidebar(
         menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap")),
                 badgeLabel = "Main", badgeColor = "red",
 
-        menuItem(
+        menuItem(id = 'wf-control',
             "Workflow Mangement", icon = icon("tasks"), tabName = "wf_main",
-            tags$script("sidebarSpanJump('Workflow Mangement', 'wf_main');"),
             menuSubItem(text = "Targets", tabName = "wf_targets"),
             menuSubItem(text = "Workflow File", tabName = "wf_wf"),
             menuSubItem(text = "Workflow Config", tabName = "wf_config"),
@@ -37,12 +30,11 @@ dashboardSidebar <-  dashboardSidebar(
                  ),
         menuItem(
             "Visualization", icon = icon("tasks"), tabName = "vs_main",
-            tags$script("sidebarSpanJump('Visualization', 'vs_main');"),
             menuItem(
                 text = "Prepare dataset",
                 ## vs dfs add to sidebar
+                devComponents("ui_menu_df"),
                 menuSubItem(text = "Targets", tabName = "df_targets"),
-                menuSubItem(text = "Raw data", tabName = "df_raw"),
                 menuSubItem(text = "Count data", tabName = "df_count"),
                 menuSubItem(text = "DEG Count data", tabName = "df_degcount"),
                 menuSubItem(text = "EdgeR data", tabName = "df_edgeR")
@@ -50,7 +42,7 @@ dashboardSidebar <-  dashboardSidebar(
             menuItem(
                 text = "Collection of plots",
                 ## vs plots add to sidebar
-                menuSubItem(text = "Scatter Plot", tabName = "plot_point"),
+                devComponents("ui_menu_plot"),
                 menuSubItem(text = "PCA Plot", tabName = "plot_pca"),
                 menuSubItem(text = "Box Plot", tabName = "plot_box"),
                 menuSubItem(text = "t-SNE", tabName = "plot_tsne"),
@@ -67,23 +59,31 @@ dashboardSidebar <-  dashboardSidebar(
 )
 # body
 dashboardBody <- dashboardBody(
+    tags$div(
+        useShinyjs(),
+        useSweetAlert(),
+        useToastr(),
+        useSps(),
+        use_waitress()
+    ),
     tabItems(
         tabItem(tabName = "dashboard", dashboardUI("dashboard")),
         # WF tabs
         tabItem(tabName = "wf_main", wf_mainUI("wf_main")),
+        wfPanel(),
         tabItem(tabName = "wf_targets", targetUI("wf_targets")),
         tabItem(tabName = "wf_wf", wfUI("wf_wf")),
         tabItem(tabName = "wf_config", configUI("wf_config")),
         # VS tabs
         tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
+        devComponents("ui_tab_df"),
+        devComponents("ui_tab_plot"),
         ## vs dfs
         tabItem(tabName = "df_targets", df_targetsUI("df_targets")),
-        tabItem(tabName = "df_raw", df_rawUI("df_raw")),
         tabItem(tabName = "df_count", df_countUI("df_count")),
         tabItem(tabName = "df_degcount", df_degcountUI("df_degcount")),
         tabItem(tabName = "df_edgeR", df_edgeRUI("df_edgeR")),
         ## vs plots
-        tabItem(tabName = "plot_point", plot_pointUI("plot_point")),
         tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),
         tabItem(tabName = "plot_box", plot_boxUI("plot_box")),
         tabItem(tabName = "plot_tsne", plot_tsneUI("plot_tsne")),

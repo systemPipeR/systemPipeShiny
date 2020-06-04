@@ -15,13 +15,18 @@ function sidebarSpanJump(span_text, link_tab){
 	$(".sidebar-menu").find("span:contains(" + span_text + ")")[0].onclick =
   	function(){
     	$('[href="#shiny-tab-' + link_tab + '"]').tab('show');
+        $("#wf-panel").addClass("shinyjs-hide");
     };
 }
 
+$(document).ready(function(){
+    sidebarSpanJump('Workflow Mangement', 'wf_main');
+    sidebarSpanJump('Visualization', 'vs_main');
+});
 
 // Enable a tag to change tab by clicking text with links
 $(document).ready(function() {
-  $('.sps-tab-link').click(function(e) {
+  $('.tab-content').on('click', '.sps-tab-link', function(e) {
     var link = $(this).attr('href');
     if (link.match('#')) {
       e.preventDefault();

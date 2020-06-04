@@ -16,11 +16,6 @@ useSps <- function(){
     # addResourcePath("sps", system.file("www", package = "systemPipeShiny"))
     addResourcePath("sps", "www")
     tags$head(
-        HTML('
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/css/uikit.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit-icons.min.js"></script>
-             '),
         tags$link(rel = "stylesheet", type = "text/css",
                             href = "sps/sps.css"),
                   tags$script(src = "sps/sps.js")
@@ -101,9 +96,7 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #' @param title Title of gallery
 #' @param texts label under each image
 #' @param hrefs link when clicking each
-#' @param image_frame_size integer, 1-12
-#' @param img_height css style like '300px'
-#' @param img_width css style like '480px'
+#' @param image_frame_size integer, 1-12, this controls width
 #' @param images image source,
 #'
 #' @return a div element
@@ -124,7 +117,7 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #'
 #' ui <- fluidPage(
 #'     includeCSS("www/sps.css"),
-#'     gallery(texts = texts, hrefs = hrefs, images = images, image_size = 2)
+#'     gallery(texts = texts, hrefs = hrefs, images = images)
 #' )
 #'
 #' server <- function(input, output, session) {
@@ -133,20 +126,18 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #'
 #' shinyApp(ui, server)
 gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts,
-                    hrefs, images, image_frame_size = 4, img_height = "300px",
-                    img_width = "480px"
-                    ){
+                    hrefs, images, image_frame_size = 4){
     if (is.null(Id)) Id <- glue("gallery{sample(1000:100000, 1)}")
     assert_that(length(texts) == length(hrefs) & length(hrefs) == length(images),
                 msg = "texts, hrefs and images must have the same length")
     tags$div(
-        id = Id, class = "col uk-overflow-hidden uk-overlay", `uk-scrollspy`="cls: uk-animation-slide-bottom; target: img; delay: 300; repeat: true",
+        id = Id, class = "col",
         p(class = "text-center h2", style = glue("color: {title_color};"), title),
         tags$div(
-            class = "row",
+            class = "row", style = "  margin: 10px;",
             HTML(glue('
-                <a href="{hrefs}"  class="col-sm-{image_frame_size} sps-tab-link" style="right: 5px;">
-                  <img src="{images}" class="img-gallery" style="height: {img_height}; width: {img_width};">
+                <a href="{hrefs}"  class="col-sm-{image_frame_size} sps-tab-link" style="right: 1px;">
+                  <img src="{images}" class="img-gallery" style="width: 100%;">
                   <p class="text-center h4">{texts}</p>
                 </a>
              '))
@@ -178,12 +169,11 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #'
 #' }
 #' shinyApp(ui, server)
-genGallery <- function(tabnames, Id = NULL, title = "Gallery", type = "vs",
-                       title_color = "#0275d8", image_frame_size = 4, img_height = "300px",
-                       img_width = "480px") {
+genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
+                       title_color = "#0275d8", image_frame_size = 3) {
     tabs <- findTabInfo(tabnames, type)
     gallery(Id = Id, title = title, title_color = title_color,
-            image_frame_size = image_frame_size, img_height = img_height,
+            image_frame_size = image_frame_size,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
             images = tabs[['images']])
 }
@@ -419,3 +409,157 @@ dynamicFile <- function(id, title = "Select your file:",
                   multiple = multiple, buttonLabel = label)
     }
 }
+
+
+
+#' Create template tabs and servers
+#' @description generate UI and server part for template components if `dev`
+#' option is TRUE. See ui.R and server.R for example. Normally there is no need
+#' to change code of this function ui or server scripts.
+#' @param element choose from "ui_menu_df", "ui_menu_plot","ui_tab_df",
+#' "ui_tab_plot", "server"
+#' @param shared use only when `element` is 'server'
+#'
+#' @return ui_xx returns html tags, server will return a server function
+#' @export
+#'
+devComponents <- function(element, shared=NULL){
+    element <- match.arg(element, c("ui_menu_df", "ui_menu_plot",
+                                    "ui_tab_df", "ui_tab_plot", "server"))
+
+    if(is.null(getOption("sps")$dev)) {
+        options(sps = getOption("sps") %>% {.[['dev']] <- FALSE; .})
+        msg("dev option is not set, set to FALSE", "warning")
+    }
+    if(getOption("sps")$dev){
+        switch (element,
+                "ui_menu_df" = menuSubItem(text = "Template data", tabName = "df_template"),
+                "ui_menu_plot" = menuSubItem(text = "Template Plot", tabName = "plot_template"),
+                "ui_tab_df" = tabItem(tabName = "df_template", df_templateUI("df_template")),
+                "ui_tab_plot" = tabItem(tabName = "plot_template", plot_templateUI("plot_template")),
+                "server" = {
+                    callModule(df_templateServer, "df_template", shared = shared)
+                    callModule(plot_templateServer, "plot_template", shared = shared)
+                    }
+        )
+    } else {tabItem("")}
+}
+
+
+#' Example UI elements for plotting
+#' @description return some example UI elements can be toggled on plotting
+#' @param ns namespace function
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' eg_UI <- function(id) {
+#'     ns <- NS(id)
+#'     tagList(
+#'         useSps(),
+#'         uiExamples(ns)
+#'     )
+#' }
+#' ui <- fluidPage(eg_UI("eg"))
+#' server <- function(input, output, session) {}
+#' shinyApp(ui, server)
+uiExamples <- function(ns){
+    tagList(
+        h3("Some examples for plotting controls"),
+        boxPlus(
+            width = 12, closable = FALSE, collapsible = TRUE,
+            footer = dropdownButton(
+                size = "sm", icon = icon("code"), width = "500px",
+                footer_padding = FALSE,
+                tooltip = tooltipOptions(title = "Click to see code"),
+                label = "see code",
+                aceEditor(
+                    ns("code-chunk"), mode = "r", readOnly = TRUE,
+                    fontSize = 14, value =
+                        glue('
+                    clearableTextInput(ns("text1"), "text input example"),
+                    strong("Simple action button example"), br(),
+                    actionButton(
+                        ns("op1"),
+                        label = "click me",
+                        icon("cog")
+                    ),
+                    radioGroupButtons(
+                        inputId = ns("radio_gp1"),
+                        label = "radio group example",
+                        choices = c("A",
+                                    "B", "C", "D"),
+                        status = "primary",
+                        checkIcon = list(
+                            yes = icon("ok", lib = "glyphicon"),
+                            no = icon("remove", lib = "glyphicon"))
+                    ),
+                    sliderTextInput(
+                        inputId = ns("slider1"),
+                        label = "slider example",
+                        choices = c(1, 10, 100, 500, 1000),
+                        grid = TRUE
+                    )
+                    ')
+                )
+            ),
+            p("You need to write your own UI and server logic"),
+            p("This section is jusr for demo and will not be included when you
+              create a new tab"),
+            clearableTextInput(ns("text1"), "text input example"),
+            strong("Simple action button example"), br(),
+            actionButton(
+                ns("op1"),
+                label = "click me",
+                icon("cog")
+            ),
+            radioGroupButtons(
+                inputId = ns("radio_gp1"),
+                label = "radio group example",
+                choices = c("A",
+                            "B", "C", "D"),
+                status = "primary",
+                checkIcon = list(
+                    yes = icon("ok", lib = "glyphicon"),
+                    no = icon("remove", lib = "glyphicon"))
+            ),
+            sliderTextInput(
+                inputId = ns("slider1"),
+                label = "slider example",
+                choices = c(1, 10, 100, 500, 1000),
+                grid = TRUE
+            )
+        )
+    )
+}
+
+#' hr line with color #3b8dbc38
+#' @export
+spsHr <- function() {
+    hr(style ='border: 0.5px solid #3b8dbc38;')
+}
+
+wfPanel <- function(){
+    shared = reactiveValues()
+    shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE)
+    div(class = "tab-pane", id = "wf-panel",
+        absolutePanel(
+            top = "3%", right = "1%", draggable = TRUE, width = "300",
+            height = "auto", class = "control-panel", cursor = "inherit",
+            style = "background-color: white; z-index:999;",
+            fluidRow(
+                column(2),
+                column(8, h4("Workflow Progress")),
+                column(2, HTML('<button class="action-button
+                                  bttn bttn-simple bttn-xs bttn-primary
+                                  bttn-no-outline" data-target="#wf-panel-main"
+                                  data-toggle="collapse">
+                                  <i class="fa fa-minus"></i></button>'))
+            ),
+            div(class = "collapse", id = "wf-panel-main", uiOutput("wf_panel_main"))
+        )
+    )
+}
+

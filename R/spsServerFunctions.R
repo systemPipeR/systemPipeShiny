@@ -354,7 +354,6 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @examples
 #' library(shiny)
 #' library(shinytoastr)
-#' options(sps = list(verbose = TRUE))
 #' df_validate_common <- list(
 #'     vd1 = function(df, apple){
 #'         print(apple)
@@ -391,7 +390,7 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' }
 #'
 #' shinyApp(ui, server)
-spsValidator <- function(validate_list, args = list()){
+spsValidator <- function(validate_list, args = list(), title = "Validation"){
     on.exit(if(exists("vd_progress")) vd_progress$close())
     # pre checks
     if(!is.list(args)) msg("Args must be in a list", "error")
@@ -417,7 +416,7 @@ spsValidator <- function(validate_list, args = list()){
         arg_names  %in% names(each_vd_args)
     }, simplify = FALSE)
     # set up progress bar
-    sapces <- rep('&nbsp', 16) %>% glue_collapse()
+    sapces <- rep('&nbsp', 8) %>% glue_collapse()
     vd_progress <- Waitress$new(theme = "overlay-opacity",
                              min = 0, max = length(validate_list))
     vd_progress$notify(
@@ -450,7 +449,7 @@ spsValidator <- function(validate_list, args = list()){
         vd_progress$inc(1) # update progress
     }
     vd_progress$set(100)
-    toastr_success("Validation Passed", position = "bottom-right",
+    toastr_success(glue("{title} Passed"), position = "bottom-right",
                    timeOut = 1500)
     return(invisible())
 }

@@ -1,24 +1,3 @@
-gallery_plot <- data.frame(
-    texts = c(
-        "Bar Plot",
-        "PCA Plot",
-        "Point Plot",
-        "T-SNE Plot"
-    ),
-    hrefs = c(
-        "",
-        "#shiny-tab-plot_pca",
-        "",
-        ""
-    ),
-    images = c(
-        "plot_list/plot_bar.png",
-        "plot_list/plot_pca.png",
-        "plot_list/plot_point.png",
-        "plot_list/plot_tsne.jpg"
-    )
-)
-
 tabble_workflow <- data.frame(
     Workflow = c(
         ""
@@ -53,20 +32,14 @@ vs_mainUI <- function(id){
         </ol>
              '),
         br(),
-        hrefTable(item_titles = c("workflow 1", "workflow 2", "workflow 3"),
-                  item_labels = list(c("tab 1"), c("tab 3", "tab 4") ,c("tab 5", "tab 6", "tab 7")),
-                  item_hrefs = list(c("https://www.google.com/"), c("", ""), c("", "", "")),
-        ),
-        genHrefTable(rows = list(wf1 = c("df_raw", "df_count"), wf2 =  c("df_raw"))),
+        genHrefTable(rows = list(wf1 = c("df_targets", "df_count"), wf2 =  c("df_targets"))),
         br(),
-        gallery(title = "Gallery of Plots", texts = gallery_plot$texts, hrefs = gallery_plot$hrefs, images = gallery_plot$images, image_frame_size = 3),
-        genGallery(tabnames = "all")
+        genGallery(type = "vs")
 
     )
 }
 
 ## server
 vs_mainServer <- function(input, output, session, shared){
-
 }
 
