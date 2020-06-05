@@ -157,7 +157,8 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
 #' shinyApp(ui = shinyUI(
 #'     fluidPage(actionButton("haha", "haha"))
 #' ), server = function(input, output, session) {
-#'     observeEvent(input$haha, shinyCheckSpace(session, cran_pkg = "1", bioc_pkg = "haha", github = "sdasdd/asdsad"))
+#'     observeEvent(input$haha, shinyCheckSpace(session, cran_pkg = "1",
+#'                  bioc_pkg = "haha", github = "sdasdd/asdsad"))
 #' })
 shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NULL, quietly = FALSE) {
     missing_cran <- checkNameSpace(cran_pkg, quietly, from = "CRAN")
@@ -371,14 +372,11 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #'         return(result)
 #'     }
 #' )
-#'
-#'
 #' ui <- fluidPage(
 #'     actionButton("btn", "this btn"),
 #'     useToastr(),
 #'     use_waitress()
 #' )
-#'
 #' server <- function(input, output, session) {
 #'     observeEvent(input$btn, {
 #'         spsValidator(df_validate_common,
@@ -388,7 +386,6 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #'         print(123)
 #'     })
 #' }
-#'
 #' shinyApp(ui, server)
 spsValidator <- function(validate_list, args = list(), title = "Validation"){
     on.exit(if(exists("vd_progress")) vd_progress$close())
@@ -453,3 +450,122 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
                    timeOut = 1500)
     return(invisible())
 }
+
+#' Workflow Progress tracker server logic
+#' @description use it on the top level server not inside a module. Only
+#' designed for workflow tabs.
+#' @param shared the shared object
+#'
+#' @return reactive renderUI object
+#' @export
+#'
+#' @examples
+#' wfProgressPanel(shared)
+wfProgressPanel <- function(shared){
+    renderUI({
+        total_progress <- sum(as.numeric(shared$wf_flags))/0.03
+        timelineBlock(reversed = FALSE,
+                      timelineItem(
+                          title = "Targets file",
+                          icon = timeline_icon(shared$wf_flags$targets_ready),
+                          color = timeline_color(shared$wf_flags$targets_ready),
+                          border = FALSE,
+                          progressBar(
+                            "pg_target",  striped = TRUE, status = "primary",
+                            timeline_pg(shared$wf_flags$targets_ready))
+                      ),
+                      timelineItem(
+                          title = "Workflow Rmd",
+                          icon = timeline_icon(shared$wf_flags$wf_ready),
+                          color = timeline_color(shared$wf_flags$wf_ready),
+                          border = FALSE,
+                          progressBar(
+                             "pg_rmd", striped = TRUE, status = "primary",
+                             timeline_pg(shared$wf_flags$wf_ready))
+                      ),
+                      timelineItem(
+                          title = "Config",
+                          icon = timeline_icon(shared$wf_flags$wf_conf_ready),
+                          color = timeline_color(shared$wf_flags$wf_conf_ready),
+                          border = FALSE,
+                          progressBar(
+                             "pg_config", striped = TRUE, status = "primary",
+                             timeline_pg(shared$wf_flags$wf_conf_ready))
+                      ),
+                      timelineLabel("Ready",
+                                    color = if(all(as.logical(shared$wf_flags)))
+                                                 "olive"
+                                            else "orange"),
+                      div(style = "margin-left: 60px; margin-right: 15px;",
+                          progressBar(
+                              "pg_wf_all", total_progress, striped = TRUE,
+                              status = timline_pg_status(total_progress)
+                          )
+                      )
+        )
+    })
+}
+
+
+updatePg <- function(pg, value, pg_values){
+    if(!inherits(ns, "reactivevalues"))
+        msg("`pg_values` needs to be a reactivevalues object", "error")
+    if(!inherits(pg, "character") | length(pg) > 1)
+        msg(c("`pg` needs to be a character string of length 1"), "error")
+    if(value < 0 | value > 100) msg("value needs to be between 0 and 100")
+    if(is.null(pg_values[[pg]]))
+        msg(glue("{pg} is not one of the progress"))
+    pg_values[[pg]] = value
+}
+
+.pgItem = function(title, value, ns){
+    value = value/100
+    timelineItem(
+        title = title,
+        icon = timeline_icon(floor(value)),
+        color = timeline_color(floor(value)),
+        border = FALSE,
+        progressBar(
+            ns(glue("pg_{title}")),  striped = TRUE, status = "primary",
+            floor(value))
+    )
+}
+
+pgPaneServer <- function(items, pg_values, ns){
+    if(!inherits(items, "character"))
+        msg(c("`items` needs to be a character vector"), "error")
+    if(!inherits(ns, "function")) msg("`ns` needs to be a function", "error")
+    if(!inherits(pg_values, "reactivevalues"))
+        msg("`pg_values` needs to be a reactivevalues object", "error")
+    renderUI({
+        timeline_list <- list()
+        for(i in items){
+            if(is.empty(pg_values[["init"]])) pg_values[[i]] <- 0
+            timeline_list[[i]] <- .pgItem(i, pg_values[[i]], ns)
+        }
+        p_max <- reactiveValuesToList(pg_values) %>%
+            unlist %>% length
+        p_percent <- reactiveValuesToList(pg_values) %>%
+            unlist %>% sum %>% {./p_max}
+        pg_values[["init"]] <- TRUE
+        timelineBlock(reversed = FALSE,
+                      tagList(
+                          timeline_list,
+                          timelineLabel("Ready",
+                                        color = if(p_percent == p_max*100)
+                                            "olive"
+                                        else "orange"),
+                          div(style = "margin-left: 60px; margin-right: 15px;",
+                              progressBar(
+                                  "pg_wf_all", p_percent,
+                                  striped = TRUE,
+                                  status = timline_pg_status(p_percent)
+                              )
+                          )
+                      )
+
+        )
+    })
+}
+
+

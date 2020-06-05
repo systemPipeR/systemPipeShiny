@@ -127,7 +127,7 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #' shinyApp(ui, server)
 gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts,
                     hrefs, images, image_frame_size = 4){
-    if (is.null(Id)) Id <- glue("gallery{sample(1000:100000, 1)}")
+    if (is.null(Id)) Id <- glue("gallery{sample(1000000:9999999, 1)}")
     assert_that(length(texts) == length(hrefs) & length(hrefs) == length(images),
                 msg = "texts, hrefs and images must have the same length")
     tags$div(
@@ -204,7 +204,7 @@ genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
 hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8",
                     label_text, hrefs, ...
                     ){
-    if (is.null(Id)) Id <- glue("list-tab{sample(1000:100000, 1)}")
+    if (is.null(Id)) Id <- glue("list-tab{sample(1000000:9999999, 1)}")
     assert_that(length(label_text) == length(hrefs),
                 msg = "texts and hrefs must have the same length")
     tags$div(
@@ -255,7 +255,7 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
                       text_color = "#0275d8", item_titles, item_labels,
                       item_hrefs, ...
                       ){
-    if (is.null(Id)) Id <- glue("list-table{sample(1000:100000, 1)}")
+    if (is.null(Id)) Id <- glue("list-table{sample(1000000:9999999, 1)}")
     assert_that(is.list(item_labels)); assert_that(is.list(item_hrefs))
     assert_that(length(item_titles) == length(item_labels) & length(item_labels) == length(item_hrefs),
                 msg = "item_titles, item_labels and item_hrefs must have the same length")
@@ -541,9 +541,13 @@ spsHr <- function() {
     hr(style ='border: 0.5px solid #3b8dbc38;')
 }
 
+#' Workflow progress tracker UI
+#' @description call it on top level UI not inside a module. Call this function
+#' only once. Do not repeat this function.
+#' @export
+#' @examples
+#' wfPanel()
 wfPanel <- function(){
-    shared = reactiveValues()
-    shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE)
     div(class = "tab-pane", id = "wf-panel",
         absolutePanel(
             top = "3%", right = "1%", draggable = TRUE, width = "300",
@@ -558,8 +562,46 @@ wfPanel <- function(){
                                   data-toggle="collapse">
                                   <i class="fa fa-minus"></i></button>'))
             ),
-            div(class = "collapse", id = "wf-panel-main", uiOutput("wf_panel_main"))
+            div(class = "collapse",
+                id = "wf-panel-main",
+                uiOutput("wf_panel"))
         )
     )
 }
 
+#' General progress progress tracker UI
+#'
+#' @param title If not specified and id contains 'plot', title will be
+#' 'Plot Progress'; has 'df' will be 'Data Prepare', if neither will be
+#' 'progress'
+#' @description this is used inside data and plot tabs, inside a module
+#' @export
+#' @examples
+#' pgPaneUI("id")
+pgPaneUI <- function(id, title=NULL){
+    if(is.null(title)) {
+        title <- id %>% {
+            if(str_detect(., "plot")) "Plot Progress"
+            else if(str_detect(., "df")) "Data Prepare"
+            else("Progress")
+        }
+    }
+    div(class = "tab-pane", id = glue("{id}-pg-container"),
+        absolutePanel(
+            top = "5%", right = "2%", draggable = TRUE, width = "300",
+            height = "auto", class = "control-panel", cursor = "inherit",
+            style = "background-color: white; z-index:999;",
+            fluidRow(
+                column(3),
+                column(7, h4(title)),
+                column(2,
+                    HTML(glue('<button class="action-button ',
+                              'bttn bttn-simple bttn-xs bttn-primary ',
+                              'bttn-no-outline" data-target="#{id}-timeline"',
+                              ' data-toggle="collapse">',
+                              '<i class="fa fa-minus"></i></button>')))
+            ),
+            div(class = "collapse", id = glue("{id}-timeline"), uiOutput(id))
+        )
+    )
+}

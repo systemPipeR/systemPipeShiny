@@ -285,7 +285,7 @@ timeline_pg <- function(bool = FALSE){
     if (bool) return(100) else return(0)
 }
 
-timline_pg_total <- function(progress = 0){
+timline_pg_status <- function(progress = 0){
     if(progress <= 33.4) "warning"
     else if(progress < 66.7) "info"
     else "success"

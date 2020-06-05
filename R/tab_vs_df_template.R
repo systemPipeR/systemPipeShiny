@@ -19,6 +19,7 @@ df_templateUI <- function(id){
     tagList(
         h2("Title for this kind of dataframe"),
         renderDesc(id = ns("desc"), desc),
+        pgPaneUI(ns("pg")), # progress tracker
         # first validate required packages and other prerequisites
         div(style = "text-align: center;",
             actionButton(inputId = ns("validate_start"), label = "Start with this tab")
@@ -74,6 +75,13 @@ df_templateUI <- function(id){
 ## server
 df_templateServer <- function(input, output, session, shared){
     ns <- session$ns
+    # progress tracker
+    pg_values <- reactiveValues()
+    output$pg <- pgPaneServer(c("a", "b", "c"), pg_values, ns)
+    observe({
+        print(pg_values)
+        print(pg_values[["init"]])
+              })
     # start the tab by checking if required packages are installed
     observeEvent(input$validate_start, {
         req(shinyCheckSpace(

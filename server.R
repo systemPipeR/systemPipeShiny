@@ -29,45 +29,21 @@ server <- function(input, output, session) {
     callModule(topServer, "top", shared = shared)
     callModule(rightServer, "right", shared = shared)
     callModule(aboutServer, "about")
-    # global server logic
-    setup_pushbar() #pushbar set up
-    serverLoadingScreen(input, output, session) #loading screening
+
+    # global server logic, usually no need to change below
+    ## pushbar set up
+    setup_pushbar()
+    ## loading screening
+    serverLoadingScreen(input, output, session)
     ## for workflow control panel
     removeClass(id = "wf-panel", asis = TRUE, class = "tab-pane")
+    shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE,
+                                  wf_conf_ready = FALSE)
     observeEvent(input$left_sidebar, {
         print(input$left_sidebar)
         toggleClass(id = "wf-panel", class = "shinyjs-hide", asis = TRUE,
                     condition = !str_detect(input$left_sidebar, "^wf_"))
     })
     shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE)
-    output$wf_panel_main <- renderUI({
-        total_progress <- sum(as.numeric(shared$wf_flags))/0.03
-        timelineBlock(reversed = FALSE,
-                      timelineItem(
-                          title = "Targets file",
-                          icon = timeline_icon(shared$wf_flags$targets_ready),
-                          color =  timeline_color(shared$wf_flags$targets_ready),
-                          border = FALSE,
-                          progressBar("pg_target", timeline_pg(shared$wf_flags$targets_ready), striped = TRUE, status = "primary")
-                      ),
-                      timelineItem(
-                          title = "Workflow Rmd",
-                          icon = timeline_icon(shared$wf_flags$wf_ready),
-                          color = timeline_color(shared$wf_flags$wf_ready),
-                          border = FALSE,
-                          progressBar("pg_rmd", timeline_pg(shared$wf_flags$wf_ready), striped = TRUE, status = "primary")
-                      ),
-                      timelineItem(
-                          title = "Config",
-                          icon = timeline_icon(shared$wf_flags$wf_conf_ready),
-                          color = timeline_color(shared$wf_flags$wf_conf_ready),
-                          border = FALSE,
-                          progressBar("pg_config", timeline_pg(shared$wf_flags$wf_conf_ready), striped = TRUE, status = "primary")
-                      ),
-                      timelineLabel("Ready", color = if(all(as.logical(shared$wf_flags))) "olive" else "orange"),
-                      div(style = "margin-left: 60px; margin-right: 15px;",
-                          progressBar("pg_wf_all", total_progress, striped = TRUE, status = timline_pg_total(total_progress))
-                      )
-            )
-    })
+    output$wf_panel <- wfProgressPanel(shared)
 }
