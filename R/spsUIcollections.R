@@ -569,15 +569,11 @@ wfPanel <- function(){
     )
 }
 
-#' General progress progress tracker UI
-#'
+#' @rdname pgPaneServer
 #' @param title If not specified and id contains 'plot', title will be
 #' 'Plot Progress'; has 'df' will be 'Data Prepare', if neither will be
-#' 'progress'
-#' @description this is used inside data and plot tabs, inside a module
+#' @param id progress panel id on UI side
 #' @export
-#' @examples
-#' pgPaneUI("id")
 pgPaneUI <- function(id, title=NULL){
     if(is.null(title)) {
         title <- id %>% {

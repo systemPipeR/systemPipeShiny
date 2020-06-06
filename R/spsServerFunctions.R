@@ -507,65 +507,134 @@ wfProgressPanel <- function(shared){
 }
 
 
-updatePg <- function(pg, value, pg_values){
-    if(!inherits(ns, "reactivevalues"))
-        msg("`pg_values` needs to be a reactivevalues object", "error")
-    if(!inherits(pg, "character") | length(pg) > 1)
-        msg(c("`pg` needs to be a character string of length 1"), "error")
-    if(value < 0 | value > 100) msg("value needs to be between 0 and 100")
-    if(is.null(pg_values[[pg]]))
-        msg(glue("{pg} is not one of the progress"))
-    pg_values[[pg]] = value
-}
-
+#' Create each item in the progress bar
+#' internal function
+#' @param title progress title
+#' @param value 0-100
+#' @param ns namespace function
 .pgItem = function(title, value, ns){
-    value = value/100
     timelineItem(
         title = title,
-        icon = timeline_icon(floor(value)),
-        color = timeline_color(floor(value)),
+        icon = timeline_icon(floor(value/100)),
+        color = timeline_color(floor(value/100)),
         border = FALSE,
         progressBar(
             ns(glue("pg_{title}")),  striped = TRUE, status = "primary",
-            floor(value))
+            value)
     )
 }
 
+#' A draggable progress panel
+#' Useful if you want to track a workflow
+#' @description First use `pgPaneUI` on UI side and create a reactivevalues
+#' object. Then pass it to `pgPaneServer` and register a progress panel. It
+#' requires the namespace `ns` function, if you are not using a module,
+#' you still can register the namespace \code{ns <- NS('any_id')}
+#'  on server to pass it to  `pgPaneServer`. If you use module
+#'  \code{ns <- session$ns(module_id)}.
+#' @param items a named character vector, names will be used as progress item
+#' label, actual value will be used to update progress on server
+#' @param pg_values reactivevalues object
+#' @param ns namespace function, you shouldn't run the function, directly pass
+#' the ns function to `pgPaneServer`
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' library(shinydashboard)
+#' library(shinytoastr)
+#' ui <- dashboardPage(header = dashboardHeader(),
+#'                     sidebar = dashboardSidebar(),
+#'                     body = dashboardBody(
+#'                         useToastr(),
+#'                         actionButton("a", "a"),
+#'                         actionButton("b", "b"),
+#'                         actionButton("c", "c"),
+#'                         pgPaneUI('pg')
+#'                     )
+#' )
+#' server <- function(input, output, session) {
+#'     ns <- NS("test")
+#'     pg_values <- reactiveValues()
+#'     output$pg <- pgPaneServer(c("This a" = "a",
+#'                                 "This b" = "b",
+#'                                 "This c" = "c"),
+#'                               pg_values, ns)
+#'     observeEvent(input$a, {
+#'         updatePg("a", 100, pg_values)
+#'     })
+#'     observeEvent(input$b, {
+#'         updatePg("b", 100, pg_values)
+#'     })
+#'     observeEvent(input$c, {
+#'         updatePg("c", 100, pg_values)
+#'     })
+#'     shinyApp(ui, server)
 pgPaneServer <- function(items, pg_values, ns){
-    if(!inherits(items, "character"))
-        msg(c("`items` needs to be a character vector"), "error")
-    if(!inherits(ns, "function")) msg("`ns` needs to be a function", "error")
-    if(!inherits(pg_values, "reactivevalues"))
-        msg("`pg_values` needs to be a reactivevalues object", "error")
-    renderUI({
-        timeline_list <- list()
-        for(i in items){
-            if(is.empty(pg_values[["init"]])) pg_values[[i]] <- 0
-            timeline_list[[i]] <- .pgItem(i, pg_values[[i]], ns)
+    shinyCatch({
+        if(!inherits(items, "character"))
+            msg(c("Progress `items` needs to be a character vector"), "error")
+        if(!inherits(ns, "function"))
+            msg("Progress arg `ns` needs to be a function", "error")
+        if(!inherits(pg_values, "reactivevalues"))
+            msg(c("Progress arg `pg_values` needs",
+                  "to be a reactivevalues object"),
+                "error")
+        if(is.empty(isolate(pg_values[["init"]]))) {
+            for(i in items) pg_values[[i]] <- 0
+            pg_values[["init"]] <- TRUE
         }
-        p_max <- reactiveValuesToList(pg_values) %>%
-            unlist %>% length
-        p_percent <- reactiveValuesToList(pg_values) %>%
-            unlist %>% sum %>% {./p_max}
-        pg_values[["init"]] <- TRUE
-        timelineBlock(reversed = FALSE,
-                      tagList(
-                          timeline_list,
-                          timelineLabel("Ready",
-                                        color = if(p_percent == p_max*100)
-                                            "olive"
-                                        else "orange"),
-                          div(style = "margin-left: 60px; margin-right: 15px;",
-                              progressBar(
-                                  "pg_wf_all", p_percent,
-                                  striped = TRUE,
-                                  status = timline_pg_status(p_percent)
+        renderUI({
+            timeline_list <- list()
+            item_names <- names(items)
+            for(i in seq_along(items)){
+                current_i <- items[i]
+                timeline_list[[current_i]] <- .pgItem(item_names[i],
+                                                      pg_values[[current_i]],
+                                                      ns)
+            }
+            p_max <- reactiveValuesToList(pg_values) %>%
+                unlist %>% length - 1
+            p_percent <- reactiveValuesToList(pg_values) %>%
+                unlist %>% sum %>% {./p_max}
+            timelineBlock(reversed = FALSE,
+                          tagList(
+                              timeline_list,
+                              timelineLabel("Ready",
+                                            color = if(p_percent >= 100)
+                                                "olive"
+                                            else "orange"),
+                              div(style = "margin-left: 60px;
+                                           margin-right: 15px;",
+                                  progressBar(
+                                      "pg_wf_all", p_percent,
+                                      striped = TRUE,
+                                      status = timline_pg_status(p_percent)
+                                  )
                               )
                           )
-                      )
-
-        )
-    })
+            )
+        })
+    }, blocking_level = "error")
 }
 
 
+#' @rdname pgPaneServer
+#' @param pg progress name, this will be each item in the `items`
+#' @param value 0-100 number
+#' @param pg_values a `reactivevalues` object
+#' @export
+updatePg <- function(pg, value, pg_values){
+    shinyCatch({
+        if(!inherits(pg_values, "reactivevalues"))
+            msg("Progress value needs to be a reactivevalues object", "error")
+        if(!inherits(pg, "character") | length(pg) > 1)
+            msg(c("Progress needs to be a",
+                  "character string of length 1"),
+                "error")
+        if(value < 0 | value > 100) msg("value needs to be between 0 and 100")
+        if(is.null(pg_values[[pg]]))
+            msg(glue("{pg} is not one of the progress"), 'error')
+        pg_values[[pg]] = value
+    }, blocking_level = 'error')
+}

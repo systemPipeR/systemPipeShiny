@@ -9,7 +9,7 @@ dashboardHeader <- dashboardHeaderPlus(
         span(class = "logo-lg", "systemPipeShiny"),
         img(src = "systemPipe_small.png")
     ),
-    enable_rightsidebar = TRUE,
+    enable_rightsidebar = FALSE,
     rightSidebarIcon = "clipboard-check",
     left_menu = topUI("top")
 )
@@ -18,12 +18,12 @@ dashboardSidebar <-  dashboardSidebar(
     sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
                       label = "Search..."),
     sidebarMenu(id = "left_sidebar",
-        menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap")),
-                badgeLabel = "Main", badgeColor = "red",
-
+        menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap"),
+                badgeLabel = "Main", badgeColor = "red"
+                ),
         menuItem(id = 'wf-control',
-            "Workflow Mangement", icon = icon("tasks"), tabName = "wf_main",
-            menuSubItem(text = "Targets", tabName = "wf_targets"),
+            "Workflow Mangement (Beta)", tabName = "wf_main",
+            menuSubItem(text = "Targets", tabName = "wf_targets", ),
             menuSubItem(text = "Workflow File", tabName = "wf_wf"),
             menuSubItem(text = "Workflow Config", tabName = "wf_config"),
             menuSubItem(text = "Run Workflow", tabName = "wf_run")
@@ -97,13 +97,14 @@ dashboardBody <- dashboardBody(
     )
 )
 # right side bar
-rightsidebar <- rightSidebar(
-    background = "light", icon = "clipboard-check", width = 400,
-    rightUI("right")
-)
+# rightsidebar <- rightSidebar(
+#     background = "light", icon = "clipboard-check", width = 400,
+#     rightUI("right")
+# )
 # app main UI
 mainUI <- dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
-                            body =  dashboardBody, rightsidebar = rightsidebar)
+                            body =  dashboardBody #,rightsidebar = rightsidebar
+                            )
 # merge everything together
 ui <- spsUI(mainUI)
 

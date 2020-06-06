@@ -77,11 +77,10 @@ df_templateServer <- function(input, output, session, shared){
     ns <- session$ns
     # progress tracker
     pg_values <- reactiveValues()
-    output$pg <- pgPaneServer(c("a", "b", "c"), pg_values, ns)
-    observe({
-        print(pg_values)
-        print(pg_values[["init"]])
-              })
+    output$pg <- pgPaneServer(c("Package Requirements" = "pkg" ,
+                                "Input Data Validation" = "data",
+                                "Preprocess" = "prepro"),
+                              pg_values, ns)
     # start the tab by checking if required packages are installed
     observeEvent(input$validate_start, {
         req(shinyCheckSpace(
@@ -92,6 +91,7 @@ df_templateServer <- function(input, output, session, shared){
         ))
         shinyjs::show(id = "tab_main")
         shinyjs::hide(id = "validate_start")
+        updatePg('123', 100, pg_values)
     })
     observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
     # get upload path, note path is in upload_path()$datapath

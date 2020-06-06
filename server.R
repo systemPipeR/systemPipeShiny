@@ -27,7 +27,7 @@ server <- function(input, output, session) {
     callModule(plot_volcanoServer, "plot_volcano", shared = shared)
     # other tabs
     callModule(topServer, "top", shared = shared)
-    callModule(rightServer, "right", shared = shared)
+    # callModule(rightServer, "right", shared = shared)
     callModule(aboutServer, "about")
 
     # global server logic, usually no need to change below
