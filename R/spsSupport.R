@@ -201,11 +201,13 @@ findTabInfo <- function(tabnames=NULL, type = NULL) {
         tabs <- tabs[tabs$type %in% type, ]
         tab_nos <- seq_len(nrow(tabs))
     } else {
-        tab_nos <- sapply(tabnames, function(x) {
+        tab_nos <- vapply(tabnames, function(x) {
             tab_no <- str_which(glue("^{x}$"), tabs$Tab_name)
-            if (!not_empty(tab_no)) warning(glue("Tab {x} is not in the tab list"))
+            if (!not_empty(tab_no)){
+                stop(glue("Tab {x} is not in the tab list"), call. = FALSE)
+                return(NA)}
             tab_no
-        })
+        }, 1)
     }
     list(
         tab_labels = tabs$Display_label[tab_nos],

@@ -20,7 +20,6 @@ df_templateUI <- function(id){
         h2("Title for this kind of dataframe"),
         renderDesc(id = ns("desc"), desc),
         pgPaneUI(ns("pg")), # progress tracker
-        # first validate required packages and other prerequisites
         div(style = "text-align: center;",
             actionButton(inputId = ns("validate_start"), label = "Start with this tab")
         ),
@@ -60,11 +59,6 @@ df_templateUI <- function(id){
                       actionButton(ns("preprocess"), label = "Preprocess", icon("paper-plane"))
                 )
             ),
-            # column(
-            #     width = 12,
-            #     actionButton(ns("df_reload"), label = "Load/Reload Data Input", icon("redo-alt")),
-            #
-            # ),
             fluidRow(id = ns("plot_option_row"), class = "shinyjs-hide",
                      uiOutput(ns("plot_option"))
             )
@@ -91,17 +85,11 @@ df_templateServer <- function(input, output, session, shared){
         ))
         shinyjs::show(id = "tab_main")
         shinyjs::hide(id = "validate_start")
-        updatePg('123', 100, pg_values)
+        updatePg('pkg', 100, pg_values) # update progress
     })
     observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
     # get upload path, note path is in upload_path()$datapath
     upload_path <- dynamicFileServer(input, session, id = "file_upload")
-    observe({
-        # print(data_df() %>% class)
-        # print(data_df())
-        # print(input$df_rows_all)
-        # print(data_df()[input$df_rows_all, ])
-        })
     # load the file dynamically
     data_df <- reactive({
         df_path <- upload_path()
@@ -125,6 +113,7 @@ df_templateServer <- function(input, output, session, shared){
     })
 
     # preprocess
+    ## define validators
     df_validator_common <- list(
         vd1 = function(df, ...){
             if (is(df, "data.frame")) {result <- c(" " = TRUE)}
@@ -138,43 +127,26 @@ df_templateServer <- function(input, output, session, shared){
             return(result)
         }
     )
-
+    ## define special validations for different reprocesses
+    df_validate_method1 <- list(
+        md1 = function(df, special1) {
+            cat(special1)
+            if (ncol(df) > 1) return(c(" " = TRUE))
+            else return(c("Need more than 1 column" = FALSE))
+        }
+    )
+    df_validate_method2 <- list(
+        md1 = function(df, special2) {
+            cat(special2)
+            if (ncol(df) > 1) return(c(" " = TRUE))
+            else return(c("Need more than 1 column" = FALSE))
+        }
+    )
+    # start validation and preprocess
     observeEvent(input$preprocess, ignoreInit = TRUE, {
-        # update filtered df
+        # get filtered df
         df_filter <-  data_df()[input$df_rows_all, ]
-        # define common validations
-        df_validate_common <- list(
-            vd1 = function(df, apple){
-                cat(apple)
-                if (is(df, "data.frame")) {result <- c(" " = TRUE)}
-                else {result <- c("Input is not dataframe or tibble" = FALSE)}
-                return(result)
-            },
-            vd2 = function(df, banana, orange="orange\n"){
-                cat(banana)
-                cat(orange)
-                if (nrow(df) > 10) {result <- c(" " = TRUE)}
-                else {result <- c("Need more than 10 rows" = FALSE)}
-                Sys.sleep(1)
-                return(result)
-            }
-        )
-        # define validations for different preprocesses
-        df_validate_method1 <- list(
-            md1 = function(df, special1) {
-                cat(special1)
-                if (ncol(df) > 1) return(c(" " = TRUE))
-                else return(c("Need more than 1 column" = FALSE))
-            }
-        )
-        df_validate_method2 <- list(
-            md1 = function(df, special2) {
-                cat(special2)
-                if (ncol(df) > 1) return(c(" " = TRUE))
-                else return(c("Need more than 1 column" = FALSE))
-            }
-        )
-        # validate them
+        # validate data
         spsValidator(df_validate_common,
                      args = list(df = df_filter,
                                  apple = "apple\n",
@@ -190,6 +162,7 @@ df_templateServer <- function(input, output, session, shared){
                                  title = "Special validation for method 2"),
             msg('No addition validation required')
         )
+        updatePg('data', 100, pg_values) # update progress
         # if validation passed, start reprocess
         df_processed <- shinyCatch(switch(input$select_prepro,
            'md1' = {
@@ -201,11 +174,11 @@ df_templateServer <- function(input, output, session, shared){
            },
            df_filter
         ), blocking_level = 'error')
-        if(!is.null(df_processed)) {
-            shared$data_in_task <- df_processed
-            toastr_success(title = "Preprocess done!", message = "You can choose your plot options below",
-                           timeOut = 2000)
-        }
+        req(!is.null(df_processed))
+        updatePg('prepro', 100, pg_values) # update progress
+        shared$data_in_task <- df_processed
+        toastr_success(title = "Preprocess done!", message = "You can choose your plot options below",
+                       timeOut = 2000)
         shinyjs::show(id = "plot_option_row")
         gallery <- switch(input$select_prepro,
                           'md1' = genGallery("plot_pca"),

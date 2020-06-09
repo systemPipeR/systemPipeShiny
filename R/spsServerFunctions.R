@@ -569,17 +569,17 @@ wfProgressPanel <- function(shared){
 #'     observeEvent(input$c, {
 #'         updatePg("c", 100, pg_values)
 #'     })
-#'     shinyApp(ui, server)
+#' }
+#' shinyApp(ui, server)
 pgPaneServer <- function(items, pg_values, ns){
     shinyCatch({
         if(!inherits(items, "character"))
-            msg(c("Progress `items` needs to be a character vector"), "error")
+            stop("Progress `items` needs to be a character vector")
         if(!inherits(ns, "function"))
-            msg("Progress arg `ns` needs to be a function", "error")
+            stop("Progress arg `ns` needs to be a function")
         if(!inherits(pg_values, "reactivevalues"))
-            msg(c("Progress arg `pg_values` needs",
-                  "to be a reactivevalues object"),
-                "error")
+            stop(c("Progress arg `pg_values` needs",
+                   "to be a reactivevalues object"))
         if(is.empty(isolate(pg_values[["init"]]))) {
             for(i in items) pg_values[[i]] <- 0
             pg_values[["init"]] <- TRUE
@@ -596,7 +596,7 @@ pgPaneServer <- function(items, pg_values, ns){
             p_max <- reactiveValuesToList(pg_values) %>%
                 unlist %>% length - 1
             p_percent <- reactiveValuesToList(pg_values) %>%
-                unlist %>% sum %>% {./p_max}
+                unlist %>% sum - 1 %>% {./p_max}
             timelineBlock(reversed = FALSE,
                           tagList(
                               timeline_list,
@@ -627,14 +627,99 @@ pgPaneServer <- function(items, pg_values, ns){
 updatePg <- function(pg, value, pg_values){
     shinyCatch({
         if(!inherits(pg_values, "reactivevalues"))
-            msg("Progress value needs to be a reactivevalues object", "error")
+            stop("Progress value needs to be a reactivevalues object")
         if(!inherits(pg, "character") | length(pg) > 1)
-            msg(c("Progress needs to be a",
-                  "character string of length 1"),
-                "error")
+            stop("Progress needs to be a character string of length 1")
         if(value < 0 | value > 100) msg("value needs to be between 0 and 100")
         if(is.null(pg_values[[pg]]))
-            msg(glue("{pg} is not one of the progress"), 'error')
+            stop(glue("{pg} is not one of the progress"))
         pg_values[[pg]] = value
     }, blocking_level = 'error')
 }
+
+#' Add and get data between shiny modules
+#' @param data any type of R object you want to store and use in other tabs
+#' @param shared the SPS shared reactivevalues object
+#' @param ns the name space function
+#' @return Nothing to return with `add` method and returns original object for
+#' the `get` method
+#' @export
+#' @examples
+#' library(shiny)
+#' library(shinytoastr)
+#' resolveOptions()
+#' ui <- fluidPage(
+#'     useToastr(),
+#'     actionButton("add", "add"),
+#'     actionButton("get", "get"),
+#'     actionButton("wrong", "when it gets wrong")
+#' )
+#' server <- function(input, output, session) {
+#'     tab_info <- tibble::tibble(
+#'         Tab_name = 'df_count',
+#'         Display_label = 'Count Table',
+#'         type = 'data',
+#'         image = ''
+#'     )
+#'     shared <- reactiveValues()
+#'     ns <- NS("df_count")
+#'     data <- tibble::tibble(this = 123)
+#'     cat('before adding\n')
+#'     print(shared)
+#'     observeEvent(input$add, {
+#'         addData(data, shared, ns)
+#'         cat('after adding\n')
+#'         print(shared) # watch the data_intask object is created
+#'     })
+#'     observeEvent(input$get, {
+#'         cat("get data\n")
+#'         getData('df_count', shared)
+#'     })
+#'     observeEvent(input$wrong, {
+#'         cat("get wrong data\n")
+#'         getData('not_there', shared)
+#'     })
+#' }
+#' shinyApp(ui, server)
+addData <- function(data, shared, ns) {
+    shinyCatch({
+        if (!inherits(shared, "reactivevalues"))
+            stop("Use the reactivevalues object `shared`")
+        if(!inherits(ns, "function"))
+            stop("Arg `ns` needs to be a function")
+        namespce <- ns("") %>% str_remove("-.*$")
+        findTabInfo(namespce)
+        if(not_empty(shared$data_intask[[namespce]]) & getOption('sps')$verbose)
+            warning(c(glue("found {namespce} has already been added to "),
+                           "`shared$data_intask` list, overwrite"))
+        shared$data_intask[[namespce]] <- data
+    })
+}
+
+
+#' @rdname addData
+#' @param tabname which tab the data was been added to task (which tab you used
+#' the `addData` method)
+#' @export
+getData <- function(tabname, shared){
+    shinyCatch({
+        if(!inherits(shared, "reactivevalues"))
+            stop("Use the reactivevalues object `shared`")
+        if(!inherits(tabname, "character") | length(tabname) > 1)
+            stop("One tab name each time")
+        findTabInfo(tabname)
+        if(is.empty(shared$data_intask[[tabname]]))
+        {warning(glue("Data for {tabname} is empty")); return(NULL)}
+        return(shared$data_intask[[tabname]])
+    })
+}
+
+
+
+
+
+
+
+
+
+
