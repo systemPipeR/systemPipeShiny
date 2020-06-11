@@ -18,11 +18,10 @@ dashboardSidebar <-  dashboardSidebar(
     sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
                       label = "Search..."),
     sidebarMenu(id = "left_sidebar",
-        menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap"),
-                badgeLabel = "Main", badgeColor = "red"
+        menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap")
                 ),
         menuItem(id = 'wf-control',
-            "Workflow Mangement (Beta)", tabName = "wf_main",
+            HTML('Workflow Mangement<small class="badge pull-right bg-olive">Beta</small>'), tabName = "wf_main",
             menuSubItem(text = "Targets", tabName = "wf_targets", ),
             menuSubItem(text = "Workflow File", tabName = "wf_wf"),
             menuSubItem(text = "Workflow Config", tabName = "wf_config"),

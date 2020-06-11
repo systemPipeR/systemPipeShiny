@@ -179,6 +179,10 @@ genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
 }
 
 #' Show a list of tabs in buttons
+#' @details `hrefTab` can be use for any purpose of shiny.
+#' `genHrefTab` is upper level wrapper of `hrefTab` and should
+#' only be used under systemPipeShiny framework for fast retrieving tab info and
+#' generate the `hrefTab`.
 #' `label_text`, `hrefs` must be the same length
 #' @importFrom assertthat assert_that
 #' @param Id optional
@@ -186,14 +190,14 @@ genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
 #' @param title_color title color
 #' @param label_text individual tab labels
 #' @param hrefs individual tab links
-#'
+#' @param ... other args pass to the html container
 #' @return a div element
 #' @export
-#'
 #' @examples
 #' ui <- fluidPage(
-#' includeCSS("www/sps.css"),
-#' hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"), hrefs = c("https://google.com/", "", ""))
+#' useSps(),
+#' hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
+#'         hrefs = c("https://google.com/", "", ""))
 #' )
 #'
 #' server <- function(input, output, session) {
@@ -212,12 +216,22 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
         p(class = "h4",  style = glue("color: {title_color}; text-align: left;"), title),
         tags$div(
             HTML(glue('
-                <a href="{hrefs}" class="href-button">{label_text}</a>\n
+              <a href="{hrefs}" class="href-button sps-tab-link">{label_text}</a>\n
                 '))
         )
     )
 }
 
+
+#' @rdname hrefTab
+#' @param tabnames tab names, must have the \code{tab_info} dataframe or
+#' `tab_info.csv` config file in `./config` directory.
+genHrefTab <- function(tabnames, Id = NULL, title = "A bar to list tabs",
+                         text_color = "#0275d8", ...) {
+    tabs <- findTabInfo(tabnames)
+    hrefTab(Id = Id, title = title, text_color = text_color,
+            label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
+}
 
 #' A table of lists of hyper reference buttons
 #' `item_titles`, `item_labels`, `item_hrefs` must have the same length
@@ -506,7 +520,7 @@ uiExamples <- function(ns){
                 )
             ),
             p("You need to write your own UI and server logic"),
-            p("This section is jusr for demo and will not be included when you
+            p("This section is just for demo and will not be included when you
               create a new tab"),
             clearableTextInput(ns("text1"), "text input example"),
             strong("Simple action button example"), br(),
@@ -577,7 +591,7 @@ wfPanel <- function(){
 pgPaneUI <- function(id, title=NULL){
     if(is.null(title)) {
         title <- id %>% {
-            if(str_detect(., "plot")) "Plot Progress"
+            if(str_detect(., "plot")) "Plot Prepare"
             else if(str_detect(., "df")) "Data Prepare"
             else("Progress")
         }

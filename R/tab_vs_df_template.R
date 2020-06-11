@@ -99,8 +99,8 @@ df_templateServer <- function(input, output, session, shared){
     })
     # display table
     output$df <- DT::renderDT({
-        validate(
-            need(not_empty(data_df()), "Data file cannot be not loaded")
+        shiny::validate(
+            need(not_empty(data_df()), message = "Data file is not loaded")
         )
         DT::datatable(
             data_df(), style = "bootstrap", class = "compact",  filter = "top",
@@ -114,13 +114,13 @@ df_templateServer <- function(input, output, session, shared){
 
     # preprocess
     ## define validators
-    df_validator_common <- list(
-        vd1 = function(df, ...){
+    df_validate_common <- list(
+        vd1 = function(df){
             if (is(df, "data.frame")) {result <- c(" " = TRUE)}
             else {result <- c("Input is not dataframe or tibble" = FALSE)}
             return(result)
         },
-        vd2 = function(df, ...){
+        vd2 = function(df){
             if (ncol(df) > 1) {result <- c(" " = TRUE)}
             else {result <- c("Input is not dataframe or tibble" = FALSE)}
             Sys.sleep(1)
@@ -153,13 +153,18 @@ df_templateServer <- function(input, output, session, shared){
                                  banana = "banana\n"),
                      title = "Common Validations")
         # validate special requirements for different preprocess
-        switch(input$select_prepro,
-            'md1' = spsValidator(df_validate_method1,
-                                 args = list(df = df_filter, special1 = "validation for method 1\n"),
-                                 title = "Special validation for method 1"),
-            'md2' = spsValidator(df_validate_method2,
-                                 args = list(df = df_filter, special2 = "validation for method 2\n"),
-                                 title = "Special validation for method 2"),
+        switch(
+            input$select_prepro,
+            'md1' = spsValidator(
+                df_validate_method1,
+                args = list(df = df_filter, special1 = "validation for method 1\n"),
+                title = "Special validation for method 1"
+            ),
+            'md2' = spsValidator(
+                df_validate_method2,
+                args = list(df = df_filter, special2 = "validation for method 2\n"),
+                title = "Special validation for method 2"
+            ),
             msg('No addition validation required')
         )
         updatePg('data', 100, pg_values) # update progress
@@ -176,13 +181,18 @@ df_templateServer <- function(input, output, session, shared){
         ), blocking_level = 'error')
         req(!is.null(df_processed))
         updatePg('prepro', 100, pg_values) # update progress
-        shared$data_in_task <- df_processed
-        toastr_success(title = "Preprocess done!", message = "You can choose your plot options below",
-                       timeOut = 2000)
+        # add data to task
+        addData(df_processed, shared, ns)
+        toastr_success(
+            title = "Preprocess done!",
+            message = "You can choose your plot options below",
+            timeOut = 5000,
+            position = "bottom-right"
+        )
         shinyjs::show(id = "plot_option_row")
         gallery <- switch(input$select_prepro,
                           'md1' = genGallery("plot_pca"),
-                          'md2' = genGallery("plot_template"),
+                          'md2' = genGallery(c("plot_template", "plot_pca")),
                           genGallery(type = "vs")
         )
         output$plot_option <- renderUI({

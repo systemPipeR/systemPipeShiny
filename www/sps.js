@@ -71,3 +71,20 @@ $(document).ready(function() {
 });
 
 
+// change plot document size based on distance to bottom
+function stretchSpsPlot() {
+    var stretch_elem = $(".sps-plot-container");
+    var parent_pane = stretch_elem.parents(".tab-pane");
+    var div_dis = $(document).height() - stretch_elem.offset().top - stretch_elem.height();
+    var h = 0;
+    if(div_dis < window.innerHeight/4) {
+        h = parent_pane.height() + window.innerHeight/2;
+        parent_pane.height(h);
+    }
+    if(div_dis > window.innerHeight/2) {
+        h = parent_pane.height() - window.innerHeight/4;
+        parent_pane.height(h);
+    }
+}
+
+$(document).resize(stretchSpsPlot);

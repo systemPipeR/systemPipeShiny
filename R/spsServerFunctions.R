@@ -346,6 +346,7 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' This return name will be used as error message.
 #' @param args a `named`(very important) list of arguments that will be used in
 #' different function in  `validate_list`. `...` argument is not supported.
+#' Positional args will not work either.
 #' Have to specify the name of argument, position argument also is not working.
 #'
 #' @return if any validation function returns FALSE, a error pop-up will show
@@ -388,7 +389,6 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' }
 #' shinyApp(ui, server)
 spsValidator <- function(validate_list, args = list(), title = "Validation"){
-    on.exit(if(exists("vd_progress")) vd_progress$close())
     # pre checks
     if(!is.list(args)) msg("Args must be in a list", "error")
     if(!is.list(validate_list)) msg("Validate_list must be in a list", "error")
@@ -398,7 +398,7 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
     # check if all required args are provided
     inject_args <- sapply(seq_along(validate_list), function(each_vd) {
         if(!is.function(validate_list[[each_vd]])) {
-            msg("Each item in `validate_list` must be a function")}
+            msg("Each item in `validate_list` must be a function", "error")}
         each_vd_args <- formals(validate_list[[each_vd]])
         sapply(seq_along(each_vd_args), function(each_arg) {
             required_arg <- rlang::is_missing(each_vd_args[[each_arg]])
@@ -412,15 +412,6 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
         })
         arg_names  %in% names(each_vd_args)
     }, simplify = FALSE)
-    # set up progress bar
-    sapces <- rep('&nbsp', 8) %>% glue_collapse()
-    vd_progress <- Waitress$new(theme = "overlay-opacity",
-                             min = 0, max = length(validate_list))
-    vd_progress$notify(
-        html = HTML(glue("<h4>{sapces}Validating{sapces}</h4>")),
-        position = "tr",
-        text_color = "#3071a9"
-        )
     for(index in seq_along(validate_list)){
         result <- shinyCatch(do.call(
             validate_list[[index]], args = args[inject_args[[index]]]
@@ -443,11 +434,9 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
                 glue_collapse(sep = "\n- ")
             shinyCatch(stop(failed_msg), blocking = "error")
         }
-        vd_progress$inc(1) # update progress
     }
-    vd_progress$set(100)
     toastr_success(glue("{title} Passed"), position = "bottom-right",
-                   timeOut = 1500)
+                   timeOut = 3500)
     return(invisible())
 }
 
@@ -512,14 +501,15 @@ wfProgressPanel <- function(shared){
 #' @param title progress title
 #' @param value 0-100
 #' @param ns namespace function
-.pgItem = function(title, value, ns){
+.pgItem = function(title, string, value, ns){
     timelineItem(
+        id = ns(glue("timeline_{string}")),
         title = title,
         icon = timeline_icon(floor(value/100)),
         color = timeline_color(floor(value/100)),
         border = FALSE,
         progressBar(
-            ns(glue("pg_{title}")),  striped = TRUE, status = "primary",
+            ns(glue("pg_{string}")),  striped = TRUE, status = "primary",
             value)
     )
 }
@@ -533,7 +523,7 @@ wfProgressPanel <- function(shared){
 #'  on server to pass it to  `pgPaneServer`. If you use module
 #'  \code{ns <- session$ns(module_id)}.
 #' @param items a named character vector, names will be used as progress item
-#' label, actual value will be used to update progress on server
+#' label, actual string will be used to update progress on server
 #' @param pg_values reactivevalues object
 #' @param ns namespace function, you shouldn't run the function, directly pass
 #' the ns function to `pgPaneServer`
@@ -587,16 +577,17 @@ pgPaneServer <- function(items, pg_values, ns){
         renderUI({
             timeline_list <- list()
             item_names <- names(items)
-            for(i in seq_along(items)){
+            for (i in seq_along(items)) {
                 current_i <- items[i]
                 timeline_list[[current_i]] <- .pgItem(item_names[i],
+                                                      items[i],
                                                       pg_values[[current_i]],
                                                       ns)
             }
             p_max <- reactiveValuesToList(pg_values) %>%
                 unlist %>% length - 1
             p_percent <- reactiveValuesToList(pg_values) %>%
-                unlist %>% sum - 1 %>% {./p_max}
+                unlist %>% {sum(.) - 1} %>% {./p_max}
             timelineBlock(reversed = FALSE,
                           tagList(
                               timeline_list,
@@ -607,7 +598,7 @@ pgPaneServer <- function(items, pg_values, ns){
                               div(style = "margin-left: 60px;
                                            margin-right: 15px;",
                                   progressBar(
-                                      "pg_wf_all", p_percent,
+                                      ns("pg_all"), p_percent,
                                       striped = TRUE,
                                       status = timline_pg_status(p_percent)
                                   )
@@ -638,12 +629,16 @@ updatePg <- function(pg, value, pg_values){
 }
 
 #' Add and get data between shiny modules
+#'
 #' @param data any type of R object you want to store and use in other tabs
 #' @param shared the SPS shared reactivevalues object
+#' @param type one of data, plot
 #' @param ns the name space function
 #' @return Nothing to return with `add` method and returns original object for
 #' the `get` method
 #' @export
+#' @details `addPlot`, `getPlot` are wrappers of `xxData` method where \code{
+#' type = "plot"}
 #' @examples
 #' library(shiny)
 #' library(shinytoastr)
@@ -681,19 +676,25 @@ updatePg <- function(pg, value, pg_values){
 #'     })
 #' }
 #' shinyApp(ui, server)
-addData <- function(data, shared, ns) {
+addData <- function(data, shared, ns, type = "data") {
     shinyCatch({
         if (!inherits(shared, "reactivevalues"))
             stop("Use the reactivevalues object `shared`")
         if(!inherits(ns, "function"))
             stop("Arg `ns` needs to be a function")
+        type <- match.arg(type, c("data", "plot"))
         namespce <- ns("") %>% str_remove("-.*$")
         findTabInfo(namespce)
-        if(not_empty(shared$data_intask[[namespce]]) & getOption('sps')$verbose)
+        if(not_empty(shared[[type]][[namespce]]) & getOption('sps')$verbose)
             warning(c(glue("found {namespce} has already been added to "),
                            "`shared$data_intask` list, overwrite"))
-        shared$data_intask[[namespce]] <- data
-    })
+        shared[[type]][[namespce]] <- data
+        if(getOption('sps')$verbose) {
+            info <- glue("Data for namespace {namespce} added")
+            message(info)
+            toastr_info(info, timeOut = 3000, position = "bottom-right")
+        }
+    }, blocking_level = "error")
 }
 
 
@@ -701,24 +702,33 @@ addData <- function(data, shared, ns) {
 #' @param tabname which tab the data was been added to task (which tab you used
 #' the `addData` method)
 #' @export
-getData <- function(tabname, shared){
+getData <- function(tabname, shared, type = "data"){
     shinyCatch({
         if(!inherits(shared, "reactivevalues"))
             stop("Use the reactivevalues object `shared`")
         if(!inherits(tabname, "character") | length(tabname) > 1)
             stop("One tab name each time")
-        findTabInfo(tabname)
-        if(is.empty(shared$data_intask[[tabname]]))
-        {warning(glue("Data for {tabname} is empty")); return(NULL)}
-        return(shared$data_intask[[tabname]])
-    })
+        type <- match.arg(type, c("data", "plot"))
+        tab_info <- findTabInfo(tabname)$tab_labels
+        if(is.empty(shared[[type]][[tabname]]))
+        stop(glue("Data from tab `{tab_info}` is empty"))
+        if(getOption('sps')$verbose){
+            success_info <- glue("data for tab `{tab_info} found`")
+            toastr_info(success_info, timeOut = 3000, position = "bottom-right")
+        }
+        return(shared[[type]][[tabname]])
+    }, blocking_level = "error")
 }
 
+#' @rdname addData
+addPlot <- function(plot, shared, ns){
+    addData(plot, shared, ns, type = "plot")
+}
 
-
-
-
-
+#' @rdname addData
+getPlot <- function(tabname, shared){
+    return(getData(tabname, shared, type = "plot"))
+}
 
 
 
