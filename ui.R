@@ -61,9 +61,7 @@ dashboardBody <- dashboardBody(
     tags$div(
         useShinyjs(),
         useSweetAlert(),
-        useToastr(),
-        useSps(),
-        use_waitress()
+        useSps()
     ),
     tabItems(
         tabItem(tabName = "dashboard", dashboardUI("dashboard")),

@@ -14,7 +14,19 @@ plot_templateUI <- function(id){
     ```
     "
     tagList(
-        pgPaneUI(ns("pg")),
+        # in case you need more than one data input, uncomment lines below
+        pgPaneUI(ns("pg"),
+                 titles = c("Package Requirements",
+                            # "Input Metadata" = "meta",
+                            "Input Dataframe",
+                            # "Validate Meta",
+                            "Validate Dataframe"),
+                 pg_ids = c(ns("pkg"),
+                            # ns("meta"),
+                            ns("data"),
+                            # ns("vd_meta"),
+                            ns("vd_data"))
+        ),
         h2("Title for this kind of plot"), spsHr(),
         renderDesc(id = ns("desc"), desc), spsHr(),
         genHrefTab(c("df_targets", "df_template"),
@@ -42,14 +54,7 @@ plot_templateUI <- function(id){
 ## server
 plot_templateServer <- function(input, output, session, shared){
     ns <- session$ns
-    # register the progress control first
-    pg_values <- reactiveValues()
-    output$pg <- pgPaneServer(c("Package Requirements" = "pkg" ,
-                                # "Input Metadata" = "meta",
-                                "Input Data" = "data",
-                                # "Validate Meta" = "vd_meta",
-                                "Validate Data" = "vd_data"),
-                              pg_values, ns)
+    tabname <- "plot_template"
     # define data containers
     mydata <- reactiveValues()
     # define validators
@@ -74,26 +79,24 @@ plot_templateServer <- function(input, output, session, shared){
             bioc_pkg = c(""),
             github = c("")
         ))
-        updatePg('pkg', 100, pg_values)
+        pgPaneUpdate('pg', 'pkg', 100)
         # mydata$meta <- getData("df_targets", shared)
-        # updatePg("meta", 100, pg_values)
+        # pgPaneUpdate('pg', 'meta', 100)
         mydata$df <- getData("df_template", shared)
-        updatePg('data', 100, pg_values)
+        pgPaneUpdate('pg', 'data', 100)
         # spsValidator(validate_meta,
         #              args = list(meta = mydata$meta,
         #                          data1 = "this is data1\n"),
         #              title = "Meta Validations")
-        # updatePg("vd_meta", 100, pg_values)
+        # pgPaneUpdate('pg', 'vd_meta', 100)
         spsValidator(validate_data,
                      args = list(data = mydata$df,
                                  data2 = "this is data2\n"),
                      title = "Data Validations")
-        updatePg("vd_data", 100, pg_values)
+        pgPaneUpdate('pg', 'vd_data', 100)
         shinyjs::show(id = "tab_main")
         toastr_success(
-            title = "Ready for plotting!",
-            message = "",
-            timeOut = 5000,
+            title = "Ready for plotting!", message = "", timeOut = 5000,
             position = "bottom-right"
         )
     })
@@ -102,7 +105,7 @@ plot_templateServer <- function(input, output, session, shared){
             jqui_resizable(plotOutput(ns("plot")))
             )
         output$plot_ui <- plot_out
-        addPlot(plot_out, shared, ns)
+        addPlot(plot_out, shared, tabname)
     })
     output$plot <- renderPlot({
         ggplot(mydata$df, aes(Sepal.Length, Sepal.Width)) +

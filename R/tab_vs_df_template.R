@@ -19,7 +19,10 @@ df_templateUI <- function(id){
     tagList(
         h2("Title for this kind of dataframe"),
         renderDesc(id = ns("desc"), desc),
-        pgPaneUI(ns("pg")), # progress tracker
+        pgPaneUI(ns("pg"),
+            titles = c("Package Requirements", "Input Data Validation", "Preprocess"),
+            pg_ids = c(ns("pkg"), ns("data"), ns("prepro"))
+        ),
         div(style = "text-align: center;",
             actionButton(inputId = ns("validate_start"), label = "Start with this tab")
         ),
@@ -69,14 +72,10 @@ df_templateUI <- function(id){
 ## server
 df_templateServer <- function(input, output, session, shared){
     ns <- session$ns
-    # progress tracker
-    pg_values <- reactiveValues()
-    output$pg <- pgPaneServer(c("Package Requirements" = "pkg" ,
-                                "Input Data Validation" = "data",
-                                "Preprocess" = "prepro"),
-                              pg_values, ns)
+    tabname <- "df_template"
     # start the tab by checking if required packages are installed
     observeEvent(input$validate_start, {
+        print(class(session))
         req(shinyCheckSpace(
             session = session,
             cran_pkg = c("base"),
@@ -85,7 +84,7 @@ df_templateServer <- function(input, output, session, shared){
         ))
         shinyjs::show(id = "tab_main")
         shinyjs::hide(id = "validate_start")
-        updatePg('pkg', 100, pg_values) # update progress
+        pgPaneUpdate('pg', 'pkg', 100) # update progress
     })
     observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
     # get upload path, note path is in upload_path()$datapath
@@ -167,7 +166,7 @@ df_templateServer <- function(input, output, session, shared){
             ),
             msg('No addition validation required')
         )
-        updatePg('data', 100, pg_values) # update progress
+        pgPaneUpdate('pg', 'data', 100)
         # if validation passed, start reprocess
         df_processed <- shinyCatch(switch(input$select_prepro,
            'md1' = {
@@ -180,9 +179,9 @@ df_templateServer <- function(input, output, session, shared){
            df_filter
         ), blocking_level = 'error')
         req(!is.null(df_processed))
-        updatePg('prepro', 100, pg_values) # update progress
+        pgPaneUpdate('pg', 'prepro', 100)
         # add data to task
-        addData(df_processed, shared, ns)
+        addData(df_processed,shared, tabname)
         toastr_success(
             title = "Preprocess done!",
             message = "You can choose your plot options below",

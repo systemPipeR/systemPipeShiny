@@ -40,7 +40,6 @@ server <- function(input, output, session) {
     shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE,
                                   wf_conf_ready = FALSE)
     observeEvent(input$left_sidebar, {
-        print(input$left_sidebar)
         toggleClass(id = "wf-panel", class = "shinyjs-hide", asis = TRUE,
                     condition = !str_detect(input$left_sidebar, "^wf_"))
     })

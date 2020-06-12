@@ -71,20 +71,22 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
     toastr_actions <- list(
         message = function(m) {
             msg(m$message, "SPS-INFO", "blue")
-            toastr_info(message = remove_ANSI(m$message), position = position,
-                        closeButton = TRUE, timeOut = 3000)
+            toastr_info(message = remove_ANSI(m$message),
+                        position = position, closeButton = TRUE,
+                        timeOut = 3000, preventDuplicates = TRUE)
         },
         warning = function(m) {
             msg(m$message, "SPS-WARNING", "orange")
-            toastr_warning(message = remove_ANSI(m$message), position = position,
-                           closeButton = TRUE, timeOut = 5000)
+            toastr_warning(message = remove_ANSI(m$message),
+                           position = position, closeButton = TRUE,
+                           timeOut = 5000, preventDuplicates = TRUE)
         },
         error = function(m) {
             msg(m$message, "SPS-ERROR", "red")
             toastr_error(
                 message = remove_ANSI(m$message), position = position,
-                closeButton = TRUE, timeOut = 0,
-                title = "There is an error", hideDuration = 300,
+                closeButton = TRUE, timeOut = 0, preventDuplicates = TRUE,
+                title = "There is an error", hideDuration = 300
             )
         }
     )
@@ -442,12 +444,12 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
 
 #' Workflow Progress tracker server logic
 #' @description use it on the top level server not inside a module. Only
-#' designed for workflow tabs.
+#' designed for workflow tabs. For other purpose, use `pgPaneUI`.
 #' @param shared the shared object
 #'
 #' @return reactive renderUI object
 #' @export
-#'
+#' @seealso pgPaneUpdate
 #' @examples
 #' wfProgressPanel(shared)
 wfProgressPanel <- function(shared){
@@ -495,150 +497,84 @@ wfProgressPanel <- function(shared){
     })
 }
 
-
-#' Create each item in the progress bar
-#' internal function
-#' @param title progress title
-#' @param value 0-100
-#' @param ns namespace function
-.pgItem = function(title, string, value, ns){
-    timelineItem(
-        id = ns(glue("timeline_{string}")),
-        title = title,
-        icon = timeline_icon(floor(value/100)),
-        color = timeline_color(floor(value/100)),
-        border = FALSE,
-        progressBar(
-            ns(glue("pg_{string}")),  striped = TRUE, status = "primary",
-            value)
-    )
-}
-
 #' A draggable progress panel
-#' Useful if you want to track a workflow
-#' @description First use `pgPaneUI` on UI side and create a reactivevalues
-#' object. Then pass it to `pgPaneServer` and register a progress panel. It
-#' requires the namespace `ns` function, if you are not using a module,
-#' you still can register the namespace \code{ns <- NS('any_id')}
-#'  on server to pass it to  `pgPaneServer`. If you use module
-#'  \code{ns <- session$ns(module_id)}.
-#' @param items a named character vector, names will be used as progress item
-#' label, actual string will be used to update progress on server
-#' @param pg_values reactivevalues object
-#' @param ns namespace function, you shouldn't run the function, directly pass
-#' the ns function to `pgPaneServer`
-#' @export
-#'
-#' @examples
+#' Use `pgPaneUI` on UI side and use `pgPaneUpdate` to update it. The UI only
+#' renders correctly inside `shinydashboard` or `shinydashboardPlus`.
+#' @param pane_id Progress panel main ID, use `ns` wrap it on `pgPaneUI` but not
+#' on `pgPaneUpdate` if using shiny module
+#' @param pg_id a character string of ID for the progress you want to update.
+#'  Do not use \code{ns(pg_id)} to wrap it on server
+#' @param value 0-100 real number to update the progress you use `pg_id` to
+#' choose
+#' @param session current shiny session
+#' @example
 #' library(shiny)
 #' library(shinydashboard)
 #' library(shinytoastr)
 #' ui <- dashboardPage(header = dashboardHeader(),
 #'                     sidebar = dashboardSidebar(),
 #'                     body = dashboardBody(
-#'                         useToastr(),
+#'                         useSps(),
 #'                         actionButton("a", "a"),
 #'                         actionButton("b", "b"),
-#'                         actionButton("c", "c"),
-#'                         pgPaneUI('pg')
+#'                         sliderInput("c", min = -100, max = 100, value = 0,
+#'                                     label = "c"),
+#'                         pgPaneUI("thispg", c("this a", "this b", " this c"),
+#'                                  c("a", "b", "c"), "Example Progress")
 #'                     )
 #' )
 #' server <- function(input, output, session) {
-#'     ns <- NS("test")
-#'     pg_values <- reactiveValues()
-#'     output$pg <- pgPaneServer(c("This a" = "a",
-#'                                 "This b" = "b",
-#'                                 "This c" = "c"),
-#'                               pg_values, ns)
 #'     observeEvent(input$a, {
-#'         updatePg("a", 100, pg_values)
+#'         for(i in 1:10){
+#'             pgPaneUpdate("thispg", "a", i*10)
+#'             Sys.sleep(0.3)
+#'         }
 #'     })
 #'     observeEvent(input$b, {
-#'         updatePg("b", 100, pg_values)
+#'         for(i in 1:10){
+#'             pgPaneUpdate("thispg", "b", i*10)
+#'             Sys.sleep(0.3)
+#'         }
 #'     })
-#'     observeEvent(input$c, {
-#'         updatePg("c", 100, pg_values)
-#'     })
+#'     observeEvent(input$c, pgPaneUpdate("thispg", "c", input$c))
 #' }
 #' shinyApp(ui, server)
-pgPaneServer <- function(items, pg_values, ns){
+pgPaneUpdate <- function(pane_id, pg_id, value,
+                         session = getDefaultReactiveDomain()){
     shinyCatch({
-        if(!inherits(items, "character"))
-            stop("Progress `items` needs to be a character vector")
-        if(!inherits(ns, "function"))
-            stop("Progress arg `ns` needs to be a function")
-        if(!inherits(pg_values, "reactivevalues"))
-            stop(c("Progress arg `pg_values` needs",
-                   "to be a reactivevalues object"))
-        if(is.empty(isolate(pg_values[["init"]]))) {
-            for(i in items) pg_values[[i]] <- 0
-            pg_values[["init"]] <- TRUE
+        assert_that(is.character(pane_id))
+        assert_that(is.character(pg_id))
+        assert_that(value >= 0 & value <= 100,
+                    msg = "Progress value needs to be 0-100")
+        updateProgressBar(session, id = glue("{pg_id}-pg"), value = value)
+        if(inherits(session, "session_proxy")){
+            pane_id <- session$ns(pane_id)
+            pg_id <- session$ns(pg_id)
         }
-        renderUI({
-            timeline_list <- list()
-            item_names <- names(items)
-            for (i in seq_along(items)) {
-                current_i <- items[i]
-                timeline_list[[current_i]] <- .pgItem(item_names[i],
-                                                      items[i],
-                                                      pg_values[[current_i]],
-                                                      ns)
-            }
-            p_max <- reactiveValuesToList(pg_values) %>%
-                unlist %>% length - 1
-            p_percent <- reactiveValuesToList(pg_values) %>%
-                unlist %>% {sum(.) - 1} %>% {./p_max}
-            timelineBlock(reversed = FALSE,
-                          tagList(
-                              timeline_list,
-                              timelineLabel("Ready",
-                                            color = if(p_percent >= 100)
-                                                "olive"
-                                            else "orange"),
-                              div(style = "margin-left: 60px;
-                                           margin-right: 15px;",
-                                  progressBar(
-                                      ns("pg_all"), p_percent,
-                                      striped = TRUE,
-                                      status = timline_pg_status(p_percent)
-                                  )
-                              )
-                          )
-            )
-        })
+        session$sendCustomMessage(
+            type = "sps-update-pg",
+            message = list(
+                panel_id = pane_id,
+                which_pg = pg_id,
+                value = value
+        ))
     }, blocking_level = "error")
-}
 
-
-#' @rdname pgPaneServer
-#' @param pg progress name, this will be each item in the `items`
-#' @param value 0-100 number
-#' @param pg_values a `reactivevalues` object
-#' @export
-updatePg <- function(pg, value, pg_values){
-    shinyCatch({
-        if(!inherits(pg_values, "reactivevalues"))
-            stop("Progress value needs to be a reactivevalues object")
-        if(!inherits(pg, "character") | length(pg) > 1)
-            stop("Progress needs to be a character string of length 1")
-        if(value < 0 | value > 100) msg("value needs to be between 0 and 100")
-        if(is.null(pg_values[[pg]]))
-            stop(glue("{pg} is not one of the progress"))
-        pg_values[[pg]] = value
-    }, blocking_level = 'error')
 }
 
 #' Add and get data between shiny modules
 #'
+#' These function groups are designed to be used inside shiny modules
 #' @param data any type of R object you want to store and use in other tabs
 #' @param shared the SPS shared reactivevalues object
 #' @param type one of data, plot
-#' @param ns the name space function
+#' @param tabname tab name of current tab if using `addData` method and tab
+#' name to get data from if using `getData`.
 #' @return Nothing to return with `add` method and returns original object for
 #' the `get` method
 #' @export
-#' @details `addPlot`, `getPlot` are wrappers of `xxData` method where \code{
-#' type = "plot"}
+#' @details `addPlot`, `getPlot` are wrappers of `add/getData` method where
+#' \code{type = "plot"}
 #' @examples
 #' library(shiny)
 #' library(shinytoastr)
@@ -657,18 +593,17 @@ updatePg <- function(pg, value, pg_values){
 #'         image = ''
 #'     )
 #'     shared <- reactiveValues()
-#'     ns <- NS("df_count")
 #'     data <- tibble::tibble(this = 123)
 #'     cat('before adding\n')
 #'     print(shared)
 #'     observeEvent(input$add, {
-#'         addData(data, shared, ns)
+#'         addData(data, shared, "thistab")
 #'         cat('after adding\n')
 #'         print(shared) # watch the data_intask object is created
 #'     })
 #'     observeEvent(input$get, {
 #'         cat("get data\n")
-#'         getData('df_count', shared)
+#'         getData('thistab', shared)
 #'     })
 #'     observeEvent(input$wrong, {
 #'         cat("get wrong data\n")
@@ -676,21 +611,18 @@ updatePg <- function(pg, value, pg_values){
 #'     })
 #' }
 #' shinyApp(ui, server)
-addData <- function(data, shared, ns, type = "data") {
+addData <- function(data, shared, tabname, type = "data") {
     shinyCatch({
-        if (!inherits(shared, "reactivevalues"))
-            stop("Use the reactivevalues object `shared`")
-        if(!inherits(ns, "function"))
-            stop("Arg `ns` needs to be a function")
+        assert_that(inherits(shared, "reactivevalues"))
+        assert_that(is.character(tabname))
         type <- match.arg(type, c("data", "plot"))
-        namespce <- ns("") %>% str_remove("-.*$")
-        findTabInfo(namespce)
-        if(not_empty(shared[[type]][[namespce]]) & getOption('sps')$verbose)
-            warning(c(glue("found {namespce} has already been added to "),
+        findTabInfo(tabname)
+        if(not_empty(shared[[type]][[tabname]]) & getOption('sps')$verbose)
+            warning(c(glue("found {tabname} has already been added to "),
                            "`shared$data_intask` list, overwrite"))
-        shared[[type]][[namespce]] <- data
+        shared[[type]][[tabname]] <- data
         if(getOption('sps')$verbose) {
-            info <- glue("Data for namespace {namespce} added")
+            info <- glue("Data for namespace {tabname} added")
             message(info)
             toastr_info(info, timeOut = 3000, position = "bottom-right")
         }
@@ -699,15 +631,12 @@ addData <- function(data, shared, ns, type = "data") {
 
 
 #' @rdname addData
-#' @param tabname which tab the data was been added to task (which tab you used
-#' the `addData` method)
 #' @export
 getData <- function(tabname, shared, type = "data"){
     shinyCatch({
-        if(!inherits(shared, "reactivevalues"))
-            stop("Use the reactivevalues object `shared`")
-        if(!inherits(tabname, "character") | length(tabname) > 1)
-            stop("One tab name each time")
+        assert_that(inherits(shared, "reactivevalues"))
+        assert_that(is.character(tabname) & length(tabname) < 2,
+                    msg = "A character string of one tab name each time")
         type <- match.arg(type, c("data", "plot"))
         tab_info <- findTabInfo(tabname)$tab_labels
         if(is.empty(shared[[type]][[tabname]]))
@@ -721,8 +650,8 @@ getData <- function(tabname, shared, type = "data"){
 }
 
 #' @rdname addData
-addPlot <- function(plot, shared, ns){
-    addData(plot, shared, ns, type = "plot")
+addPlot <- function(plot, shared, tabname){
+    addData(plot, shared, tabname, type = "plot")
 }
 
 #' @rdname addData

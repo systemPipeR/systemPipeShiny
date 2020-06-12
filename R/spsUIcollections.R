@@ -18,8 +18,9 @@ useSps <- function(){
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css",
                             href = "sps/sps.css"),
-                  tags$script(src = "sps/sps.js")
-
+        tags$script(src = "sps/sps.js"),
+        tags$script(src="sps/sps_update_pg.js"),
+        useToastr()
     )
 }
 
@@ -583,35 +584,74 @@ wfPanel <- function(){
     )
 }
 
-#' @rdname pgPaneServer
-#' @param title If not specified and id contains 'plot', title will be
-#' 'Plot Progress'; has 'df' will be 'Data Prepare', if neither will be
-#' @param id progress panel id on UI side
+
+
+#' @rdname pgPaneUpdate
+#' @param titles labels to display for each progress, must have the same length
+#' as `pg_ids`
+#' @param pg_ids a character vector of IDs for each progress. Don't forget
+#' to use `ns` wrap each ID.
+#' @param title_main If not specified and pane_id contains 'plot', title will be
+#' 'Plot Prepare'; has 'df' will be 'Data Prepare', if neither will be
+#' "Progress"
 #' @export
-pgPaneUI <- function(id, title=NULL){
-    if(is.null(title)) {
-        title <- id %>% {
+pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
+    if(is.null(title_main)) {
+        title_main <- pane_id %>% {
             if(str_detect(., "plot")) "Plot Prepare"
             else if(str_detect(., "df")) "Data Prepare"
             else("Progress")
         }
     }
-    div(class = "tab-pane", id = glue("{id}-pg-container"),
-        absolutePanel(
-            top = "5%", right = "2%", draggable = TRUE, width = "300",
-            height = "auto", class = "control-panel", cursor = "inherit",
-            style = "background-color: white; z-index:999;",
-            fluidRow(
-                column(3),
-                column(7, h4(title)),
-                column(2,
-                    HTML(glue('<button class="action-button ',
-                              'bttn bttn-simple bttn-xs bttn-primary ',
-                              'bttn-no-outline" data-target="#{id}-timeline"',
-                              ' data-toggle="collapse">',
-                              '<i class="fa fa-minus"></i></button>')))
-            ),
-            div(class = "collapse", id = glue("{id}-timeline"), uiOutput(id))
+    assert_that(is.character(titles))
+    assert_that(is.character(pg_ids))
+    assert_that(length(titles) == length(pg_ids))
+
+    sapply(seq_along(pg_ids), function(i) {
+        tags$li(style = "margin-bottom: 0;",
+                tags$i(id = glue("{pg_ids[i]}-icon"),
+                       class = "fa fa-times bg-red"),
+                div(class = "timeline-item",
+                    h3(class = "timeline-header no-border", titles[i]),
+                    div(class="timeline-body", style = "padding: 0px;",
+                        progressBar(
+                            glue("{pg_ids[i]}-pg"), striped = TRUE,
+                            status = "primary", 0
+                        )
+                    )
+                )
         )
-    )
+    }, simplify = FALSE) %>% {
+        timelineBlock(reversed = FALSE, id = glue("{pane_id}-timeline"),
+                      .,
+                      timelineLabel(id = glue("{pane_id}-pg-label"), "Ready",
+                                    color = "orange"),
+                      div(style = "margin-left: 60px; margin-right: 15px;",
+                          progressBar(
+                              glue("{pane_id}-pg-all"), striped = TRUE,
+                              status = "primary", 0
+                          )
+                      )
+        )
+    } %>% {
+        div(class = "tab-pane", id = glue("{pane_id}-pg-container"),
+            absolutePanel(
+                top = "5%", right = "2%", draggable = TRUE, width = "310",
+                height = "auto", class = "control-panel", cursor = "inherit",
+                style = "background-color: white; z-index:999;",
+                fluidRow(
+                    column(3),
+                    column(7, h4(title_main)),
+                    column(2,
+                           HTML(glue('<button class="action-button ',
+                                     'bttn bttn-simple bttn-xs bttn-primary ',
+                                     'bttn-no-outline"',
+                                     'data-target="#{pane_id}-pg-collapse"',
+                                     ' data-toggle="collapse">',
+                                     '<i class="fa fa-minus"></i></button>')))
+                ),
+                div(class = "collapse", id = glue("{pane_id}-pg-collapse"), .)
+            )
+        )
+    }
 }
