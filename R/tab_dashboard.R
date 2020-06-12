@@ -6,7 +6,6 @@ dashboardUI <- function(id){
         h2(strong("This app is under construction, please do not use it for production.")),
         tags$p(strong("This page controls targets file and configuration of other parameters.")),
         p("If you cannot click some buttons, that means they are disabled at current tab or you need to do other things first, e.g. upload a file."),
-        bookmarkButton(id = ns("bookmark1")),
         fluidRow(
             shinydashboardPlus::carousel(width = 12,
                 id = "dashcarousel",
@@ -25,11 +24,6 @@ dashboardUI <- function(id){
 }
 
 ## server
-dashboardServer <- function(input, output, session){
+dashboardServer <- function(input, output, session, shared){
     ns <- session$ns
-    observeEvent(input$bookmark1, {
-        print(12)
-        session$doBookmark()
-    })
 }
-enableBookmarking(store = "url")

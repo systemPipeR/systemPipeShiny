@@ -164,7 +164,7 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
     missing_pkgs <- lapply(packages, function(pkg) {
         if (!eval(parse(text = "requireNamespace(pkg, quietly = TRUE)"))) pkg
     }) %>% unlist()
-    if (!quietly) {
+    if (!quietly & not_empty(missing_pkgs)) {
         msg(glue("These packages are missing from",
                  "{from}: {glue::glue_collapse(missing_pkgs, sep = ',')}"))
         }
@@ -184,23 +184,30 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' @examples
 #' tabnames <- c("wf_wf", "d", "sas")
 #' findTabInfo(tabnames)
-findTabInfo <- function(tabnames, type = NULL) {
-    assert_that(is.character(tabnames))
+findTabInfo <- function(tabnames=NULL, type = NULL) {
+    if(is.null(type)) assert_that(is.character(tabnames))
+
     appDir <- options()$sps$appDir
     tabs <- if (exists("tab_info")) {
         tab_info
     } else {
         vroom(glue("{appDir}/config/tabs.csv"), comment = "#", na = character())
     }
+    if(!getOption('sps')$dev){
+        tabs <- tabs[!str_detect(tabs$Tab_name, "_template$"), ]
+        tabnames <- tabnames[!str_detect(tabnames, "_template$")]
+        }
     if(not_empty(type)) {
         tabs <- tabs[tabs$type %in% type, ]
         tab_nos <- seq_len(nrow(tabs))
     } else {
-        tab_nos <- sapply(tabnames, function(x) {
+        tab_nos <- vapply(tabnames, function(x) {
             tab_no <- str_which(glue("^{x}$"), tabs$Tab_name)
-            if (!not_empty(tab_no)) warning(glue("Tab {x} is not in the tab list"))
+            if (!not_empty(tab_no)){
+                stop(glue("Tab {x} is not in the tab list"), call. = FALSE)
+                return(NA)}
             tab_no
-        })
+        }, 1)
     }
     list(
         tab_labels = tabs$Display_label[tab_nos],
@@ -266,4 +273,22 @@ remove_ANSI <- function(string) {
     ANSI <- paste0("(?:(?:\\x{001b}\\[)|\\x{009b})(?:(?:[0-9]{1,3})?(?:",
                    "(?:;[0-9]{0,3})*)?[A-M|f-m])|\\x{001b}[A-M]")
     gsub(ANSI, "", string, perl = TRUE)
+}
+
+
+timeline_icon <- function(bool = FALSE){
+    if (bool) return("check") else return("times")
+}
+
+timeline_color <- function(bool = FALSE){
+    if (bool) return("olive") else return("red")
+}
+timeline_pg <- function(bool = FALSE){
+    if (bool) return(100) else return(0)
+}
+
+timline_pg_status <- function(progress = 0){
+    if(progress <= 33.4) "warning"
+    else if(progress < 66.7) "info"
+    else "success"
 }

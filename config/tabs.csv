@@ -1,6 +1,6 @@
 # List of SPS tabs,,,
 # It is suggested to use spsNewtab to add more tabs to this file ,,,
-# image path is relative to the ‘www’ folder,,,
+# image paths use ‘www’ folder as root,,,
 Tab_name,Display_label,type,image
 dashboard,Home,core,
 wf_main,Workflow Main Page,core,
@@ -9,8 +9,10 @@ wf_wf,Workflow Steps,wf,
 wf_config,Workflow Config,wf,
 wf_run,Run Workflow,wf,
 vs_main,Visualization Main Page,core,
-df_raw,Raw Data,data,
+df_template,Template Data Tab,data,
 df_count,Count Table,data,
+df_targets,Meta Data,data,
+plot_template,Template Plot Tab,vs,plot_list/plot_point.png
 plot_point,Scatter Plot,vs,plot_list/plot_point.png
 plot_pca,PCA Plot,vs,plot_list/plot_pca.png
 about,About this App,core,

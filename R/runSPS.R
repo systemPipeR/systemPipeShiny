@@ -44,6 +44,7 @@ verifyConfig <- function(appDir) {
 #' resolveOptions()
 resolveOptions <- function(appDir = getwd()){
     ops <- options()$sps
+    ops$appDir <- NULL
     verified_ops <- verifyConfig(appDir)
     sps_options <- verified_ops[[1]]
     sps_defaults <- verified_ops[[2]]

@@ -71,20 +71,22 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
     toastr_actions <- list(
         message = function(m) {
             msg(m$message, "SPS-INFO", "blue")
-            toastr_info(message = remove_ANSI(m$message), position = position,
-                        closeButton = TRUE, timeOut = 3000)
+            toastr_info(message = remove_ANSI(m$message),
+                        position = position, closeButton = TRUE,
+                        timeOut = 3000, preventDuplicates = TRUE)
         },
         warning = function(m) {
             msg(m$message, "SPS-WARNING", "orange")
-            toastr_warning(message = remove_ANSI(m$message), position = position,
-                           closeButton = TRUE, timeOut = 5000)
+            toastr_warning(message = remove_ANSI(m$message),
+                           position = position, closeButton = TRUE,
+                           timeOut = 5000, preventDuplicates = TRUE)
         },
         error = function(m) {
             msg(m$message, "SPS-ERROR", "red")
             toastr_error(
                 message = remove_ANSI(m$message), position = position,
-                closeButton = TRUE, timeOut = 0,
-                title = "There is an error", hideDuration = 300,
+                closeButton = TRUE, timeOut = 0, preventDuplicates = TRUE,
+                title = "There is an error", hideDuration = 300
             )
         }
     )
@@ -157,7 +159,8 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
 #' shinyApp(ui = shinyUI(
 #'     fluidPage(actionButton("haha", "haha"))
 #' ), server = function(input, output, session) {
-#'     observeEvent(input$haha, shinyCheckSpace(session, cran_pkg = "1", bioc_pkg = "haha", github = "sdasdd/asdsad"))
+#'     observeEvent(input$haha, shinyCheckSpace(session, cran_pkg = "1",
+#'                  bioc_pkg = "haha", github = "sdasdd/asdsad"))
 #' })
 shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NULL, quietly = FALSE) {
     missing_cran <- checkNameSpace(cran_pkg, quietly, from = "CRAN")
@@ -345,6 +348,7 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' This return name will be used as error message.
 #' @param args a `named`(very important) list of arguments that will be used in
 #' different function in  `validate_list`. `...` argument is not supported.
+#' Positional args will not work either.
 #' Have to specify the name of argument, position argument also is not working.
 #'
 #' @return if any validation function returns FALSE, a error pop-up will show
@@ -354,7 +358,6 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @examples
 #' library(shiny)
 #' library(shinytoastr)
-#' options(sps = list(verbose = TRUE))
 #' df_validate_common <- list(
 #'     vd1 = function(df, apple){
 #'         print(apple)
@@ -372,14 +375,11 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #'         return(result)
 #'     }
 #' )
-#'
-#'
 #' ui <- fluidPage(
 #'     actionButton("btn", "this btn"),
 #'     useToastr(),
 #'     use_waitress()
 #' )
-#'
 #' server <- function(input, output, session) {
 #'     observeEvent(input$btn, {
 #'         spsValidator(df_validate_common,
@@ -389,10 +389,8 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #'         print(123)
 #'     })
 #' }
-#'
 #' shinyApp(ui, server)
-spsValidator <- function(validate_list, args = list()){
-    on.exit(if(exists("vd_progress")) vd_progress$close())
+spsValidator <- function(validate_list, args = list(), title = "Validation"){
     # pre checks
     if(!is.list(args)) msg("Args must be in a list", "error")
     if(!is.list(validate_list)) msg("Validate_list must be in a list", "error")
@@ -402,7 +400,7 @@ spsValidator <- function(validate_list, args = list()){
     # check if all required args are provided
     inject_args <- sapply(seq_along(validate_list), function(each_vd) {
         if(!is.function(validate_list[[each_vd]])) {
-            msg("Each item in `validate_list` must be a function")}
+            msg("Each item in `validate_list` must be a function", "error")}
         each_vd_args <- formals(validate_list[[each_vd]])
         sapply(seq_along(each_vd_args), function(each_arg) {
             required_arg <- rlang::is_missing(each_vd_args[[each_arg]])
@@ -416,15 +414,6 @@ spsValidator <- function(validate_list, args = list()){
         })
         arg_names  %in% names(each_vd_args)
     }, simplify = FALSE)
-    # set up progress bar
-    sapces <- rep('&nbsp', 16) %>% glue_collapse()
-    vd_progress <- Waitress$new(theme = "overlay-opacity",
-                             min = 0, max = length(validate_list))
-    vd_progress$notify(
-        html = HTML(glue("<h4>{sapces}Validating{sapces}</h4>")),
-        position = "tr",
-        text_color = "#3071a9"
-        )
     for(index in seq_along(validate_list)){
         result <- shinyCatch(do.call(
             validate_list[[index]], args = args[inject_args[[index]]]
@@ -447,10 +436,229 @@ spsValidator <- function(validate_list, args = list()){
                 glue_collapse(sep = "\n- ")
             shinyCatch(stop(failed_msg), blocking = "error")
         }
-        vd_progress$inc(1) # update progress
     }
-    vd_progress$set(100)
-    toastr_success("Validation Passed", position = "bottom-right",
-                   timeOut = 1500)
+    toastr_success(glue("{title} Passed"), position = "bottom-right",
+                   timeOut = 3500)
     return(invisible())
 }
+
+#' Workflow Progress tracker server logic
+#' @description use it on the top level server not inside a module. Only
+#' designed for workflow tabs. For other purpose, use `pgPaneUI`.
+#' @param shared the shared object
+#'
+#' @return reactive renderUI object
+#' @export
+#' @seealso pgPaneUpdate
+#' @examples
+#' wfProgressPanel(shared)
+wfProgressPanel <- function(shared){
+    renderUI({
+        total_progress <- sum(as.numeric(shared$wf_flags))/0.03
+        timelineBlock(reversed = FALSE,
+                      timelineItem(
+                          title = "Targets file",
+                          icon = timeline_icon(shared$wf_flags$targets_ready),
+                          color = timeline_color(shared$wf_flags$targets_ready),
+                          border = FALSE,
+                          progressBar(
+                            "pg_target",  striped = TRUE, status = "primary",
+                            timeline_pg(shared$wf_flags$targets_ready))
+                      ),
+                      timelineItem(
+                          title = "Workflow Rmd",
+                          icon = timeline_icon(shared$wf_flags$wf_ready),
+                          color = timeline_color(shared$wf_flags$wf_ready),
+                          border = FALSE,
+                          progressBar(
+                             "pg_rmd", striped = TRUE, status = "primary",
+                             timeline_pg(shared$wf_flags$wf_ready))
+                      ),
+                      timelineItem(
+                          title = "Config",
+                          icon = timeline_icon(shared$wf_flags$wf_conf_ready),
+                          color = timeline_color(shared$wf_flags$wf_conf_ready),
+                          border = FALSE,
+                          progressBar(
+                             "pg_config", striped = TRUE, status = "primary",
+                             timeline_pg(shared$wf_flags$wf_conf_ready))
+                      ),
+                      timelineLabel("Ready",
+                                    color = if(all(as.logical(shared$wf_flags)))
+                                                 "olive"
+                                            else "orange"),
+                      div(style = "margin-left: 60px; margin-right: 15px;",
+                          progressBar(
+                              "pg_wf_all", total_progress, striped = TRUE,
+                              status = timline_pg_status(total_progress)
+                          )
+                      )
+        )
+    })
+}
+
+#' A draggable progress panel
+#' Use `pgPaneUI` on UI side and use `pgPaneUpdate` to update it. The UI only
+#' renders correctly inside `shinydashboard` or `shinydashboardPlus`.
+#' @param pane_id Progress panel main ID, use `ns` wrap it on `pgPaneUI` but not
+#' on `pgPaneUpdate` if using shiny module
+#' @param pg_id a character string of ID for the progress you want to update.
+#'  Do not use \code{ns(pg_id)} to wrap it on server
+#' @param value 0-100 real number to update the progress you use `pg_id` to
+#' choose
+#' @param session current shiny session
+#' @example
+#' library(shiny)
+#' library(shinydashboard)
+#' library(shinytoastr)
+#' ui <- dashboardPage(header = dashboardHeader(),
+#'                     sidebar = dashboardSidebar(),
+#'                     body = dashboardBody(
+#'                         useSps(),
+#'                         actionButton("a", "a"),
+#'                         actionButton("b", "b"),
+#'                         sliderInput("c", min = -100, max = 100, value = 0,
+#'                                     label = "c"),
+#'                         pgPaneUI("thispg", c("this a", "this b", " this c"),
+#'                                  c("a", "b", "c"), "Example Progress")
+#'                     )
+#' )
+#' server <- function(input, output, session) {
+#'     observeEvent(input$a, {
+#'         for(i in 1:10){
+#'             pgPaneUpdate("thispg", "a", i*10)
+#'             Sys.sleep(0.3)
+#'         }
+#'     })
+#'     observeEvent(input$b, {
+#'         for(i in 1:10){
+#'             pgPaneUpdate("thispg", "b", i*10)
+#'             Sys.sleep(0.3)
+#'         }
+#'     })
+#'     observeEvent(input$c, pgPaneUpdate("thispg", "c", input$c))
+#' }
+#' shinyApp(ui, server)
+pgPaneUpdate <- function(pane_id, pg_id, value,
+                         session = getDefaultReactiveDomain()){
+    shinyCatch({
+        assert_that(is.character(pane_id))
+        assert_that(is.character(pg_id))
+        assert_that(value >= 0 & value <= 100,
+                    msg = "Progress value needs to be 0-100")
+        updateProgressBar(session, id = glue("{pg_id}-pg"), value = value)
+        if(inherits(session, "session_proxy")){
+            pane_id <- session$ns(pane_id)
+            pg_id <- session$ns(pg_id)
+        }
+        session$sendCustomMessage(
+            type = "sps-update-pg",
+            message = list(
+                panel_id = pane_id,
+                which_pg = pg_id,
+                value = value
+        ))
+    }, blocking_level = "error")
+
+}
+
+#' Add and get data between shiny modules
+#'
+#' These function groups are designed to be used inside shiny modules
+#' @param data any type of R object you want to store and use in other tabs
+#' @param shared the SPS shared reactivevalues object
+#' @param type one of data, plot
+#' @param tabname tab name of current tab if using `addData` method and tab
+#' name to get data from if using `getData`.
+#' @return Nothing to return with `add` method and returns original object for
+#' the `get` method
+#' @export
+#' @details `addPlot`, `getPlot` are wrappers of `add/getData` method where
+#' \code{type = "plot"}
+#' @examples
+#' library(shiny)
+#' library(shinytoastr)
+#' resolveOptions()
+#' ui <- fluidPage(
+#'     useToastr(),
+#'     actionButton("add", "add"),
+#'     actionButton("get", "get"),
+#'     actionButton("wrong", "when it gets wrong")
+#' )
+#' server <- function(input, output, session) {
+#'     tab_info <- tibble::tibble(
+#'         Tab_name = 'df_count',
+#'         Display_label = 'Count Table',
+#'         type = 'data',
+#'         image = ''
+#'     )
+#'     shared <- reactiveValues()
+#'     data <- tibble::tibble(this = 123)
+#'     cat('before adding\n')
+#'     print(shared)
+#'     observeEvent(input$add, {
+#'         addData(data, shared, "thistab")
+#'         cat('after adding\n')
+#'         print(shared) # watch the data_intask object is created
+#'     })
+#'     observeEvent(input$get, {
+#'         cat("get data\n")
+#'         getData('thistab', shared)
+#'     })
+#'     observeEvent(input$wrong, {
+#'         cat("get wrong data\n")
+#'         getData('not_there', shared)
+#'     })
+#' }
+#' shinyApp(ui, server)
+addData <- function(data, shared, tabname, type = "data") {
+    shinyCatch({
+        assert_that(inherits(shared, "reactivevalues"))
+        assert_that(is.character(tabname))
+        type <- match.arg(type, c("data", "plot"))
+        findTabInfo(tabname)
+        if(not_empty(shared[[type]][[tabname]]) & getOption('sps')$verbose)
+            warning(c(glue("found {tabname} has already been added to "),
+                           "`shared$data_intask` list, overwrite"))
+        shared[[type]][[tabname]] <- data
+        if(getOption('sps')$verbose) {
+            info <- glue("Data for namespace {tabname} added")
+            message(info)
+            toastr_info(info, timeOut = 3000, position = "bottom-right")
+        }
+    }, blocking_level = "error")
+}
+
+
+#' @rdname addData
+#' @export
+getData <- function(tabname, shared, type = "data"){
+    shinyCatch({
+        assert_that(inherits(shared, "reactivevalues"))
+        assert_that(is.character(tabname) & length(tabname) < 2,
+                    msg = "A character string of one tab name each time")
+        type <- match.arg(type, c("data", "plot"))
+        tab_info <- findTabInfo(tabname)$tab_labels
+        if(is.empty(shared[[type]][[tabname]]))
+        stop(glue("Data from tab `{tab_info}` is empty"))
+        if(getOption('sps')$verbose){
+            success_info <- glue("data for tab `{tab_info} found`")
+            toastr_info(success_info, timeOut = 3000, position = "bottom-right")
+        }
+        return(shared[[type]][[tabname]])
+    }, blocking_level = "error")
+}
+
+#' @rdname addData
+addPlot <- function(plot, shared, tabname){
+    addData(plot, shared, tabname, type = "plot")
+}
+
+#' @rdname addData
+getPlot <- function(tabname, shared){
+    return(getData(tabname, shared, type = "plot"))
+}
+
+
+
+

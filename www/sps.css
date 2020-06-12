@@ -138,3 +138,13 @@ img-gallery:hover {
 .desc a:link {
   text-decoration: none;
 }
+
+/* sps control-panel*/
+.control-panel {
+    opacity: 0.7;
+    transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+}
+
+.control-panel:hover { opacity: 1;}
