@@ -10,7 +10,7 @@ server <- function(input, output, session) {
     callModule(configServer, "wf_config", shared = shared)
     # VS tabs
     callModule(vs_mainServer, "vs_main", shared = shared)
-    devComponents("server", shared) # for templates
+    devComponents("server", shared = shared) # for templates
     ## data
     callModule(df_targetsServer, "df_targets", shared = shared)
     callModule(df_countServer, "df_count", shared = shared)
