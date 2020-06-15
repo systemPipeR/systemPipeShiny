@@ -1,24 +1,23 @@
-##' Plot MDS from Count matrix
-##' 
-##' Plots Multidimensional Scaling based on pairwise distances between samples
-##' using a count dataframe and a targets file.
-##' 
-##' @param countDF Matrix object of Count data.
-##' @param targets Object containing targets.
-##' @param colData Dataframe containing metadata about each sample.
-##' @param method Normalization method for plot. Options include "rlog", "vst".
-##' @examples
-##' 
-##' ## Create targets file object
-##' targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-##' targets <- read.delim(targetspath, comment="#")
-##' colData <- data.frame(row.names = targets$SampleName, 
-##'             condition = targets$Factor)
-##' countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-##' countDF <- read.delim(countfile, row.names=1)
-##' ## Create MDS plot
-##' run_MDS(countDF = countDF, targets = targets, colData = colData, method = "rlog")
+#################### Plot MDS from Count matrix ######################
 
+#'
+#' Plots Multidimensional Scaling based on pairwise distances between samples
+#' using a count dataframe and a targets file.
+#'
+#' @param countDF Matrix object of Count data.
+#' @param targets Object containing targets.
+#' @param colData Dataframe containing metadata about each sample.
+#' @param method Normalization method for plot. Options include "rlog", "vst".
+#' @examples
+#' ## Create targets file object
+#' targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+#' targets <- read.delim(targetspath, comment="#")
+#' colData <- data.frame(row.names = targets$SampleName,
+#'             condition = targets$Factor)
+#' countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+#' countDF <- read.delim(countfile, row.names=1)
+#' ## Create MDS plot
+#' run_MDS(countDF = countDF, targets = targets, colData = colData, method = "rlog")
 run_MDS <- function(countDF, targets, colData, method) {
   ## Create full DESeqDataSet object
   dds <- DESeqDataSetFromMatrix(countData = countDF, colData = colData, 
