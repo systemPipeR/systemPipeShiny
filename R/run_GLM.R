@@ -1,7 +1,23 @@
+#################### Plot GLM-PCA from Count matrix ######################
 # library(glmpca)
 # library(DESeq2, quietly = TRUE)
 # library(ggplot2)
 
+#' Plots Generalized Principal Component Analysis performed on raw counts using a count dataframe and
+#' a targets file.
+#' @param countDF Matrix object of Count data.
+#' @param targets Object containing targets.
+#' @param colData Dataframe containing metadata about each sample.
+#' @examples
+#' ## Create targets file object
+#' targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+#' targets <- read.delim(targetspath, comment="#")
+#' colData <- data.frame(row.names = targets$SampleName,
+#'             condition = targets$Factor)
+#' countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+#' countDF <- read.delim(countfile, row.names=1)
+#' ## Create GLM-PCA plot
+#' run_GLM(countDF = countDF, targets = targets, colData = colData)
 run_GLM <- function(countDF, targets, colData) {
   ## Create full DESeqDataSet object
   dds <- DESeqDataSetFromMatrix(countData = countDF, colData = colData, 

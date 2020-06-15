@@ -1,4 +1,29 @@
-# library(DESeq2, quietly = TRUE)
+#################### Bar Plot of DEGs from a count matrix ######################
+
+#' Plots a Bar Plot using \code{run_DESeq2} to create a DESeq2 data frame of
+#' differentially expressed genes.
+#' @param countDF Matrix containing Count data.
+#' @param targets targets \code{data.frame}
+#' @param FDR False Discovery Rate cut off for filtering.
+#' @param Fold Log Fold Change cut off for filtering.
+#' @param cmpset Number pertaining to index of set of \code{cmp} matrix
+#' desired.
+#' @param cmp \code{character matrix} where comparisons are defined in two
+#' columns. This matrix should be generated with \code{readComp()} from the
+#' targets file. Values used for comparisons need to match those in the Factor
+#' column of the targets file.
+#' @param plot If plot = \code{TRUE}, then function will plot a bar plot. If
+#' plot = \code{false}, function will return the DESeq2 \code{data frame}.
+#' @examples
+#' ## Create DEG dataframe
+#' targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+#' targets <- read.delim(targetspath, comment="#")
+#' cmp <- readComp(file=targetspath, format="matrix", delim="-")
+#' countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+#' countDF <- read.delim(countfile, row.names=1)
+#'
+#' ## Create plot
+#' deg_deseq2(countDF, targets, Fold = 2, FDR = 10, cmpset = 1, cmp, plot = T)
 deg_deseq2 <- function(countDF, targets, Fold, FDR, cmpset, cmp, plot = T) {
   degseqDF <- systemPipeR::run_DESeq2(countDF = countDF, targets = targets, cmp = cmp[[cmpset]], 
                          independent = FALSE)
