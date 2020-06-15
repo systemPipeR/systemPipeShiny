@@ -1,6 +1,7 @@
 #################### Plot MDS from Count matrix ######################
+# library(DESeq2, quietly = TRUE)
+# library(ape, warn.conflicts = FALSE)
 
-#'
 #' Plots Multidimensional Scaling based on pairwise distances between samples
 #' using a count dataframe and a targets file.
 #'
@@ -30,13 +31,14 @@ run_MDS <- function(countDF, targets, colData, method) {
   }
   ## transformation to a distance matrix
   d <- cor(assay(normdata), method = "spearman")
-  distmat <- dist(1-d) #to get sample-to-sample distances
+  distmat <- dist(1-d)
   ## perform MDS 
   mdsData <- data.frame(cmdscale(distmat)) 
   mds <- cbind(mdsData, as.data.frame(colData(dds)))
   Sample <- targets$Factor
   g <- ggplot(mds, aes(X1,X2,color=Sample)) + geom_point(size=3) + scale_y_reverse()  + ggtitle("Multidimensional Scaling (MDS)")
   ggplotly(g)
+  
   
 }
 

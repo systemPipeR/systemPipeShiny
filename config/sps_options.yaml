@@ -26,3 +26,7 @@ display_code:
 verbose:
     default: false
     other: [true]
+
+dev:
+    default: false
+    other: [true]

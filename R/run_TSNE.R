@@ -1,4 +1,11 @@
 #################### Plot t-SNE from Count matrix ######################
+## tSNE has two main parameters: the perplexity and learning rate
+## tSNE is a stochastic algorithm which means running the method multiple times on the same dataset will result in different plots. 
+##To ensure reproducibility, we fix the
+## "seed" of the random-number generator in the code below so that we always get the same plot
+## tSNE faithfully represents local relationships
+# library(Rtsne)
+# library(ggplot2)
 
 #' Plots t-Distributed Stochastic Neighbor Embedding between samples using a
 #' count dataframe and a targets file.

@@ -1,4 +1,6 @@
 #################### Plot PCA from Count matrix ######################
+# library(DESeq2, quietly = TRUE)
+# library(ape, warn.conflicts = FALSE)
 
 #' Plots Principal Component Analysis from a count dataframe and a targets file.
 #' @param countDF Matrix of Count data.
@@ -16,26 +18,26 @@
 #' ## Create PCA plot
 #' run_PCA(countDF = countDF, targets = targets, colData = colData, method = "raw")
 run_PCA <- function(countDF, targets, colData, method) {
-    
-    ## Create full DESeqDataSet object
-    dds <- DESeqDataSetFromMatrix(countData = countDF, colData = colData, 
-                                  design = ~condition)
-    dds <- DESeq(dds)
-    #method
-    if (method == "rlog") {
-        normdata <- rlog(dds, blind=TRUE)
-    } else if (method == "vst") {
-        normdata <- varianceStabilizingTransformation(dds, blind = T)   
-    } else if (method == "raw") {
-        normdata <- DESeqTransform(dds)
-    }
-    pcaData <- plotPCA(normdata, intgroup="condition", returnData=TRUE)
-    percentVar <- round(100 * attr(pcaData, "percentVar"))
-    Sample <- targets$Factor
-    g <- ggplot(pcaData, aes(PC1, PC2, color=Sample)) +
-        geom_point(size=3) +
-        xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-        ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
-        coord_fixed() + ggtitle("Principal Component Analysis (PCA)")
-    ggplotly(g)
+  
+  ## Create full DESeqDataSet object
+  dds <- DESeqDataSetFromMatrix(countData = countDF, colData = colData, 
+                                design = ~condition)
+  dds <- DESeq(dds)
+  #method
+  if (method == "rlog") {
+    normdata <- rlog(dds, blind=TRUE)
+  } else if (method == "vst") {
+    normdata <- varianceStabilizingTransformation(dds, blind = T)   
+  } else if (method == "raw") {
+  normdata <- DESeqTransform(dds)
+  }
+  pcaData <- plotPCA(normdata, intgroup="condition", returnData=TRUE)
+  percentVar <- round(100 * attr(pcaData, "percentVar"))
+  Sample <- targets$Factor
+  g <- ggplot(pcaData, aes(PC1, PC2, color=Sample)) +
+    geom_point(size=3) +
+    xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+    ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
+    coord_fixed() + ggtitle("Principal Component Analysis (PCA)")
+  ggplotly(g)
 }

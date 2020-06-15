@@ -1,7 +1,7 @@
 ########################## Template for data tab ###############################
 
 ## UI
-df_rawUI <- function(id){
+df_templateUI <- function(id){
     ns <- NS(id)
     # describe your tab in markdown format, this will go right under the title
     desc <- "
@@ -19,7 +19,10 @@ df_rawUI <- function(id){
     tagList(
         h2("Title for this kind of dataframe"),
         renderDesc(id = ns("desc"), desc),
-        # first validate required packages and other prerequisites
+        pgPaneUI(ns("pg"),
+            titles = c("Package Requirements", "Input Data Validation", "Preprocess"),
+            pg_ids = c(ns("pkg"), ns("data"), ns("prepro"))
+        ),
         div(style = "text-align: center;",
             actionButton(inputId = ns("validate_start"), label = "Start with this tab")
         ),
@@ -51,7 +54,7 @@ df_rawUI <- function(id){
                 column(4,
                     pickerInput(
                         inputId = ns("select_prepro"),
-                        choices = c(`Do Nothing`='nothing', `Take log`='log'),
+                        choices = c(`Do Nothing`='nothing', `Method 1`='md1', `Method 2`='md2'),
                         options = list(style = "btn-primary")
                     )
                 ),
@@ -59,46 +62,33 @@ df_rawUI <- function(id){
                       actionButton(ns("preprocess"), label = "Preprocess", icon("paper-plane"))
                 )
             ),
-            # column(
-            #     width = 12,
-            #     actionButton(ns("df_reload"), label = "Load/Reload Data Input", icon("redo-alt")),
-            #
-            # ),
-            fluidRow(id = ns("plot_options"),
-                     a("Scatter Plot", href = "#shiny-tab-plot_point"),
-                     a("plot2"),
-                     a("plot3"),
-                     p("...")
+            fluidRow(id = ns("plot_option_row"), class = "shinyjs-hide",
+                     uiOutput(ns("plot_option"))
             )
         )
     )
 }
 
 ## server
-df_rawServer <- function(input, output, session, shared){
+df_templateServer <- function(input, output, session, shared){
     ns <- session$ns
+    tabname <- "df_template"
     # start the tab by checking if required packages are installed
-    shinyjs::hide(id = "tab_main")
     observeEvent(input$validate_start, {
-        if (shinyCheckSpace(
+        print(class(session))
+        req(shinyCheckSpace(
             session = session,
             cran_pkg = c("base"),
             bioc_pkg = c(""),
             github = c("")
-        )) {
-            shinyjs::show(id = "tab_main")
-            shinyjs::hide(id = "validate_start")
-        }
+        ))
+        shinyjs::show(id = "tab_main")
+        shinyjs::hide(id = "validate_start")
+        pgPaneUpdate('pg', 'pkg', 100) # update progress
     })
     observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
     # get upload path, note path is in upload_path()$datapath
     upload_path <- dynamicFileServer(input, session, id = "file_upload")
-    observe({
-        print(data_df() %>% class)
-        print(data_df())
-        # print(input$df_rows_all)
-        # print(data_df()[input$df_rows_all, ])
-        })
     # load the file dynamically
     data_df <- reactive({
         df_path <- upload_path()
@@ -108,8 +98,8 @@ df_rawServer <- function(input, output, session, shared){
     })
     # display table
     output$df <- DT::renderDT({
-        validate(
-            need(not_empty(data_df()), "Data file cannot be not loaded")
+        shiny::validate(
+            need(not_empty(data_df()), message = "Data file is not loaded")
         )
         DT::datatable(
             data_df(), style = "bootstrap", class = "compact",  filter = "top",
@@ -122,44 +112,90 @@ df_rawServer <- function(input, output, session, shared){
     })
 
     # preprocess
-    df_validator_common <- list(
-        vd1 = function(df, ...){
+    ## define validators
+    df_validate_common <- list(
+        vd1 = function(df){
             if (is(df, "data.frame")) {result <- c(" " = TRUE)}
             else {result <- c("Input is not dataframe or tibble" = FALSE)}
             return(result)
         },
-        vd2 = function(df, ...){
+        vd2 = function(df){
             if (ncol(df) > 1) {result <- c(" " = TRUE)}
             else {result <- c("Input is not dataframe or tibble" = FALSE)}
+            Sys.sleep(1)
             return(result)
         }
     )
-
-    observeEvent(input$preprocess, {
-        withProgress(message = 'Making plot', value = 0, {
-            # Number of times we'll go through the loop
-            n <- 10
-
-            for (i in 1:n) {
-                # Increment the progress bar, and update the detail text.
-                incProgress(1/n, detail = paste("Doing part", i))
-
-                # Pause for 0.1 seconds to simulate a long computation.
-                Sys.sleep(0.1)
-            }
-        })
-
-        check_results <- T
-        if(!all(check_results)) {
-
-        } else {
-            shinyjs::show(id = "plot_options")
-            sendSweetAlert(
-                session = session, type = "success",
-                title = "Data added", text = "Choose a plot type"
-            )
+    ## define special validations for different reprocesses
+    df_validate_method1 <- list(
+        md1 = function(df, special1) {
+            cat(special1)
+            if (ncol(df) > 1) return(c(" " = TRUE))
+            else return(c("Need more than 1 column" = FALSE))
         }
-
+    )
+    df_validate_method2 <- list(
+        md1 = function(df, special2) {
+            cat(special2)
+            if (ncol(df) > 1) return(c(" " = TRUE))
+            else return(c("Need more than 1 column" = FALSE))
+        }
+    )
+    # start validation and preprocess
+    observeEvent(input$preprocess, ignoreInit = TRUE, {
+        # get filtered df
+        df_filter <-  data_df()[input$df_rows_all, ]
+        # validate data
+        spsValidator(df_validate_common,
+                     args = list(df = df_filter,
+                                 apple = "apple\n",
+                                 banana = "banana\n"),
+                     title = "Common Validations")
+        # validate special requirements for different preprocess
+        switch(
+            input$select_prepro,
+            'md1' = spsValidator(
+                df_validate_method1,
+                args = list(df = df_filter, special1 = "validation for method 1\n"),
+                title = "Special validation for method 1"
+            ),
+            'md2' = spsValidator(
+                df_validate_method2,
+                args = list(df = df_filter, special2 = "validation for method 2\n"),
+                title = "Special validation for method 2"
+            ),
+            msg('No addition validation required')
+        )
+        pgPaneUpdate('pg', 'data', 100)
+        # if validation passed, start reprocess
+        df_processed <- shinyCatch(switch(input$select_prepro,
+           'md1' = {
+               # your preprocess function, e.g
+               df_filter[, 1] = df_filter[, 1] + 1
+           },
+           'md2' = {
+               df_filter[, 1] = log(df_filter[, 1])
+           },
+           df_filter
+        ), blocking_level = 'error')
+        req(!is.null(df_processed))
+        pgPaneUpdate('pg', 'prepro', 100)
+        # add data to task
+        addData(df_processed,shared, tabname)
+        toastr_success(
+            title = "Preprocess done!",
+            message = "You can choose your plot options below",
+            timeOut = 5000,
+            position = "bottom-right"
+        )
+        shinyjs::show(id = "plot_option_row")
+        gallery <- switch(input$select_prepro,
+                          'md1' = genGallery("plot_pca"),
+                          'md2' = genGallery(c("plot_template", "plot_pca")),
+                          genGallery(type = "vs")
+        )
+        output$plot_option <- renderUI({
+            gallery
+        })
     })
-
 }

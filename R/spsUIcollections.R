@@ -16,15 +16,11 @@ useSps <- function(){
     # addResourcePath("sps", system.file("www", package = "systemPipeShiny"))
     addResourcePath("sps", "www")
     tags$head(
-        HTML('
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/css/uikit.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit-icons.min.js"></script>
-             '),
         tags$link(rel = "stylesheet", type = "text/css",
                             href = "sps/sps.css"),
-                  tags$script(src = "sps/sps.js")
-
+        tags$script(src = "sps/sps.js"),
+        tags$script(src="sps/sps_update_pg.js"),
+        useToastr()
     )
 }
 
@@ -101,9 +97,7 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #' @param title Title of gallery
 #' @param texts label under each image
 #' @param hrefs link when clicking each
-#' @param image_frame_size integer, 1-12
-#' @param img_height css style like '300px'
-#' @param img_width css style like '480px'
+#' @param image_frame_size integer, 1-12, this controls width
 #' @param images image source,
 #'
 #' @return a div element
@@ -124,7 +118,7 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #'
 #' ui <- fluidPage(
 #'     includeCSS("www/sps.css"),
-#'     gallery(texts = texts, hrefs = hrefs, images = images, image_size = 2)
+#'     gallery(texts = texts, hrefs = hrefs, images = images)
 #' )
 #'
 #' server <- function(input, output, session) {
@@ -133,20 +127,18 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #'
 #' shinyApp(ui, server)
 gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts,
-                    hrefs, images, image_frame_size = 4, img_height = "300px",
-                    img_width = "480px"
-                    ){
-    if (is.null(Id)) Id <- glue("gallery{sample(1000:100000, 1)}")
+                    hrefs, images, image_frame_size = 4){
+    if (is.null(Id)) Id <- glue("gallery{sample(1000000:9999999, 1)}")
     assert_that(length(texts) == length(hrefs) & length(hrefs) == length(images),
                 msg = "texts, hrefs and images must have the same length")
     tags$div(
-        id = Id, class = "col uk-overflow-hidden uk-overlay", `uk-scrollspy`="cls: uk-animation-slide-bottom; target: img; delay: 300; repeat: true",
+        id = Id, class = "col",
         p(class = "text-center h2", style = glue("color: {title_color};"), title),
         tags$div(
-            class = "row",
+            class = "row", style = "  margin: 10px;",
             HTML(glue('
-                <a href="{hrefs}"  class="col-sm-{image_frame_size} sps-tab-link" style="right: 5px;">
-                  <img src="{images}" class="img-gallery" style="height: {img_height}; width: {img_width};">
+                <a href="{hrefs}"  class="col-sm-{image_frame_size} sps-tab-link" style="right: 1px;">
+                  <img src="{images}" class="img-gallery" style="width: 100%;">
                   <p class="text-center h4">{texts}</p>
                 </a>
              '))
@@ -178,17 +170,20 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #'
 #' }
 #' shinyApp(ui, server)
-genGallery <- function(tabnames, Id = NULL, title = "Gallery", type = "vs",
-                       title_color = "#0275d8", image_frame_size = 4, img_height = "300px",
-                       img_width = "480px") {
+genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
+                       title_color = "#0275d8", image_frame_size = 3) {
     tabs <- findTabInfo(tabnames, type)
     gallery(Id = Id, title = title, title_color = title_color,
-            image_frame_size = image_frame_size, img_height = img_height,
+            image_frame_size = image_frame_size,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
             images = tabs[['images']])
 }
 
 #' Show a list of tabs in buttons
+#' @details `hrefTab` can be use for any purpose of shiny.
+#' `genHrefTab` is upper level wrapper of `hrefTab` and should
+#' only be used under systemPipeShiny framework for fast retrieving tab info and
+#' generate the `hrefTab`.
 #' `label_text`, `hrefs` must be the same length
 #' @importFrom assertthat assert_that
 #' @param Id optional
@@ -196,14 +191,14 @@ genGallery <- function(tabnames, Id = NULL, title = "Gallery", type = "vs",
 #' @param title_color title color
 #' @param label_text individual tab labels
 #' @param hrefs individual tab links
-#'
+#' @param ... other args pass to the html container
 #' @return a div element
 #' @export
-#'
 #' @examples
 #' ui <- fluidPage(
-#' includeCSS("www/sps.css"),
-#' hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"), hrefs = c("https://google.com/", "", ""))
+#' useSps(),
+#' hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
+#'         hrefs = c("https://google.com/", "", ""))
 #' )
 #'
 #' server <- function(input, output, session) {
@@ -214,7 +209,7 @@ genGallery <- function(tabnames, Id = NULL, title = "Gallery", type = "vs",
 hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8",
                     label_text, hrefs, ...
                     ){
-    if (is.null(Id)) Id <- glue("list-tab{sample(1000:100000, 1)}")
+    if (is.null(Id)) Id <- glue("list-tab{sample(1000000:9999999, 1)}")
     assert_that(length(label_text) == length(hrefs),
                 msg = "texts and hrefs must have the same length")
     tags$div(
@@ -222,12 +217,22 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
         p(class = "h4",  style = glue("color: {title_color}; text-align: left;"), title),
         tags$div(
             HTML(glue('
-                <a href="{hrefs}" class="href-button">{label_text}</a>\n
+              <a href="{hrefs}" class="href-button sps-tab-link">{label_text}</a>\n
                 '))
         )
     )
 }
 
+
+#' @rdname hrefTab
+#' @param tabnames tab names, must have the \code{tab_info} dataframe or
+#' `tab_info.csv` config file in `./config` directory.
+genHrefTab <- function(tabnames, Id = NULL, title = "A bar to list tabs",
+                         text_color = "#0275d8", ...) {
+    tabs <- findTabInfo(tabnames)
+    hrefTab(Id = Id, title = title, text_color = text_color,
+            label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
+}
 
 #' A table of lists of hyper reference buttons
 #' `item_titles`, `item_labels`, `item_hrefs` must have the same length
@@ -265,7 +270,7 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
                       text_color = "#0275d8", item_titles, item_labels,
                       item_hrefs, ...
                       ){
-    if (is.null(Id)) Id <- glue("list-table{sample(1000:100000, 1)}")
+    if (is.null(Id)) Id <- glue("list-table{sample(1000000:9999999, 1)}")
     assert_that(is.list(item_labels)); assert_that(is.list(item_hrefs))
     assert_that(length(item_titles) == length(item_labels) & length(item_labels) == length(item_hrefs),
                 msg = "item_titles, item_labels and item_hrefs must have the same length")
@@ -417,5 +422,236 @@ dynamicFile <- function(id, title = "Select your file:",
     } else {
         fileInput(inputId = id, label = title,
                   multiple = multiple, buttonLabel = label)
+    }
+}
+
+
+
+#' Create template tabs and servers
+#' @description generate UI and server part for template components if `dev`
+#' option is TRUE. See ui.R and server.R for example. Normally there is no need
+#' to change code of this function ui or server scripts.
+#' @param element choose from "ui_menu_df", "ui_menu_plot","ui_tab_df",
+#' "ui_tab_plot", "server"
+#' @param shared use only when `element` is 'server'
+#'
+#' @return ui_xx returns html tags, server will return a server function
+#' @export
+#'
+devComponents <- function(element, shared=NULL){
+    element <- match.arg(element, c("ui_menu_df", "ui_menu_plot",
+                                    "ui_tab_df", "ui_tab_plot", "server"))
+
+    if(is.null(getOption("sps")$dev)) {
+        options(sps = getOption("sps") %>% {.[['dev']] <- FALSE; .})
+        msg("dev option is not set, set to FALSE", "warning")
+    }
+    if(getOption("sps")$dev){
+        switch (element,
+                "ui_menu_df" = menuSubItem(text = "Template data", tabName = "df_template"),
+                "ui_menu_plot" = menuSubItem(text = "Template Plot", tabName = "plot_template"),
+                "ui_tab_df" = tabItem(tabName = "df_template", df_templateUI("df_template")),
+                "ui_tab_plot" = tabItem(tabName = "plot_template", plot_templateUI("plot_template")),
+                "server" = {
+                    callModule(df_templateServer, "df_template", shared = shared)
+                    callModule(plot_templateServer, "plot_template", shared = shared)
+                    }
+        )
+    } else {tabItem("")}
+}
+
+
+#' Example UI elements for plotting
+#' @description return some example UI elements can be toggled on plotting
+#' @param ns namespace function
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' eg_UI <- function(id) {
+#'     ns <- NS(id)
+#'     tagList(
+#'         useSps(),
+#'         uiExamples(ns)
+#'     )
+#' }
+#' ui <- fluidPage(eg_UI("eg"))
+#' server <- function(input, output, session) {}
+#' shinyApp(ui, server)
+uiExamples <- function(ns){
+    tagList(
+        h3("Some examples for plotting controls"),
+        boxPlus(
+            width = 12, closable = FALSE, collapsible = TRUE,
+            footer = dropdownButton(
+                size = "sm", icon = icon("code"), width = "500px",
+                footer_padding = FALSE,
+                tooltip = tooltipOptions(title = "Click to see code"),
+                label = "see code",
+                aceEditor(
+                    ns("code-chunk"), mode = "r", readOnly = TRUE,
+                    fontSize = 14, value =
+                        glue('
+                    clearableTextInput(ns("text1"), "text input example"),
+                    strong("Simple action button example"), br(),
+                    actionButton(
+                        ns("op1"),
+                        label = "click me",
+                        icon("cog")
+                    ),
+                    radioGroupButtons(
+                        inputId = ns("radio_gp1"),
+                        label = "radio group example",
+                        choices = c("A",
+                                    "B", "C", "D"),
+                        status = "primary",
+                        checkIcon = list(
+                            yes = icon("ok", lib = "glyphicon"),
+                            no = icon("remove", lib = "glyphicon"))
+                    ),
+                    sliderTextInput(
+                        inputId = ns("slider1"),
+                        label = "slider example",
+                        choices = c(1, 10, 100, 500, 1000),
+                        grid = TRUE
+                    )
+                    ')
+                )
+            ),
+            p("You need to write your own UI and server logic"),
+            p("This section is just for demo and will not be included when you
+              create a new tab"),
+            clearableTextInput(ns("text1"), "text input example"),
+            strong("Simple action button example"), br(),
+            actionButton(
+                ns("op1"),
+                label = "click me",
+                icon("cog")
+            ),
+            radioGroupButtons(
+                inputId = ns("radio_gp1"),
+                label = "radio group example",
+                choices = c("A",
+                            "B", "C", "D"),
+                status = "primary",
+                checkIcon = list(
+                    yes = icon("ok", lib = "glyphicon"),
+                    no = icon("remove", lib = "glyphicon"))
+            ),
+            sliderTextInput(
+                inputId = ns("slider1"),
+                label = "slider example",
+                choices = c(1, 10, 100, 500, 1000),
+                grid = TRUE
+            )
+        )
+    )
+}
+
+#' hr line with color #3b8dbc38
+#' @export
+spsHr <- function() {
+    hr(style ='border: 0.5px solid #3b8dbc38;')
+}
+
+#' Workflow progress tracker UI
+#' @description call it on top level UI not inside a module. Call this function
+#' only once. Do not repeat this function.
+#' @export
+#' @examples
+#' wfPanel()
+wfPanel <- function(){
+    div(class = "tab-pane", id = "wf-panel",
+        absolutePanel(
+            top = "3%", right = "1%", draggable = TRUE, width = "300",
+            height = "auto", class = "control-panel", cursor = "inherit",
+            style = "background-color: white; z-index:999;",
+            fluidRow(
+                column(2),
+                column(8, h4("Workflow Progress")),
+                column(2, HTML('<button class="action-button
+                                  bttn bttn-simple bttn-xs bttn-primary
+                                  bttn-no-outline" data-target="#wf-panel-main"
+                                  data-toggle="collapse">
+                                  <i class="fa fa-minus"></i></button>'))
+            ),
+            div(class = "collapse",
+                id = "wf-panel-main",
+                uiOutput("wf_panel"))
+        )
+    )
+}
+
+
+
+#' @rdname pgPaneUpdate
+#' @param titles labels to display for each progress, must have the same length
+#' as `pg_ids`
+#' @param pg_ids a character vector of IDs for each progress. Don't forget
+#' to use `ns` wrap each ID.
+#' @param title_main If not specified and pane_id contains 'plot', title will be
+#' 'Plot Prepare'; has 'df' will be 'Data Prepare', if neither will be
+#' "Progress"
+#' @export
+pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
+    if(is.null(title_main)) {
+        title_main <- pane_id %>% {
+            if(str_detect(., "plot")) "Plot Prepare"
+            else if(str_detect(., "df")) "Data Prepare"
+            else("Progress")
+        }
+    }
+    assert_that(is.character(titles))
+    assert_that(is.character(pg_ids))
+    assert_that(length(titles) == length(pg_ids))
+
+    sapply(seq_along(pg_ids), function(i) {
+        tags$li(style = "margin-bottom: 0;",
+                tags$i(id = glue("{pg_ids[i]}-icon"),
+                       class = "fa fa-times bg-red"),
+                div(class = "timeline-item",
+                    h3(class = "timeline-header no-border", titles[i]),
+                    div(class="timeline-body", style = "padding: 0px;",
+                        progressBar(
+                            glue("{pg_ids[i]}-pg"), striped = TRUE,
+                            status = "primary", 0
+                        )
+                    )
+                )
+        )
+    }, simplify = FALSE) %>% {
+        timelineBlock(reversed = FALSE, id = glue("{pane_id}-timeline"),
+                      .,
+                      timelineLabel(id = glue("{pane_id}-pg-label"), "Ready",
+                                    color = "orange"),
+                      div(style = "margin-left: 60px; margin-right: 15px;",
+                          progressBar(
+                              glue("{pane_id}-pg-all"), striped = TRUE,
+                              status = "primary", 0
+                          )
+                      )
+        )
+    } %>% {
+        div(class = "tab-pane", id = glue("{pane_id}-pg-container"),
+            absolutePanel(
+                top = "5%", right = "2%", draggable = TRUE, width = "310",
+                height = "auto", class = "control-panel", cursor = "inherit",
+                style = "background-color: white; z-index:999;",
+                fluidRow(
+                    column(3),
+                    column(7, h4(title_main)),
+                    column(2,
+                           HTML(glue('<button class="action-button ',
+                                     'bttn bttn-simple bttn-xs bttn-primary ',
+                                     'bttn-no-outline"',
+                                     'data-target="#{pane_id}-pg-collapse"',
+                                     ' data-toggle="collapse">',
+                                     '<i class="fa fa-minus"></i></button>')))
+                ),
+                div(class = "collapse", id = glue("{pane_id}-pg-collapse"), .)
+            )
+        )
     }
 }

@@ -1,4 +1,6 @@
 #################### Plots a clustering dendrogram from Count matrix ######################
+# library(DESeq2, quietly = TRUE)
+# library(ape, warn.conflicts = FALSE)
 
 #' Plots Hierarchical Clustering dendrogram between samples using a count
 #' dataframe and a targets file.

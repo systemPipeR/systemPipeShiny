@@ -1,4 +1,8 @@
 #################### Plot Clustering Heat Map from Count matrix ######################
+# library(DESeq2, quietly = TRUE)
+# library(ape, warn.conflicts = FALSE)
+# library("RColorBrewer")
+# library(plotly)
 
 #' Plots a hierarchical clustering heat map using a count dataframe and a
 #' targets file.

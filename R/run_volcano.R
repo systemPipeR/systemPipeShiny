@@ -1,4 +1,5 @@
 #################### Plots a Volcano Plot ######################
+# library(ggplot2)
 
 #' Plots  a Volcano Plot from an \code{edgeR} or \code{DESeq2} data frame.
 #' @param DF \code{edgeR} or \code{DESeq2} data frame.

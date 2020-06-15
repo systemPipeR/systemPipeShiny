@@ -15,13 +15,18 @@ function sidebarSpanJump(span_text, link_tab){
 	$(".sidebar-menu").find("span:contains(" + span_text + ")")[0].onclick =
   	function(){
     	$('[href="#shiny-tab-' + link_tab + '"]').tab('show');
+        $("#wf-panel").addClass("shinyjs-hide");
     };
 }
 
+$(document).ready(function(){
+    sidebarSpanJump('Workflow Mangement', 'wf_main');
+    sidebarSpanJump('Visualization', 'vs_main');
+});
 
 // Enable a tag to change tab by clicking text with links
 $(document).ready(function() {
-  $('.sps-tab-link').click(function(e) {
+  $('.tab-content').on('click', '.sps-tab-link', function(e) {
     var link = $(this).attr('href');
     if (link.match('#')) {
       e.preventDefault();
@@ -66,3 +71,20 @@ $(document).ready(function() {
 });
 
 
+// change plot document size based on distance to bottom
+function stretchSpsPlot() {
+    var stretch_elem = $(".sps-plot-container");
+    var parent_pane = stretch_elem.parents(".tab-pane");
+    var div_dis = $(document).height() - stretch_elem.offset().top - stretch_elem.height();
+    var h = 0;
+    if(div_dis < window.innerHeight/4) {
+        h = parent_pane.height() + window.innerHeight/2;
+        parent_pane.height(h);
+    }
+    if(div_dis > window.innerHeight/2) {
+        h = parent_pane.height() - window.innerHeight/4;
+        parent_pane.height(h);
+    }
+}
+
+$(document).resize(stretchSpsPlot);
