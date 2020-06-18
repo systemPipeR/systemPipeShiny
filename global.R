@@ -61,7 +61,7 @@ options(sps = list(
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
-    verbose = FALSE,
+    verbose = TRUE,
     dev = TRUE
 ))
 
