@@ -148,3 +148,61 @@ img-gallery:hover {
 }
 
 .control-panel:hover { opacity: 1;}
+
+
+/* sps hexagon icon and hex panel*/
+.hex-container {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.hex {
+  opacity: 0.8;
+}
+
+.hex:hover {
+  opacity: 1;
+}
+
+.powerby-link {
+  font: italic bold 25px serif;
+  fill: #0275d8;
+  opacity: 0.5;
+}
+
+.powerby-link:hover {
+  opacity: 1;
+}
+
+.hex-box {
+  width: 4vw;
+  min-width: 50px;
+  display: inline-block;
+  padding-top: 0;
+}
+
+.hex-container span {
+ display: inline-block;
+ text-align: center;
+ font-size: 0.8vw;
+}
+
+.hex-panel {
+  position: auto;
+}
+.hex-panel > .hex-item {
+  display: inline-block;
+  text-align: left;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right:0;
+}
+
+.hex-panel h5 {
+  display: inline-block;
+  font-weight: 900;
+  font-size: 1.25vw;
+  transform: translateY(-2.2vw);
+}
