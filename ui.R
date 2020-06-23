@@ -28,7 +28,7 @@ dashboardSidebar <-  dashboardSidebar(
             menuSubItem(text = "Run Workflow", tabName = "wf_run")
                  ),
         menuItem(
-            "Visualization", icon = icon("tasks"), tabName = "vs_main",
+            "Visualization", icon = icon("images"), tabName = "vs_main",
             menuItem(
                 text = "Prepare dataset",
                 ## vs dfs add to sidebar
@@ -52,13 +52,15 @@ dashboardSidebar <-  dashboardSidebar(
                 menuSubItem(text = "Volcano", tabName = "plot_volcano")
                 )
         ),
-        ## add other tabs
+        menuItem("Canvas", tabName = "canvas", icon = icon("paint-brush")
+        ),
         menuItem("About", icon = icon("info"), tabName = "about")
     )
 )
 # body
 dashboardBody <- dashboardBody(
-    tags$div(
+    tags$head(
+        tags$link(rel="shortcut icon", href="systemPipe_small.png"),
         useShinyjs(),
         useSweetAlert(),
         useSps()
@@ -90,16 +92,18 @@ dashboardBody <- dashboardBody(
         tabItem(tabName = "plot_clust", plot_clustUI("plot_clust")),
         tabItem(tabName = "plot_volcano", plot_volcanoUI("plot_volcano")),
         ## other tabs
+        tabItem(tabName = "canvas", canvasUI("canvas")),
         tabItem(tabName = "about", aboutUI("about"))
     )
 )
-# right side bar
+# right side bar, not in use at this moment
 # rightsidebar <- rightSidebar(
 #     background = "light", icon = "clipboard-check", width = 400,
 #     rightUI("right")
 # )
 # app main UI
 mainUI <- dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
+                            title = "systemPipeShiny",
                             body =  dashboardBody #,rightsidebar = rightsidebar
                             )
 # merge everything together

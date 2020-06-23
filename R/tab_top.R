@@ -4,70 +4,23 @@ topUI <- function(id){
     tagList(
         pushbar_deps(),
         actionBttn(
-            inputId = ns("top_target_btn"),
-            label = "Targets",
-            style = "bordered", 
-            size = "sm",
-            icon = icon("vials")
-        ),
-        pushbar(
-            id = ns("top_target_push"),
-            from = "top",
-            style= "background:#ECF0F5;padding:2%;min-height:50%;",
-            tagList(
-                fluidRow(
-                    actionBttn(ns("close_target_push"), style = "simple", icon = icon("times"), color = "danger", size = "sm")
-                    ),
-                fluidRow(
-                    boxPlus(title = "Targets", width = 12, closable = FALSE,
-                            uiOutput(ns("top_target_table"))
-                            )
-                )
-            )
-        ),
-        actionBttn(
-            inputId =  ns("top_ct_btn"),
-            label = "Count",
+            inputId = ns("snap_btn"),
+            label = "Snapshots",
             style = "bordered",
             size = "sm",
-            icon = icon("table")
+            icon = icon("camera")
         ),
         pushbar(
-            id = ns("top_ct_push"),
+            id = ns("snap_push"),
             from = "top",
-            style= "background:#ECF0F5;padding:2%;min-height:50%;",
+            style= "background:#ECF0F5;padding:2%;min-height:50%; overflow:auto;",
             tagList(
                 fluidRow(
-                    actionBttn(ns("close_ct_push"), style = "simple", icon = icon("times"), color = "danger", size = "sm")
-                ),
-                fluidRow(
-                    boxPlus(title = "Count Table", width = 12, closable = FALSE,
-                            p("You need to load your targets first at the 'DEG' tab, otherwise nothing will show up here."),
-                            rHandsontableOutput(ns("count_table"))
-                    )
-                )
-            )
-        ),
-        actionBttn(
-            inputId = ns("top_bed_btn"),
-            label = "BED",
-            style = "bordered",
-            size = "sm",
-            icon = icon("dna")
-        ),
-        pushbar(
-            id = ns("top_bed_push"),
-            from = "top",
-            style= "background:#ECF0F5;padding:2%;min-height:50%;",
-            tagList(
-                fluidRow(
-                    actionBttn(ns("close_bed_push"), style = "simple", icon = icon("times"), color = "danger", size = "sm")
-                ),
-                fluidRow(
-                    boxPlus(title = "BED", width = 12, closable = FALSE,
-                            p("You need to load your targets first at the 'xx' tab, otherwise nothing will show up here."),
-                            rHandsontableOutput(ns("bed"))
-                    )
+                    div(style = " position: fixed; top: 0; right: 0; margin:0;",
+                        actionBttn(ns("close_snap"), style = "simple", icon = icon("times"),
+                                   color = "danger", size = "sm")),
+                    div(class = "text-center", h3("Manage your plot snapshots")),
+                    spsHr(),uiOutput(ns("top_snap"))
                 )
             )
         )
@@ -78,39 +31,43 @@ topUI <- function(id){
 topServer <- function(input, output, session, shared){
     setup_pushbar(blur = TRUE, overlay = TRUE)
     ns <- session$ns
-    observeEvent(input$top_target_btn, {
-        pushbar_open(id = ns("top_target_push"))
-        if (shared$wf_flags$targets_ready) {
-            output$top_target_table <- renderUI({
-                rHandsontableOutput(ns("targets_df"))
-            })
-            output$targets_df <- renderRHandsontable({
-                rhandsontable(head(shared$targets$df, 100), readOnly = TRUE, height = 500, width = 1000) %>%
-                hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE)
-            })
-        } else {
-            output$top_target_table <- renderUI({p("You need to add your targets to task in the 'Files' tab, otherwise nothing will show up here.")})
+    observeEvent(c(input$snap_btn, input$trash), ignoreInit = TRUE, {
+        pushbar_open(id = ns("snap_push"))
+        snaps <- names(shared$canvas$server)
+        snap_remove <- which(snaps %in% input$destroy_order)
+        if (length(snap_remove) > 0){
+            snaps <- snaps[-snap_remove]
+            shared$canvas$server <- shared$canvas$server[-snap_remove]
+            shared$canvas$ui <- shared$canvas$ui[-snap_remove]
+            print(names(shared$canvas$server)); print(names(shared$canvas$ui))
         }
-    })
-    observeEvent(input$top_ct_btn, {
-        pushbar_open(id = ns("top_ct_push"))
-        if (!is.null(shared$count_table)){
-            output$count_table <- renderRHandsontable({
-                rhandsontable(shared$count_table, readOnly = TRUE) %>%
-                    hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE)
-            })
-            }
+        output$top_snap <- renderUI({
+            shiny::validate(need(length(isolate(shared$canvas$server)) > 0, message = "No snapshot yet"))
+            tagList(
+                boxPlus(title = "Current snapshots", width = 6, closable = FALSE,
+                        orderInput(ns("snaps"), NULL, items = snaps, placeholder = 'Current snapshots',
+                                   item_class = "success", connect = c(ns("snaps"), ns('destroy')))
+                ),
+                boxPlus(title = "Snapshots to destroy", width = 6, closable = FALSE,
+                        orderInput(ns('destroy'), NULL, items = NULL, placeholder = 'Drag plots you want to destroy here',
+                                   connect = c(ns("snaps"), ns('destroy'))),
+                        br(), br(), br(),
+                        actionBttn(ns("trash"), "destroy", icon = icon("trash"),  style = "material-flat", color = "danger")
+                ),
+                tags$script(glue(.open = '@', .close = '@', '
+                  $("#@ns("destroy")@").bind("DOMSubtreeModified", function(){
+                    $(this).children(".btn").attr("class", "btn btn-danger ui-sortable-handle")
+                  })
+                ')),
+                tags$script(glue(.open = '@', .close = '@', '
+                  $("#@ns("snaps")@").bind("DOMSubtreeModified", function(){
+                    $(this).children(".btn").attr("class", "btn btn-primary ui-sortable-handle")
+                  })
+                '))
+            )
         })
-    observeEvent(input$top_bed_btn, {
-        pushbar_open(id = ns("top_bed_push"))
-        if (!is.null(shared$bed)){
-            output$bed <- renderRHandsontable({
-                rhandsontable(shared$bed, readOnly = TRUE) %>%
-                    hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE)
-            })
-        }
     })
-    observeEvent({input$close_target_push | input$close_ct_push | input$close_bed_push}, {
+    observeEvent(input$close_snap, {
         pushbar_close()
-    }) 
+    })
 }

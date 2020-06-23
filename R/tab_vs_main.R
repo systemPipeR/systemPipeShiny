@@ -1,18 +1,9 @@
-tabble_workflow <- data.frame(
-    Workflow = c(
-        ""
-    ),
-    hrefs = c(
-        ""
-    )
-
-)
 ## UI
 vs_mainUI <- function(id){
     ns <- NS(id)
     tagList(
         HTML('
-        <h1 style="color: #5e9ca0;">Visualization&nbsp;</h1>
+        <h1 style="color: var(--info);">Visualization&nbsp;</h1>
         <p><strong>This is the visualization module. The main purpose is to help
         you quickly generate some plots.&nbsp;</strong></p>
         <p><strong>There are <em>two</em> ways you can use this tab:</strong></p>

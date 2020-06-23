@@ -28,6 +28,7 @@ server <- function(input, output, session) {
     # other tabs
     callModule(topServer, "top", shared = shared)
     # callModule(rightServer, "right", shared = shared)
+    callModule(canvasServer, "canvas", shared = shared)
     callModule(aboutServer, "about")
 
     # global server logic, usually no need to change below

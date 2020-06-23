@@ -356,9 +356,9 @@ renderDesc <- function(id, desc) {
         <div class="collapse desc-body" id="{id}" aria-expanded="false">
          {HTML(markdown::renderMarkdown(text = glue(desc)))}
         </div>
+
         <a role="button" class="collapsed" data-toggle="collapse"
-           href="#{id}" aria-expanded="false"
-           aria-controls="{id}">
+           href="#{id}" aria-expanded="false" aria-controls="{id}">
         </a>
       </div>
     '))
@@ -482,12 +482,11 @@ devComponents <- function(element, shared=NULL){
 #' shinyApp(ui, server)
 uiExamples <- function(ns){
     tagList(
-        h3("Some examples for plotting controls"),
+        h4("Some examples for plotting controls"),
         boxPlus(
             width = 12, closable = FALSE, collapsible = TRUE,
             footer = dropdownButton(
                 size = "sm", icon = icon("code"), width = "500px",
-                footer_padding = FALSE,
                 tooltip = tooltipOptions(title = "Click to see code"),
                 label = "see code",
                 aceEditor(
@@ -671,9 +670,9 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
     title_text <- if(is.empty(title)) ''
     else glue('<span class="text-info">{title}</span><br>')
     hex <-  if(is.empty(hex_link)) {
-        glue('<polygon points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="#0275d8" stroke-width="2"/>')
+        glue('<polygon points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/>')
     } else {
-        glue('<a href="{hex_link}" target="_blank"> <polygon class="hex" points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="#0275d8" stroke-width="2"/></a>')
+        glue('<a href="{hex_link}" target="_blank"> <polygon class="hex" points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/></a>')
     }
     footer_text <- if(is.empty(footer)) ''
     else glue('<text x=10 y=115><a class="powerby-link" href="{footer_link}" target="_blank">{footer}</a></text>')

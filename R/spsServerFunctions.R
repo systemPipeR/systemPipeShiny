@@ -568,13 +568,11 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 #' @param data any type of R object you want to store and use in other tabs
 #' @param shared the SPS shared reactivevalues object
 #' @param type one of data, plot
-#' @param tabname tab name of current tab if using `addData` method and tab
-#' name to get data from if using `getData`.
+#' @param tab_id tab ID of current tab if using `addData` method and tab
+#' ID to get data from if using `getData`.
 #' @return Nothing to return with `add` method and returns original object for
 #' the `get` method
 #' @export
-#' @details `addPlot`, `getPlot` are wrappers of `add/getData` method where
-#' \code{type = "plot"}
 #' @examples
 #' library(shiny)
 #' library(shinytoastr)
@@ -611,18 +609,17 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 #'     })
 #' }
 #' shinyApp(ui, server)
-addData <- function(data, shared, tabname, type = "data") {
+addData <- function(data, shared, tab_id) {
     shinyCatch({
         assert_that(inherits(shared, "reactivevalues"))
-        assert_that(is.character(tabname))
-        type <- match.arg(type, c("data", "plot"))
-        findTabInfo(tabname)
-        if(not_empty(shared[[type]][[tabname]]) & getOption('sps')$verbose)
-            warning(c(glue("found {tabname} has already been added to "),
+        assert_that(is.character(tab_id))
+        findTabInfo(tab_id)
+        if(not_empty(shared[['data']][[tab_id]]) & getOption('sps')$verbose)
+            message(c(glue("found {tab_id} has already been added to "),
                            "`shared$data_intask` list, overwrite"))
-        shared[[type]][[tabname]] <- data
+        shared[['data']][[tab_id]] <- data
         if(getOption('sps')$verbose) {
-            info <- glue("Data for namespace {tabname} added")
+            info <- glue("Data for namespace {tab_id} added")
             message(info)
             toastr_info(info, timeOut = 3000, position = "bottom-right")
         }
@@ -632,33 +629,21 @@ addData <- function(data, shared, tabname, type = "data") {
 
 #' @rdname addData
 #' @export
-getData <- function(tabname, shared, type = "data"){
+getData <- function(tab_id, shared){
     shinyCatch({
         assert_that(inherits(shared, "reactivevalues"))
-        assert_that(is.character(tabname) & length(tabname) < 2,
+        assert_that(is.character(tab_id) & length(tab_id) < 2,
                     msg = "A character string of one tab name each time")
-        type <- match.arg(type, c("data", "plot"))
-        tab_info <- findTabInfo(tabname)$tab_labels
-        if(is.empty(shared[[type]][[tabname]]))
+        tab_info <- findTabInfo(tab_id)$tab_labels
+        if(is.empty(shared[['data']][[tab_id]]))
         stop(glue("Data from tab `{tab_info}` is empty"))
         if(getOption('sps')$verbose){
             success_info <- glue("data for tab `{tab_info} found`")
             toastr_info(success_info, timeOut = 3000, position = "bottom-right")
         }
-        return(shared[[type]][[tabname]])
+        return(shared[['data']][[tab_id]])
     }, blocking_level = "error")
 }
-
-#' @rdname addData
-addPlot <- function(plot, shared, tabname){
-    addData(plot, shared, tabname, type = "plot")
-}
-
-#' @rdname addData
-getPlot <- function(tabname, shared){
-    return(getData(tabname, shared, type = "plot"))
-}
-
 
 
 

@@ -72,6 +72,7 @@ $(document).ready(function() {
 
 
 // change plot document size based on distance to bottom
+// TODO may be problem here
 function stretchSpsPlot() {
     var stretch_elem = $(".sps-plot-container");
     var parent_pane = stretch_elem.parents(".tab-pane");

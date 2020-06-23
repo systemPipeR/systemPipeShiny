@@ -1,3 +1,35 @@
+/*Bootstrap colors*/
+:root {
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #fff;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #337ab7;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
 /*
 systemPipeShiny CSS Styles
 */
@@ -5,7 +37,7 @@ systemPipeShiny CSS Styles
 /*buttons, default is too ugly*/
 .btn-default {
   color: #fff;
-  background-color: #337ab7;
+  background-color: var(--primary);
   border-color: #2e6da4;
 }
 .btn-default:hover{
@@ -67,7 +99,7 @@ img-gallery:hover {
 
 /*for sps hyperlink button  and tables*/
 .href-button {
-  background-color: #0275d8;
+  background-color: var(--primary);
   border: none;
   border-radius: 10px 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -167,7 +199,7 @@ img-gallery:hover {
 
 .powerby-link {
   font: italic bold 25px serif;
-  fill: #0275d8;
+  fill: var(--primary);
   opacity: 0.5;
 }
 
@@ -176,7 +208,7 @@ img-gallery:hover {
 }
 
 .hex-box {
-  width: 4vw;
+  width: 3vw;
   min-width: 50px;
   display: inline-block;
   padding-top: 0;
@@ -185,7 +217,7 @@ img-gallery:hover {
 .hex-container span {
  display: inline-block;
  text-align: center;
- font-size: 0.8vw;
+ font-size: 0.6vw;
 }
 
 .hex-panel {
@@ -202,7 +234,37 @@ img-gallery:hover {
 
 .hex-panel h5 {
   display: inline-block;
+  margin-left: 20px;
   font-weight: 900;
-  font-size: 1.25vw;
+  font-size: 1em;
   transform: translateY(-2.2vw);
 }
+
+/* sps canvas*/
+.snap-drag {
+  opacity: 0;
+}
+
+.snap-drag:hover {
+  opacity: 1;
+}
+
+.snap-drag button{
+  position: absolute;
+  outline: none;
+  background-color: Transparent;
+  top: 2px;
+  right: 4px;
+}
+
+.snap-drag button:focus {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.snap-drag h4{
+  margin-bottom: 0;
+  padding-bottom: 10px;
+}
+
+

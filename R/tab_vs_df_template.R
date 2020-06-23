@@ -17,7 +17,10 @@ df_templateUI <- function(id){
     ```
     "
     tagList(
-        h2("Title for this kind of dataframe"),
+        h2("Title for this kind of dataframe"), spsHr(),
+        hexPanel(ns("poweredby"), "POWERED BY:",
+                 hex_imgs = c("sps/systemPipe_small.png"),
+                 hex_titles = c("SystemPipeShiny")),
         renderDesc(id = ns("desc"), desc),
         pgPaneUI(ns("pg"),
             titles = c("Package Requirements", "Input Data Validation", "Preprocess"),
@@ -72,7 +75,7 @@ df_templateUI <- function(id){
 ## server
 df_templateServer <- function(input, output, session, shared){
     ns <- session$ns
-    tabname <- "df_template"
+    tab_id <- "df_template"
     # start the tab by checking if required packages are installed
     observeEvent(input$validate_start, {
         print(class(session))
@@ -181,7 +184,7 @@ df_templateServer <- function(input, output, session, shared){
         req(!is.null(df_processed))
         pgPaneUpdate('pg', 'prepro', 100)
         # add data to task
-        addData(df_processed,shared, tabname)
+        addData(df_processed, shared, tab_id)
         toastr_success(
             title = "Preprocess done!",
             message = "You can choose your plot options below",

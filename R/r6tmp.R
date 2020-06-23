@@ -129,7 +129,6 @@ mod2_UI <- function(id){
             label = "Number of columns per row to initiate canvas:",
             choices = c(1:4, 12), selected = 2, grid = TRUE
         ),
-        actionButton(ns("hide_title"), "Hide Plot Title"),
         fluidRow(uiOutput(ns("new")), class = "sps-canvas")
     )
 }

@@ -84,6 +84,8 @@ options(shiny.autoreload = TRUE) # takes some computer power, you may consider t
 
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-
+# add a global container to save plot snap shots
+sps_plots <- plotContainer$new()
 ####### you can add additional code #########
+
 
