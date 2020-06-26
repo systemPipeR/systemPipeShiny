@@ -53,7 +53,6 @@ canvasServer <- function(input, output, session, shared){
         print(new_plot_id)
         shared$canvas$ui[[new_plot_id]] <- list(sps_plots$getUI(tab_id, ns(new_plot_id)), ns(new_plot_id))
         shared$canvas$server[[new_plot_id]] <- sps_plots$getServer(tab_id)
-        # TODO add option of draggable
     })
     observeEvent(shared$canvas$server, {
         output$snap_choose <- renderUI({
