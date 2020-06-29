@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-.swp
 .idea
 packrat/lib*/
 packrat/src/

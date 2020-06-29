@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny
 Version: 0.0.9
-Date: 2020-02-18
+Date: 2020-06-11
 Authors@R: c(
     person(given = "Daniela", family = "Cassol", role = c("aut", "cre"), email = "danielac@ucr.edu"),
     person(given = "Thomas", family = "Girke", role = c("aut"), email = "thomas.girke@ucr.edu"),
@@ -11,5 +11,6 @@ Description: systemPipeShiny
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
-Depends: shiny, shinydashboard, shinydashboardPlus, shinyWidgets, pushbar, rhandsontable, magrittr, shinyjs, shinyTree, networkD3, plotly, systemPipeR, systemPipeRdata
+Depends: shiny, shinydashboard, shinydashboardPlus, shinyWidgets, pushbar, rhandsontable, magrittr, shinyjs, shinyTree, networkD3, plotly, systemPipeR, systemPipeRdata, ggplot2
 URL: http://girke.bioinformatics.ucr.edu/systemPipeR/
+RoxygenNote: 7.1.1
