@@ -1,0 +1,526 @@
+# ToDo
+
+## Initialization function
+
+## S4 Class
+
+## Errors
+
+1: pkgload is incompatible with the current version of R. `load_all()` may function incorrectly.
+2: multiple methods tables found for ‘which’
+3: replacing previous import ‘shiny::runExample’ by ‘shinyjs::runExample’ when loading ‘systemPipeShiny’
+4: replacing previous import ‘shinyWidgets::alert’ by ‘shinyjs::alert’ when loading ‘systemPipeShiny’
+5: replacing previous import ‘shinyjs::show’ by ‘systemPipeR::show’ when loading ‘systemPipeShiny’
+6: In FUN(X[[i]], ...) : PCRE pattern compilation error "quantifier does not follow a repeatable item' at '*\.swp'
+
+
+- [systemPipeShiny/R/runSPS.R:42] @example spans multiple lines. Do you want @examples?
+- [systemPipeShiny/R/spsServerFunctions.R:29] @example spans multiple lines. Do you want @examples?
+- [systemPipeShiny/R/spsServerFunctions.R:158] @ unknown tag
+- [systemPipeShiny/R/spsServerFunctions.R:510] @example spans multiple lines. Do you want @examples?
+- [systemPipeShiny/R/spsSupport.R:86] @param requires name and description
+- [systemPipeShiny/R/spsSupport.R:87] @param requires name and description
+- [systemPipeShiny/R/spsSupport.R:140] @examples requires a value
+- [systemPipeShiny/R/spsUIcollections.R:14] @examples requires a value
+- [systemPipeShiny/R/spsUIcollections.R:77] @examples requires a value
+- [systemPipeShiny/R/spsUIcollections.R:164] @example spans multiple lines. Do you want @examples?
+- [systemPipeShiny/R/spsUIcollections.R:322] @example spans multiple lines. Do you want @examples?
+
+### Checking
+
+Status: 1 ERROR, 7 WARNINGs, 5 NOTEs
+
+R CMD check systemPipeShiny_0.0.9.tar.gz 
+* using log directory ‘/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny.Rcheck’
+* using R Under development (unstable) (2020-04-30 r78337)
+* using platform: x86_64-pc-linux-gnu (64-bit)
+* using session charset: UTF-8
+* checking for file ‘systemPipeShiny/DESCRIPTION’ ... OK
+* this is package ‘systemPipeShiny’ version ‘0.0.9’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... NOTE
+Depends: includes the non-default packages:
+  'shiny', 'shinydashboard', 'shinydashboardPlus', 'shinyWidgets',
+  'pushbar', 'rhandsontable', 'magrittr', 'shinyjs', 'shinyTree',
+  'networkD3', 'plotly', 'systemPipeR', 'systemPipeRdata', 'ggplot2'
+Adding so many packages to the search path is excessive and importing
+selectively is preferable.
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘systemPipeShiny’ can be installed ... WARNING
+Found the following significant warnings:
+  Warning: no function found corresponding to methods exports from ‘BSgenome’ for: ‘releaseName’
+  Warning: pkgload is incompatible with the current version of R. `load_all()` may function incorrectly.
+  Warning: replacing previous import ‘shiny::runExample’ by ‘shinyjs::runExample’ when loading ‘systemPipeShiny’
+  Warning: replacing previous import ‘shinyWidgets::alert’ by ‘shinyjs::alert’ when loading ‘systemPipeShiny’
+  Warning: replacing previous import ‘shinyjs::show’ by ‘systemPipeR::show’ when loading ‘systemPipeShiny’
+  Warning: replacing previous import ‘plotly::last_plot’ by ‘ggplot2::last_plot’ when loading ‘systemPipeShiny’
+See ‘/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny.Rcheck/00install.out’ for details.
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Malformed Description field: should contain one or more complete sentences.
+* checking top-level files ... NOTE
+File
+  LICENSE
+is not mentioned in the DESCRIPTION file.
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... WARNING
+'::' or ':::' imports not declared from:
+  ‘DT’ ‘crayon’ ‘markdown’ ‘particlesjs’ ‘rlang’ ‘shinytoastr’ ‘tibble’
+  ‘yaml’
+'loadNamespace' or 'requireNamespace' calls not declared from:
+  ‘crayon’ ‘particlesjs’
+Unexported object imported by a ':::' call: ‘shiny:::reactiveStop’
+  See the note in ?`:::` about the use of this operator.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+configServer: warning in shinyCatch(readLines(rmd_file_path()) %>%
+  paste(collapse = "\n"), blocking = "error"): partial argument match
+  of 'blocking' to 'blocking_level'
+spsValidator: warning in shinyCatch(stop(glue("Error(s) while running
+  through validator: ", "{names(validate_list)[index]} ")), blocking =
+  "error"): partial argument match of 'blocking' to 'blocking_level'
+spsValidator: warning in shinyCatch(stop(failed_msg), blocking =
+  "error"): partial argument match of 'blocking' to 'blocking_level'
+.change_branch: no visible global function definition for ‘str_which’
+.change_branch: no visible binding for global variable ‘.’
+.change_branch: no visible global function definition for
+  ‘str_remove_all’
+.change_branch: no visible global function definition for ‘str_remove’
+.change_branch: no visible global function definition for
+  ‘str_replace_all’
+.find_long_branch: no visible global function definition for
+  ‘str_split’
+.find_long_branch : <anonymous>: no visible global function definition
+  for ‘str_remove_all’
+.find_long_branch: no visible binding for global variable ‘.’
+.make_plot: no visible global function definition for ‘str_replace_all’
+.make_plot: no visible global function definition for ‘str_split’
+.make_plot : <anonymous>: no visible global function definition for
+  ‘str_remove_all’
+.parse_step: no visible global function definition for ‘str_remove_all’
+.parse_step: no visible global function definition for ‘str_split’
+.parse_step: no visible global function definition for ‘str_which’
+.parse_step : <anonymous>: no visible binding for global variable ‘.’
+.parse_step: no visible binding for global variable ‘.’
+.parse_step : <anonymous>: no visible global function definition for
+  ‘str_which’
+ViewSpsDefaults: no visible global function definition for ‘glue’
+addData: no visible global function definition for ‘assert_that’
+addData: no visible global function definition for ‘not_empty’
+addData: no visible global function definition for ‘glue’
+addData: no visible global function definition for ‘toastr_info’
+checkNameSpace: no visible global function definition for ‘is.empty’
+checkNameSpace: no visible global function definition for ‘not_empty’
+checkNameSpace: no visible global function definition for ‘glue’
+check_target : checker4: no visible global function definition for
+  ‘str_detect’
+clearableTextInput: no visible global function definition for ‘glue’
+configServer: no visible global function definition for
+  ‘updateAceEditor’
+configUI: no visible global function definition for ‘aceEditor’
+degServer: no visible binding for global variable ‘count_list’
+deg_deseq2: no visible binding for global variable ‘Comparisons’
+deg_deseq2: no visible binding for global variable ‘Counts’
+deg_deseq2: no visible binding for global variable ‘Type’
+deg_edgeR: no visible binding for global variable ‘Comparisons’
+deg_edgeR: no visible binding for global variable ‘Counts’
+deg_edgeR: no visible binding for global variable ‘Type’
+df_countServer: no visible global function definition for ‘is.empty’
+df_countServer: no visible global function definition for ‘head’
+df_countUI: no visible global function definition for ‘glue’
+df_degcountUI: no visible global function definition for ‘glue’
+df_edgeRUI: no visible global function definition for ‘glue’
+df_target: no visible global function definition for ‘is.empty’
+df_target: no visible global function definition for ‘read.csv’
+df_targetsServer: no visible global function definition for ‘is.empty’
+df_targetsServer: no visible global function definition for ‘head’
+df_targetsUI: no visible global function definition for ‘glue’
+df_templateServer: no visible global function definition for
+  ‘not_empty’
+df_templateServer : <anonymous>: no visible global function definition
+  for ‘is’
+df_templateServer: no visible global function definition for
+  ‘toastr_success’
+dynamicFile: no visible global function definition for ‘is.empty’
+dynamicFile: no visible global function definition for
+  ‘shinyFilesButton’
+dynamicFile: no visible global function definition for ‘glue’
+dynamicFileServer: no visible global function definition for
+  ‘getVolumes’
+dynamicFileServer: no visible global function definition for
+  ‘shinyFileChoose’
+dynamicFileServer: no visible global function definition for
+  ‘parseFilePaths’
+dynamicFileServer: no visible global function definition for ‘glue’
+edaServer: no visible binding for global variable ‘count_list’
+edgeR_up: no visible global function definition for ‘is.empty’
+edgeR_up: no visible global function definition for ‘read.csv’
+findTabInfo: no visible global function definition for ‘assert_that’
+findTabInfo: no visible binding for global variable ‘tab_info’
+findTabInfo: no visible global function definition for ‘vroom’
+findTabInfo: no visible global function definition for ‘glue’
+findTabInfo: no visible global function definition for ‘str_detect’
+findTabInfo: no visible global function definition for ‘not_empty’
+findTabInfo : <anonymous>: no visible global function definition for
+  ‘str_which’
+findTabInfo : <anonymous>: no visible global function definition for
+  ‘glue’
+findTabInfo : <anonymous>: no visible global function definition for
+  ‘not_empty’
+findTreeParent : <anonymous>: no visible global function definition for
+  ‘str_detect’
+findTreeParent : <anonymous>: no visible global function definition for
+  ‘str_remove’
+findTreeParent: no visible global function definition for ‘str_sort’
+gallery: no visible global function definition for ‘glue’
+gallery: no visible global function definition for ‘assert_that’
+getData: no visible global function definition for ‘assert_that’
+getData: no visible global function definition for ‘is.empty’
+getData: no visible global function definition for ‘glue’
+getData: no visible global function definition for ‘toastr_info’
+hot_count: no visible global function definition for ‘is.empty’
+hot_count: no visible global function definition for ‘read.csv’
+hot_deg: no visible global function definition for ‘is.empty’
+hot_deg: no visible global function definition for ‘read.csv’
+hot_target: no visible global function definition for ‘vroom’
+hot_target: no visible global function definition for ‘cols’
+hrefTab: no visible global function definition for ‘glue’
+hrefTab: no visible global function definition for ‘assert_that’
+hrefTable: no visible global function definition for ‘glue’
+hrefTable: no visible global function definition for ‘assert_that’
+hrefTable : <anonymous>: no visible global function definition for
+  ‘assert_that’
+hrefTable : <anonymous>: no visible global function definition for
+  ‘glue’
+hrefTable : <anonymous>: no visible global function definition for
+  ‘glue_collapse’
+loadDF: no visible global function definition for ‘cols’
+loadDF: no visible global function definition for ‘is.empty’
+loadDF: no visible global function definition for ‘vroom’
+load_count: no visible global function definition for ‘read.delim’
+load_count: no visible global function definition for ‘read.table’
+msg: no visible global function definition for ‘glue’
+pgPaneUI: no visible global function definition for ‘str_detect’
+pgPaneUI: no visible binding for global variable ‘.’
+pgPaneUI: no visible global function definition for ‘assert_that’
+pgPaneUI : <anonymous>: no visible global function definition for
+  ‘glue’
+pgPaneUI: no visible global function definition for ‘glue’
+pgPaneUpdate: no visible global function definition for ‘assert_that’
+pgPaneUpdate: no visible global function definition for ‘glue’
+plotWF: no visible global function definition for ‘assert_that’
+plotWF: no visible global function definition for ‘is.writeable’
+plotWF: no visible global function definition for ‘is.count’
+plotWF: no visible global function definition for ‘dot’
+plotWF: no visible global function definition for ‘rsvg_svg’
+plotWF: no visible global function definition for ‘rsvg_png’
+plot_boxServer: no visible binding for global variable ‘Comparisons’
+plot_boxServer: no visible binding for global variable ‘Counts’
+plot_boxServer: no visible binding for global variable ‘Type’
+plot_templateServer: no visible global function definition for
+  ‘toastr_success’
+plot_templateServer: no visible global function definition for
+  ‘jqui_resizable’
+plot_templateServer: no visible binding for global variable
+  ‘Sepal.Length’
+plot_templateServer: no visible binding for global variable
+  ‘Sepal.Width’
+plot_templateServer: no visible binding for global variable ‘Species’
+readComp: no visible binding for global variable ‘args_bam’
+readComp: no visible global function definition for ‘read.delim’
+readComp: no visible global function definition for ‘combn’
+renderDesc: no visible global function definition for ‘glue’
+resolveOptions: no visible global function definition for ‘glue’
+runSPS: no visible global function definition for ‘glue’
+run_CLUST: no visible global function definition for
+  ‘DESeqDataSetFromMatrix’
+run_CLUST: no visible global function definition for ‘DESeq’
+run_CLUST: no visible global function definition for ‘rlog’
+run_CLUST: no visible global function definition for
+  ‘varianceStabilizingTransformation’
+run_CLUST: no visible global function definition for ‘DESeqTransform’
+run_CLUST: no visible global function definition for ‘cor’
+run_CLUST: no visible global function definition for ‘assay’
+run_CLUST: no visible global function definition for ‘hclust’
+run_CLUST: no visible global function definition for ‘dist’
+run_CLUST: no visible global function definition for ‘plot.phylo’
+run_CLUST: no visible global function definition for ‘as.phylo’
+run_GLM: no visible global function definition for
+  ‘DESeqDataSetFromMatrix’
+run_GLM: no visible global function definition for ‘counts’
+run_GLM: no visible global function definition for ‘glmpca’
+run_GLM: no visible binding for global variable ‘dim1’
+run_GLM: no visible binding for global variable ‘dim2’
+run_HEAT: no visible global function definition for
+  ‘DESeqDataSetFromMatrix’
+run_HEAT: no visible global function definition for ‘DESeq’
+run_HEAT: no visible global function definition for ‘rlog’
+run_HEAT: no visible global function definition for
+  ‘varianceStabilizingTransformation’
+run_HEAT: no visible global function definition for ‘DESeqTransform’
+run_HEAT: no visible global function definition for ‘cor’
+run_HEAT: no visible global function definition for ‘assay’
+run_LIMMA: no visible global function definition for ‘read.delim’
+run_LIMMA: no visible global function definition for ‘DGEList’
+run_LIMMA: no visible global function definition for ‘cpm’
+run_LIMMA: no visible global function definition for ‘calcNormFactors’
+run_LIMMA: no visible global function definition for ‘model.matrix’
+run_LIMMA: no visible global function definition for ‘makeContrasts’
+run_LIMMA: no visible global function definition for ‘lmFit’
+run_LIMMA: no visible global function definition for ‘eBayes’
+run_LIMMA: no visible global function definition for ‘decideTests’
+run_LIMMA: no visible global function definition for ‘topTable’
+run_LIMMA: no visible global function definition for ‘voom’
+run_MDS: no visible global function definition for
+  ‘DESeqDataSetFromMatrix’
+run_MDS: no visible global function definition for ‘DESeq’
+run_MDS: no visible global function definition for ‘rlog’
+run_MDS: no visible global function definition for
+  ‘varianceStabilizingTransformation’
+run_MDS: no visible global function definition for ‘cor’
+run_MDS: no visible global function definition for ‘assay’
+run_MDS: no visible global function definition for ‘dist’
+run_MDS: no visible global function definition for ‘cmdscale’
+run_MDS: no visible binding for global variable ‘X1’
+run_MDS: no visible binding for global variable ‘X2’
+run_PCA: no visible global function definition for
+  ‘DESeqDataSetFromMatrix’
+run_PCA: no visible global function definition for ‘DESeq’
+run_PCA: no visible global function definition for ‘rlog’
+run_PCA: no visible global function definition for
+  ‘varianceStabilizingTransformation’
+run_PCA: no visible global function definition for ‘DESeqTransform’
+run_PCA: no visible global function definition for ‘plotPCA’
+run_PCA: no visible binding for global variable ‘PC1’
+run_PCA: no visible binding for global variable ‘PC2’
+run_TSNE: no visible global function definition for ‘Rtsne’
+run_TSNE: no visible binding for global variable ‘tsne_x’
+run_TSNE: no visible binding for global variable ‘tsne_y’
+shinyCatch : <anonymous>: no visible global function definition for
+  ‘toastr_info’
+shinyCatch : <anonymous>: no visible global function definition for
+  ‘toastr_warning’
+shinyCatch : <anonymous>: no visible global function definition for
+  ‘toastr_error’
+shinyCatch : <anonymous>: no visible global function definition for
+  ‘is.empty’
+shinyCheckSpace: no visible global function definition for ‘str_remove’
+shinyCheckSpace: no visible global function definition for ‘is.empty’
+spsValidator : <anonymous> : <anonymous>: no visible global function
+  definition for ‘glue’
+spsValidator: no visible global function definition for ‘glue’
+spsValidator: no visible global function definition for ‘is_bool’
+spsValidator: no visible binding for global variable ‘.’
+spsValidator: no visible global function definition for ‘glue_collapse’
+spsValidator: no visible global function definition for
+  ‘toastr_success’
+step2listD3 : findChildren: no visible global function definition for
+  ‘na.omit’
+subsetRmd: no visible global function definition for ‘assert_that’
+subsetRmd: no visible global function definition for ‘not_empty’
+subsetRmd: no visible global function definition for ‘is.string’
+subsetRmd: no visible global function definition for ‘str_which’
+subsetRmd: no visible global function definition for ‘str_remove’
+subsetRmd: no visible global function definition for ‘str_extract’
+subsetRmd: no visible global function definition for ‘str_replace_all’
+subsetRmd: no visible global function definition for ‘str_replace’
+subsetRmd: no visible binding for global variable ‘.’
+targetServer: no visible global function definition for ‘not_empty’
+targetServer: no visible binding for global variable ‘.’
+targetServer: no visible global function definition for ‘str_detect’
+targetServer: no visible global function definition for
+  ‘updateAceEditor’
+targetServer: no visible global function definition for ‘toastr_info’
+targetServer: no visible global function definition for ‘is.empty’
+targetUI: no visible global function definition for ‘glue’
+targetUI: no visible global function definition for ‘aceEditor’
+topServer: no visible global function definition for ‘head’
+uiExamples: no visible global function definition for ‘aceEditor’
+uiExamples: no visible global function definition for ‘glue’
+uploadServer: no visible binding for '<<-' assignment to ‘count_list’
+uploadServer: no visible binding for global variable ‘count_df’
+uploadServer: no visible binding for global variable ‘count_list’
+useSps: no visible global function definition for ‘useToastr’
+verifyConfig: no visible global function definition for ‘glue’
+verifyConfig : <anonymous>: no visible global function definition for
+  ‘glue’
+verifyConfig: no visible binding for global variable ‘.’
+wfServer: no visible global function definition for ‘str_remove_all’
+Undefined global functions or variables:
+  . Comparisons Counts DESeq DESeqDataSetFromMatrix DESeqTransform
+  DGEList PC1 PC2 Rtsne Sepal.Length Sepal.Width Species Type X1 X2
+  aceEditor args_bam as.phylo assay assert_that calcNormFactors
+  cmdscale cols combn cor count_df count_list counts cpm decideTests
+  dim1 dim2 dist dot eBayes getVolumes glmpca glue glue_collapse hclust
+  head is is.count is.empty is.string is.writeable is_bool
+  jqui_resizable lmFit makeContrasts model.matrix na.omit not_empty
+  parseFilePaths plot.phylo plotPCA read.csv read.delim read.table rlog
+  rsvg_png rsvg_svg shinyFileChoose shinyFilesButton str_detect
+  str_extract str_remove str_remove_all str_replace str_replace_all
+  str_sort str_split str_which tab_info toastr_error toastr_info
+  toastr_success toastr_warning topTable tsne_x tsne_y updateAceEditor
+  useToastr varianceStabilizingTransformation voom vroom
+Consider adding
+  importFrom("methods", "is")
+  importFrom("stats", "cmdscale", "cor", "dist", "hclust",
+             "model.matrix", "na.omit")
+  importFrom("utils", "combn", "head", "read.csv", "read.delim",
+             "read.table")
+to your NAMESPACE file (and ensure that your DESCRIPTION Imports field
+contains 'methods').
+* checking Rd files ... NOTE
+prepare_Rd: hrefTable.Rd:34-36: Dropping empty section \value
+prepare_Rd: msg.Rd:19-21: Dropping empty section \value
+prepare_Rd: quiet.Rd:12-14: Dropping empty section \value
+prepare_Rd: uiExamples.Rd:12-14: Dropping empty section \value
+prepare_Rd: useSps.Rd:10-12: Dropping empty section \value
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘aboutServer’ ‘aboutUI’ ‘check_target’ ‘compare.names’ ‘configServer’
+  ‘configUI’ ‘count_desc’ ‘dashboardServer’ ‘dashboardUI’ ‘degServer’
+  ‘degUI’ ‘deg_venn’ ‘degcounts_desc’ ‘df_countServer’ ‘df_countUI’
+  ‘df_degcountServer’ ‘df_degcountUI’ ‘df_edgeRServer’ ‘df_edgeRUI’
+  ‘df_target’ ‘df_targetsServer’ ‘df_targetsUI’ ‘df_templateServer’
+  ‘df_templateUI’ ‘edaServer’ ‘edaUI’ ‘edgeR_desc’ ‘edgeR_up’
+  ‘hot_count’ ‘hot_deg’ ‘hot_target’ ‘load_count’ ‘loading404’
+  ‘loadingVhelix’ ‘plotWF’ ‘plot_boxServer’ ‘plot_boxUI’
+  ‘plot_clustServer’ ‘plot_clustUI’ ‘plot_glmServer’ ‘plot_glmUI’
+  ‘plot_heatServer’ ‘plot_heatUI’ ‘plot_mdsServer’ ‘plot_mdsUI’
+  ‘plot_pcaServer’ ‘plot_pcaUI’ ‘plot_templateServer’ ‘plot_templateUI’
+  ‘plot_tsneServer’ ‘plot_tsneUI’ ‘plot_volcanoServer’ ‘plot_volcanoUI’
+  ‘readComp’ ‘renderLoading’ ‘run_LIMMA’ ‘serverLoadingScreen’
+  ‘subsetRmd’ ‘tabble_workflow’ ‘targetServer’ ‘targetUI’
+  ‘targets_desc’ ‘timeline_color’ ‘timeline_icon’ ‘timeline_pg’
+  ‘timline_pg_status’ ‘topServer’ ‘topUI’ ‘uploadServer’ ‘uploadUI’
+  ‘venn_methods’ ‘verifyConfig’ ‘vs_mainServer’ ‘vs_mainUI’ ‘wfServer’
+  ‘wfUI’ ‘wf_mainServer’ ‘wf_mainUI’ ‘xxServer’ ‘xxUI’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'addData'
+  ‘plot’
+
+Undocumented arguments in documentation object 'gallery'
+  ‘title_color’
+
+Documented arguments not in \usage in documentation object 'genGallery':
+  ‘img_height’ ‘img_width’
+
+Undocumented arguments in documentation object 'hrefTab'
+  ‘text_color’
+
+Undocumented arguments in documentation object 'renderDesc'
+  ‘id’
+
+Undocumented arguments in documentation object 'run_volcano'
+  ‘comparison’
+Documented arguments not in \usage in documentation object 'run_volcano':
+  ‘Comparison’
+
+Documented arguments not in \usage in documentation object 'shinyCatch':
+  ‘blocking’
+
+Undocumented arguments in documentation object 'spsValidator'
+  ‘title’
+
+Undocumented arguments in documentation object 'step2listD3'
+  ‘t_lvl’ ‘t_text’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... WARNING
+Argument items with no description in Rd object 'findTreeParent':
+  ‘step_names’
+
+Argument items with no description in Rd object 'step2listD3':
+  ‘start_lvl’
+
+* checking for unstated dependencies in examples ... WARNING
+'::' or ':::' import not declared from: ‘tibble’
+'library' or 'require' calls not declared from:
+  ‘shinyFiles’ ‘shinytoastr’
+* checking files in ‘vignettes’ ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  ‘VisualizationFunctions.Rmd’, ‘bibtex.bib’, ‘systemPipeShiny.Rmd’,
+    ‘systemPipeShiny.png’
+Package has no Sweave vignette sources and no VignetteBuilder field.
+* checking examples ... ERROR
+Running examples in ‘systemPipeShiny-Ex.R’ failed
+The error most likely occurred in:
+
+> ### Name: ViewSpsDefaults
+> ### Title: Print systemPipeShiny default Options
+> ### Aliases: ViewSpsDefaults
+> 
+> ### ** Examples
+> 
+> # Make sure you created the app folder and has config.yaml in config folder
+> ViewSpsDefaults()
+Error in glue("{appDir}/config/sps_options.yaml") : 
+  could not find function "glue"
+Calls: ViewSpsDefaults -> verifyConfig -> <Anonymous>
+Execution halted
+* checking PDF version of manual ... OK
+* DONE
+
+Status: 1 ERROR, 7 WARNINGs, 5 NOTEs
+
+
+## roxygen2::roxygenise()
+
+Loading systemPipeShiny
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/runSPS.R:42] @example spans multiple lines. Do you want @examples?
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsServerFunctions.R:29] @example spans multiple lines. Do you want @examples?
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsServerFunctions.R:158] @ unknown tag
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsServerFunctions.R:510] @example spans multiple lines. Do you want @examples?
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsSupport.R:86] @param requires name and description
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsSupport.R:87] @param requires name and description
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsSupport.R:140] @examples requires a value
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsUIcollections.R:14] @examples requires a value
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsUIcollections.R:77] @examples requires a value
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsUIcollections.R:164] @example spans multiple lines. Do you want @examples?
+Warning: [/home/dcassol/danielac@ucr.edu/projects/SYSPipeWF_org/systemPipeShiny/R/spsUIcollections.R:322] @example spans multiple lines. Do you want @examples?
+Warning: The existing 'NAMESPACE' file was not generated by roxygen2, and will not be overwritten.
+Warning: The existing 'NAMESPACE' file was not generated by roxygen2, and will not be overwritten.
+Writing deg_deseq2.Rd
+Writing deg_edgeR.Rd
+Writing run_CLUST.Rd
+Writing run_GLM.Rd
+Writing run_HEAT.Rd
+Writing run_MDS.Rd
+Writing run_PCA.Rd
+Writing run_TSNE.Rd
+Writing run_volcano.Rd
+Warning messages:
+1: replacing previous import ‘shiny::runExample’ by ‘shinyjs::runExample’ when loading ‘systemPipeShiny’ 
+2: replacing previous import ‘shinyWidgets::alert’ by ‘shinyjs::alert’ when loading ‘systemPipeShiny’ 
+3: replacing previous import ‘shinyjs::show’ by ‘systemPipeR::show’ when loading ‘systemPipeShiny’ 
+4: replacing previous import ‘plotly::last_plot’ by ‘ggplot2::last_plot’ when loading ‘systemPipeShiny’ 
+
+## ToDo

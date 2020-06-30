@@ -2,6 +2,7 @@
 exportPattern("^[^\\.]")
 
 ## Imports
-import(shiny, shinydashboard, shinydashboardPlus, shinyWidgets, pushbar, rhandsontable, magrittr, shinyjs, shinyTree, networkD3, plotly, systemPipeR, systemPipeRdata)
+import(shiny, shinydashboard, shinydashboardPlus, shinyWidgets, pushbar, rhandsontable, magrittr,
+       shinyjs, shinyTree, networkD3, plotly, systemPipeR, systemPipeRdata, ggplot2)
 
 

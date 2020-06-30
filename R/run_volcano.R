@@ -1,5 +1,23 @@
+#################### Plots a Volcano Plot ######################
 # library(ggplot2)
 
+#' Plots  a Volcano Plot from an \code{edgeR} or \code{DESeq2} data frame.
+#' @param DF \code{edgeR} or \code{DESeq2} data frame.
+#' @param FDR False Discovery Rate cut off for filtering.
+#' @param Fold Log Fold Change cut off for filtering.
+#' @param Comparison \code{String} names of samples or conditions that are
+#' compared. Example: "M1-A1"
+#' @examples
+#' ## Create DEG dataframe
+#' targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+#' targets <- read.delim(targetspath, comment="#")
+#' cmp <- readComp(file=targetspath, format="matrix", delim="-")
+#' countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+#' countDF <- read.delim(countfile, row.names=1)
+#' edgeDF <- run_edgeR(countDF=countDF, targets=targets, cmp=cmp[[1]], independent=FALSE, mdsplot="")
+#'
+#' ## Create Volcano plot
+#' run_volcano(DF = edgeDF,FDR = 10, Fold = 2, comparison = "M1-A1")
 run_volcano <- function(DF, FDR, Fold, comparison) {
   pval <- DF[, grep("_FDR$", colnames(DF)), drop=FALSE]
   log2FC <- DF[, grep("_logFC$", colnames(DF)), drop=FALSE]

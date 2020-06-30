@@ -2,6 +2,7 @@
 # systemPipeShiny
 
 <!-- badges: start -->
+![R-CMD-check](https://github.com/systemPipeR/systemPipeShiny/workflows/R-CMD-check/badge.svg)
 <!-- badges: end -->
 
 This tool is under devleopment, please do not install for now...
