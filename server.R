@@ -2,15 +2,21 @@
 # please do not delete comments starting with '##'
 server <- function(input, output, session) {
     shared <- reactiveValues()
-    callModule(dashboardServer, "dashboard", shared = shared)
+    # core tabs
+    core_dashboardServer("core_dashboard", shared)
+    core_topServer("core_top", shared)
+    # core_rightServer("core_right", shared)
+    core_canvasServer("core_canvas", shared)
+    core_aboutServer("core_about", shared)
     # WF tabs server
-    callModule(wf_mainServer, "wf_main", shared = shared)
-    callModule(targetServer, "wf_targets", shared = shared)
-    callModule(wfServer, "wf_wf", shared = shared)
-    callModule(configServer, "wf_config", shared = shared)
+    wf_mainServer("wf_main", shared)
+    wf_targetServer("wf_targets", shared)
+    wf_wfServer("wf_wf", shared)
+    wf_configServer("wf_config", shared)
+    wf_runServer("wf_run", shared)
     # VS tabs
-    callModule(vs_mainServer, "vs_main", shared = shared)
-    devComponents("server", shared) # for templates
+    vs_mainServer("vs_main", shared)
+    devComponents("server", shared = shared) # for templates
     ## data
     callModule(df_targetsServer, "df_targets", shared = shared)
     callModule(df_countServer, "df_count", shared = shared)
@@ -25,10 +31,6 @@ server <- function(input, output, session) {
     callModule(plot_heatServer, "plot_heat", shared = shared)
     callModule(plot_clustServer, "plot_clust", shared = shared)
     callModule(plot_volcanoServer, "plot_volcano", shared = shared)
-    # other tabs
-    callModule(topServer, "top", shared = shared)
-    # callModule(rightServer, "right", shared = shared)
-    callModule(aboutServer, "about")
 
     # global server logic, usually no need to change below
     ## pushbar set up
@@ -37,8 +39,6 @@ server <- function(input, output, session) {
     serverLoadingScreen(input, output, session)
     ## for workflow control panel
     removeClass(id = "wf-panel", asis = TRUE, class = "tab-pane")
-    shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE,
-                                  wf_conf_ready = FALSE)
     observeEvent(input$left_sidebar, {
         toggleClass(id = "wf-panel", class = "shinyjs-hide", asis = TRUE,
                     condition = !str_detect(input$left_sidebar, "^wf_"))
