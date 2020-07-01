@@ -1,8 +1,8 @@
 ## UI
-configUI <- function(id){
+wf_configUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "Configuration",
-        h2("Workflow Configuration"),
+    tagList(
+        tabTitle("Workflow Configuration"),
         fluidRow(
             radioGroupButtons(
                 inputId = ns("config_source"), label = "Choose your config file source:",
@@ -37,7 +37,7 @@ configUI <- function(id){
 }
 
 ## server
-configServer <- function(input, output, session, shared){
+wf_configServer <- function(input, output, session, shared){
     ns <- session$ns
     down_clicked <- reactiveValues(flag = 0)
 

@@ -1,15 +1,15 @@
 ## UI
-wfUI <- function(id){
+wf_wfUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "Workflow",
-        h2("Workflow"),
+    tagList(
+        tabTitle("Workflow"),
         fluidRow(
             boxPlus(title = "Display Rmd", width = 12,
-                    closable = FALSE, 
+                    closable = FALSE,
                     radioGroupButtons(
-                        inputId = ns("wf_source"), label = "Choose Workflow source:", 
+                        inputId = ns("wf_source"), label = "Choose Workflow source:",
                         selected = "upload",
-                        choiceNames = c("Upload", "Example Rmd"), 
+                        choiceNames = c("Upload", "Example Rmd"),
                         choiceValues = c("upload", "eg"),
                         justified = TRUE, status = "primary",
                         checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
@@ -31,19 +31,19 @@ wfUI <- function(id){
                            column(width = 12, style = "padding-left: 0;",
                                   downloadButton(ns("down_rmd"), "Save New Rmd"),
                                   actionButton(ns("wf_plot_step"),
-                                               label = "Plot steps", 
+                                               label = "Plot steps",
                                                icon("redo-alt")),
                                   actionButton(ns("wf_render_md"),
-                                               label = "Report preview", 
+                                               label = "Report preview",
                                                icon("redo-alt")),
                                   actionButton(ns("to_task_rmd"),
-                                               label = "Add to task", 
+                                               label = "Add to task",
                                                icon("paper-plane"))
                                   ),
                            hr(),
                            h4("Search steps in the box below"),
-                           p("Displayed only when file uploaded or use example. 
-                             When steps are chosen, you can plot steps and preview 
+                           p("Displayed only when file uploaded or use example.
+                             When steps are chosen, you can plot steps and preview
                              report document."),
                            shinyTree(ns("rmd_tree"), checkbox = TRUE)
 
@@ -51,7 +51,7 @@ wfUI <- function(id){
             ),
             column(7,
                    boxPlus(title = "Workflow you selected",
-                           width = 12, 
+                           width = 12,
                            closable  = FALSE,
                     uiOutput(ns("wf_plot_ui"))
                     )
@@ -68,13 +68,13 @@ wfUI <- function(id){
 }
 
 ## server
-wfServer <- function(input, output, session, shared){
+wf_wfServer <- function(input, output, session, shared){
     ns <- session$ns
-    
+
     rmd_file_path <- reactive({
         if (input$wf_source == "eg") "inst/extdata/systemPipeRNAseq.md" else input$rmd_file$datapath
     })
-    
+
     rmd <- reactive({
         if (!is.null(rmd_file_path())) {
             quiet(subsetRmd(p = rmd_file_path()))
@@ -89,15 +89,15 @@ wfServer <- function(input, output, session, shared){
             get_selected(input$rmd_tree, format = "names") %>% unlist() %>%
                 str_remove_all(" .*$") %>% findTreeParent()
         }
-        
+
     })
     rmd_file_new <-  reactiveVal(NULL)
     disable_wf_bt <- reactiveVal(TRUE)
-    
+
     observeEvent(input$wf_source, {
         disable("down_rmd"); disable("wf_render_md"); disable("to_task_rmd"); disable("wf_plot_step") # disable all on start
     })
-    
+
     observeEvent(input$rmd_tree, {
         if (length(rmd_tree_selected()) < 1 ) {
             disable("down_rmd"); disable("wf_render_md"); disable("to_task_rmd"); disable("wf_plot_step")
@@ -152,7 +152,7 @@ wfServer <- function(input, output, session, shared){
             )
         }
     )
-    
+
     observeEvent(c(input$wf_render_md, input$to_task_rmd), ignoreInit = TRUE, {
         rmd_file_new(tempfile(pattern = "wf", fileext = ".Rmd"))
         quiet(subsetRmd(p = rmd_file_path(),
@@ -162,12 +162,12 @@ wfServer <- function(input, output, session, shared){
         ))
         shared$wf$file <- isolate(rmd_file_new())
     })
-    
+
     observeEvent(input$to_task_rmd, {
         if (!is.null(shared$wf$file)) {
             shared$wf_flags$wf_ready = TRUE
             sendSweetAlert(
-                session = session, 
+                session = session,
                 title = "Workflow added to Task",
                 text = "You can see workflow status by clicking top right",
                 type = "success"

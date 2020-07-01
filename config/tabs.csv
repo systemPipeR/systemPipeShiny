@@ -1,18 +1,19 @@
-# List of SPS tabs,,,
-# It is suggested to use spsNewtab to add more tabs to this file ,,,
-# image paths use ‘www’ folder as root,,,
-Tab_name,Display_label,type,image
-dashboard,Home,core,
-wf_main,Workflow Main Page,core,
-wf_targets,Workflow Metadata,wf,
-wf_wf,Workflow Steps,wf,
-wf_config,Workflow Config,wf,
-wf_run,Run Workflow,wf,
-vs_main,Visualization Main Page,core,
-df_template,Template Data Tab,data,
-df_count,Count Table,data,
-df_targets,Meta Data,data,
-plot_template,Template Plot Tab,vs,plot_list/plot_point.png
-plot_point,Scatter Plot,vs,plot_list/plot_point.png
-plot_pca,PCA Plot,vs,plot_list/plot_pca.png
-about,About this App,core,
+# List of SPS tabs,,,,
+# Editing by hand is not recommended ,,,,
+# image paths use ‘www’ folder as root,,,,
+tab_name,display_label,type,type_sub,image
+core_about,About this App,core,,
+core_canvas,Plot Canvas,core,,
+core_dashboard,Home,core,,
+core_right,Right side menu,core,,
+core_top,Top push bars,core,,
+wf_main,Workflow Main Page,wf,,
+wf_config,Workflow Config,wf,,
+wf_run,Workflow Run,wf,,
+wf_target,Workflow Metadata,wf,,
+wf_wf,Workflow Steps,wf,,
+vs_main,Visualization Main Page,vs,,
+df_template,Template Data Tab,vs,data,
+plot_template,Template Plot Tab,vs,plot,plot_list/plot_point.png
+df_targets,Metadata ,vs,data,
+df_count,Count Table,vs,data,

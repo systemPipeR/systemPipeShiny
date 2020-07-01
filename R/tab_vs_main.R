@@ -2,8 +2,8 @@
 vs_mainUI <- function(id){
     ns <- NS(id)
     tagList(
+        tabTitle("Visualization"),
         HTML('
-        <h1 style="color: var(--info);">Visualization&nbsp;</h1>
         <p><strong>This is the visualization module. The main purpose is to help
         you quickly generate some plots.&nbsp;</strong></p>
         <p><strong>There are <em>two</em> ways you can use this tab:</strong></p>
@@ -23,9 +23,9 @@ vs_mainUI <- function(id){
         </ol>
              '),
         br(),
-        genHrefTable(rows = list(wf1 = c("df_targets", "df_count"), wf2 =  c("df_targets"))),
+        genHrefTable(rows = list(wf1 = c("df_targets", "df_count"), wf2 =  "data")),
         br(),
-        genGallery(type = "vs")
+        genGallery(type = "plot")
 
     )
 }

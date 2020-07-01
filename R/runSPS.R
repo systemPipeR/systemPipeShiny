@@ -66,13 +66,14 @@ resolveOptions <- function(appDir = getwd()){
     # check if in option list
     for (x in names(ops)){
         opt_value <- if (!ops[[x]] %in% sps_options[[x]] %>% unlist) {
-            message(glue(
-            "option'{x}' has unknown value '{ops[[x]]}', set to default.",
+            msg(glue(
+            "option'{x}' has unknown value '{ops[[x]]}', set to default. \n",
             "valid values are {glue_collapse(c(sps_options[[x]]), sep=', ')}"
-                ))
+                ), "SPS-WARNING", "orange")
             sps_defaults[[x]]
             } else {ops[[x]]}
-        if (is.null(opt_value)) message(glue("option'{x}' unknown, not used"))
+        if (is.null(opt_value)) msg(glue("option'{x}' unknown, not used"),
+                                    "SPS-WARNING", "orange")
         ops[[x]] <- opt_value
     }
     # replace defaults

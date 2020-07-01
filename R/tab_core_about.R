@@ -1,8 +1,8 @@
 ## UI
-aboutUI <- function(id){
+core_aboutUI <- function(id){
     ns <- NS(id)
     tags$div(
-        h2("About this app", style = "color:var(--info)"),
+        tabTitle("About this app"),
         h3("Our group"),
         fluidRow(
             widgetUserBox(
@@ -77,8 +77,8 @@ aboutUI <- function(id){
                 includeMarkdown("www/about/tgirke.md")
             )
         ),
-        h3("About SystemPipeR"),
-        tags$iframe(src="https://girke.bioinformatics.ucr.edu/systemPipeR/mydoc_systemPipeR_2.html",
+        h3("Read the manual"),
+        tags$iframe(src="https://systempiper.github.io/systemPipeShiny-book/",
                     style="border: 1px solid #AAA; width: 100%; height: 700px"),
         br(),
         tags$a(href="https://bioconductor.org/packages/release/bioc/html/systemPipeR.html",
@@ -88,7 +88,10 @@ aboutUI <- function(id){
 }
 
 ## server
-aboutServer <- function(input, output, session){
+core_aboutServer <- function(id, shared){
+    module <- function(input, output, session){
+        ns <- session$ns
 
-
+    }
+    moduleServer(id, module)
 }

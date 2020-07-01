@@ -27,7 +27,7 @@ plot_templateUI <- function(id){
                             # ns("vd_meta"),
                             ns("vd_data"))
         ),
-        h2("Title for this kind of plot"),
+        tabTitle("Title for this kind of plot"),
         spsHr(), h3("Descrption"),
         hexPanel(ns("poweredby"), "POWERED BY:",
                  hex_imgs = c("sps/systemPipeR_site.png"),

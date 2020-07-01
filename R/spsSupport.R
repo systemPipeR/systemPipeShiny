@@ -172,11 +172,11 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 }
 
 #' Find tab information from tabs.csv
-#'
+#' If `type` is not empty, `tabnames` will be ignored
 #' @importFrom vroom vroom
 #'
 #' @param tabnames vector of strings, tab names you want to get
-#' @param type tab type, one of : core, wf, data, vs
+#' @param type tab type and sub type, one of: core, wf, vs, data, plot
 #'
 #' @return a list contains `tab_labels`, `hrefs` reference, `images`
 #' @export
@@ -186,32 +186,36 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' findTabInfo(tabnames)
 findTabInfo <- function(tabnames=NULL, type = NULL) {
     if(is.null(type)) assert_that(is.character(tabnames))
-
     appDir <- options()$sps$appDir
     tabs <- if (exists("tab_info")) {
         tab_info
     } else {
-        vroom(glue("{appDir}/config/tabs.csv"), comment = "#", na = character())
+       vroom(glue("{appDir}/config/tabs.csv"), comment = "#", na = character())
     }
     if(!getOption('sps')$dev){
-        tabs <- tabs[!str_detect(tabs$Tab_name, "_template$"), ]
+        tabs <- tabs[!str_detect(tabs$tab_name, "_template$"), ]
         tabnames <- tabnames[!str_detect(tabnames, "_template$")]
         }
     if(not_empty(type)) {
-        tabs <- tabs[tabs$type %in% type, ]
-        tab_nos <- seq_len(nrow(tabs))
+        type <- match.arg(type, c('core', 'wf', 'vs', 'data', 'plot'))
+        tab_nos <- tabs$type %in% type
+        if (!any(tab_nos)) tab_nos <- tabs$type_sub %in% type
+        if (!any(tab_nos)){
+            warning(glue("This tab type '{type}' contains no tab, check the type"), call. = FALSE)
+            return(NULL)
+        }
     } else {
         tab_nos <- vapply(tabnames, function(x) {
-            tab_no <- str_which(glue("^{x}$"), tabs$Tab_name)
-            if (!not_empty(tab_no)){
+            tab_no <- str_which(glue("^{x}$"), tabs$tab_name)
+            if (is.empty(tab_no)){
                 stop(glue("Tab {x} is not in the tab list"), call. = FALSE)
-                return(NA)}
+            }
             tab_no
         }, 1)
     }
     list(
-        tab_labels = tabs$Display_label[tab_nos],
-        hrefs = glue("#shiny-tab-{tabs$Tab_name[tab_nos]}"),
+        tab_labels = tabs$display_label[tab_nos],
+        hrefs = glue("#shiny-tab-{tabs$tab_name[tab_nos]}"),
         images = tabs$image[tab_nos]
         ) %>% return()
 }

@@ -1,81 +1,81 @@
 
 ## submodule target UI
-targetUI <- function(id){
+wf_targetUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "Targets",
-             h2("Targets"),
-             fluidRow(
-               column(3,
-                      fluidRow(
-                        valueBox(width = 12,textOutput(ns("box_samples")), "Number of Samples", icon = icon("vials"))
-                      ),
-                      fluidRow(
-                        valueBox(width = 12, textOutput(ns("box_ncol")), "Number of columns", icon = icon("columns"), color = "purple")
-                      ),
-                      fluidRow(
-                        uiOutput(ns("box_missing_ui"))
-                      ),
-                      boxPlus("Missing files (first row is treated as column names)", width = 12,
-                              p("Write down your path prefix if you use relative path in targets"),
-                              clearableTextInput(ns("target_data_path"), label = "Add path prefix", placeholder = "long path"),
-                              if (getOption('sps')$mode == 'server') {
-                                  h5("File checking is disabled on 'server' mode")
-                              } else {
-                                  tagList(
-                                    selectInput(ns("column_check"), "Choose a column to check files:",
-                                              choices = "Disabled before uploading targets"),
-                                    verbatimTextOutput(ns("missing_files"))
-                                  )
-                              }
+    tagList(
+        tabTitle("Targets"),
+        fluidRow(
+            column(3,
+                   fluidRow(
+                       valueBox(width = 12,textOutput(ns("box_samples")), "Number of Samples", icon = icon("vials"))
+                   ),
+                   fluidRow(
+                       valueBox(width = 12, textOutput(ns("box_ncol")), "Number of columns", icon = icon("columns"), color = "purple")
+                   ),
+                   fluidRow(
+                       uiOutput(ns("box_missing_ui"))
+                   ),
+                   boxPlus("Missing files (first row is treated as column names)", width = 12,
+                           p("Write down your path prefix if you use relative path in targets"),
+                           clearableTextInput(ns("target_data_path"), label = "Add path prefix", placeholder = "long path"),
+                           if (getOption('sps')$mode == 'server') {
+                               h5("File checking is disabled on 'server' mode")
+                           } else {
+                               tagList(
+                                   selectInput(ns("column_check"), "Choose a column to check files:",
+                                               choices = "Disabled before uploading targets"),
+                                   verbatimTextOutput(ns("missing_files"))
+                               )
+                           }
 
-                      ),
-                      tags$style(
-                          glue(
-                          '#@{ns("missing_files")}@{
+                   ),
+                   tags$style(
+                       glue(
+                           '#@{ns("missing_files")}@{
                             height: 800px;
                           }',
-                          .open = "@{", .close = "}@"
-                          )
-                      )
-               ),
-               column(9,
-                      radioGroupButtons(
-                          inputId = ns("target_source"), label = "Choose target source:",
-                          selected = "upload",
-                          choiceNames = c("Upload", "Example PE", "Example SE"),
-                          choiceValues = c("upload", "pe", "se"),
-                          justified = TRUE, status = "primary",
-                          checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
-                      ),
-                      dynamicFile(ns("target_upload"),
-                                  "If upload, choose your target file here:",
-                                  multiple = FALSE),
-                      column(12, style = "padding: 0;",
-                        downloadButton(ns("down_targets"), "Save"),
-                        actionButton(ns("to_task_target"),
-                                     label = "Add to task",
-                                     icon("paper-plane"))
-                      ),
-                      h4("Targets header"),
-                      p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
-                      aceEditor(
-                        outputId = ns("ace_target_header"),
-                        theme = "Chrome",
-                        value = "",
-                        placeholder = "Target header lines", height = "100px"
-                      ),
-                      p("You can edit your targets (metadata) below."),
-                      p("Columns of 'FileName1', 'FileName2' are required for pair-end or 'FileName' for single-end. 'SampleName', 'Factor' are required for both."),
-                      p("Columns names should be on the first row."),
-                      rHandsontableOutput(ns("targets_df"), height = "800px")
-               )
+                           .open = "@{", .close = "}@"
+                       )
+                   )
+            ),
+            column(9,
+                   radioGroupButtons(
+                       inputId = ns("target_source"), label = "Choose target source:",
+                       selected = "upload",
+                       choiceNames = c("Upload", "Example PE", "Example SE"),
+                       choiceValues = c("upload", "pe", "se"),
+                       justified = TRUE, status = "primary",
+                       checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
+                   ),
+                   dynamicFile(ns("target_upload"),
+                               "If upload, choose your target file here:",
+                               multiple = FALSE),
+                   column(12, style = "padding: 0;",
+                          downloadButton(ns("down_targets"), "Save"),
+                          actionButton(ns("to_task_target"),
+                                       label = "Add to task",
+                                       icon("paper-plane"))
+                   ),
+                   h4("Targets header"),
+                   p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
+                   aceEditor(
+                       outputId = ns("ace_target_header"),
+                       theme = "Chrome",
+                       value = "",
+                       placeholder = "Target header lines", height = "100px"
+                   ),
+                   p("You can edit your targets (metadata) below."),
+                   p("Columns of 'FileName1', 'FileName2' are required for pair-end or 'FileName' for single-end. 'SampleName', 'Factor' are required for both."),
+                   p("Columns names should be on the first row."),
+                   rHandsontableOutput(ns("targets_df"), height = "800px")
+            )
 
-             )
+        )
     )
 }
 
 ## submodule server
-targetServer <- function(input, output, session, shared){
+wf_targetServer <- function(input, output, session, shared){
     ace_target_header_init <-
     "# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
     # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.

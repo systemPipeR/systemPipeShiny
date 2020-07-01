@@ -46,7 +46,7 @@ spsUI <- function(mainUI){
                         particlesjs::particles(
                             target_id ="loading-screen",
                             element_id = "particles",
-                            config = "www/particlesjs-config.json"
+                            config = "www/loading_themes/particlesjs-config.json"
                         )
                     }
                 }
@@ -77,9 +77,9 @@ serverLoadingScreen <- function(input, output, session){
 
 #### loading screen collections
 loading404 <- function(){
-    includeHTML("www/nyan.html")
+    includeHTML("www/loading_themes/nyan.html")
 }
 
 loadingVhelix <- function(){
-        includeHTML("www/vhelix.html")
+    includeHTML("www/loading_themes/vhelix.html")
 }

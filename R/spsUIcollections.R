@@ -14,12 +14,11 @@ NULL
 #' @examples
 useSps <- function(){
     # addResourcePath("sps", system.file("www", package = "systemPipeShiny"))
-    addResourcePath("sps", "www")
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css",
-                            href = "sps/sps.css"),
-        tags$script(src = "sps/sps.js"),
-        tags$script(src="sps/sps_update_pg.js"),
+                            href = "css/sps.css"),
+        tags$script(src = "js/sps.js"),
+        tags$script(src="js/sps_update_pg.js"),
         useToastr()
     )
 }
@@ -173,6 +172,7 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
                        title_color = "#0275d8", image_frame_size = 3) {
     tabs <- findTabInfo(tabnames, type)
+    if (is.null(tabs)) return(div("Nothing to display in gallery"))
     gallery(Id = Id, title = title, title_color = title_color,
             image_frame_size = image_frame_size,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
@@ -318,10 +318,13 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 #' @param title table title
 #' @param text_color text color for table
 #' @param ... any additional args to the html element, like class, style ...
-#'
+#' @details For `rows`, there are some specially reserved characters
+#' for type and sub types. If indicated, it will return a list of tabs matching
+#' the indicated tabs instead of searching individual tab names. These words
+#' include: core, wf, vs, data, plot.
 #' @example
 #' library(shiny)
-#' rows <- list(wf1 = c("df_raw", "df_count"), wf2 =  c("df_raw"))
+#' rows <- list(wf1 = c("df_raw", "df_count"), wf2 =  "data")
 #' ui <- fluidPage(
 #'     genHrefTable(rows)
 #' )
@@ -329,9 +332,14 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 #'
 #' }
 #' shinyApp(ui, server)
-genHrefTable <- function(rows, Id = NULL, title = "A Table of list of tabs",
+genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
                          text_color = "#0275d8", ...) {
-    tab_list <- sapply(rows, function(x) findTabInfo(x))
+    tab_list <- sapply(rows, function(x) {
+        if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
+            findTabInfo(type = x)
+        } else {findTabInfo(x)}
+
+    })
     hrefTable(Id = Id, title = title,
               text_color = text_color, item_titles = names(rows),
               item_labels = tab_list[1,], item_hrefs = tab_list[2,], ...)
@@ -768,4 +776,18 @@ hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
                  tagList(.)
         )
     }
+}
+
+#' SPS tab title
+#'
+#' @param title title text
+#' @param ... other attributes and children to this DOM
+#' @return a h2 level heading with bootstrap4 info color, bt4 color not the
+#' default bt3 info color
+#' @export
+#'
+#' @examples
+#' tabTitle("This title")
+tabTitle <- function(title, ...){
+    h2(title, style = "color:#17a2b8;", ...)
 }

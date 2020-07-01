@@ -17,15 +17,16 @@ df_templateUI <- function(id){
     ```
     "
     tagList(
-        h2("Title for this kind of dataframe"), spsHr(),
+        pgPaneUI(ns("pg"),
+                 titles = c("Package Requirements", "Data Loaded",
+                            "Input Data Validation", "Preprocess"),
+                 pg_ids = c(ns("pkg"), ns("data"), ns("vd_data"), ns("prepro"))
+        ),
+        tabTitle("Title for this kind of dataframe"), spsHr(),
         hexPanel(ns("poweredby"), "POWERED BY:",
                  hex_imgs = c("sps/systemPipe_small.png"),
                  hex_titles = c("SystemPipeShiny")),
         renderDesc(id = ns("desc"), desc),
-        pgPaneUI(ns("pg"),
-            titles = c("Package Requirements", "Input Data Validation", "Preprocess"),
-            pg_ids = c(ns("pkg"), ns("data"), ns("prepro"))
-        ),
         div(style = "text-align: center;",
             actionButton(inputId = ns("validate_start"), label = "Start with this tab")
         ),
@@ -95,6 +96,7 @@ df_templateServer <- function(input, output, session, shared){
     # load the file dynamically
     data_df <- reactive({
         df_path <- upload_path()
+        pgPaneUpdate('pg', 'data', 0) # set data progress to 0 every time reloads
         loadDF(choice = input$data_source, upload_path = df_path$datapath,
                   delim = input$delim, comment = input$comment,
                   eg_path = "inst/extdata/iris.csv")
@@ -104,6 +106,7 @@ df_templateServer <- function(input, output, session, shared){
         shiny::validate(
             need(not_empty(data_df()), message = "Data file is not loaded")
         )
+        pgPaneUpdate('pg', 'data', 100)
         DT::datatable(
             data_df(), style = "bootstrap", class = "compact",  filter = "top",
             extensions = c( 'Scroller','Buttons'), options = list(
@@ -169,7 +172,7 @@ df_templateServer <- function(input, output, session, shared){
             ),
             msg('No addition validation required')
         )
-        pgPaneUpdate('pg', 'data', 100)
+        pgPaneUpdate('pg', 'vd_data', 100)
         # if validation passed, start reprocess
         df_processed <- shinyCatch(switch(input$select_prepro,
            'md1' = {

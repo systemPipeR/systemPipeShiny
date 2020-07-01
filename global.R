@@ -58,7 +58,7 @@ library(rsvg)
 options(sps = list(
     mode = "local",
     loading_screen = FALSE,
-    loading_theme = "vhelix",
+    loading_theme = "vhelsix",
     loading_particles = TRUE,
     use_crayon = TRUE,
     verbose = TRUE,
@@ -67,6 +67,7 @@ options(sps = list(
 
 source("R/runSPS.R")
 source("R/spsSupport.R")
+source("R/plotContainer.R")
 resolveOptions(appDir = getwd())
 
 # other useful shiny options

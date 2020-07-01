@@ -3,7 +3,7 @@
 #' Initiate this container at the global level. This container is used to
 #' communicate plotting tabs with the canvas tab
 #' @importFrom R6 R6class
-#'
+#' @rdname plotContainer
 #' @examples
 #' library(shiny)
 #' library(shinydashboard)
@@ -239,7 +239,7 @@ plotContainer <- R6::R6Class("plot_container",
         #' @param skip positive integer, This function is usually bound to the
         #' plotting button. When clicked, the first number of `skip` clicks will
         #' not add the snapshot to the canvas tab.
-        #' @param reset bool, to reset the count or not
+        #' @param reset bool, to reset the count and return nothing?
         #' @return a vector of `tab_id` and count number as a character string
         notifySnap = function(tab_id, skip = 1, reset = FALSE){
             if(reset) {
