@@ -461,8 +461,8 @@ devComponents <- function(element, shared=NULL){
                 "ui_tab_df" = tabItem(tabName = "df_template", df_templateUI("df_template")),
                 "ui_tab_plot" = tabItem(tabName = "plot_template", plot_templateUI("plot_template")),
                 "server" = {
-                    callModule(df_templateServer, "df_template", shared = shared)
-                    callModule(plot_templateServer, "plot_template", shared = shared)
+                    df_templateServer("df_template", shared)
+                    plot_templateServer("plot_template", shared)
                     }
         )
     } else {tabItem("")}

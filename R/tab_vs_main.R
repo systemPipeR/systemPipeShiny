@@ -31,6 +31,11 @@ vs_mainUI <- function(id){
 }
 
 ## server
-vs_mainServer <- function(input, output, session, shared){
+vs_mainServer <- function(id, shared){
+    module <- function(input, output, session){
+        ns <- session$ns
+
+    }
+    moduleServer(id, module)
 }
 

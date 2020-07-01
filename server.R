@@ -3,19 +3,19 @@
 server <- function(input, output, session) {
     shared <- reactiveValues()
     # core tabs
-    callModule(core_dashboardServer, "core_dashboard", shared = shared)
-    callModule(core_topServer, "core_top", shared = shared)
-    # callModule(core_rightServer, "core_right", shared = shared)
+    core_dashboardServer("core_dashboard", shared)
+    core_topServer("core_top", shared)
+    # core_rightServer("core_right", shared)
     core_canvasServer("core_canvas", shared)
-    callModule(core_aboutServer, "core_about")
+    core_aboutServer("core_about", shared)
     # WF tabs server
-    callModule(wf_mainServer, "wf_main", shared = shared)
-    callModule(wf_targetServer, "wf_targets", shared = shared)
-    callModule(wf_wfServer, "wf_wf", shared = shared)
-    callModule(wf_configServer, "wf_config", shared = shared)
-    callModule(wf_runServer, "wf_run", shared = shared)
+    wf_mainServer("wf_main", shared)
+    wf_targetServer("wf_targets", shared)
+    wf_wfServer("wf_wf", shared)
+    wf_configServer("wf_config", shared)
+    wf_runServer("wf_run", shared)
     # VS tabs
-    callModule(vs_mainServer, "vs_main", shared = shared)
+    vs_mainServer("vs_main", shared)
     devComponents("server", shared = shared) # for templates
     ## data
     callModule(df_targetsServer, "df_targets", shared = shared)

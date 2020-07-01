@@ -8,7 +8,7 @@
 #
 # ## server
 # core_rightServer <- function(id, shared){
-#     module <- function(input, output, session, shared){
+#     module <- function(input, output, session){
 #         ns <- session$ns
 #         shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE)
 #         observeEvent(shared$wf_flags, {

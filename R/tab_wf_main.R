@@ -13,7 +13,11 @@ wf_mainUI <- function(id){
 
 
 ## server
-wf_mainServer <- function(input, output, session, shared){
-    # WF main tab logic
+wf_mainServer <- function(id, shared){
+    module <- function(input, output, session){
+        ns <- session$ns
+
+    }
+    moduleServer(id, module)
 }
 
