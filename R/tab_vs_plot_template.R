@@ -50,17 +50,15 @@ plot_templateUI <- function(id){
             actionButton(inputId = ns("validate_start"), label = "Start/Reload")
         ),
         spsHr(), h3("Plotting"),
-        div(
-            id = ns("tab_main"), class = "shinyjs-hide",
-            uiExamples(ns), spsHr(),
+
             fluidRow(
                 actionButton(ns("render"), label = "Render/Snapshot plot",
                              icon("paper-plane")),
             ),
             div(class = "sps-plot-container",
-                jqui_resizable(sps_plots$addUI(plotlyOutput(ns("plot")), id))
+                jqui_resizable(sps_plots$addUI(plotlyOutput(ns("plot")), id)),
+                tags$script(glue('stretchPlotTab("{ns("plot")}")'))
             )
-        )
     )
 }
 
@@ -116,7 +114,7 @@ plot_templateServer <- function(id, shared){
         })
         observeEvent(input$render, {
             output$plot <- sps_plots$addServer(renderPlotly, tab_id, {
-                ggplotly(ggplot(mydata$df, aes(Sepal.Length, Sepal.Width)) +
+                ggplotly(ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
                              geom_point(aes(colour = Species))
                 )
             })

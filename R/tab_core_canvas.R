@@ -40,13 +40,17 @@ core_canvasUI <- function(id){
             actionButton(ns("refresh"), 'Refresh Canvas')
         ), spsHr(),
         fluidRow(uiOutput(ns("snap_choose"))),
-        fluidRow(uiOutput(ns("canvas_main")), class = "sps-canvas")
+        fluidRow(
+            uiOutput(ns("canvas_main")),
+            tags$script('stretchCanvas()')
+        )
     )
 }
 
 ## server
 core_canvasServer <- function(id, shared){
     module <- function(input, output, session){
+        ns <- session$ns
         observeEvent(shared$snap_signal, {
             tab_id <- shared$snap_signal[1]
             new_plot_id <- glue("{tab_id}-{shared$snap_signal[2]}")
@@ -102,18 +106,18 @@ core_canvasServer <- function(id, shared){
                                 `plot-toggle` = ui[[i]][2]
                             )
                         ),
-                        div(class = "sps-plot-container",
-                            shared$canvas$ui[[i]][[1]]
-                        ),
+                        div(class = "sps-plot-canvas", ui[[i]][[1]]),
                         tags$script(glue(.open = '@', .close = '@',
                                          '$("#@ui[[i]][2]@-container")',
                                          '.draggable({ handle: ".snap-drag"})')),
                         tags$script(glue(.open = '@', .close = '@',
                                          '$("#@ui[[i]][2]@")',
                                          '.resizable()'))
-                    )# TODO fix jqui in wrong id
+                    )
                 }, simplify = FALSE) %>%{
-                    fluidRow(id = ns('plots'), style = glue("background-color: {input$canvas_color};"),
+                    fluidRow(id = ns('plots'),
+                             style = glue("background-color: {isolate(input$canvas_color)};"),
+                             class = "sps-canvas",
                              tagList(.)
                     )
                 }
