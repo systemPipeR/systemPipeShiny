@@ -93,7 +93,7 @@ df_templateServer <-function(id, shared){
         })
         observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
         # get upload path, note path is in upload_path()$datapath
-        upload_path <- dynamicFileServer(input, session, id = "file_upload")
+        upload_path <- dynamicFileServer(input, session, id = "file_upload") # this is reactive
         # load the file dynamically
         data_df <- reactive({
             df_path <- upload_path()

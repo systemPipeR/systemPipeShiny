@@ -30,3 +30,9 @@ verbose:
 dev:
     default: false
     other: [true]
+
+load_snap:
+    default: false
+    other: [true]
+
+

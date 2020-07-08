@@ -27,14 +27,22 @@ core_canvasUI <- function(id){
         tabTitle("systemPipeShiny Canvas"),
         spsHr(), renderDesc(id = ns("desc"), desc), spsHr(),
         fluidRow(
-            column(6, h5("Number of plots per row to initiate canvas:"),
-                sliderTextInput(inputId = ns("ncols"), label = NULL, choices = c(1:4, 12),
-                                selected = 2, grid = TRUE
-            )),
-            column(6, h5("Choose canvas background color"),
-                   colourpicker::colourInput(ns("canvas_color"),
-                                                label = NULL, "white",
-                                                allowTransparent = TRUE))
+            column(6,
+                h5("Number of plots per row to initiate canvas:"),
+                sliderTextInput(inputId = ns("ncols"),
+                                label = NULL,
+                                choices = c(1:4, 12),
+                                selected = 2,
+                                grid = TRUE
+                )
+            ),
+            column(6,
+                h5("Choose canvas background color"),
+                colourpicker::colourInput(
+                    ns("canvas_color"),
+                    label = NULL, "white",
+                    allowTransparent = TRUE)
+            )
         ),
         div(style = "text-align: center;",
             actionButton(ns("refresh"), 'Refresh Canvas')
@@ -51,24 +59,33 @@ core_canvasUI <- function(id){
 core_canvasServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
+        # receive snap singal
         observeEvent(shared$snap_signal, {
             tab_id <- shared$snap_signal[1]
             new_plot_id <- glue("{tab_id}-{shared$snap_signal[2]}")
-            print(new_plot_id)
             shared$canvas$ui[[new_plot_id]] <- list(sps_plots$getUI(tab_id, ns(new_plot_id)), ns(new_plot_id))
             shared$canvas$server[[new_plot_id]] <- sps_plots$getServer(tab_id)
         })
+        # update snap list on signal
         observeEvent(shared$canvas$server, {
             output$snap_choose <- renderUI({
                 shiny::validate(need(length(shared$canvas$server) > 0, message = "No snapshot yet"))
                 tagList(
                     boxPlus(title = "Current snapshots", width = 6, closable = FALSE,
-                            orderInput(ns("snaps"), "order matters", items = names(shared$canvas$server), placeholder = 'Current snapshots',
-                                       item_class = "success", connect = c(ns("snaps"), ns('snap_unselect')))
+                            orderInput(
+                                ns("snaps"), NULL,
+                                items = names(shared$canvas$server),
+                                placeholder = 'Current snapshots',
+                                item_class = "success",
+                                connect = c(ns("snaps"), ns('snap_unselect'))
+                            )
                     ),
                     boxPlus(title = "Snapshots excluded", width = 6, closable = FALSE,
-                            orderInput(ns('snap_unselect'), NULL, items = NULL, placeholder = 'Drag plots here if you don\'t want to see on canvas',
-                                       connect = c(ns("snaps"), ns('snap_unselect')))
+                            orderInput(
+                                ns('snap_unselect'), NULL, items = NULL,
+                                placeholder = 'Drag plots here if you don\'t want to see on canvas',
+                                connect = c(ns("snaps"), ns('snap_unselect'))
+                            )
                     ),
                     tags$script(glue(.open = '@', .close = '@', '
                   $("#@ns("snap_unselect")@").bind("DOMSubtreeModified", function(){
@@ -83,15 +100,16 @@ core_canvasServer <- function(id, shared){
                 )
             })
         })
+        # refresh canvas on click
         observeEvent(input$refresh, {
             ui <- shared$canvas$ui
             snap_severs <- shared$canvas$server
             snaps <- which(names(ui) %in% input$snaps_order)
-            if (length(snaps) > 0){
+            # create plot containers
+            output$canvas_main <- renderUI({
+                shiny::validate(need(length(snaps) > 0, message = "Need at least one snapshot"))
                 ui <- ui[snaps]
                 snap_severs <- snap_severs[snaps]
-            }
-            output$canvas_main <- renderUI({
                 sapply(seq_along(ui), function(i){
                     column(
                         width = 12/isolate(input$ncols),
@@ -122,6 +140,7 @@ core_canvasServer <- function(id, shared){
                     )
                 }
             })
+            # add server to plots
             for(plot_id in names(snap_severs)){
                 output[[plot_id]] <- snap_severs[[plot_id]]
             }

@@ -58,7 +58,8 @@
 #                              icon("paper-plane")),
 #             ),
 #             div(class = "sps-plot-container",
-#                 jqui_resizable(sps_plots$addUI(plotlyOutput(ns("plot")), id))
+#                 jqui_resizable(sps_plots$addUI(plotlyOutput(ns("plot")), id)),
+#                 tags$script(glue('stretchPlotTab("{ns("plot")}")'))
 #             )
 #         )
 #     )

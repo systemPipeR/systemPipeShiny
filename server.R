@@ -1,6 +1,7 @@
 ####### Server
 # please do not delete comments starting with '##'
 server <- function(input, output, session) {
+    # add a container to communicate tabs
     shared <- reactiveValues()
     # core tabs
     core_dashboardServer("core_dashboard", shared)
@@ -45,4 +46,5 @@ server <- function(input, output, session) {
     })
     shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE)
     output$wf_panel <- wfProgressPanel(shared)
+    spsWarnings(session)
 }

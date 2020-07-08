@@ -4,6 +4,7 @@
 #' communicate plotting tabs with the canvas tab
 #' @importFrom R6 R6class
 #' @rdname plotContainer
+#' @export
 #' @examples
 #' library(shiny)
 #' library(shinydashboard)
@@ -221,7 +222,6 @@ plotContainer <- R6::R6Class("plot_container",
             return(render_func(expr_func(), ...))
         },
 
-
         #' @description Get plot UI to the container.
         #' @param tab_id unique ID, usually the tab ID if used in a module
         #' @return saved plot server function
@@ -232,20 +232,25 @@ plotContainer <- R6::R6Class("plot_container",
             return(base::do.call(render_expr$func, render_expr$args))
         },
 
-
         #' @description notify the snapshot tab a snapshot has been added
         #'
         #' @param tab_id unique ID, usually the tab ID if used in a module
         #' @param skip positive integer, This function is usually bound to the
         #' plotting button. When clicked, the first number of `skip` clicks will
         #' not add the snapshot to the canvas tab.
-        #' @param reset bool, to reset the count and return nothing?
+        #' @param reset bool, to reset the count and return nothing
+        #' @param set_to positive integer, reset the count of a tab to be a
+        #' certain number
         #' @return a vector of `tab_id` and count number as a character string
-        notifySnap = function(tab_id, skip = 1, reset = FALSE){
+        notifySnap = function(tab_id, skip = 1, reset = FALSE, set_to = NULL){
             if(reset) {
                 private$notify_list[[tab_id]] <- NULL
                 return(invisible())
-                }
+            }
+            if(is.number(set_to)){
+                private$notify_list[[tab_id]] <- abs(round(set_to))
+                return(invisible())
+            }
             assert_that(is.number(skip))
             notify_index <- private$notify_list[[tab_id]]
             if(is.null(notify_index)) {
@@ -286,3 +291,264 @@ plotContainer <- R6::R6Class("plot_container",
         notify_list = list()
     )
 )
+
+
+#' SPS database functions
+#'
+#' Initiate this container at global level. Methods in this class can help admin to
+#' manage general information of sps. For now it only stores some meta data and
+#' the encryption key pairs. You can use this database to store other useful things,
+#' like user pass hash, IP, browsing info ...
+#'
+#' A SQLite database by default is created inside `config` directory. If not, you
+#' can use `createDb` method to create one. On initiation, this class checks
+#' if the default db is there and gives warnings if not.
+#' @importFrom R6 R6class
+#' @rdname snapHash
+#' @export
+#' @examples
+#' dir.create("config")
+#' mydb <- spsdb$new()
+#' mydb$createDb()
+#' mydb$changeKey()
+#' mydb$queryValue("sps_meta")
+#' mydb$queryInsert("sps_meta", value = "'new1', '1'")
+#' mydb$queryValue("sps_meta")
+#' mydb$queryInsert("sps_meta", value = c("'new2'", "'2'"))
+#' mydb$queryValue("sps_meta")
+#' mydb$queryUpdate("sps_meta", value = '234', col = "value", WHERE = "info = 'new1'")
+#' mydb$queryValue("sps_meta")
+#' mydb$queryValueDp("sps_meta", dp_expr = "filter(., info %in% c('new1', 'new2')) %>% select(2)")
+#' mydb$queryDel("sps_meta", WHERE = "value = '234'")
+spsdb <- R6::R6Class("spsdb",
+    public = list(
+        initialize = function(){
+            msg("Created snapshot file hash method container")
+            private$verbose <- private$verbosity()
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            fail_msg <- c("Can't find default SPS db. ",
+                          "Default name 'config/sps.db'. Use `createDb` method",
+                          " to create new or be careful to change default db_name ",
+                          "when you use other methods")
+            con <- private$dbConnect("config/sps.db")
+
+            if(is.null(con)){
+                msg(fail_msg, "warning")
+            } else if(!db_has_table(con, "sps_meta")){
+                msg("Db found but metadata table not found", "warning")
+            } else {
+                msg("Default SPS-db found and is working")
+            }
+        },
+
+        #' @description Create a snap hash database
+        #'
+        #' @param db_name database path, you need to manually create parent directory
+        #' if not exists
+        createDb = function(db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            if(!dir.exists(dirname(db_name))) dir.create(dirname(db_name), recursive = TRUE)
+            con <- private$dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't create db. Make sure your wd is writeable", "error")
+            } else {
+                sps_meta <- tribble(
+                    ~info, ~value,
+                    "creation_date", as.character(format(Sys.time(), "%Y%m%d%H%M%S")),
+                )
+                RSQLite::dbWriteTable(con, 'sps_meta', sps_meta, overwrite = TRUE)
+                if(private$verbose) msg("Db write meta")
+                key <- private$genkey() %>% serialize(NULL)
+                sps_raw <- tribble(
+                    ~info, ~value,
+                    "key", key,
+                )
+                RSQLite::dbWriteTable(con, 'sps_raw', sps_raw, overwrite = TRUE)
+                if(private$verbose) msg("Key generated and stored in db")
+                msg(glue("Db created at '{db_name}'. DO NOT share this file with others"),
+                    "SPS-DANGER", "red")
+            }
+        },
+
+        #' @description Change encryption key of a SPS project
+        #'
+        #' @param db_name  database path
+        #' generate
+        changeKey = function(db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            con <- private$dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't find db.", "error")
+            } else {
+                old_value <- tryCatch(
+                    RSQLite::dbGetQuery(con,
+                        "SELECT `value`
+                         FROM `sps_raw`
+                         WHERE (`info` = 'key')") %>% pull() ,
+                    error = function(e){
+                        msg(e, "warning")
+                        return(NULL)
+                    }
+                )
+                if(length(old_value) == 0) msg("Not a standard sps db", "error")
+                key <- private$genkey() %>% serialize(NULL)
+                res <- RSQLite::dbSendStatement(con, glue(
+                    "UPDATE sps_raw SET value=x'{glue_collapse(key)}' WHERE info='key'"))
+                if(RSQLite::dbGetRowsAffected(res) != 0){
+                    msg("You new key has been generated and saved in db")
+                } else {msg("Update key failed")}
+                RSQLite::dbClearResult(res)
+            }
+        },
+
+        #' @description Query database
+        #'
+        #' @param db_name  database path
+        #' @param table  table name
+        #' @param SELECT  SQL select grammar
+        #' @param WHERE SQL select where
+        #' @return query result, usually a dataframe
+        queryValue = function(table, SELECT="*", WHERE="1", db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            con <- dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't find db.", "error")
+            } else {
+                results <- RSQLite::dbGetQuery(con, glue("
+                    SELECT {SELECT}
+                    FROM {table}
+                    WHERE {WHERE}
+                "))
+
+                if(private$verbose) msg("Query sent")
+                return(results)
+            }
+        },
+
+        #' @description Query database with dplyr grammar
+        #'
+        #' Only supports simple selections, like comparison, %in%, `between()`,
+        #' `is.na()`, etc. Advanced selections like wildcard, using outside dplyr
+        #' functions like `str_detect`, `grepl` are not supported.
+        #'
+        #' @param db_name  database path
+        #' @param table  table name
+        #' @param dp_expr dplyr chained expression, must use '.' in first
+        #' component of the chain expression
+        #' @return query result, usually a tibble
+        queryValueDp = function(table, dp_expr="select(., everything())",
+                                 db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            con <- dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't find db.", "error")
+            } else {
+                results <- tbl(con, table) %>%
+                    {rlang::eval_tidy(rlang::parse_expr(dp_expr))} %>%
+                    collect()
+                if(private$verbose) msg("Query sent")
+                return(results)
+            }
+        },
+
+        #' @description update(modify) the value in db
+        #'
+        #' @param db_name  database path
+        #' @param table  table name
+        #' @param value  new value
+        #' @param col  which column
+        #' @param WHERE SQL where statement, conditions to select rows
+        queryUpdate =  function(table, value, col, WHERE="1", db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            con <- private$dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't find db.", "error")
+            } else {
+                res <- RSQLite::dbSendStatement(con, glue(
+                    "UPDATE {table} SET {col}={value} WHERE {WHERE}"))
+                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
+                    msg("No row updated")
+                } else {msg(glue("Updated {aff_rows} rows"))}
+                RSQLite::dbClearResult(res)
+            }
+        },
+
+        #' @description delete value in db
+        #'
+        #' @param db_name  database path
+        #' @param table  table name
+        #' @param WHERE SQL where statement, conditions to select rows
+        queryDel =  function(table, WHERE="1", db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            con <- private$dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't find db.", "error")
+            } else {
+                res <- RSQLite::dbSendStatement(con, glue(
+                    "DELETE FROM {table} WHERE {WHERE}"))
+                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
+                    msg("No row deleted")
+                } else {msg(glue("Deleted {aff_rows} rows"))}
+                RSQLite::dbClearResult(res)
+            }
+        },
+
+        #' @description Insert value to db
+        #'
+        #' @param db_name  database path
+        #' @param table  table name
+        #' @param value  new values for the entire row
+        #' @param WHERE SQL where statement, conditions to select rows
+        queryInsert =  function(table, value, db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            con <- private$dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't find db.", "error")
+            } else {
+                value <- glue_collapse(value, sep = ", ")
+                res <- RSQLite::dbSendStatement(con, glue(
+                    "INSERT INTO {table} VALUES ({value})"))
+                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
+                    msg("No row inserted")
+                } else {msg(glue("Inserted {aff_rows} rows"))}
+                RSQLite::dbClearResult(res)
+            }
+        }
+    ),
+    private = list(
+        verbosity = function(){
+            verbose <- getOption('sps')$verbose
+            if(is.null(verbose)) verbose <- FALSE
+            return(verbose)
+        },
+        dbConnect = function(db_name){
+            if(!is.character(db_name) | length(db_name) != 1)
+                msg("Invalid db name", "error")
+            con <- tryCatch(
+                RSQLite::dbConnect(
+                    RSQLite::SQLite(),
+                    normalizePath(db_name, mustWork = FALSE)
+                ),
+                error = function(e){
+                    msg(e, "warning")
+                    return(NULL)
+                }
+            )
+            if(private$verbose) msg("db connected")
+            return(con)
+        },
+        genToken = function(){
+            key <- openssl::rsa_keygen()
+            key_path <- tempfile()
+            openssl::write_pem(key, key_path)
+            if (is.writeable(".")) openssl::write_ssh(key, "sps_pub.txt")
+            else msg("Current directory unwriteable", "error")
+            return(key_path)
+        },
+        genkey = function(){
+            return(openssl::rsa_keygen())
+        },
+        verbose = FALSE
+    )
+)
+

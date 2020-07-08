@@ -84,7 +84,6 @@ stretchCanvas = () =>{
             });
         var min_dis = Math.min(...div_dis);
         var h = 0;
-        console.log(min_dis);
         if(min_dis < window.innerHeight/4) {
             h = container.height() + window.innerHeight/2;
             container.height(h);

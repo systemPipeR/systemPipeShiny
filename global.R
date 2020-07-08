@@ -57,17 +57,18 @@ library(rsvg)
 # dev: developer mode, you are able to add tabs - TRUE, FALSE
 options(sps = list(
     mode = "local",
-    loading_screen = FALSE,
-    loading_theme = "vhelsix",
+    loading_screen = T,
+    loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
     verbose = TRUE,
-    dev = TRUE
+    dev = TRUE,
+    load_snap = TRUE
 ))
 
 source("R/runSPS.R")
 source("R/spsSupport.R")
-source("R/plotContainer.R")
+source("R/spsClasses.R")
 resolveOptions(appDir = getwd())
 
 # other useful shiny options
@@ -76,7 +77,6 @@ options(shiny.maxRequestSize = 5*1024^2)
 
 # for debugging
 # options(shiny.reactlog = TRUE)
-# options(shiny.autoload.r = FALSE)
 # options(shiny.trace = TRUE)
 # options(shiny.fullstacktrace = TRUE)
 # options(shiny.error = browser)
@@ -86,7 +86,9 @@ options(shiny.autoreload = TRUE) # takes some computer power, you may consider t
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
 # add a global container to save plot snap shots
+# Please do not change the container variable name
 sps_plots <- plotContainer$new()
+
 ####### you can add additional code #########
 
 
