@@ -1,6 +1,6 @@
 ---
 title: "systemPipeShiny" 
-author: "Author: Daniela Cassol (danielac@ucr.edu) and Thomas Girke (thomas.girke@ucr.edu)"
+author: "Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Thomas Girke"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`" 
 output:
   BiocStyle::html_document:
@@ -9,7 +9,7 @@ output:
   BiocStyle::pdf_document: default
 package: systemPipeR
 vignette: |
-  %\VignetteIndexEntry{RIBO-Seq Workflow Template}
+  %\VignetteIndexEntry{systemPipeShiny}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 fontsize: 14pt
@@ -40,16 +40,18 @@ suppressPackageStartupMessages({
 })
 ```
 
-# Internal annotation
-
-## Title
+# Introduction
 
 Accelerate data analysis with interactive systemPipeShiny toolkits
 
-## Image
 ![systemPipeShiny](./systemPipeShiny.png)
 
 - [Image Link edition](https://drive.google.com/file/d/1kRG_QGbB0w3tgQh17hJtFqXrF5gwI9Tv/view?usp=sharing)
+
+TODO: 
+Describe the package
+Motivation 
+
 
 ## Features
 
@@ -65,26 +67,11 @@ Shiny application for interactive workflow management and results visualization 
    - Plots of downstream analysis, like DEG, GO and other plots used in some specific workflows, like Venn diagram, dendrogram
 
 
-## Poster/Abstract
-systemPipeR, an R/Bioconductor package, provides a reproducible and user-friendly analysis workflow environment. In order to accelerate the user analysis process, we have developed systemPipeR templates and an interactive web application, systemPipeShiny. 
-To enhance user experience on data visualization and to help new users to familiarize the workflow environment, we developed SystemPipeShiny as a Shiny based web application. Users can interactively manage workflow files, like helping to validate workflow file requirements, visualizing workflow structure and choosing steps. A customized ready-to-run workflow environment can be created in a few clicks and a few input typing with this app. 
-Also, once the initial results are obtained from workflow running, one can use this app to do downstream analysis and visualization. Analysis like, but not limited to,  differentially expressed gene analysis, gene ontology enrichment can be done in this app. Visualizing and refining plots and be as easy as tweaking some buttons in this app. By combining our templates and our app, data analysis in the systemPipeR environment will be more efficient and data exploration will be more interactive.
-This poster gives an overview of both existing and upcoming features of systemPipeShiny.
-
-These workflows are preconfigured and ready-to-use. By following guidelines from systemPipeR, users can easily customize these workflows to their own analysis. Templates are well organized and easy-to-download/install under the systemPipeR Github organization. We also provide Rstudio integration which enables workflow generation only requires a few clicks with our templates.
-
-Keywords:  workflow environment, automation, interactive visualization, reporting infrastructure
-
-# Introduction
-
-Describe the package
-Motivation 
+## Quick start
 
 ```{r, eval=FALSE}
 library(systemPipeShiny)
 ```
-
-## Quick start
 
 ```{r, eval=FALSE}
 shiny::runApp("../")
@@ -109,6 +96,24 @@ BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, depend
 ## Workflow Management system
 
 ## Visualization 
+
+Table with all exported functions
+
+| Function Name     | Description                                                                                                           | Category        |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------|-----------------|
+| `run...`    | Description | Visualization       |
+| `run...`    | Description | Visualization       |
+
+
+##3 Barplot
+describe to the user how to use this fct
+
+```{r,eval=FALSE}
+#add the example run from the help files
+```
+### Heatmap
+
+# How to use this function on the Shiny application
 
 # How to custom the Visualization Tab
 
