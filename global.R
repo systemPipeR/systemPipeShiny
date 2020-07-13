@@ -58,15 +58,16 @@ library(rsvg)
 options(sps = list(
     mode = "local",
     loading_screen = FALSE,
-    loading_theme = "vhelix",
+    loading_theme = "vhelsix",
     loading_particles = TRUE,
     use_crayon = TRUE,
-    verbose = FALSE,
+    verbose = TRUE,
     dev = TRUE
 ))
 
 source("R/runSPS.R")
 source("R/spsSupport.R")
+source("R/plotContainer.R")
 resolveOptions(appDir = getwd())
 
 # other useful shiny options
@@ -84,6 +85,8 @@ options(shiny.autoreload = TRUE) # takes some computer power, you may consider t
 
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-
+# add a global container to save plot snap shots
+sps_plots <- plotContainer$new()
 ####### you can add additional code #########
+
 

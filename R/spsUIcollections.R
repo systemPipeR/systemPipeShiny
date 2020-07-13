@@ -14,12 +14,11 @@ NULL
 #' @examples
 useSps <- function(){
     # addResourcePath("sps", system.file("www", package = "systemPipeShiny"))
-    addResourcePath("sps", "www")
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css",
-                            href = "sps/sps.css"),
-        tags$script(src = "sps/sps.js"),
-        tags$script(src="sps/sps_update_pg.js"),
+                            href = "css/sps.css"),
+        tags$script(src = "js/sps.js"),
+        tags$script(src="js/sps_update_pg.js"),
         useToastr()
     )
 }
@@ -173,6 +172,7 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
                        title_color = "#0275d8", image_frame_size = 3) {
     tabs <- findTabInfo(tabnames, type)
+    if (is.null(tabs)) return(div("Nothing to display in gallery"))
     gallery(Id = Id, title = title, title_color = title_color,
             image_frame_size = image_frame_size,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
@@ -318,10 +318,13 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 #' @param title table title
 #' @param text_color text color for table
 #' @param ... any additional args to the html element, like class, style ...
-#'
+#' @details For `rows`, there are some specially reserved characters
+#' for type and sub types. If indicated, it will return a list of tabs matching
+#' the indicated tabs instead of searching individual tab names. These words
+#' include: core, wf, vs, data, plot.
 #' @example
 #' library(shiny)
-#' rows <- list(wf1 = c("df_raw", "df_count"), wf2 =  c("df_raw"))
+#' rows <- list(wf1 = c("df_raw", "df_count"), wf2 =  "data")
 #' ui <- fluidPage(
 #'     genHrefTable(rows)
 #' )
@@ -329,9 +332,14 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 #'
 #' }
 #' shinyApp(ui, server)
-genHrefTable <- function(rows, Id = NULL, title = "A Table of list of tabs",
+genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
                          text_color = "#0275d8", ...) {
-    tab_list <- sapply(rows, function(x) findTabInfo(x))
+    tab_list <- sapply(rows, function(x) {
+        if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
+            findTabInfo(type = x)
+        } else {findTabInfo(x)}
+
+    })
     hrefTable(Id = Id, title = title,
               text_color = text_color, item_titles = names(rows),
               item_labels = tab_list[1,], item_hrefs = tab_list[2,], ...)
@@ -356,9 +364,9 @@ renderDesc <- function(id, desc) {
         <div class="collapse desc-body" id="{id}" aria-expanded="false">
          {HTML(markdown::renderMarkdown(text = glue(desc)))}
         </div>
+
         <a role="button" class="collapsed" data-toggle="collapse"
-           href="#{id}" aria-expanded="false"
-           aria-controls="{id}">
+           href="#{id}" aria-expanded="false" aria-controls="{id}">
         </a>
       </div>
     '))
@@ -453,8 +461,8 @@ devComponents <- function(element, shared=NULL){
                 "ui_tab_df" = tabItem(tabName = "df_template", df_templateUI("df_template")),
                 "ui_tab_plot" = tabItem(tabName = "plot_template", plot_templateUI("plot_template")),
                 "server" = {
-                    callModule(df_templateServer, "df_template", shared = shared)
-                    callModule(plot_templateServer, "plot_template", shared = shared)
+                    df_templateServer("df_template", shared)
+                    plot_templateServer("plot_template", shared)
                     }
         )
     } else {tabItem("")}
@@ -482,12 +490,11 @@ devComponents <- function(element, shared=NULL){
 #' shinyApp(ui, server)
 uiExamples <- function(ns){
     tagList(
-        h3("Some examples for plotting controls"),
+        h4("Some examples for plotting controls"),
         boxPlus(
             width = 12, closable = FALSE, collapsible = TRUE,
             footer = dropdownButton(
                 size = "sm", icon = icon("code"), width = "500px",
-                footer_padding = FALSE,
                 tooltip = tooltipOptions(title = "Click to see code"),
                 label = "see code",
                 aceEditor(
@@ -654,4 +661,133 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
             )
         )
     }
+}
+
+
+#' @rdname hexPanel
+#' @param hex_img single value of `hex_imgs`
+#' @param hex_link single value of `hex_links`
+#' @param footer single value of `footers`
+#' @param footer_link single value of `footer_links`
+#' @param x string, X offset
+#' @param y string, Y offset
+#'
+#' @export
+hexLogo <- function(id, title="", hex_img, hex_link = "" ,
+                    footer = "", footer_link= "", x="-10", y="-20"){
+    title_text <- if(is.empty(title)) ''
+    else glue('<span class="text-info">{title}</span><br>')
+    hex <-  if(is.empty(hex_link)) {
+        glue('<polygon points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/>')
+    } else {
+        glue('<a href="{hex_link}" target="_blank"> <polygon class="hex" points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/></a>')
+    }
+    footer_text <- if(is.empty(footer)) ''
+    else glue('<text x=10 y=115><a class="powerby-link" href="{footer_link}" target="_blank">{footer}</a></text>')
+    HTML(glue('
+    <div id="{id}" class="hex-container">
+      {title_text}
+      <svg class="hex-box" viewBox="0 0 100 115" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="{id}-hex" patternUnits="userSpaceOnUse" height="100%" width="100%">
+            <image href="{hex_img}" x="{x}" y="{y}" height="125%" width="125%" />
+          </pattern>
+        </defs>
+        {hex}
+        {footer_text}
+      </svg>
+    </div>
+     '))
+}
+
+
+#' Hexagon logo and logo panel
+#'
+#' @param id input ID
+#' @param title title of the logo, display on top of logo or title of logo panel
+#' displayed on the left
+#' @param hex_imgs a character vector of logo image source, can be online or
+#' local, see details
+#' @param hex_links a character vector of links attached to each logo, if not
+#' `NULL`, must be the same length as `hex_imgs`
+#' @param hex_titles similar to `hex_links`, titles of each logo
+#' @param footers a character vector of footer attached to each logo
+#' @param footer_links a character vector of footer links, if not `NULL`,
+#' must be the same length as `footers`
+#' @param xs a character vector X coordinate offset value for each logo image,
+#' default -10
+#' @param ys Y coordinates offset, must be the same length as `xs`, default -20
+#' @details
+#' The image in each hexagon is resized to the same size as the hex and then
+#' enlarged 125%. You may want to use x, y offset value to change the image
+#' position.
+#'
+#' If your image source is local, you need to add your local directory to the
+#' shiny server, e.g. `addResourcePath("sps", "www")`. This example add `www`
+#' folder under my current working directory as `sps` to the server. Then you
+#' can access my images by `hex_imgs = "sps/my_img.png"`.
+#'
+#' some args in `hexPanel` are character vectors, use `NULL` for the default
+#' value. If you want to change value but not all of your logos, use `""` to
+#' occupy space in the vector. e.g. I have 3 logos, but I only want to add
+#' 2 footer and only 1 footer has a link:
+#' `footers = c("footer1", "footer2", "")`,
+#' `footer_links = c("", "https://mylink", "")`. By doing so  `footers` and
+#' `footer_links` has the same required length.
+#' @export
+#'
+#' @examples
+#' library(shiny)
+#' ui <- fluidPage(
+#'     useSps(),
+#'     hexPanel("haha", "DEMO OF:" ,
+#'     rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2)
+#'     )
+#' )
+#' server <- function(input, output, session) {
+#' }
+#' shinyApp(ui, server)
+hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
+                     footers=NULL, footer_links=NULL, xs=NULL, ys=NULL){
+    if(not_empty(hex_titles))
+        assert_that(length(hex_titles) == length(hex_imgs))
+    if(not_empty(hex_links))
+        assert_that(length(hex_imgs) == length(hex_links))
+    if(not_empty(footers)){
+        assert_that(length(footers) <= length(hex_imgs))
+        assert_that(length(footers) == length(footer_links))
+    }
+    if(not_empty(xs))
+        assert_that(length(hex_imgs) == length(xs))
+    if(not_empty(ys))
+        assert_that(length(hex_imgs) == length(ys))
+    if(is.null(xs)) xs <- rep("-10", length(hex_imgs))
+    if(is.null(ys)) ys <- rep("-20", length(hex_imgs))
+    sapply(seq_along(hex_imgs), function(i){
+        div(class="hex-item",
+            hexLogo(id = paste0(id, i), title = hex_titles[i],
+                    hex_img = hex_imgs[i], hex_link = hex_links[i],
+                    footer = footers[i], footer_link = footer_links[i],
+                    x = xs[i], y=ys[i])
+        )
+    }, simplify = FALSE) %>% {
+        fluidRow(class = "hex-panel",
+                 h5(class = "text-primary", title),
+                 tagList(.)
+        )
+    }
+}
+
+#' SPS tab title
+#'
+#' @param title title text
+#' @param ... other attributes and children to this DOM
+#' @return a h2 level heading with bootstrap4 info color, bt4 color not the
+#' default bt3 info color
+#' @export
+#'
+#' @examples
+#' tabTitle("This title")
+tabTitle <- function(title, ...){
+    h2(title, style = "color:#17a2b8;", ...)
 }

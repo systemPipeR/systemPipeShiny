@@ -1,8 +1,8 @@
 ## UI
-configUI <- function(id){
+wf_configUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "Configuration",
-        h2("Workflow Configuration"),
+    tagList(
+        tabTitle("Workflow Configuration"),
         fluidRow(
             radioGroupButtons(
                 inputId = ns("config_source"), label = "Choose your config file source:",
@@ -37,41 +37,45 @@ configUI <- function(id){
 }
 
 ## server
-configServer <- function(input, output, session, shared){
-    ns <- session$ns
-    down_clicked <- reactiveValues(flag = 0)
+wf_configServer <- function(id, shared){
+    module <- function(input, output, session){
+        ns <- session$ns
+        down_clicked <- reactiveValues(flag = 0)
 
-    rmd_file_path <- reactive({
-        if (input$config_source == "eg") "inst/extdata/config.yaml" else input$config_upload$datapath
-    })
-    observeEvent(rmd_file_path(), {
-        updateAceEditor(session, editorId = "ace_config", value = {
-            shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"), blocking = "error")
+        rmd_file_path <- reactive({
+            if (input$config_source == "eg") "inst/extdata/config.yaml" else input$config_upload$datapath
         })
-    })
-
-    observeEvent(c(input$to_task_config, down_clicked$flag), {
-        shared$config$file <- tempfile(pattern = "target", fileext = ".txt")
-        writeLines(isolate(input$ace_config), shared$config$file)
-    })
-
-    observeEvent(input$to_task_config, {
-        if (!is.null(shared$config$file)) {
-            shared$wf_flags$wf_conf_ready = TRUE
-            sendSweetAlert(
-                session = session,
-                title = "Config added to Task",
-                text = "You can see workflow status by clicking top right",
-                type = "success"
-            )
-        }
-    })
-    output$down_targets <- downloadHandler(
-        filename <- function() {
-            "targets.txt"
-        },
-        content <- function(filename) {
-            down_clicked$flag <- down_clicked$flag + 1
-            file.copy(from = shared$config$file, to = filename)
+        observeEvent(rmd_file_path(), {
+            updateAceEditor(session, editorId = "ace_config", value = {
+                shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"), blocking = "error")
+            })
         })
+
+        observeEvent(c(input$to_task_config, down_clicked$flag), {
+            shared$config$file <- tempfile(pattern = "target", fileext = ".txt")
+            writeLines(isolate(input$ace_config), shared$config$file)
+        })
+
+        observeEvent(input$to_task_config, {
+            if (!is.null(shared$config$file)) {
+                shared$wf_flags$wf_conf_ready = TRUE
+                sendSweetAlert(
+                    session = session,
+                    title = "Config added to Task",
+                    text = "You can see workflow status by clicking top right",
+                    type = "success"
+                )
+            }
+        })
+        output$down_targets <- downloadHandler(
+            filename <- function() {
+                "targets.txt"
+            },
+            content <- function(filename) {
+                down_clicked$flag <- down_clicked$flag + 1
+                file.copy(from = shared$config$file, to = filename)
+            })
+    }
+    moduleServer(id, module)
 }
+
