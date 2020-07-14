@@ -1,4 +1,7 @@
 ####### Server
+# DO NOT delete the next line
+# last change date: 20200713114337
+print(getOption('sps')$loading_screen)
 # please do not delete comments starting with '##'
 server <- function(input, output, session) {
     # add a container to communicate tabs
@@ -46,5 +49,27 @@ server <- function(input, output, session) {
     })
     shared$wf_flags <- data.frame(targets_ready = FALSE, wf_ready = FALSE, wf_conf_ready = FALSE)
     output$wf_panel <- wfProgressPanel(shared)
-    spsWarnings(session)
+    # spsWarnings(session)
+    # TODO admin page, come back in next release
+    admin_url <- reactive({
+        names(getQueryString())
+    }) %>% debounce(1000)
+
+    output$page_admin <- renderUI({
+        req(admin_url() == getOption('sps')$admin_url)
+        shinyjs::hide("page_user", asis = TRUE)
+        adminUI()
+    })
+    # observeEvent(input$reload, ignoreInit = TRUE, {
+    #     sps_options <- getOption('sps')
+    #     sps_options[['loading_screen']] = isolate(input$change)
+    #     options(sps = sps_options)
+    #     server_file <- readLines("server.R", skipNul = FALSE)
+    #     server_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
+    #     writeLines(server_file, "server.R")
+    #     ui_file <- readLines("ui.R", skipNul = FALSE)
+    #     ui_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
+    #     writeLines(ui_file, "ui.R")
+    # })
 }
+

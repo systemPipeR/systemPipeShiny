@@ -1,19 +1,19 @@
-# List of SPS tabs,,,,
-# Editing by hand is not recommended ,,,,
-# image paths use ‘www’ folder as root,,,,
-tab_name,display_label,type,type_sub,image
-core_about,About this App,core,,
-core_canvas,Plot Canvas,core,,
-core_dashboard,Home,core,,
-core_right,Right side menu,core,,
-core_top,Top push bars,core,,
-wf_main,Workflow Main Page,wf,,
-wf_config,Workflow Config,wf,,
-wf_run,Workflow Run,wf,,
-wf_target,Workflow Metadata,wf,,
-wf_wf,Workflow Steps,wf,,
-vs_main,Visualization Main Page,vs,,
-df_template,Template Data Tab,vs,data,
-plot_template,Template Plot Tab,vs,plot,plot_list/plot_point.png
-df_targets,Metadata ,vs,data,
-df_count,Count Table,vs,data,
+# List of SPS tabs,,,,,
+# Editing by hand is not recommended ,,,,,
+# image paths use ‘www’ folder as root,,,,,
+tab_name,display_label,type,type_sub,image,displayed
+core_about,About this App,core,,,1
+core_canvas,Plot Canvas,core,,,1
+core_dashboard,Home,core,,,1
+core_right,Right side menu,core,,,1
+core_top,Top push bars,core,,,1
+wf_main,Workflow Main Page,wf,,,1
+wf_config,Workflow Config,wf,,,1
+wf_run,Workflow Run,wf,,,1
+wf_target,Workflow Metadata,wf,,,1
+wf_wf,Workflow Steps,wf,,,1
+vs_main,Visualization Main Page,vs,,,1
+df_template,Template Data Tab,vs,data,,1
+plot_template,Template Plot Tab,vs,plot,plot_list/plot_point.png,1
+df_targets,Metadata ,vs,data,,1
+df_count,Count Table,vs,data,,1

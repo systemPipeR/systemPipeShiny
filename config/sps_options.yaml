@@ -7,8 +7,8 @@ loading_screen:
     other: [false]
 
 loading_theme:
-    default: "404"
-    other: [vhelix]
+    default: vhelix
+    other: ["404"]
 
 
 loading_particles:
@@ -16,12 +16,13 @@ loading_particles:
     other: [true]
 
 use_crayon:
-    default: false
-    other: [true]
+    default: true
+    other: [false]
 
-display_code:
-    default: false
-    other: [true]
+# will work on this option once `shinymeta` is on CRAN
+#display_code:
+#    default: false
+#    other: [true]
 
 verbose:
     default: false
@@ -31,8 +32,12 @@ dev:
     default: false
     other: [true]
 
-load_snap:
+admin_page:
     default: false
     other: [true]
+
+admin_url:
+    default: admin
+    other: ["*"]
 
 

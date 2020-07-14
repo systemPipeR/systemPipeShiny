@@ -304,13 +304,12 @@ plotContainer <- R6::R6Class("plot_container",
 #' can use `createDb` method to create one. On initiation, this class checks
 #' if the default db is there and gives warnings if not.
 #' @importFrom R6 R6class
-#' @rdname snapHash
+#' @rdname spsDb
 #' @export
 #' @examples
 #' dir.create("config")
-#' mydb <- spsdb$new()
+#' mydb <- spsDb$new()
 #' mydb$createDb()
-#' mydb$changeKey()
 #' mydb$queryValue("sps_meta")
 #' mydb$queryInsert("sps_meta", value = "'new1', '1'")
 #' mydb$queryValue("sps_meta")
@@ -320,10 +319,10 @@ plotContainer <- R6::R6Class("plot_container",
 #' mydb$queryValue("sps_meta")
 #' mydb$queryValueDp("sps_meta", dp_expr = "filter(., info %in% c('new1', 'new2')) %>% select(2)")
 #' mydb$queryDel("sps_meta", WHERE = "value = '234'")
-spsdb <- R6::R6Class("spsdb",
+spsDb <- R6::R6Class("spsdb",
     public = list(
         initialize = function(){
-            msg("Created snapshot file hash method container")
+            msg("Created SPS database method container")
             private$verbose <- private$verbosity()
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't find default SPS db. ",
@@ -334,8 +333,8 @@ spsdb <- R6::R6Class("spsdb",
 
             if(is.null(con)){
                 msg(fail_msg, "warning")
-            } else if(!db_has_table(con, "sps_meta")){
-                msg("Db found but metadata table not found", "warning")
+            } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
+                msg("Db found but some table(s) not found", "warning")
             } else {
                 msg("Default SPS-db found and is working")
             }
@@ -370,37 +369,6 @@ spsdb <- R6::R6Class("spsdb",
             }
         },
 
-        #' @description Change encryption key of a SPS project
-        #'
-        #' @param db_name  database path
-        #' generate
-        changeKey = function(db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                msg("Can't find db.", "error")
-            } else {
-                old_value <- tryCatch(
-                    RSQLite::dbGetQuery(con,
-                        "SELECT `value`
-                         FROM `sps_raw`
-                         WHERE (`info` = 'key')") %>% pull() ,
-                    error = function(e){
-                        msg(e, "warning")
-                        return(NULL)
-                    }
-                )
-                if(length(old_value) == 0) msg("Not a standard sps db", "error")
-                key <- private$genkey() %>% serialize(NULL)
-                res <- RSQLite::dbSendStatement(con, glue(
-                    "UPDATE sps_raw SET value=x'{glue_collapse(key)}' WHERE info='key'"))
-                if(RSQLite::dbGetRowsAffected(res) != 0){
-                    msg("You new key has been generated and saved in db")
-                } else {msg("Update key failed")}
-                RSQLite::dbClearResult(res)
-            }
-        },
-
         #' @description Query database
         #'
         #' @param db_name  database path
@@ -410,7 +378,7 @@ spsdb <- R6::R6Class("spsdb",
         #' @return query result, usually a dataframe
         queryValue = function(table, SELECT="*", WHERE="1", db_name="config/sps.db"){
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- dbConnect(db_name)
+            con <- private$dbConnect(db_name)
             if(is.null(con)){
                 msg("Can't find db.", "error")
             } else {
@@ -551,4 +519,148 @@ spsdb <- R6::R6Class("spsdb",
         verbose = FALSE
     )
 )
+
+#' SPS encryption functions
+#'
+#' Initiate this container at global level. Methods in this class can help admin to
+#' encrypt files been output from sps. For now it is only used to encypt and decrypt
+#' snapshots.
+#'
+#' This class requires the SPS database. This class inherits all functions from
+#' the db class, so there is no need to initiate the `spsDb` container.
+#' @importFrom R6 R6class
+#' @rdname spsEncryption
+#' @export
+#' @examples
+#' dir.create("config")
+#' my_ecpt <- spsEncryption$new()
+#' my_ecpt$createDb()
+#' my_ecpt$keyChange()
+#' writeLines("test", "test.txt")
+#' my_ecpt$encrypt("test.txt", "test.bin")
+#' my_ecpt$decrypt("test.bin", "test_decpt.txt", TRUE)
+#' readLines('test_decpt.txt')
+spsEncryption <- R6::R6Class(
+    "spsencrypt",
+    inherit = spsDb,
+    public = list(
+        initialize = function(){
+            msg("Created SPS encryption method container")
+            msg("This container inherits all functions from spsDb class")
+            private$verbose <- private$verbosity()
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            fail_msg <- c("Can't find default SPS db. ",
+                          "Default name 'config/sps.db'. Use `createDb` method",
+                          " to create new or be careful to change default db_name ",
+                          "when you use other methods")
+            con <- private$dbConnect("config/sps.db")
+
+            if(is.null(con)){
+                msg(fail_msg, "warning")
+            } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
+                msg("Db found but some table(s) not found", "warning")
+            } else {
+                msg("Default SPS-db found and is working")
+            }
+        },
+
+        #' @description Change encryption key of a SPS project
+        #'
+        #' @param db_name  database path
+        keyChange = function(db_name="config/sps.db"){
+            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+            con <- private$dbConnect(db_name)
+            if(is.null(con)){
+                msg("Can't find db.", "error")
+            } else {
+                old_value <- tryCatch(
+                    RSQLite::dbGetQuery(con,
+                        "SELECT `value`
+                         FROM `sps_raw`
+                         WHERE (`info` = 'key')") %>% pull() ,
+                    error = function(e){
+                        msg(e, "warning")
+                        return(NULL)
+                    }
+                )
+                if(length(old_value) == 0) msg("Not a standard sps db", "error")
+                key <- private$genkey()
+                key_encode <- key %>% serialize(NULL)
+                res <- RSQLite::dbSendStatement(con, glue(
+                    "UPDATE sps_raw SET value=x'{glue_collapse(key_encode)}' WHERE info='key'"))
+                if(RSQLite::dbGetRowsAffected(res) != 0){
+                    msg("You new key has been generated and saved in db")
+                    msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"))
+                } else {msg("Update key failed")}
+                RSQLite::dbClearResult(res)
+            }
+        },
+
+        #' @description Get encryption key from db of a SPS project
+        #'
+        #' @param db_name  database path
+        keyGet = function(db_name="config/sps.db"){
+            key <- self$queryValue(table = 'sps_raw', SELECT="value",
+                                   WHERE="info='key'", db_name) %>%
+                pull() %>% unlist() %>% unserialize()
+            if(private$verbose) msg(glue("OpenSSL key found md5 {glue_collapse(key$pubkey$fingerprint)}"))
+            key
+        },
+
+        #' @description Encrypt raw data or a file with key from a SPS project
+        #'
+        #' @param data  raw vector or a file path
+        #' @param db_name  database path
+        #' @param out_path if provided, encrypted data will be write to a file
+        encrypt = function(data, out_path=NULL, db_name="config/sps.db"){
+            key <- self$keyGet()
+            data_ecpt <- openssl::encrypt_envelope(data, key$pubkey)
+            class(data_ecpt) <- c(class(data_ecpt), "sps_ecpt")
+            if(private$verbose) msg("Data encrypted")
+            if(is.null(out_path)) return(data_ecpt)
+            else saveRDS(data_ecpt, out_path)
+            if(private$verbose) msg(glue("File write to {normalizePath(out_path)}"))
+        },
+
+        #' @description Decrypt raw data or a file with key from a SPS project
+        #'
+        #' @param data  raw vector or a file path
+        #' @param out_path if provided, encrypted data will be write to a file
+        #' @param overwrite if `out_path` file exists, overwrite?
+        #' @param db_name  database path
+        decrypt = function(data, out_path=NULL, overwrite = FALSE, db_name="config/sps.db"){
+            if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
+                msg(glue("File {normalizePath(out_path)} exists"), "error")
+            }
+
+            data <- tryCatch({
+                if (is.raw(data)) {data}
+                else if (all(is.character(data) & length(data) == 1)) {
+                    content <- readRDS(normalizePath(data, mustWork = TRUE))
+                    if(private$verbose) msg("File read into memory")
+                    content
+                }
+                else {msg("data must be raw or a valid file", "error")}
+                }, error = function(e){
+                    msg(e, "warning")
+                    msg("Not a standard SPS encrypted object", "error")
+                })
+            if(!inherits(data, "sps_ecpt"))
+                msg("Not a standard SPS encrypted object", "error")
+            key <- self$keyGet()
+            data_dcpt <- suppressWarnings(openssl::decrypt_envelope(data$data,
+                                          iv = data$iv,
+                                          session =data$session,
+                                          key = key))
+            if(private$verbose) msg("Data decrypted")
+            if(is.null(out_path)) return(data_dcpt)
+            else {
+                writeBin(object = data_dcpt, con = out_path)
+                msg(glue("File {normalizePath(out_path)} overwrites"), "warning")
+            }
+            if(private$verbose) msg(glue("File write to {normalizePath(out_path)}"))
+        }
+    )
+)
+
 

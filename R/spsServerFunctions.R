@@ -653,13 +653,6 @@ spsWarnings <- function(session){
             "SPS-DANGER", "red")
         sps_warnings[['dev']] <- h4(glue("You are on developer mode"))
     }
-    if(getOption("sps")$load_snap) {
-        msg(c("Users can upload snapshots. Users may reach your server. ",
-              "It may cause security issues.\n",
-              "Make sure you are using a container environment"),
-            "SPS-DANGER", "red")
-        sps_warnings[['snap']] <- h4(glue("Snap shot upload is allowed"))
-    }
     sendSweetAlert(session = session, html = TRUE,
                    '<p style="color:var(--danger)">DANGER</p>',
                    div(class = "sps-warning",

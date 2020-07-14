@@ -55,25 +55,26 @@ library(rsvg)
 # use_crayon: Do you want colorful terminal messages? must install `crayon`- TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # dev: developer mode, you are able to add tabs - TRUE, FALSE
+# admin_url: admin_page query url - admin
 options(sps = list(
     mode = "local",
-    loading_screen = T,
+    loading_screen = TRUE,
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
     verbose = TRUE,
     dev = TRUE,
-    load_snap = TRUE
+    admin_page = TRUE,
+    admin_url = "admin"
 ))
-
-source("R/runSPS.R")
+source("R/spsCore.R")
 source("R/spsSupport.R")
 source("R/spsClasses.R")
-resolveOptions(appDir = getwd())
+resolveOptions()
 
 # other useful shiny options
-# max upload size, default 5MB
-options(shiny.maxRequestSize = 5*1024^2)
+# max upload size
+options(shiny.maxRequestSize = 30*1e6)
 
 # for debugging
 # options(shiny.reactlog = TRUE)
@@ -81,7 +82,7 @@ options(shiny.maxRequestSize = 5*1024^2)
 # options(shiny.fullstacktrace = TRUE)
 # options(shiny.error = browser)
 # options(shiny.autoreload.r = TRUE)
-options(shiny.autoreload = TRUE) # takes some computer power, you may consider turn it off
+options(shiny.autoreload = FALSE) # takes some computer power, you may consider turn it off
 
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))

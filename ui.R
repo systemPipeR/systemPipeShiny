@@ -1,4 +1,6 @@
 ####### UI
+# DO NOT delete the next line
+# last change date: 20200713114337
 # valid colors:
 # red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black
 
@@ -63,10 +65,9 @@ dashboardBody <- dashboardBody(
         tags$link(rel="shortcut icon", href="systemPipe_small.png"),
         useShinyjs(),
         useSweetAlert(),
-        useSps()
+        useSps(),
     ),
     tabItems(
-
         # WF tabs
         tabItem(tabName = "wf_main", wf_mainUI("wf_main")),
         wfPanel(),
@@ -110,5 +111,3 @@ mainUI <- dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar
                             )
 # merge everything together
 ui <- spsUI(mainUI)
-
-
