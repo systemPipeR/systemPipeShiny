@@ -65,9 +65,6 @@ NULL
 #' }
 #' shinyApp(ui, server)
 shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none") {
-    if (tolower(blocking_level) %in% c("message", "warning", "error")) {
-        blocking = TRUE
-    } else {blocking = FALSE}
     toastr_actions <- list(
         message = function(m) {
             msg(m$message, "SPS-INFO", "blue")

@@ -22,3 +22,9 @@ adminUI <- function(){
         )
     )
 }
+
+
+# TODO toggle sps options
+# TODO visitor stats
+# TODO encrypt, decrypt file
+# TODO

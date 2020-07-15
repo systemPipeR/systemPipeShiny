@@ -57,8 +57,8 @@ library(rsvg)
 # dev: developer mode, you are able to add tabs - TRUE, FALSE
 # admin_url: admin_page query url - admin
 options(sps = list(
-    mode = "local",
-    loading_screen = TRUE,
+    mode = "server",
+    loading_screen = FALSE,
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
@@ -86,9 +86,13 @@ options(shiny.autoreload = FALSE) # takes some computer power, you may consider 
 
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-# add a global container to save plot snap shots
+# add  global containers
 # Please do not change the container variable name
+## to save plot snap shots
 sps_plots <- plotContainer$new()
+## for database and encryption functions
+sps_enc <- spsEncryption$new()
+# use `sps_enc$createDb()` to create a new database if there is no db
 
 ####### you can add additional code #########
 

@@ -322,7 +322,7 @@ plotContainer <- R6::R6Class("plot_container",
 spsDb <- R6::R6Class("spsdb",
     public = list(
         initialize = function(){
-            msg("Created SPS database method container")
+            msg("Created SPS database method container", "SPS-INFO")
             private$verbose <- private$verbosity()
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't find default SPS db. ",
@@ -336,7 +336,7 @@ spsDb <- R6::R6Class("spsdb",
             } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
                 msg("Db found but some table(s) not found", "warning")
             } else {
-                msg("Default SPS-db found and is working")
+                private$.msg("Default SPS-db found and is working")
             }
         },
 
@@ -388,7 +388,7 @@ spsDb <- R6::R6Class("spsdb",
                     WHERE {WHERE}
                 "))
 
-                if(private$verbose) msg("Query sent")
+                if(private$verbose)  private$.msg("Query sent")
                 return(results)
             }
         },
@@ -414,7 +414,7 @@ spsDb <- R6::R6Class("spsdb",
                 results <- tbl(con, table) %>%
                     {rlang::eval_tidy(rlang::parse_expr(dp_expr))} %>%
                     collect()
-                if(private$verbose) msg("Query sent")
+                if(private$verbose)  private$.msg("Query sent")
                 return(results)
             }
         },
@@ -436,7 +436,7 @@ spsDb <- R6::R6Class("spsdb",
                     "UPDATE {table} SET {col}={value} WHERE {WHERE}"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
                     msg("No row updated")
-                } else {msg(glue("Updated {aff_rows} rows"))}
+                } else { private$.msg(glue("Updated {aff_rows} rows"))}
                 RSQLite::dbClearResult(res)
             }
         },
@@ -455,8 +455,8 @@ spsDb <- R6::R6Class("spsdb",
                 res <- RSQLite::dbSendStatement(con, glue(
                     "DELETE FROM {table} WHERE {WHERE}"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    msg("No row deleted")
-                } else {msg(glue("Deleted {aff_rows} rows"))}
+                    msg("No row deleted", "warning")
+                } else { private$.msg(glue("Deleted {aff_rows} rows"))}
                 RSQLite::dbClearResult(res)
             }
         },
@@ -477,13 +477,16 @@ spsDb <- R6::R6Class("spsdb",
                 res <- RSQLite::dbSendStatement(con, glue(
                     "INSERT INTO {table} VALUES ({value})"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    msg("No row inserted")
-                } else {msg(glue("Inserted {aff_rows} rows"))}
+                    msg("No row inserted", "warning")
+                } else { private$.msg(glue("Inserted {aff_rows} rows"))}
                 RSQLite::dbClearResult(res)
             }
         }
     ),
     private = list(
+        .msg = function(msg){
+            msg(msg, "SPS-INFO", "blue")
+        },
         verbosity = function(){
             verbose <- getOption('sps')$verbose
             if(is.null(verbose)) verbose <- FALSE
@@ -502,7 +505,7 @@ spsDb <- R6::R6Class("spsdb",
                     return(NULL)
                 }
             )
-            if(private$verbose) msg("db connected")
+            if(private$verbose)  private$.msg("db connected")
             return(con)
         },
         genToken = function(){
@@ -545,8 +548,8 @@ spsEncryption <- R6::R6Class(
     inherit = spsDb,
     public = list(
         initialize = function(){
-            msg("Created SPS encryption method container")
-            msg("This container inherits all functions from spsDb class")
+            private$.msg("Created SPS encryption method container")
+            private$.msg("This container inherits all functions from spsDb class")
             private$verbose <- private$verbosity()
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't find default SPS db. ",
@@ -560,7 +563,7 @@ spsEncryption <- R6::R6Class(
             } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
                 msg("Db found but some table(s) not found", "warning")
             } else {
-                msg("Default SPS-db found and is working")
+                private$.msg("Default SPS-db found and is working")
             }
         },
 
@@ -589,9 +592,9 @@ spsEncryption <- R6::R6Class(
                 res <- RSQLite::dbSendStatement(con, glue(
                     "UPDATE sps_raw SET value=x'{glue_collapse(key_encode)}' WHERE info='key'"))
                 if(RSQLite::dbGetRowsAffected(res) != 0){
-                    msg("You new key has been generated and saved in db")
-                    msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"))
-                } else {msg("Update key failed")}
+                    private$.msg("You new key has been generated and saved in db")
+                    msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"), "SPS-INFO", "orange")
+                } else {msg("Update key failed", "warning")}
                 RSQLite::dbClearResult(res)
             }
         },
@@ -603,7 +606,8 @@ spsEncryption <- R6::R6Class(
             key <- self$queryValue(table = 'sps_raw', SELECT="value",
                                    WHERE="info='key'", db_name) %>%
                 pull() %>% unlist() %>% unserialize()
-            if(private$verbose) msg(glue("OpenSSL key found md5 {glue_collapse(key$pubkey$fingerprint)}"))
+            if(private$verbose)
+                private$.msg(glue("OpenSSL key found md5 {glue_collapse(key$pubkey$fingerprint)}"))
             key
         },
 
@@ -612,14 +616,19 @@ spsEncryption <- R6::R6Class(
         #' @param data  raw vector or a file path
         #' @param db_name  database path
         #' @param out_path if provided, encrypted data will be write to a file
-        encrypt = function(data, out_path=NULL, db_name="config/sps.db"){
+        #' @param overwrite if `out_path` file exists, overwrite?
+        encrypt = function(data, out_path=NULL, overwrite = FALSE, db_name="config/sps.db"){
+            if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
+                msg(glue("File {normalizePath(out_path)} exists"), "error")
+            }
             key <- self$keyGet()
             data_ecpt <- openssl::encrypt_envelope(data, key$pubkey)
             class(data_ecpt) <- c(class(data_ecpt), "sps_ecpt")
-            if(private$verbose) msg("Data encrypted")
+            if(private$verbose)  private$.msg("Data encrypted")
             if(is.null(out_path)) return(data_ecpt)
             else saveRDS(data_ecpt, out_path)
-            if(private$verbose) msg(glue("File write to {normalizePath(out_path)}"))
+            if(private$verbose)  private$.msg(glue("File write to {normalizePath(out_path)}"))
+            return(invisible(out_path))
         },
 
         #' @description Decrypt raw data or a file with key from a SPS project
@@ -637,7 +646,7 @@ spsEncryption <- R6::R6Class(
                 if (is.raw(data)) {data}
                 else if (all(is.character(data) & length(data) == 1)) {
                     content <- readRDS(normalizePath(data, mustWork = TRUE))
-                    if(private$verbose) msg("File read into memory")
+                    if(private$verbose)  private$.msg("File read into memory")
                     content
                 }
                 else {msg("data must be raw or a valid file", "error")}
@@ -648,17 +657,24 @@ spsEncryption <- R6::R6Class(
             if(!inherits(data, "sps_ecpt"))
                 msg("Not a standard SPS encrypted object", "error")
             key <- self$keyGet()
-            data_dcpt <- suppressWarnings(openssl::decrypt_envelope(data$data,
-                                          iv = data$iv,
-                                          session =data$session,
-                                          key = key))
-            if(private$verbose) msg("Data decrypted")
+            data_dcpt <- tryCatch({
+                suppressWarnings(
+                    openssl::decrypt_envelope(
+                        data$data,
+                        iv = data$iv,
+                        session =data$session,
+                        key = key))
+                },  error = function(e){
+                    msg(e, "warning")
+                    msg("Cannot decrypt this file", "error")
+                })
+            if(private$verbose)  private$.msg("Data decrypted")
             if(is.null(out_path)) return(data_dcpt)
             else {
                 writeBin(object = data_dcpt, con = out_path)
-                msg(glue("File {normalizePath(out_path)} overwrites"), "warning")
             }
-            if(private$verbose) msg(glue("File write to {normalizePath(out_path)}"))
+            if(private$verbose)  private$.msg(glue("File write to {normalizePath(out_path)}"))
+            return(invisible(out_path))
         }
     )
 )
