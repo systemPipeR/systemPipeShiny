@@ -260,7 +260,9 @@ msg <- function(msg, level = "INFO", .other_color="white") {
             other <- crayon::make_style(.other_color)$bold
         }
     }
-    msg <- glue("[{level}] {Sys.time()} {msg}")
+    msg <- if(str_detect(msg, "\\[.*\\] [0-9]{4}-[0-9]{2}")) msg
+           else glue("[{level}] {Sys.time()} {msg}")
+
     switch (toupper(level),
         "WARNING" = warning(warn(msg), call. = FALSE, immediate. = TRUE),
         "ERROR" = stop(err(msg), call. = FALSE),
@@ -268,6 +270,7 @@ msg <- function(msg, level = "INFO", .other_color="white") {
         cat(other(msg), sep = "\n")
     )
 }
+
 
 #' Remove ANSI color code
 #' @description borrowed from crayon package, since this package is not required

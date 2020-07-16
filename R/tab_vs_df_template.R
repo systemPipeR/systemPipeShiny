@@ -24,8 +24,8 @@ df_templateUI <- function(id){
         ),
         tabTitle("Title for this kind of dataframe"), spsHr(),
         hexPanel(ns("poweredby"), "POWERED BY:",
-                 hex_imgs = c("sps/systemPipe_small.png"),
-                 hex_titles = c("SystemPipeShiny")),
+                 hex_imgs = c("img/systemPipeR_site.png"),
+                 hex_titles = c("SystemPipeShiny"), ys = c("-10")),
         renderDesc(id = ns("desc"), desc),
         div(style = "text-align: center;",
             actionButton(inputId = ns("validate_start"), label = "Start with this tab")
@@ -80,7 +80,6 @@ df_templateServer <-function(id, shared){
         tab_id <- "df_template"
         # start the tab by checking if required packages are installed
         observeEvent(input$validate_start, {
-            print(class(session))
             req(shinyCheckSpace(
                 session = session,
                 cran_pkg = c("base"),
@@ -93,7 +92,7 @@ df_templateServer <-function(id, shared){
         })
         observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
         # get upload path, note path is in upload_path()$datapath
-        upload_path <- dynamicFileServer(input, session, id = "file_upload")
+        upload_path <- dynamicFileServer(input, session, id = "file_upload") # this is reactive
         # load the file dynamically
         data_df <- reactive({
             df_path <- upload_path()
@@ -199,7 +198,7 @@ df_templateServer <-function(id, shared){
             gallery <- switch(input$select_prepro,
                               'md1' = genGallery("plot_pca"),
                               'md2' = genGallery(c("plot_template", "plot_pca")),
-                              genGallery(type = "vs")
+                              genGallery(type = "plot")
             )
             output$plot_option <- renderUI({
                 gallery

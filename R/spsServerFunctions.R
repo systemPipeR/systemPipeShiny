@@ -65,9 +65,6 @@ NULL
 #' }
 #' shinyApp(ui, server)
 shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none") {
-    if (tolower(blocking_level) %in% c("message", "warning", "error")) {
-        blocking = TRUE
-    } else {blocking = FALSE}
     toastr_actions <- list(
         message = function(m) {
             msg(m$message, "SPS-INFO", "blue")
@@ -643,6 +640,23 @@ getData <- function(tab_id, shared){
         }
         return(shared[['data']][[tab_id]])
     }, blocking_level = "error")
+}
+
+
+spsWarnings <- function(session){
+    sps_warnings <- list()
+    if(getOption("sps")$dev) {
+        msg("Developer mode is on. you shouldn't deploy app with this mode",
+            "SPS-DANGER", "red")
+        sps_warnings[['dev']] <- h4(glue("You are on developer mode"))
+    }
+    sendSweetAlert(session = session, html = TRUE,
+                   '<p style="color:var(--danger)">DANGER</p>',
+                   div(class = "sps-warning",
+                       tagList(sps_warnings)
+                       ),
+                   type = "error"
+    )
 }
 
 

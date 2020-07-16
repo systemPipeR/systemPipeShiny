@@ -7,7 +7,7 @@
 dashboardHeader <- dashboardHeaderPlus(
     title = tagList(
         span(class = "logo-lg", "systemPipeShiny"),
-        img(src = "systemPipe_small.png")
+        img(src = "img/systemPipe_small.png")
     ),
     enable_rightsidebar = FALSE,
     rightSidebarIcon = "clipboard-check",

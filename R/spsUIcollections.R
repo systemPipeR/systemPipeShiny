@@ -137,7 +137,7 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
             class = "row", style = "  margin: 10px;",
             HTML(glue('
                 <a href="{hrefs}"  class="col-sm-{image_frame_size} sps-tab-link" style="right: 1px;">
-                  <img src="{images}" class="img-gallery" style="width: 100%;">
+                  <img src="{images}" class="img-gallery" height=300 width=400 style="width: 100%;">
                   <p class="text-center h4">{texts}</p>
                 </a>
              '))
@@ -173,6 +173,7 @@ genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
                        title_color = "#0275d8", image_frame_size = 3) {
     tabs <- findTabInfo(tabnames, type)
     if (is.null(tabs)) return(div("Nothing to display in gallery"))
+    tabs$images[tabs$images == ""] <- "img/noimg.png"
     gallery(Id = Id, title = title, title_color = title_color,
             image_frame_size = image_frame_size,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],

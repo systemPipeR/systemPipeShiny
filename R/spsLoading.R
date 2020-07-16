@@ -13,6 +13,24 @@
 #' spsUI(mainUI)
 spsUI <- function(mainUI){
     fluidPage(
+        spsUIuser(mainUI),
+        spsUIadmin()
+    )
+}
+
+#' Internal functional to render admin UI
+spsUIadmin <- function(){
+    uiOutput(
+        "page_admin", container = fluidPage,
+        style = "margin-left: -2em; margin-right: -2em; height:100vh;",
+        class = "shinyjs-hide"
+    )
+}
+
+#' Internal functional to render user UI
+spsUIuser <- function(mainUI){
+    fluidPage(
+        id = "page_user",
         if (getOption("sps")$loading_screen)
         {tagList(
             div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",

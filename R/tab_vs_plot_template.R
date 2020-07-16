@@ -30,7 +30,7 @@ plot_templateUI <- function(id){
         tabTitle("Title for this kind of plot"),
         spsHr(), h3("Descrption"),
         hexPanel(ns("poweredby"), "POWERED BY:",
-                 hex_imgs = c("sps/systemPipeR_site.png"),
+                 hex_imgs = c("img/systemPipeR_site.png"),
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
         renderDesc(id = ns("desc"), desc),
         spsHr(), h3("Data preparation"),
@@ -58,7 +58,8 @@ plot_templateUI <- function(id){
                              icon("paper-plane")),
             ),
             div(class = "sps-plot-container",
-                jqui_resizable(sps_plots$addUI(plotlyOutput(ns("plot")), id))
+                jqui_resizable(sps_plots$addUI(plotlyOutput(ns("plot")), id)),
+                tags$script(glue('stretchPlotTab("{ns("plot")}")'))
             )
         )
     )

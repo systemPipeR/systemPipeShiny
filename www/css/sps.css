@@ -267,4 +267,13 @@ img-gallery:hover {
   padding-bottom: 10px;
 }
 
+a.bttn-default {
+    background: #3c8dbc !important;
+}
 
+.sps-warning h4 {
+    color: var(--danger);
+}
+.sps-warning h4::before{
+    content: "\2022 ";
+}
