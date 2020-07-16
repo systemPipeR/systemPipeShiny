@@ -58,13 +58,13 @@ library(rsvg)
 # admin_url: admin_page query url - admin
 options(sps = list(
     mode = "server",
-    loading_screen = FALSE,
+    loading_screen = TRUE,
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
-    verbose = TRUE,
+    verbose = FALSE,
     dev = TRUE,
-    admin_page = TRUE,
+    admin_page = FALSE,
     admin_url = "admin"
 ))
 source("R/spsCore.R")
@@ -82,7 +82,7 @@ options(shiny.maxRequestSize = 30*1e6)
 # options(shiny.fullstacktrace = TRUE)
 # options(shiny.error = browser)
 # options(shiny.autoreload.r = TRUE)
-options(shiny.autoreload = FALSE) # takes some computer power, you may consider turn it off
+# options(shiny.autoreload = FALSE) # takes some computer power, you may consider turn it off
 
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))

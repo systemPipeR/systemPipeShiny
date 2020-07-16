@@ -22,7 +22,8 @@ spsUI <- function(mainUI){
 spsUIadmin <- function(){
     uiOutput(
         "page_admin", container = fluidPage,
-        style = "margin-left: -2em; margin-right: -2em; height:100vh;"
+        style = "margin-left: -2em; margin-right: -2em; height:100vh;",
+        class = "shinyjs-hide"
     )
 }
 

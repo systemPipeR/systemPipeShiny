@@ -1,7 +1,6 @@
 ####### Server
 # DO NOT delete the next line
 # last change date: 20200713114337
-print(getOption('sps')$loading_screen)
 # please do not delete comments starting with '##'
 server <- function(input, output, session) {
     # add a container to communicate tabs
@@ -53,13 +52,15 @@ server <- function(input, output, session) {
     # TODO admin page, come back in next release
     admin_url <- reactive({
         names(getQueryString())
-    }) %>% debounce(1000)
-
-    output$page_admin <- renderUI({
-        req(admin_url() == getOption('sps')$admin_url)
-        shinyjs::hide("page_user", asis = TRUE)
-        adminUI()
     })
+    observe({
+        req(admin_url() == getOption('sps')$admin_url)
+        req(getOption('sps')$admin_page)
+        shinyjs::hide("page_user", asis = TRUE)
+        shinyjs::show("page_admin", asis = TRUE)
+        output$page_admin <- renderUI(adminUI())
+    })
+
     # observeEvent(input$reload, ignoreInit = TRUE, {
     #     sps_options <- getOption('sps')
     #     sps_options[['loading_screen']] = isolate(input$change)

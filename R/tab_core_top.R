@@ -57,7 +57,6 @@ core_topServer <- function(id, shared){
                 snaps <- snaps[-snap_remove]
                 shared$canvas$server <- shared$canvas$server[-snap_remove]
                 shared$canvas$ui <- shared$canvas$ui[-snap_remove]
-                print(names(shared$canvas$server)); print(names(shared$canvas$ui))
             }
             output$top_snap <- renderUI({
                 shiny::validate(need(length(isolate(shared$canvas$server)) > 0, message = "No snapshot yet"))
