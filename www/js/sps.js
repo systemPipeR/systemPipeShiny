@@ -28,7 +28,7 @@ $(document).ready(() =>{
 
 // Enable a tag to change tab by clicking text with links
 $(document).ready(function(){
-  $('.tab-content').on('click', '.sps-tab-link', (e) =>{
+  $('.tab-content').on('click', '.sps-tab-link', function(e){
     var link = $(this).attr('href');
     if (link.match('#')) {
       e.preventDefault();

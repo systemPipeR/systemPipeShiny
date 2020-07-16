@@ -198,7 +198,7 @@ df_templateServer <-function(id, shared){
             gallery <- switch(input$select_prepro,
                               'md1' = genGallery("plot_pca"),
                               'md2' = genGallery(c("plot_template", "plot_pca")),
-                              genGallery(type = "vs")
+                              genGallery(type = "plot")
             )
             output$plot_option <- renderUI({
                 gallery
