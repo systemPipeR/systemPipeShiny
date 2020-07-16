@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-16.04, r: '4.0', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+          - {os: ubuntu-18.04, r: '4.0', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
           - {os: macOS-latest, r: '4.0'}
           - {os: windows-latest, r: '4.0'}
 
@@ -58,7 +58,7 @@ jobs:
         run: |
           sudo apt-get install libcurl4-openssl-dev
           sudo apt-get install libv8-dev
-          sudo apt-get install libsodium-dev
+          sudo apt-get install libssl-dev
 
       - name: Install dependencies
         run: |
