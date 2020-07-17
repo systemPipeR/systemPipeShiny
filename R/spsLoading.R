@@ -7,11 +7,7 @@
 #' @return a `fluidPage`
 #'
 #' @examples
-#' ui <- fluidPage()
-#' server <- function(input, output, session) {}
-#' mainUI <- shinyApp(ui, server)
-#' spsUI(mainUI)
-spsUI <- function(mainUI){
+spsUIwrapper <- function(mainUI){
     fluidPage(
         spsUIuser(mainUI),
         spsUIadmin()

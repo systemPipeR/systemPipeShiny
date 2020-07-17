@@ -40,4 +40,6 @@ admin_url:
     default: admin
     other: ["*"]
 
-
+warning_toast:
+    default: true
+    other: [false]

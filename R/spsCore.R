@@ -1,20 +1,19 @@
 ######################### SPS main function #############################
-
+# Initiation, creating tabs etc.
 #' @import glue
 NULL
 
-#' Start systemPipeShiny
+#' Pre start SPS checks
 #'
 #' @param appDir where is the app directory root location, default current
 #' working folder
 #' @export
 #'
 #' @examples
-#' runSPS()
-runSPS <- function(appDir = getwd()) {
-    source(glue("{appDir}/global.R"))
+#' checkSps()
+checkSps <- function(appDir = getwd()) {
     resolveOptions(appDir)
-    return(runApp(appDir = appDir))
+    checkTabs(appDir)
 }
 
 verifyConfig <- function(appDir) {
@@ -110,8 +109,33 @@ resolveOptions <- function(appDir = getwd()){
 #'
 #' @examples
 #' # Make sure you created the app folder and has config.yaml in config folder
-#' ViewSpsDefaults()
-ViewSpsDefaults <- function(appDir = getwd()){
+#' viewSpsDefaults()
+viewSpsDefaults <- function(appDir = getwd()){
     sps_defaults <- verifyConfig(appDir)
     cat(glue("{names(sps_defaults)}: {sps_defaults}\n\n"))
 }
+
+#' Check sps tab file on start
+checkTabs <- function(appDir){
+    if(getOption('sps')$verbose) msg("Now check the tab.csv info")
+    tab_info <- if (exists("tab_info")) {
+        tab_info
+    } else {
+        suppressMessages(vroom::vroom(glue("{appDir}/config/tabs.csv"),
+                                      comment = "#", na = character()))
+    }
+    ta_dup <- tab_info$tab_name[base::duplicated(tab_info$tab_name)] %>% unique()
+    if(length(ta_dup) > 0){
+        msg(glue("Tabname must be unique, find duplicates name(s) '{paste(ta_dup, collapse = ', ')}'"), "error")
+    }
+    no_img <- tab_info$tab_name[tab_info$type_sub == "plot" & tab_info$image == ""]
+    if(length(no_img) > 0){
+        msg(glue("These plot tabs has no image path:
+                  '{paste(no_img, collapse = ', ')}'
+                  It is recommended to add an image. It will be used to generate gallery.
+                  Now an empty image is used for these tabs' gallery."),
+            "warning")
+    }
+    if(getOption('sps')$verbose) msg("tab.csv info check pass")
+}
+

@@ -190,7 +190,7 @@ findTabInfo <- function(tabnames=NULL, type = NULL) {
     tabs <- if (exists("tab_info")) {
         tab_info
     } else {
-       vroom(glue("{appDir}/config/tabs.csv"), comment = "#", na = character())
+        vroom::vroom(glue("{appDir}/config/tabs.csv"), comment = "#", na = character())
     }
     if(!getOption('sps')$dev){
         tabs <- tabs[!str_detect(tabs$tab_name, "_template$"), ]

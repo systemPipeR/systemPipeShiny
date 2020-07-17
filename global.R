@@ -49,6 +49,7 @@ library(rsvg)
 
 # SPS options
 # mode: running mode - local, server
+# warning_toast: toast popup message when you are under some dangerious options - TRUE, FALSE
 # loading_screen: to show loading screen? - TRUE, FALSE
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
 # loading_particles: particle effects on loading, loading_screen must be TRUE - TRUE, FALSE
@@ -57,8 +58,9 @@ library(rsvg)
 # dev: developer mode, you are able to add tabs - TRUE, FALSE
 # admin_url: admin_page query url - admin
 options(sps = list(
-    mode = "server",
-    loading_screen = TRUE,
+    mode = "local",
+    warning_toast = TRUE,
+    loading_screen = F,
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
@@ -68,9 +70,9 @@ options(sps = list(
     admin_url = "admin"
 ))
 source("R/spsCore.R")
-source("R/spsSupport.R")
+source("R/spsUlti.R")
 source("R/spsClasses.R")
-resolveOptions()
+checkSps()
 
 # other useful shiny options
 # max upload size

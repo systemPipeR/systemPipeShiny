@@ -1,7 +1,3 @@
-####### UI
-# valid colors:
-# red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black
-
 # please do not delete comments starting with '##'
 # header
 dashboardHeader <- dashboardHeaderPlus(
@@ -11,14 +7,14 @@ dashboardHeader <- dashboardHeaderPlus(
     ),
     enable_rightsidebar = FALSE,
     rightSidebarIcon = "clipboard-check",
-    left_menu = topUI("top")
+    left_menu = core_topUI("core_top")
 )
 # side bar
 dashboardSidebar <-  dashboardSidebar(
     sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
                       label = "Search..."),
     sidebarMenu(id = "left_sidebar",
-        menuItem("Dashboard", tabName = "dashboard", icon = icon("sitemap")
+        menuItem("Dashboard", tabName = "core_dashboard", icon = icon("sitemap")
                 ),
         menuItem(id = 'wf-control',
             HTML('Workflow Mangement<small class="badge pull-right bg-olive">Beta</small>'), tabName = "wf_main",
@@ -28,7 +24,7 @@ dashboardSidebar <-  dashboardSidebar(
             menuSubItem(text = "Run Workflow", tabName = "wf_run")
                  ),
         menuItem(
-            "Visualization", icon = icon("tasks"), tabName = "vs_main",
+            "Visualization", icon = icon("images"), tabName = "vs_main",
             menuItem(
                 text = "Prepare dataset",
                 ## vs dfs add to sidebar
@@ -52,35 +48,37 @@ dashboardSidebar <-  dashboardSidebar(
                 menuSubItem(text = "Volcano", tabName = "plot_volcano")
                 )
         ),
-        ## add other tabs
-        menuItem("About", icon = icon("info"), tabName = "about")
+        menuItem("Canvas", tabName = "core_canvas", icon = icon("paint-brush")
+        ),
+        menuItem("About", icon = icon("info"), tabName = "core_about")
     )
 )
 # body
 dashboardBody <- dashboardBody(
-    tags$div(
+    tags$head(
+        tags$link(rel="shortcut icon", href="img/systemPipe_small.png"),
         useShinyjs(),
         useSweetAlert(),
-        useSps()
+        useSps(),
     ),
     tabItems(
-        tabItem(tabName = "dashboard", dashboardUI("dashboard")),
         # WF tabs
         tabItem(tabName = "wf_main", wf_mainUI("wf_main")),
         wfPanel(),
-        tabItem(tabName = "wf_targets", targetUI("wf_targets")),
-        tabItem(tabName = "wf_wf", wfUI("wf_wf")),
-        tabItem(tabName = "wf_config", configUI("wf_config")),
+        tabItem(tabName = "wf_targets", wf_targetUI("wf_targets")),
+        tabItem(tabName = "wf_wf", wf_wfUI("wf_wf")),
+        tabItem(tabName = "wf_config", wf_configUI("wf_config")),
+        tabItem(tabName = "wf_run", wf_runUI("wf_run")),
         # VS tabs
         tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
-        devComponents("ui_tab_df"),
-        devComponents("ui_tab_plot"),
         ## vs dfs
+        devComponents("ui_tab_df"),
         tabItem(tabName = "df_targets", df_targetsUI("df_targets")),
         tabItem(tabName = "df_count", df_countUI("df_count")),
         tabItem(tabName = "df_degcount", df_degcountUI("df_degcount")),
         tabItem(tabName = "df_edgeR", df_edgeRUI("df_edgeR")),
         ## vs plots
+        devComponents("ui_tab_plot"),
         tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),
         tabItem(tabName = "plot_box", plot_boxUI("plot_box")),
         tabItem(tabName = "plot_tsne", plot_tsneUI("plot_tsne")),
@@ -89,20 +87,21 @@ dashboardBody <- dashboardBody(
         tabItem(tabName = "plot_heat", plot_heatUI("plot_heat")),
         tabItem(tabName = "plot_clust", plot_clustUI("plot_clust")),
         tabItem(tabName = "plot_volcano", plot_volcanoUI("plot_volcano")),
-        ## other tabs
-        tabItem(tabName = "about", aboutUI("about"))
+        # core tabs
+        tabItem(tabName = "core_dashboard", core_dashboardUI("core_dashboard")),
+        tabItem(tabName = "core_canvas", core_canvasUI("core_canvas")),
+        tabItem(tabName = "core_about", core_aboutUI("core_about"))
     )
 )
-# right side bar
+# right side bar, not in use at this moment
 # rightsidebar <- rightSidebar(
 #     background = "light", icon = "clipboard-check", width = 400,
-#     rightUI("right")
+#     core_rightUI("core_right")
 # )
 # app main UI
 mainUI <- dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
+                            title = "systemPipeShiny",
                             body =  dashboardBody #,rightsidebar = rightsidebar
                             )
 # merge everything together
-ui <- spsUI(mainUI)
-
-
+ui <- spsUIwrapper(mainUI)
