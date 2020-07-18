@@ -8,7 +8,7 @@ loading_screen:
 
 loading_theme:
     default: vhelix
-    other: ["404"]
+    other: ["*"]
 
 
 loading_particles:

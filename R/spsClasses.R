@@ -1,9 +1,13 @@
+######################## SPS R6 Classes #######################
+
 #' SPS snapshots container
 #'
 #' Initiate this container at the global level. This container is used to
 #' communicate plotting tabs with the canvas tab
 #' @importFrom R6 R6class
 #' @rdname plotContainer
+#' @importFrom R6 R6class
+#' @importFrom rlang eval_tidy parse_expr
 #' @export
 #' @examples
 #' library(shiny)
@@ -148,9 +152,10 @@
 plotContainer <- R6::R6Class("plot_container",
     public = list(
         initialize = function(){
-            msg("Created a plot container R6 object")
+            spsinfo("Created a plot container R6 object", verbose = TRUE)
             private$verbose <- private$verbosity()
-            msg(c("Current verbosity for plot contianer is ", private$verbose))
+            spsinfo(c("Current verbosity for plot contianer is ", private$verbose),
+                    verbose = TRUE)
         },
 
         #' @field a list of plot UI snapshots will be stored here. You shouldn't
@@ -171,13 +176,13 @@ plotContainer <- R6::R6Class("plot_container",
                 msg("plot UI is not shinytag or shiny.taglist", "error")
             DOM_id <- private$tagAttrib(plot_DOM, 'id')
             if (length(DOM_id) < 1)
-                msg(c("Can't find ID for this plot UI output function. If you ",
+                spswarn(c("Can't find ID for this plot UI output function. If you ",
                       "are sure you have use the right function, then this ",
                       "plotting UI function is an exception.\n",
                       "Please open an issue on our Github page.",
-                      "https://github.com/systemPipeR/systemPipeShiny"), "warning")
+                      "https://github.com/systemPipeR/systemPipeShiny"))
             if(not_empty(self$plot_ui[[tab_id]]) & private$verbose)
-                msg(glue("Plot UI for this tab `{tab_id}` already exists ",
+                spsinfo(glue("Plot UI for this tab `{tab_id}` already exists ",
                          "in the container, overwrite"))
             self$plot_ui[[tab_id]] <- plot_DOM
             return(plot_DOM)
@@ -191,7 +196,7 @@ plotContainer <- R6::R6Class("plot_container",
         #' @return a saved plotting DOM
         getUI = function(tab_id, plot_id_new = NULL){
             ui <- self$plot_ui[[tab_id]]
-            if(is.null(ui)) msg(glue("Can't find `{id}` in plot_ui list"), "error")
+            if(is.null(ui)) spserror(glue("Can't find `{id}` in plot_ui list"))
             if(!is.null(plot_id_new)){
                 ui <- private$tagAttrib(ui, 'id', plot_id_new)
             }
@@ -293,6 +298,13 @@ plotContainer <- R6::R6Class("plot_container",
 )
 
 
+# Imports for database handling classes
+#' @importFrom R6 R6class
+#' @importFrom RSQLite dbDisconnect dbListTables dbWriteTable dbGetQuery dbSendStatement dbGetRowsAffected dbClearResult dbConnect SQLite
+#' @importFrom dplyr tribble tbl collect pull
+#' @importFrom openssl rsa_keygen encrypt_envelope decrypt_envelope
+NULL
+
 #' SPS database functions
 #'
 #' Initiate this container at global level. Methods in this class can help admin to
@@ -303,7 +315,6 @@ plotContainer <- R6::R6Class("plot_container",
 #' A SQLite database by default is created inside `config` directory. If not, you
 #' can use `createDb` method to create one. On initiation, this class checks
 #' if the default db is there and gives warnings if not.
-#' @importFrom R6 R6class
 #' @rdname spsDb
 #' @export
 #' @examples
@@ -322,8 +333,7 @@ plotContainer <- R6::R6Class("plot_container",
 spsDb <- R6::R6Class("spsdb",
     public = list(
         initialize = function(){
-            msg("Created SPS database method container", "SPS-INFO")
-            private$verbose <- private$verbosity()
+            spsinfo("Created SPS database method container", verbose = TRUE)
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't find default SPS db. ",
                           "Default name 'config/sps.db'. Use `createDb` method",
@@ -332,11 +342,11 @@ spsDb <- R6::R6Class("spsdb",
             con <- private$dbConnect("config/sps.db")
 
             if(is.null(con)){
-                msg(fail_msg, "warning")
+                spswarn(fail_msg)
             } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
-                msg("Db found but some table(s) not found", "warning")
+                spswarn("Db found but some table(s) not found")
             } else {
-                private$.msg("Default SPS-db found and is working")
+                spsinfo("Default SPS-db found and is working")
             }
         },
 
@@ -349,23 +359,25 @@ spsDb <- R6::R6Class("spsdb",
             if(!dir.exists(dirname(db_name))) dir.create(dirname(db_name), recursive = TRUE)
             con <- private$dbConnect(db_name)
             if(is.null(con)){
-                msg("Can't create db. Make sure your wd is writeable", "error")
+                spserror("Can't create db. Make sure your wd is writeable")
             } else {
-                sps_meta <- tribble(
+                sps_meta <- dplyr::tribble(
                     ~info, ~value,
                     "creation_date", as.character(format(Sys.time(), "%Y%m%d%H%M%S")),
                 )
                 RSQLite::dbWriteTable(con, 'sps_meta', sps_meta, overwrite = TRUE)
-                if(private$verbose) msg("Db write meta")
-                key <- private$genkey() %>% serialize(NULL)
-                sps_raw <- tribble(
+                spsinfo("Db write meta")
+                key <- private$genkey()
+                key_encode <- key %>% serialize(NULL)
+                sps_raw <- dplyr::tribble(
                     ~info, ~value,
-                    "key", key,
+                    "key", key_encode,
                 )
                 RSQLite::dbWriteTable(con, 'sps_raw', sps_raw, overwrite = TRUE)
-                if(private$verbose) msg("Key generated and stored in db")
+                spsinfo("Key generated and stored in db")
                 msg(glue("Db created at '{db_name}'. DO NOT share this file with others"),
                     "SPS-DANGER", "red")
+                msg(glue("Key md5 {glue_collapse(key$pubkey$fingerprint)}"), "SPS-INFO", "orange")
             }
         },
 
@@ -380,15 +392,14 @@ spsDb <- R6::R6Class("spsdb",
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             con <- private$dbConnect(db_name)
             if(is.null(con)){
-                msg("Can't find db.", "error")
+                spserror("Can't find db.")
             } else {
                 results <- RSQLite::dbGetQuery(con, glue("
                     SELECT {SELECT}
                     FROM {table}
                     WHERE {WHERE}
                 "))
-
-                if(private$verbose)  private$.msg("Query sent")
+                spsinfo("Query sent")
                 return(results)
             }
         },
@@ -411,9 +422,9 @@ spsDb <- R6::R6Class("spsdb",
             if(is.null(con)){
                 msg("Can't find db.", "error")
             } else {
-                results <- tbl(con, table) %>%
+                results <- dplyr::tbl(con, table) %>%
                     {rlang::eval_tidy(rlang::parse_expr(dp_expr))} %>%
-                    collect()
+                    dplyr::collect()
                 if(private$verbose)  private$.msg("Query sent")
                 return(results)
             }
@@ -430,13 +441,13 @@ spsDb <- R6::R6Class("spsdb",
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             con <- private$dbConnect(db_name)
             if(is.null(con)){
-                msg("Can't find db.", "error")
+                spserror("Can't find db.")
             } else {
                 res <- RSQLite::dbSendStatement(con, glue(
                     "UPDATE {table} SET {col}={value} WHERE {WHERE}"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    msg("No row updated")
-                } else { private$.msg(glue("Updated {aff_rows} rows"))}
+                    spsinfo("No row updated", verbose = TRUE)
+                } else {spsinfo(glue("Updated {aff_rows} rows"), verbose = TRUE)}
                 RSQLite::dbClearResult(res)
             }
         },
@@ -450,13 +461,13 @@ spsDb <- R6::R6Class("spsdb",
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             con <- private$dbConnect(db_name)
             if(is.null(con)){
-                msg("Can't find db.", "error")
+                spserror("Can't find db.")
             } else {
                 res <- RSQLite::dbSendStatement(con, glue(
                     "DELETE FROM {table} WHERE {WHERE}"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    msg("No row deleted", "warning")
-                } else { private$.msg(glue("Deleted {aff_rows} rows"))}
+                    spsinfo("No row deleted", verbose = TRUE)
+                } else {spsinfo(glue("Deleted {aff_rows} rows"), verbose = TRUE)}
                 RSQLite::dbClearResult(res)
             }
         },
@@ -477,49 +488,32 @@ spsDb <- R6::R6Class("spsdb",
                 res <- RSQLite::dbSendStatement(con, glue(
                     "INSERT INTO {table} VALUES ({value})"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    msg("No row inserted", "warning")
-                } else { private$.msg(glue("Inserted {aff_rows} rows"))}
+                    spswarn("No row inserted")
+                } else {spsinfo(glue("Inerted {aff_rows} rows"), verbose = TRUE)}
                 RSQLite::dbClearResult(res)
             }
         }
     ),
     private = list(
-        .msg = function(msg){
-            msg(msg, "SPS-INFO", "blue")
-        },
-        verbosity = function(){
-            verbose <- getOption('sps')$verbose
-            if(is.null(verbose)) verbose <- FALSE
-            return(verbose)
-        },
         dbConnect = function(db_name){
             if(!is.character(db_name) | length(db_name) != 1)
-                msg("Invalid db name", "error")
+                spserror("Invalid db name")
             con <- tryCatch(
                 RSQLite::dbConnect(
                     RSQLite::SQLite(),
                     normalizePath(db_name, mustWork = FALSE)
                 ),
                 error = function(e){
-                    msg(e, "warning")
+                    spswarn(e)
                     return(NULL)
                 }
             )
-            if(private$verbose)  private$.msg("db connected")
+            spsinfo("Db connected")
             return(con)
-        },
-        genToken = function(){
-            key <- openssl::rsa_keygen()
-            key_path <- tempfile()
-            openssl::write_pem(key, key_path)
-            if (is.writeable(".")) openssl::write_ssh(key, "sps_pub.txt")
-            else msg("Current directory unwriteable", "error")
-            return(key_path)
         },
         genkey = function(){
             return(openssl::rsa_keygen())
-        },
-        verbose = FALSE
+        }
     )
 )
 
@@ -531,7 +525,6 @@ spsDb <- R6::R6Class("spsdb",
 #'
 #' This class requires the SPS database. This class inherits all functions from
 #' the db class, so there is no need to initiate the `spsDb` container.
-#' @importFrom R6 R6class
 #' @rdname spsEncryption
 #' @export
 #' @examples
@@ -548,9 +541,8 @@ spsEncryption <- R6::R6Class(
     inherit = spsDb,
     public = list(
         initialize = function(){
-            private$.msg("Created SPS encryption method container")
-            private$.msg("This container inherits all functions from spsDb class")
-            private$verbose <- private$verbosity()
+            spsinfo("Created SPS encryption method container", verbose = TRUE)
+            spsinfo("This container inherits all functions from spsDb class")
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't find default SPS db. ",
                           "Default name 'config/sps.db'. Use `createDb` method",
@@ -559,11 +551,11 @@ spsEncryption <- R6::R6Class(
             con <- private$dbConnect("config/sps.db")
 
             if(is.null(con)){
-                msg(fail_msg, "warning")
+                spswarn(fail_msg)
             } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
-                msg("Db found but some table(s) not found", "warning")
+                spswarn("Db found but some table(s) not found")
             } else {
-                private$.msg("Default SPS-db found and is working")
+                spsinfo("Default SPS-db found and is working", verbose = TRUE)
             }
         },
 
@@ -574,15 +566,15 @@ spsEncryption <- R6::R6Class(
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             con <- private$dbConnect(db_name)
             if(is.null(con)){
-                msg("Can't find db.", "error")
+                spserror("Can't find db.")
             } else {
                 old_value <- tryCatch(
                     RSQLite::dbGetQuery(con,
                         "SELECT `value`
                          FROM `sps_raw`
-                         WHERE (`info` = 'key')") %>% pull() ,
+                         WHERE (`info` = 'key')") %>% dplyr::pull() ,
                     error = function(e){
-                        msg(e, "warning")
+                        spswarn(e)
                         return(NULL)
                     }
                 )
@@ -592,9 +584,9 @@ spsEncryption <- R6::R6Class(
                 res <- RSQLite::dbSendStatement(con, glue(
                     "UPDATE sps_raw SET value=x'{glue_collapse(key_encode)}' WHERE info='key'"))
                 if(RSQLite::dbGetRowsAffected(res) != 0){
-                    private$.msg("You new key has been generated and saved in db")
+                    spsinfo("You new key has been generated and saved in db")
                     msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"), "SPS-INFO", "orange")
-                } else {msg("Update key failed", "warning")}
+                } else {spserror("Update key failed")}
                 RSQLite::dbClearResult(res)
             }
         },
@@ -605,9 +597,9 @@ spsEncryption <- R6::R6Class(
         keyGet = function(db_name="config/sps.db"){
             key <- self$queryValue(table = 'sps_raw', SELECT="value",
                                    WHERE="info='key'", db_name) %>%
-                pull() %>% unlist() %>% unserialize()
+                dplyr::pull() %>% unlist() %>% unserialize()
             if(private$verbose)
-                private$.msg(glue("OpenSSL key found md5 {glue_collapse(key$pubkey$fingerprint)}"))
+                spsinfo(glue("OpenSSL key found md5 {glue_collapse(key$pubkey$fingerprint)}"))
             key
         },
 
@@ -619,7 +611,7 @@ spsEncryption <- R6::R6Class(
         #' @param overwrite if `out_path` file exists, overwrite?
         encrypt = function(data, out_path=NULL, overwrite = FALSE, db_name="config/sps.db"){
             if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
-                msg(glue("File {normalizePath(out_path)} exists"), "error")
+                spserror(glue("File {normalizePath(out_path)} exists"))
             }
             key <- self$keyGet()
             data_ecpt <- openssl::encrypt_envelope(data, key$pubkey)
@@ -627,7 +619,7 @@ spsEncryption <- R6::R6Class(
             if(private$verbose)  private$.msg("Data encrypted")
             if(is.null(out_path)) return(data_ecpt)
             else saveRDS(data_ecpt, out_path)
-            if(private$verbose)  private$.msg(glue("File write to {normalizePath(out_path)}"))
+            spsinfo(glue("File write to {normalizePath(out_path)}"))
             return(invisible(out_path))
         },
 
@@ -639,23 +631,23 @@ spsEncryption <- R6::R6Class(
         #' @param db_name  database path
         decrypt = function(data, out_path=NULL, overwrite = FALSE, db_name="config/sps.db"){
             if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
-                msg(glue("File {normalizePath(out_path)} exists"), "error")
+                spserror(glue("File {normalizePath(out_path)} exists"))
             }
 
             data <- tryCatch({
                 if (is.raw(data)) {data}
                 else if (all(is.character(data) & length(data) == 1)) {
                     content <- readRDS(normalizePath(data, mustWork = TRUE))
-                    if(private$verbose)  private$.msg("File read into memory")
+                    spsinfo("File read into memory")
                     content
                 }
-                else {msg("data must be raw or a valid file", "error")}
+                else {spserror("data must be raw or a valid file")}
                 }, error = function(e){
-                    msg(e, "warning")
-                    msg("Not a standard SPS encrypted object", "error")
+                    spswarn(e)
+                    spserror("Not a standard SPS encrypted object")
                 })
             if(!inherits(data, "sps_ecpt"))
-                msg("Not a standard SPS encrypted object", "error")
+                spserror("Not a standard SPS encrypted object")
             key <- self$keyGet()
             data_dcpt <- tryCatch({
                 suppressWarnings(
@@ -665,15 +657,15 @@ spsEncryption <- R6::R6Class(
                         session =data$session,
                         key = key))
                 },  error = function(e){
-                    msg(e, "warning")
-                    msg("Cannot decrypt this file", "error")
+                    spswarn(e)
+                    spserror("Cannot decrypt this file")
                 })
-            if(private$verbose)  private$.msg("Data decrypted")
+            spsinfo("Data decrypted")
             if(is.null(out_path)) return(data_dcpt)
             else {
                 writeBin(object = data_dcpt, con = out_path)
             }
-            if(private$verbose)  private$.msg(glue("File write to {normalizePath(out_path)}"))
+            spsinfo(glue("File write to {normalizePath(out_path)}"))
             return(invisible(out_path))
         }
     )

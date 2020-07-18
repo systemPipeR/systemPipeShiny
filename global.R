@@ -18,7 +18,6 @@ library(shinyAce) # Ace editor
 library(shinytoastr) # toastr js
 library(shinyjqui) # jQuery UI
 library(shinyFiles) # local mode select input file
-library(waiter) # loading process bar
 # remotes::install_github("dreamRs/particlesjs") # particlesjs for loading theme
 # install.packages("crayon")
 

@@ -1,3 +1,6 @@
+## Internal funcs for plotting Workflow
+
+
 # Graphviz plot workflow
 # df_wf: data frame, the standard df generated from subsetRmd function
 # out_type: choose from 'html', 'svg', 'png'
@@ -7,17 +10,15 @@
 # height: int, height of svg or png in pixels, default NULL, automatic
 # width: int, width of svg or png in pixels, default NULL, automatic
 # only selected steps will be plotted, make sure at least some steps are TRUE in 'selected' column in df_wf
-library(DOT)
-library(rsvg)
-library(assertthat)
-library(magrittr)
-library(stringr)
+
+#' @importFrom DOT dot
+#' @importFrom rsvg rsvg_svg rsvg_png
 plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='default', height=NULL, width=NULL){
     # pre checks
     assert_that(out_type %in% c('html', 'png', 'svg', 'shiny'), msg = "output type needs to be one of 'html', 'png', 'svg'")
     assert_that(plot_style %in% c('detect', 'none', 'linear'), msg = "plot style needs to be one of 'detect', 'none', 'linear'")
     assert_that(is.data.frame(df_wf))
-    all(c("t_lvl", "t_number", "t_text", "selected", "no_run", "no_success", "link_to") %in% names(df_wf)) %>% 
+    all(c("t_lvl", "t_number", "t_text", "selected", "no_run", "no_success", "link_to") %in% names(df_wf)) %>%
         assert_that(msg='One of following columns is missing: "t_lvl" "t_number" "t_text" "selected" "no_run" "no_success" "link_to"')
     if (out_path == 'default' & !out_type %in% c('html', 'shiny')){
         assert_that(is.writeable(out_path))
@@ -27,10 +28,10 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
                           'svg' = paste0('wfplot', format(Sys.time(), "%Y%m%d%H%M%S"), '.svg'),
                           'png' = paste0('wfplot', format(Sys.time(), "%Y%m%d%H%M%S"), '.png')
         )
-    } 
+    }
     df_wf <- df_wf[df_wf$selected == TRUE, ]
     if (nrow(df_wf) == 0) return(cat("no step is selected"))
-    
+
     wf <- .make_plot(df_wf, plot_style, is_main_branch=FALSE)
     wf <- append(wf, .make_plot(df_wf, plot_style, is_main_branch=TRUE), after = length(wf) - 1)
     # special case for detection style plotting, need to move unneeded nodes out of main branch
@@ -40,17 +41,17 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
     wf <- paste0(wf, collapse = "")
     # plot
     plot <- switch(out_type,
-           'shiny' = dot(wf, return = "verbatim"),
-           'html' = dot(wf),
-                               'svg' = dot(wf, return = "verbatim") %>% rsvg_svg(file = out_path, height = height, width = width),
-               'png' = dot(wf, return = "verbatim") %>% charToRaw() %>% rsvg_png(file = out_path, height = height, width = width)
+           'shiny' = DOT::dot(wf, return = "verbatim"),
+           'html' = DOT::dot(wf),
+                               'svg' = DOT::dot(wf, return = "verbatim") %>% rsvg::rsvg_svg(file = out_path, height = height, width = width),
+               'png' = DOT::dot(wf, return = "verbatim") %>% charToRaw() %>% rsvg::rsvg_png(file = out_path, height = height, width = width)
     )
     return(plot)
 }
 
 .find_long_branch <- function(t_number, link_to){
     track_back <- function(t_number, link_to, track_list){
-        for (each_track_n in 1:length(track_list)){ 
+        for (each_track_n in 1:length(track_list)){
             each_track = track_list[[each_track_n]] %>% unlist()
             previous_t_number <- names(link_to_list[which(sapply(link_to_list, function(x) any(x == t_number[each_track[1]])))])
             for (each_num in 1:length(previous_t_number)) {
@@ -71,7 +72,7 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
     names(link_to_list) <- t_number
     last_step <- list(length(t_number))
             track_list <- track_back(t_number, link_to, last_step)
-    long <- sapply(track_list, function(x) all(c(1, length(t_number)) %in% x)) %>% 
+    long <- sapply(track_list, function(x) all(c(1, length(t_number)) %in% x)) %>%
         track_list[.] %>% sapply(length) %>% which.max() %>% track_list[.] %>% unlist()
     return(long)
 }
@@ -97,7 +98,7 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
         )
     }
     if (nrow(df_wf) == 0) return(c(wf, "}"))
-    
+
     steps <- df_wf$t_number
     step_text <- str_replace_all(df_wf$t_text, '[\'\"]', "\\\\'")
     link_to <- df_wf$link_to
@@ -138,14 +139,14 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
                     plot_start <- wf %>% str_which("digraph")
     sub_start <- wf %>% str_which("subgraph ")
     sub_steps_lines <- wf %>% str_which(" -> [^\\[]") %>% .[. > sub_start]
-    sub_number <- wf[sub_steps_lines] %>% 
-        str_remove_all("[->;\n]") %>% str_remove("^.*[ ]+") %>% 
+    sub_number <- wf[sub_steps_lines] %>%
+        str_remove_all("[->;\n]") %>% str_remove("^.*[ ]+") %>%
                 str_remove("n") %>% str_replace_all("_", "\\.") %>%
         sapply(function(x) df_wf$t_number[df_wf$t_number == x]) %>% unlist()
     move_line_num <- sub_steps_lines[!sub_number %in% df_wf$t_number[long]]
     if (length(move_line_num) == 0) return(wf)
     move_lines <- wf[move_line_num]
-    wf <- wf %>% .[-move_line_num] %>% append(move_lines, after = plot_start) 
+    wf <- wf %>% .[-move_line_num] %>% append(move_lines, after = plot_start)
     return(wf)
 }
 ## Function used on this code:
@@ -173,7 +174,7 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html', out_path='defaul
 # df_wf$link_to[8] = "3, 2.5"
 # df_wf$selected = TRUE
 # plotWF(df_wf, plot_style = "linear")
-    
+
 
 
 
