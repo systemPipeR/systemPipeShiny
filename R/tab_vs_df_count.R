@@ -1,4 +1,4 @@
-count_desc <- 
+count_desc <-
     "
 #### Here you can upload the raw count data frame
 
@@ -10,9 +10,9 @@ df_countUI <- function(id, description = count_desc){
         h2("Raw Count Data Frame"),
         HTML(markdown::renderMarkdown(text = glue(description))),
         radioGroupButtons(
-            inputId = ns("plot_source"), label = "Choose your plot file source:", 
+            inputId = ns("plot_source"), label = "Choose your plot file source:",
             selected = "upload",
-            choiceNames = c("Upload", "Example"), 
+            choiceNames = c("Upload", "Example"),
             choiceValues = c("upload", "eg"),
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
@@ -21,7 +21,7 @@ df_countUI <- function(id, description = count_desc){
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
-                            label = "Add to task", 
+                            label = "Add to task",
                             icon("paper-plane"))
         ),
         fluidRow(id = "plot_options",
@@ -36,55 +36,59 @@ df_countUI <- function(id, description = count_desc){
 
 
 ## server
-df_countServer <- function(input, output, session, shared){
-    ns <- session$ns
-    shinyjs::hide(id = "plot_options")
-    
-    t.df <- reactive(shinyCatch({
-        hot_count(
-            count_p = input$df_path, 
-            choice = input$plot_source
-        )
-    }))    
-    # start the tab
-    shinyjs::hide(id = "tab_main")
-    observeEvent(input$validate, {
-        if (shinyCheckSpace(
-            session = session#, 
-            # cran_pkg = "pkg-1",
-            # bioc_pkg = c("pkg-1", "pkg-2"), 
-            # github = "haha/pkg-3"
-        )) {
-            shinyjs::show(id = "tab_main")
-        }
-    })
-    # update table
-    observeEvent(c(input$plot_source, input$upload) , {
-        if (input$plot_source == "upload" &  is.empty(input$df_path)) shinyjs::hide("df") 
-        else {
-            shinyjs::show("df")
-            disable("upload"); disable("df_path")
-            }
-        
-    })
-    # only display first 100 rows
-    output$df <- renderRHandsontable({
-        rhandsontable(head(t.df(), 100), readOnly = TRUE)
-    })
-    
-    onclick("to_task", shinyjs::show(id = "plot_options")) 
-    check_results <- T
-    observeEvent(input$to_task, {
-        shared$count$file <- tempfile(pattern = "countDFeByg", fileext = ".xls")
-        if (all(check_results)) {  
-            sendSweetAlert(
-                session = session, type = "success", 
-                title = "Data added", text = "Choose a plot type"
+df_countServer <- function(id, shared){
+    module <- function(input, output, session){
+        ns <- session$ns
+        shinyjs::hide(id = "plot_options")
+
+        t.df <- reactive(shinyCatch({
+            hot_count(
+                count_p = input$df_path,
+                choice = input$plot_source
             )
-            shared$count$df <- t.df()
-            writeLines(apply(shared$count$df, 1, paste, collapse = "\t"), shared$count$file)
-        }
-    })
+        }))
+        # start the tab
+        shinyjs::hide(id = "tab_main")
+        observeEvent(input$validate, {
+            if (shinyCheckSpace(
+                session = session#,
+                # cran_pkg = "pkg-1",
+                # bioc_pkg = c("pkg-1", "pkg-2"),
+                # github = "haha/pkg-3"
+            )) {
+                shinyjs::show(id = "tab_main")
+            }
+        })
+        # update table
+        observeEvent(c(input$plot_source, input$upload) , {
+            if (input$plot_source == "upload" &  is.empty(input$df_path)) shinyjs::hide("df")
+            else {
+                shinyjs::show("df")
+                disable("upload"); disable("df_path")
+            }
+
+        })
+        # only display first 100 rows
+        output$df <- renderRHandsontable({
+            rhandsontable(head(t.df(), 100), readOnly = TRUE)
+        })
+
+        onclick("to_task", shinyjs::show(id = "plot_options"))
+        check_results <- T
+        observeEvent(input$to_task, {
+            shared$count$file <- tempfile(pattern = "countDFeByg", fileext = ".xls")
+            if (all(check_results)) {
+                sendSweetAlert(
+                    session = session, type = "success",
+                    title = "Data added", text = "Choose a plot type"
+                )
+                shared$count$df <- t.df()
+                writeLines(apply(shared$count$df, 1, paste, collapse = "\t"), shared$count$file)
+            }
+        })
+
+    }
+    moduleServer(id, module)
 }
 
 # load raw count file

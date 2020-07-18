@@ -1,7 +1,7 @@
 # use runApp() or click right top button in Rstudio to start app,
 # but do not write this code in script, type it in console
 
-
+time_start <- Sys.time()
 # shiny and js
 library(shiny)
 library(shinydashboard) # main UI structure
@@ -64,7 +64,7 @@ options(sps = list(
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
-    verbose = FALSE,
+    verbose = T,
     dev = TRUE,
     admin_page = FALSE,
     admin_url = "admin"
@@ -88,14 +88,12 @@ options(shiny.maxRequestSize = 30*1e6)
 
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-# add  global containers
-# Please do not change the container variable name
+
+# use `sps_enc$createDb()` to create a new database if there is no db
+
+####### you can add additional code #########
 ## to save plot snap shots
 sps_plots <- plotContainer$new()
 ## for database and encryption functions
 sps_enc <- spsEncryption$new()
-# use `sps_enc$createDb()` to create a new database if there is no db
-
-####### you can add additional code #########
-
 

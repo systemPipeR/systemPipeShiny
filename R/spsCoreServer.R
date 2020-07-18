@@ -1,95 +1,62 @@
 # SPS core server functions, can only be used under SPS framework
 
+spsServer <- function(vstabs){
 
-spsServer <- function(tabs, server_expr) {
-    spsinfo("Start to create server")
-    tab_modules <- if(nrow(tabs) > 0) {
-        sapply(tabs[['tab_name']], function(x){
-            glue('{x}Server("{x}", shared)') %>% parse_expr()
-        }, simplify = FALSE)
-    } else list(empty = substitute(spsinfo("No custom server to load.")))
-
-    function(input, output, session) {
-        # add a container to communicate tabs
-        spsinfo("Creating shared object")
-        shared <- reactiveValues()
-        # core tabs
-        spsinfo("Loading core tabs server")
-        core_dashboardServer("core_dashboard", shared)
-        core_topServer("core_top", shared)
-        # core_rightServer("core_right", shared)
-        core_canvasServer("core_canvas", shared)
-        core_aboutServer("core_about", shared)
-        # WF tabs server
-        spsinfo("Loading core workflow tabs server")
-        wf_mainServer("wf_main", shared)
-        wf_targetServer("wf_targets", shared)
-        wf_wfServer("wf_wf", shared)
-        wf_configServer("wf_config", shared)
-        wf_runServer("wf_run", shared)
-        # VS tabs
-        spsinfo("Loading vs tabs server")
-        vs_mainServer("vs_main", shared)
-        devComponents("server", shared = shared) # for templates
-        # user modules
-        mapply(function(module, name){
-            spsinfo(glue("Loading server for {name}"))
-            eval_tidy(module)
-        },
-        SIMPLIFY = FALSE,
-        module = tab_modules,
-        name = names(tab_modules))
-
-        # global server logic, usually no need to change below
-        ## pushbar set up
-        spsinfo("Add push bar")
-        setup_pushbar()
-        ## loading screening
-        spsinfo("Add loading screen logic")
-        serverLoadingScreen(input, output, session)
-        ## for workflow control panel
-        spsinfo("Reslove workflow tabs progress tracker")
-        removeClass(id = "wf-panel", asis = TRUE, class = "tab-pane")
-        spsinfo("Loading other logic...")
-        observeEvent(input$left_sidebar, {
-            toggleClass(id = "wf-panel", class = "shinyjs-hide", asis = TRUE,
-                        condition = !str_detect(input$left_sidebar, "^wf_"))
-        })
-        shared$wf_flags <- data.frame(targets_ready = FALSE,
-                                      wf_ready = FALSE,
-                                      wf_conf_ready = FALSE)
-        output$wf_panel <- wfProgressPanel(shared)
-        # spsWarnings(session)
-        # TODO admin page, come back in next release
-        spsinfo("Loading admin panel server")
-        admin_url <- reactive({
-            names(getQueryString())
-        })
-        observe({
-            req(admin_url() == getOption('sps')$admin_url)
-            req(getOption('sps')$admin_page)
-            shinyjs::hide("page_user", asis = TRUE)
-            shinyjs::show("page_admin", asis = TRUE)
-            output$page_admin <- renderUI(adminUI())
-        })
-
-        # observeEvent(input$reload, ignoreInit = TRUE, {
-        #     sps_options <- getOption('sps')
-        #     sps_options[['loading_screen']] = isolate(input$change)
-        #     options(sps = sps_options)
-        #     server_file <- readLines("server.R", skipNul = FALSE)
-        #     server_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
-        #     writeLines(server_file, "server.R")
-        #     ui_file <- readLines("ui.R", skipNul = FALSE)
-        #     ui_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
-        #     writeLines(ui_file, "ui.R")
-        # })
-        spsinfo("Loading user defined expressions")
-        # additional user expressions
-        eval_tidy(server_expr)
-        appLoadingTime()
-    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #' Workflow Progress tracker server logic
@@ -357,14 +324,4 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
     toastr_success(glue("{title} Passed"), position = "bottom-right",
                    timeOut = 3500)
     return(invisible())
-}
-
-appLoadingTime <- function(){
-    if(exists('time_start')){
-        if(inherits(time_start, "POSIXct")){
-            load_time <- round(Sys.time() - time_start, 3)
-            spsinfo(glue("App UI server loading done in {load_time}s!"),
-                    verbose = TRUE)
-        }
-    }
 }

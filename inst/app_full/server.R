@@ -21,19 +21,19 @@ server <- function(input, output, session) {
     vs_mainServer("vs_main", shared)
     devComponents("server", shared = shared) # for templates
     ## data
-    callModule(df_targetsServer, "df_targets", shared = shared)
-    callModule(df_countServer, "df_count", shared = shared)
-    callModule(df_degcountServer, "df_degcount", shared = shared)
-    callModule(df_edgeRServer, "df_edgeR", shared = shared)
+    df_targetsServer("df_targets", shared)
+    df_countServer("df_count", shared)
+    df_degcountServer("df_degcount", shared)
+    df_edgeRServer("df_edgeR", shared)
     ## plots
-    callModule(plot_pcaServer, "plot_pca", shared = shared)
-    callModule(plot_boxServer, "plot_box", shared = shared)
-    callModule(plot_tsneServer, "plot_tsne", shared = shared)
-    callModule(plot_glmServer, "plot_glm", shared = shared)
-    callModule(plot_mdsServer, "plot_mds", shared = shared)
-    callModule(plot_heatServer, "plot_heat", shared = shared)
-    callModule(plot_clustServer, "plot_clust", shared = shared)
-    callModule(plot_volcanoServer, "plot_volcano", shared = shared)
+    plot_pcaServer("plot_pca", shared)
+    plot_boxServer("plot_box", shared)
+    plot_tsneServer("plot_tsne", shared)
+    plot_glmServer("plot_glm", shared)
+    plot_mdsServer("plot_mds", shared)
+    plot_heatServer("plot_heat", shared)
+    plot_clustServer("plot_clust", shared)
+    plot_volcanoServer("plot_volcano", shared)
 
     # global server logic, usually no need to change below
     ## pushbar set up

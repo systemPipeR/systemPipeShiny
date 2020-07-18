@@ -1,28 +1,28 @@
-## UI 
+## UI
 plot_mdsUI <- function(id){
     ns <- NS(id)
-    tabPanel(title = "MDS", 
+    tabPanel(title = "MDS",
              h2("Make a MDS plot"),
              fluidRow(
                  actionButton(
                      ns("op_1"),
-                     label = "Raw", 
+                     label = "Raw",
                      icon("cog")
                  ),
                  actionButton(
                      ns("op_2"),
-                     label = "R-log", 
+                     label = "R-log",
                      icon("cog")
                  ),
                  actionButton(
                      ns("op_3"),
-                     label = "VST", 
+                     label = "VST",
                      icon("cog")
                  )
              ),
              fluidRow(
                  actionButton(ns("render"),
-                              label = "Render the plot", 
+                              label = "Render the plot",
                               icon("paper-plane")),
              ),
              uiOutput(ns("plot_ui"))
@@ -30,28 +30,31 @@ plot_mdsUI <- function(id){
 }
 
 ## server
-plot_mdsServer <- function(input, output, session, shared){
-    ns <- session$ns
-    observeEvent(input$render, {
-        targets <- data.frame(shared$df$target)
-        countDF <- data.frame(shared$count$df)
-        colnames(countDF) <- countDF[1,]
-        colnames(targets) <- targets[1,]
-        countDF <- countDF[-1,]
-        targets <- targets[-1,]
-        rownames(countDF) <- countDF[,1]
-        countDF <- countDF[,-1]
-        rownames(targets) <- targets[,1]
-        targets <- targets[,-1]
-        colData <- data.frame(row.names = targets$SampleName, 
-                              condition = targets$Factor)
-        countDF[] <- lapply(countDF, function(x) as.numeric(x))
-        countDF <- as.matrix(countDF)
-        output$plot_ui <- renderUI(
-            plotlyOutput(ns("mds"))
-        )
-        output$mds <- renderPlotly({
-            run_MDS(countDF = countDF, targets = targets, colData = colData, method = "rlog")
+plot_mdsServer <- function(id, shared){
+    module <- function(input, output, session){
+        ns <- session$ns
+        observeEvent(input$render, {
+            targets <- data.frame(shared$df$target)
+            countDF <- data.frame(shared$count$df)
+            colnames(countDF) <- countDF[1,]
+            colnames(targets) <- targets[1,]
+            countDF <- countDF[-1,]
+            targets <- targets[-1,]
+            rownames(countDF) <- countDF[,1]
+            countDF <- countDF[,-1]
+            rownames(targets) <- targets[,1]
+            targets <- targets[,-1]
+            colData <- data.frame(row.names = targets$SampleName,
+                                  condition = targets$Factor)
+            countDF[] <- lapply(countDF, function(x) as.numeric(x))
+            countDF <- as.matrix(countDF)
+            output$plot_ui <- renderUI(
+                plotlyOutput(ns("mds"))
+            )
+            output$mds <- renderPlotly({
+                run_MDS(countDF = countDF, targets = targets, colData = colData, method = "rlog")
+            })
         })
-    })
+    }
+    moduleServer(id, module)
 }

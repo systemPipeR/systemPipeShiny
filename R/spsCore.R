@@ -3,6 +3,36 @@
 #' @import glue
 NULL
 
+sps <- function(vstabs, server_expr=NULL){
+    assert_that(is.character(vstabs))
+    if(length(vstabs) > 1 & sum(nchar(vstabs)) > 0){
+        spsinfo("Now check input tabs")
+        spsinfo("Find tab info ...")
+        tabs <- findTabInfo(vstabs) %>% as_tibble()
+        if(sum(not_in_vs <- tabs$tpye != 'vs') > 0)
+            spserror(glue("Tab '{glue_collapse(vstabs[not_in_vs], ', ')}' is/are not visulization tabs"))
+        tabs_df <- tabs %>% filter(type_sub == "data")
+        tabs_plot <- tabs %>% filter(type_sub == "plot")
+    } else {
+        spsinfo("Using default tabs")
+        tabs <- tibble()
+        tabs_df <- tibble()
+        tabs_plot <- tibble()
+    }
+    ui <- spsUI(tabs_df, tabs_plot)
+    spsinfo("UI created")
+    server_expr <- enexpr(server_expr)
+    server <- spsServer(tabs, server_expr)
+    spsinfo("Server created")
+    spsinfo("App starts ...", verbose = TRUE)
+    list(ui = ui, server = server)
+}
+
+
+
+
+
+
 #' Pre start SPS checks
 #'
 #' @param appDir where is the app directory root location, default current
@@ -24,14 +54,13 @@ verifyConfig <- function(appDir) {
     vapply(seq_along(sps_defaults),
            function(x) if(length(sps_defaults[x]) != 1)
            {
-               msg(glue("Default for option {names(sps_defaults)[x]} ",
-                        "has more than one value: {sps_defaults[x]}"),
-                   "SPS-WARNING", "orange")
+               spswarn(glue("Default for option {names(sps_defaults)[x]} ",
+                        "has more than one value: {sps_defaults[x]}"))
                return(FALSE)
            } else (return(TRUE)),
            TRUE
     ) %>%
-        {if (!all(.)) msg("Unexpected config file, see SPS-WARNING", "error")}
+        {if (!all(.)) spserror("Unexpected config file, see SPS-WARNING")}
     return(list(sps_options, sps_defaults))
 }
 
@@ -51,13 +80,13 @@ resolveOptions <- function(appDir = getwd()){
     msg(glue("App has {length(sps_defaults)} default configs, ",
              "resolving {length(ops)} custom configs"))
     if (!is.list(ops)) {
-        msg("Options are not in a list, reset all")
+        spswarn("Options are not in a list, reset all")
         return(options(sps = sps_defaults))
     }
     # check length
     for (x in seq_along(ops)) {
         if (length(ops[[x]]) != 1) {
-            msg(glue("option '{names(ops)[x]}' has length not 1 or NULL,",
+            spswarn(glue("option '{names(ops)[x]}' has length not 1 or NULL,",
                      "will be set to default"))
             ops[[x]] = ""
         }
@@ -65,21 +94,20 @@ resolveOptions <- function(appDir = getwd()){
     # check if in option list
     for (x in names(ops)){
         if(is.null(sps_options[[x]]))
-            {msg(glue("option {x} unknown, skip"),  "warning"); next}
+            {spswarn(glue("option {x} unknown, skip")); next}
         if("*" %in% sps_options[[x]] & ops[[x]] != sps_defaults[[x]]){
-            msg(glue("Option {x} can be any value, overwrite default to '{ops[[x]]}'"))
+            spsinfo(glue("Option {x} can be any value, overwrite default to '{ops[[x]]}'"), TRUE)
             opt_value <- ops[[x]]
         } else{
             opt_value <- if (!ops[[x]] %in% sps_options[[x]] %>% unlist) {
-                msg(glue(
+                spswarn(glue(
                     "option'{x}' has unknown value '{ops[[x]]}', set to default. \n",
                     "valid values are {glue_collapse(c(sps_options[[x]]), sep=', ')}"
-                ), "SPS-WARNING", "orange")
+                ))
                 sps_defaults[[x]]
             } else {ops[[x]]}
         }
-        if (is.null(opt_value)) msg(glue("option'{x}' unknown, not used"),
-                                    "SPS-WARNING", "orange")
+        if (is.null(opt_value)) spswarn(glue("option'{x}' unknown, not used"))
         ops[[x]] <- opt_value
     }
     # replace defaults
@@ -117,7 +145,7 @@ viewSpsDefaults <- function(appDir = getwd()){
 
 #' Check sps tab file on start
 checkTabs <- function(appDir){
-    if(getOption('sps')$verbose) msg("Now check the tab.csv info")
+    spsinfo("Now check the tab info in tab.csv ")
     tab_info <- if (exists("tab_info")) {
         tab_info
     } else {
@@ -126,16 +154,15 @@ checkTabs <- function(appDir){
     }
     ta_dup <- tab_info$tab_name[base::duplicated(tab_info$tab_name)] %>% unique()
     if(length(ta_dup) > 0){
-        msg(glue("Tabname must be unique, find duplicates name(s) '{paste(ta_dup, collapse = ', ')}'"), "error")
+        spserror(glue("Tabname must be unique, find duplicates name(s) '{paste(ta_dup, collapse = ', ')}'"))
     }
     no_img <- tab_info$tab_name[tab_info$type_sub == "plot" & tab_info$image == ""]
     if(length(no_img) > 0){
-        msg(glue("These plot tabs has no image path:
+        spswarn(glue("These plot tabs has no image path:
                   '{paste(no_img, collapse = ', ')}'
                   It is recommended to add an image. It will be used to generate gallery.
-                  Now an empty image is used for these tabs' gallery."),
-            "warning")
+                  Now an empty image is used for these tabs' gallery."))
     }
-    if(getOption('sps')$verbose) msg("tab.csv info check pass")
+    spsinfo("tab.csv info check pass")
 }
 

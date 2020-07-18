@@ -201,22 +201,25 @@ findTabInfo <- function(tabnames=NULL, type = NULL) {
         tab_nos <- tabs$type %in% type
         if (!any(tab_nos)) tab_nos <- tabs$type_sub %in% type
         if (!any(tab_nos)){
-            warning(glue("This tab type '{type}' contains no tab, check the type"), call. = FALSE)
+            spswarn(glue("This tab type '{type}' contains no tab, check the type"))
             return(NULL)
         }
     } else {
         tab_nos <- vapply(tabnames, function(x) {
             tab_no <- str_which(glue("^{x}$"), tabs$tab_name)
             if (is.empty(tab_no)){
-                stop(glue("Tab {x} is not in the tab list"), call. = FALSE)
+                spserror(glue("Tab {x} is not in the tab list"))
             }
             tab_no
         }, 1)
     }
     list(
+        tab_name = tabs$tab_name[tab_nos],
         tab_labels = tabs$display_label[tab_nos],
         hrefs = glue("#shiny-tab-{tabs$tab_name[tab_nos]}"),
-        images = tabs$image[tab_nos]
+        images = tabs$image[tab_nos],
+        tpye = tabs$type[tab_nos],
+        type_sub = tabs$type_sub[tab_nos]
         ) %>% return()
 }
 
@@ -232,6 +235,9 @@ findTabInfo <- function(tabnames=NULL, type = NULL) {
 #' "INFO", "WARNING", "ERROR", this value will be used
 #' @param level typically, one of "INFO", "WARNING", "ERROR", lower case OK.
 #' Other levels ok.
+#' @param info_text info level text prefix
+#' @param warning_text warning level text prefix
+#' @param error_text error level text prefix
 #'
 #' @return
 #' @export
@@ -240,8 +246,14 @@ findTabInfo <- function(tabnames=NULL, type = NULL) {
 #' msg("this is info")
 #' msg("this is warning", "warning")
 #' msg("this is error", "error")
-#' msg("this is other", "error")
-msg <- function(msg, level = "INFO", .other_color="white") {
+#' msg("this is other", "error2")
+msg <- function(msg,
+                level = "INFO",
+                .other_color="white",
+                info_text = "INFO",
+                warning_text = "WARNING",
+                error_text = "ERROR",
+                newline=TRUE) {
     msg <- paste0(msg, collapse = "")
     info <- warn <- err <- other <- function(msg){return(msg)}
     if(is.null(getOption('sps')$use_crayon)) {
@@ -260,17 +272,37 @@ msg <- function(msg, level = "INFO", .other_color="white") {
             other <- crayon::make_style(.other_color)$bold
         }
     }
+    level_text <- switch(toupper(level),
+        "WARNING" = warning_text,
+        "ERROR" = error_text,
+        "INFO" = info_text,
+        level
+    )
     msg <- if(str_detect(msg, "\\[.*\\] [0-9]{4}-[0-9]{2}")) msg
-           else glue("[{level}] {Sys.time()} {msg}")
+           else glue("[{level_text}] {Sys.time()} {msg}")
 
-    switch (toupper(level),
-        "WARNING" = warning(warn(msg), call. = FALSE, immediate. = TRUE),
-        "ERROR" = stop(err(msg), call. = FALSE),
+    switch(toupper(level),
+        "WARNING" = warning("\r", warn(msg), call. = FALSE, immediate. = TRUE),
+        "ERROR" = stop("\r", err(msg), call. = FALSE),
         "INFO" = message(info(msg)),
         cat(other(msg), sep = "\n")
     )
 }
 
+# internal sps msg, just simple wrappers of msg
+getVerbose <- function(){
+    if(is.null(getOption('sps')$verbose)) FALSE
+    else getOption('sps')$verbose
+}
+
+#' @param verbose bool, default get from sps options
+spsinfo <- function(msg, verbose=NULL) {
+    verbose <- if(is.null(verbose)) getVerbose()
+               else {assert_that(is.logical(verbose)); verbose}
+    if(verbose) msg(msg, "SPS-INFO", "blue")
+}
+spswarn <- function(msg) msg(msg, "warning", warning_text = "SPS-WARNING")
+spserror <- function(msg) msg(msg, "error", error_text = "SPS-ERROR")
 
 #' Remove ANSI color code
 #' @description borrowed from crayon package, since this package is not required
