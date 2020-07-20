@@ -1,24 +1,26 @@
 ## UI
+
+#' @importFrom pushbar pushbar_deps pushbar
 core_topUI <- function(id){
     ns <- NS(id)
     tagList(
-        pushbar_deps(),
-        actionBttn(
+        pushbar::pushbar_deps(),
+        shinyWidgets::actionBttn(
             inputId = ns("snap_btn"),
             label = "Snapshots",
             style = "bordered",
             size = "sm",
             icon = icon("camera")
         ),
-        pushbar(
+        pushbar::pushbar(
             id = ns("snap_push"),
             from = "top",
             style= "background:#ECF0F5;padding:2%;min-height:50%; overflow:auto;",
             tagList(
                 fluidRow(
                     div(style = " position: fixed; top: 0; right: 0; margin:0;",
-                        actionBttn(ns("close_snap"), style = "simple", icon = icon("times"),
-                                   color = "danger", size = "sm")),
+                        shinyWidgets::actionBttn(ns("close_snap"), style = "simple", icon = icon("times"),
+                                                 color = "danger", size = "sm")),
                     div(class = "text-center", tabTitle("Manage your plot snapshots")),
                     spsHr(),uiOutput(ns("top_snap"))
                 ), spsHr(),
@@ -44,13 +46,19 @@ core_topUI <- function(id){
 }
 
 ## server
+
+#' @importFrom pushbar setup_pushbar pushbar_open pushbar_close
+#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinyjqui orderInput
+#' @importFrom shinyWidgets actionBttn confirmSweetAlert
+#' @importFrom shinyjs toggleState
 core_topServer <- function(id, shared){
     module <- function(input, output, session){
-        setup_pushbar(blur = TRUE, overlay = TRUE)
+        pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
         ns <- session$ns
         # trash snaps
         observeEvent(c(input$snap_btn, input$trash), ignoreInit = TRUE, {
-            pushbar_open(id = ns("snap_push"))
+            pushbar::pushbar_open(id = ns("snap_push"))
             snaps <- names(shared$canvas$server)
             snap_remove <- which(snaps %in% input$destroy_order)
             if (length(snap_remove) > 0){
@@ -61,15 +69,15 @@ core_topServer <- function(id, shared){
             output$top_snap <- renderUI({
                 shiny::validate(need(length(isolate(shared$canvas$server)) > 0, message = "No snapshot yet"))
                 tagList(
-                    boxPlus(title = "Current snapshots", width = 6, closable = FALSE,
-                            orderInput(ns("snaps"), NULL, items = snaps, placeholder = 'Current snapshots',
+                    shinydashboardPlus::boxPlus(title = "Current snapshots", width = 6, closable = FALSE,
+                            shinyjqui::orderInput(ns("snaps"), NULL, items = snaps, placeholder = 'Current snapshots',
                                        item_class = "success", connect = c(ns("snaps"), ns('destroy')))
                     ),
-                    boxPlus(title = "Snapshots to destroy", width = 6, closable = FALSE,
-                            orderInput(ns('destroy'), NULL, items = NULL, placeholder = 'Drag plots you want to destroy here',
+                    shinydashboardPlus::boxPlus(title = "Snapshots to destroy", width = 6, closable = FALSE,
+                            shinyjqui::orderInput(ns('destroy'), NULL, items = NULL, placeholder = 'Drag plots you want to destroy here',
                                        connect = c(ns("snaps"), ns('destroy'))),
                             br(), br(), br(),
-                            actionBttn(ns("trash"), "destroy", icon = icon("trash"),  style = "material-flat", color = "danger")
+                            shinyWidgets::actionBttn(ns("trash"), "destroy", icon = icon("trash"),  style = "material-flat", color = "danger")
                     ),
                     tags$script(glue(.open = '@', .close = '@', '
                   $("#@ns("destroy")@").bind("DOMSubtreeModified", function(){
@@ -85,12 +93,12 @@ core_topServer <- function(id, shared){
             })
         })
         observeEvent(input$close_snap, {
-            pushbar_close()
+            pushbar::pushbar_close()
         })
         # loading snap
         upload_path <- dynamicFileServer(input, session, id = "snap_upload")
         observeEvent(upload_path(), {
-            confirmSweetAlert(
+            shinyWidgets::confirmSweetAlert(
                 session, inputId = "confirm_load_snap",
                 title = "Load more snapshots?",
                 text = "File uploaded, waiting for confirmation", type = "info"
@@ -126,7 +134,7 @@ core_topServer <- function(id, shared){
         # download snap
         observe({
             # if(not_empty(shared$canvas)) enable("save_snap")
-            toggleState("save_snap", not_empty(shared$canvas$ui))
+            shinyjs::toggleState("save_snap", not_empty(shared$canvas$ui))
         })
         output$save_snap <- downloadHandler(
             filename = function(){

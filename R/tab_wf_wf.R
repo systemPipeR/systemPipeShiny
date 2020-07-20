@@ -1,12 +1,17 @@
 ## UI
-wf_wfUI <- function(id){
+#' @importFrom networkD3 diagonalNetworkOutput
+#' @importFrom shiny downloadButton
+#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinyTree shinyTree
+#' @importFrom shinyWidgets radioGroupButtons
+wf_wfUI <- function(id){shinyCheckPkg
     ns <- NS(id)
     tagList(
         tabTitle("Workflow"),
         fluidRow(
-            boxPlus(title = "Display Rmd", width = 12,
+            shinydashboardPlus::boxPlus(title = "Display Rmd", width = 12,
                     closable = FALSE,
-                    radioGroupButtons(
+                    shinyWidgets::radioGroupButtons(
                         inputId = ns("wf_source"), label = "Choose Workflow source:",
                         selected = "upload",
                         choiceNames = c("Upload", "Example Rmd"),
@@ -19,17 +24,17 @@ wf_wfUI <- function(id){
                               accept = "Rmd",),
                     tags$div(
                         style = 'overflow:auto; height: 500px',
-                        diagonalNetworkOutput(ns("wf_D3"))
+                        networkD3::diagonalNetworkOutput(ns("wf_D3"))
                     )
             )
         ),
         fluidRow(
             column(5,
-                   boxPlus(title = "Choose the steps you want",
+                   shinydashboardPlus::boxPlus(title = "Choose the steps you want",
                            width = 12,
                            closable = FALSE,
                            column(width = 12, style = "padding-left: 0;",
-                                  downloadButton(ns("down_rmd"), "Save New Rmd"),
+                                  shiny::downloadButton(ns("down_rmd"), "Save New Rmd"),
                                   actionButton(ns("wf_plot_step"),
                                                label = "Plot steps",
                                                icon("redo-alt")),
@@ -45,12 +50,12 @@ wf_wfUI <- function(id){
                            p("Displayed only when file uploaded or use example.
                              When steps are chosen, you can plot steps and preview
                              report document."),
-                           shinyTree(ns("rmd_tree"), checkbox = TRUE)
+                           shinyTree::shinyTree(ns("rmd_tree"), checkbox = TRUE)
 
                    )
             ),
             column(7,
-                   boxPlus(title = "Workflow you selected",
+                   shinydashboardPlus::boxPlus(title = "Workflow you selected",
                            width = 12,
                            closable  = FALSE,
                     uiOutput(ns("wf_plot_ui"))
@@ -58,7 +63,7 @@ wf_wfUI <- function(id){
             )
         ),
         fluidRow(
-            boxPlus(
+            shinydashboardPlus::boxPlus(
                 title = "Prevew your workflow report", width = 12,
                 closable = FALSE,
                 uiOutput(ns("wf_md_ui"))
@@ -68,6 +73,10 @@ wf_wfUI <- function(id){
 }
 
 ## server
+#' @importFrom networkD3 renderDiagonalNetwork diagonalNetwork
+#' @importFrom shinyTree get_selected updateTree renderTree
+#' @importFrom shinyWidgets sendSweetAlert
+#' @importFrom shinyjs runjs enable disable
 wf_wfServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -86,7 +95,7 @@ wf_wfServer <- function(id, shared){
             if (input$wf_source == "upload" & is.null(rmd_file_path())) {
                 NULL
             } else {
-                get_selected(input$rmd_tree, format = "names") %>% unlist() %>%
+                shinyTree::get_selected(input$rmd_tree, format = "names") %>% unlist() %>%
                     str_remove_all(" .*$") %>% findTreeParent()
             }
 
@@ -95,32 +104,32 @@ wf_wfServer <- function(id, shared){
         disable_wf_bt <- reactiveVal(TRUE)
 
         observeEvent(input$wf_source, {
-            disable("down_rmd"); disable("wf_render_md"); disable("to_task_rmd"); disable("wf_plot_step") # disable all on start
+            shinyjs::disable("down_rmd"); shinyjs::disable("wf_render_md"); shinyjs::disable("to_task_rmd"); shinyjs::disable("wf_plot_step") # shinyjs::disable all on start
         })
 
         observeEvent(input$rmd_tree, {
             if (length(rmd_tree_selected()) < 1 ) {
-                disable("down_rmd"); disable("wf_render_md"); disable("to_task_rmd"); disable("wf_plot_step")
+                shinyjs::disable("down_rmd"); shinyjs::disable("wf_render_md"); shinyjs::disable("to_task_rmd"); shinyjs::disable("wf_plot_step")
             } else {
-                enable("down_rmd"); enable("wf_render_md"); enable("to_task_rmd"); enable("wf_plot_step")
+                shinyjs::enable("down_rmd"); shinyjs::enable("wf_render_md"); shinyjs::enable("to_task_rmd"); shinyjs::enable("wf_plot_step")
             }
         })
         observeEvent(c(input$wf_source, rmd_tree_selected(), rmd_file_path()), {
             if (input$wf_source == "upload" & is.null(rmd_file_path())) {
-                runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = "hidden"')
+                shinyjs::runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = "hidden"')
                 # rmd_tree_selected <- reactive(NULL)
-                updateTree(session = session, treeId = "rmd_tree", data = list(""))
+                shinyTree::updateTree(session = session, treeId = "rmd_tree", data = list(""))
             } else {
-                runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = ""')
+                shinyjs::runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = ""')
             }
 
         })
 
 
-        output$wf_D3 <- renderDiagonalNetwork({
-            diagonalNetwork(step2listD3(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text)), fontSize = 15)
+        output$wf_D3 <- networkD3::renderDiagonalNetwork({
+            networkD3::diagonalNetwork(step2listD3(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text)), fontSize = 15)
         })
-        output$rmd_tree <- renderTree({
+        output$rmd_tree <- shinyTree::renderTree({
             step2listTree(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text))
         })
 
@@ -166,7 +175,7 @@ wf_wfServer <- function(id, shared){
         observeEvent(input$to_task_rmd, {
             if (!is.null(shared$wf$file)) {
                 shared$wf_flags$wf_ready = TRUE
-                sendSweetAlert(
+                shinyWidgets::sendSweetAlert(
                     session = session,
                     title = "Workflow added to Task",
                     text = "You can see workflow status by clicking top right",

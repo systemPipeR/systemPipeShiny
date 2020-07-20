@@ -1,4 +1,5 @@
 ## UI
+#' @importFrom shinydashboardPlus carousel carouselItem
 core_dashboardUI <- function(id){
     ns <- NS(id)
     tagList(

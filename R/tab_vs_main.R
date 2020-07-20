@@ -23,9 +23,10 @@ vs_mainUI <- function(id){
         </ol>
              '),
         br(),
-        genHrefTable(rows = list(wf1 = c("df_targets", "df_count"), wf2 =  "data")),
+        genHrefTable(rows = list(workflow1 = c("df_targets", "df_count"), workflow2 =  "data"),
+                     title = "All SPS data input options"),
         br(),
-        genGallery(type = "plot")
+        genGallery(type = "plot", title = "All SPS plot options")
 
     )
 }

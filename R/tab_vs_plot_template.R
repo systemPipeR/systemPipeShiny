@@ -1,4 +1,8 @@
 ## UI
+
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinyjqui jqui_resizable
+#' @importFrom shinyWidgets pickerInput
 plot_templateUI <- function(id){
     ns <- NS(id)
     desc <- "
@@ -39,10 +43,10 @@ plot_templateUI <- function(id){
             column(6, genHrefTab(c("df_template"), title = "You need to tabular data from these tabs:"))
         ),
         h5("Once you have prepared the data, select which tab(s) your data is coming from:"),
-        column(6, pickerInput(ns("source_meta"), "Meta Data",
+        column(6, shinyWidgets::pickerInput(ns("source_meta"), "Meta Data",
                     choices = c("Meta Data" = "df_targets"),
                     options = list(style = "btn-primary"))),
-        column(6, pickerInput(ns("source_data"), "Tabular Data",
+        column(6, shinyWidgets::pickerInput(ns("source_data"), "Tabular Data",
                     choices = c("Template Data Tab" = "df_template"),
                     options = list(style = "btn-primary"))), spsHr(),
         div(style = "text-align: center;",
@@ -58,7 +62,7 @@ plot_templateUI <- function(id){
                              icon("paper-plane")),
             ),
             div(class = "sps-plot-container",
-                jqui_resizable(sps_plots$addUI(plotlyOutput(ns("plot")), id)),
+                shinyjqui::jqui_resizable(sps_plots$addUI(plotly::plotlyOutput(ns("plot")), id)),
                 tags$script(glue('stretchPlotTab("{ns("plot")}")'))
             )
         )
@@ -66,6 +70,9 @@ plot_templateUI <- function(id){
 }
 
 ## server
+#' @importFrom shinytoastr toastr_success toastr_info
+#' @importFrom plotly renderPlotly ggplotly
+#' @importFrom shinyjs show
 plot_templateServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -89,7 +96,7 @@ plot_templateServer <- function(id, shared){
         )
         # start the tab by checking if required packages are installed
         observeEvent(input$validate_start, {
-            req(shinyCheckSpace(session = session,
+            req(shinyCheckPkg(session = session,
                                 cran_pkg = c("base"),
                                 bioc_pkg = c(""),
                                 github = c("")
@@ -110,20 +117,20 @@ plot_templateServer <- function(id, shared){
                          title = "Data Validations")
             pgPaneUpdate('pg', 'vd_data', 100)
             shinyjs::show(id = "tab_main")
-            toastr_success(
+            shinytoastr::toastr_success(
                 title = "Ready for plotting!", message = "", timeOut = 5000,
                 position = "bottom-right"
             )
         })
         observeEvent(input$render, {
-            output$plot <- sps_plots$addServer(renderPlotly, tab_id, {
-                ggplotly(ggplot(mydata$df, aes(Sepal.Length, Sepal.Width)) +
-                             geom_point(aes(colour = Species))
+            output$plot <- sps_plots$addServer(plotly::renderPlotly, tab_id, {
+                plotly::ggplotly(ggplot2::ggplot(mydata$df, ggplot2::aes(Sepal.Length, Sepal.Width)) +
+                             ggplot2::geom_point(ggplot2::aes(colour = Species))
                 )
             })
             shared$snap_signal <- sps_plots$notifySnap(tab_id)
             req(shared$snap_signal)
-            toastr_info(glue("Snapshot {glue_collapse(shared$snap_signal, '-')} added to canvas"),
+            shinytoastr::toastr_info(glue("Snapshot {glue_collapse(shared$snap_signal, '-')} added to canvas"),
                         position = "bottom-right")
         })
     }

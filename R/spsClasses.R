@@ -2,11 +2,10 @@
 
 #' SPS snapshots container
 #'
-#' Initiate this container at the global level. This container is used to
+#' @description  Initiate this container at the global level. This container is used to
 #' communicate plotting tabs with the canvas tab
-#' @importFrom R6 R6class
+#' @importFrom R6 R6Class
 #' @rdname plotContainer
-#' @importFrom R6 R6class
 #' @importFrom rlang eval_tidy parse_expr
 #' @export
 #' @examples
@@ -153,16 +152,13 @@ plotContainer <- R6::R6Class("plot_container",
     public = list(
         initialize = function(){
             spsinfo("Created a plot container R6 object", verbose = TRUE)
-            private$verbose <- private$verbosity()
-            spsinfo(c("Current verbosity for plot contianer is ", private$verbose),
-                    verbose = TRUE)
         },
 
-        #' @field a list of plot UI snapshots will be stored here. You shouldn't
-        #' manually edit this list, use `add/getUI` method
+        #' @field plot_ui a list of plot UI snapshots will be stored here.
+        #' You shouldn't manually edit this list, use `add/getUI` method
         plot_ui = list(),
 
-        #' @field a list of plot server snapshots will be stored here. You shouldn't
+        #' @field plot_server a list of plot server snapshots will be stored here. You shouldn't
         #' manually edit this list, use `add/getServer` method
         plot_server = list(),
 
@@ -181,7 +177,7 @@ plotContainer <- R6::R6Class("plot_container",
                       "plotting UI function is an exception.\n",
                       "Please open an issue on our Github page.",
                       "https://github.com/systemPipeR/systemPipeShiny"))
-            if(not_empty(self$plot_ui[[tab_id]]) & private$verbose)
+            if(not_empty(self$plot_ui[[tab_id]]))
                 spsinfo(glue("Plot UI for this tab `{tab_id}` already exists ",
                          "in the container, overwrite"))
             self$plot_ui[[tab_id]] <- plot_DOM
@@ -219,7 +215,7 @@ plotContainer <- R6::R6Class("plot_container",
             expr_func <- exprToFunction(expr, env, quoted)
             if(!inherits(render_func, "function"))
                 stop("plot server is not a tab_id")
-            if(not_empty(self$plot_server[[tab_id]]) & private$verbose){
+            if(not_empty(self$plot_server[[tab_id]])){
                 msg(glue("Plot server with id {tab_id} already exists ",
                          "in the container, overwrite"))}
             self$plot_server[[tab_id]] <- list(func = render_func,
@@ -287,19 +283,13 @@ plotContainer <- R6::R6Class("plot_container",
             if(is.null(attr_value))
                 msg(glue("Can't find attribute `{attrib}`"), "warning")
         },
-        verbosity = function(){
-            verbose <- getOption('sps')$verbose
-            if(is.null(verbose)) verbose <- FALSE
-            return(verbose)
-        },
-        verbose = FALSE,
         notify_list = list()
     )
 )
 
 
 # Imports for database handling classes
-#' @importFrom R6 R6class
+#' @importFrom R6 R6Class
 #' @importFrom RSQLite dbDisconnect dbListTables dbWriteTable dbGetQuery dbSendStatement dbGetRowsAffected dbClearResult dbConnect SQLite
 #' @importFrom dplyr tribble tbl collect pull
 #' @importFrom openssl rsa_keygen encrypt_envelope decrypt_envelope
@@ -307,7 +297,7 @@ NULL
 
 #' SPS database functions
 #'
-#' Initiate this container at global level. Methods in this class can help admin to
+#' @description Initiate this container at global level. Methods in this class can help admin to
 #' manage general information of sps. For now it only stores some meta data and
 #' the encryption key pairs. You can use this database to store other useful things,
 #' like user pass hash, IP, browsing info ...
@@ -336,7 +326,7 @@ spsDb <- R6::R6Class("spsdb",
             spsinfo("Created SPS database method container", verbose = TRUE)
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't find default SPS db. ",
-                          "Default name 'config/sps.db'. Use `createDb` method",
+                          "Use `createDb` method",
                           " to create new or be careful to change default db_name ",
                           "when you use other methods")
             con <- private$dbConnect("config/sps.db")
@@ -344,7 +334,8 @@ spsDb <- R6::R6Class("spsdb",
             if(is.null(con)){
                 spswarn(fail_msg)
             } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
-                spswarn("Db found but some table(s) not found")
+                spsinfo("Connected, but tables missing, seems like a new db.", TRUE)
+                spsinfo("Use CreateDb method to create tables", TRUE)
             } else {
                 spsinfo("Default SPS-db found and is working")
             }
@@ -361,6 +352,7 @@ spsDb <- R6::R6Class("spsdb",
             if(is.null(con)){
                 spserror("Can't create db. Make sure your wd is writeable")
             } else {
+                spsinfo("Creating SPS db...", TRUE)
                 sps_meta <- dplyr::tribble(
                     ~info, ~value,
                     "creation_date", as.character(format(Sys.time(), "%Y%m%d%H%M%S")),
@@ -425,7 +417,7 @@ spsDb <- R6::R6Class("spsdb",
                 results <- dplyr::tbl(con, table) %>%
                     {rlang::eval_tidy(rlang::parse_expr(dp_expr))} %>%
                     dplyr::collect()
-                if(private$verbose)  private$.msg("Query sent")
+                spsinfo("Query sent")
                 return(results)
             }
         },
@@ -519,14 +511,14 @@ spsDb <- R6::R6Class("spsdb",
 
 #' SPS encryption functions
 #'
-#' Initiate this container at global level. Methods in this class can help admin to
+#' @description Initiate this container at global level. Methods in this class can help admin to
 #' encrypt files been output from sps. For now it is only used to encypt and decrypt
 #' snapshots.
-#'
 #' This class requires the SPS database. This class inherits all functions from
 #' the db class, so there is no need to initiate the `spsDb` container.
 #' @rdname spsEncryption
 #' @export
+#' @seealso \code{\link[systemPipeShiny::spsDb]{systemPipeShiny::spsDb()}}
 #' @examples
 #' dir.create("config")
 #' my_ecpt <- spsEncryption$new()
@@ -544,7 +536,7 @@ spsEncryption <- R6::R6Class(
             spsinfo("Created SPS encryption method container", verbose = TRUE)
             spsinfo("This container inherits all functions from spsDb class")
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            fail_msg <- c("Can't find default SPS db. ",
+            fail_msg <- c("Can't create default SPS db. ",
                           "Default name 'config/sps.db'. Use `createDb` method",
                           " to create new or be careful to change default db_name ",
                           "when you use other methods")
@@ -553,7 +545,7 @@ spsEncryption <- R6::R6Class(
             if(is.null(con)){
                 spswarn(fail_msg)
             } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
-                spswarn("Db found but some table(s) not found")
+                spsinfo("Connected, but tables missing, seems like a new db.")
             } else {
                 spsinfo("Default SPS-db found and is working", verbose = TRUE)
             }
@@ -598,7 +590,6 @@ spsEncryption <- R6::R6Class(
             key <- self$queryValue(table = 'sps_raw', SELECT="value",
                                    WHERE="info='key'", db_name) %>%
                 dplyr::pull() %>% unlist() %>% unserialize()
-            if(private$verbose)
                 spsinfo(glue("OpenSSL key found md5 {glue_collapse(key$pubkey$fingerprint)}"))
             key
         },
@@ -616,7 +607,7 @@ spsEncryption <- R6::R6Class(
             key <- self$keyGet()
             data_ecpt <- openssl::encrypt_envelope(data, key$pubkey)
             class(data_ecpt) <- c(class(data_ecpt), "sps_ecpt")
-            if(private$verbose)  private$.msg("Data encrypted")
+            spsinfo("Data encrypted")
             if(is.null(out_path)) return(data_ecpt)
             else saveRDS(data_ecpt, out_path)
             spsinfo(glue("File write to {normalizePath(out_path)}"))

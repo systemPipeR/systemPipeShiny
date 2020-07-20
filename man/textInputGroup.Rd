@@ -23,3 +23,17 @@ a row element
 \description{
 Text input with a button right next to
 }
+\examples{
+library(shiny)
+
+ui <- fluidPage(
+    tags$head(useSps()),
+    textInputGroup("id1", "id2")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+}

@@ -2,31 +2,26 @@
 # Can be used in other shiny projects, no need to use under SPS framework
 ## use on top of shiny
 
-#' @import shiny shinytoastr stringr magrittr glue htmltools shinyWidgets
-NULL
 
-
-#' Catch  error, warning, message text catcher
+#' Catch  error, warning, message text
 #' @description Catch error, warning, message by a toastr bar on shiny front end
 #' also log the text on backend console. Will return original value if not
 #' blocking at "warning" "message" level, and return `NULL` at error level.
 #' If blocks at `error`, function will be stopped and other code in the same
 #' reactive context will be blocked. If blocks at `warning` level, warning and
-#' error will be blocked; `message` level blocks will 3 levels.
+#' error will be blocked; `message` level blocks all 3 levels.
 #' @param expr expression
-#' @param position toastr position: c("top-right", "top-center", "top-left",
+#' @param position toastr position, one of: c("top-right", "top-center", "top-left",
 # "top-full-width", "bottom-right", "bottom-center", "bottom-left",
 # "bottom-full-width")
-#' @param blocking If encounter any error, warning or message, continue or
-#' stop
-#' @param blocking_level if `non_blocking` is FALSE, at what level you want to
-#' block the execution, one of "error", "warning", "message"
+#' @param blocking_level  what level you want to block the execution, one
+#' of "error", "warning", "message"
 #'
 #' @return see description
-#'
+#' @importFrom shinytoastr toastr_info toastr_warning toastr_error
 #' @export
 #'
-#' @example
+#' @examples
 #' ui <- fluidPage(
 #'     useToastr(),
 #'     actionButton("btn1","error and blocking"),
@@ -68,19 +63,19 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
     toastr_actions <- list(
         message = function(m) {
             msg(m$message, "SPS-INFO", "blue")
-            toastr_info(message = remove_ANSI(m$message),
+            shinytoastr::toastr_info(message = remove_ANSI(m$message),
                         position = position, closeButton = TRUE,
                         timeOut = 3000, preventDuplicates = TRUE)
         },
         warning = function(m) {
             msg(m$message, "SPS-WARNING", "orange")
-            toastr_warning(message = remove_ANSI(m$message),
+            shinytoastr::toastr_warning(message = remove_ANSI(m$message),
                            position = position, closeButton = TRUE,
                            timeOut = 5000, preventDuplicates = TRUE)
         },
         error = function(m) {
             msg(m$message, "SPS-ERROR", "red")
-            toastr_error(
+            shinytoastr::toastr_error(
                 message = remove_ANSI(m$message), position = position,
                 closeButton = TRUE, timeOut = 0, preventDuplicates = TRUE,
                 title = "There is an error", hideDuration = 300
@@ -148,32 +143,34 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
 #' @param bioc_pkg vector of strings
 #' @param github vector of strings, github package must specify user name, c("user1/pkg1", "user2/pkg2")
 #' @param quietly bool, should progress and error messages be suppressed?
-#'
-#' @return sweet alert massage
+#' @importFrom shinyAce is.empty
+#' @importFrom shinytoastr toastr_success
+#' @importFrom shinyWidgets sendSweetAlert
+#' @return TRUE if pass, sweet alert massage and FALSE if fail
 #' @export
 #'
-#' @ example
+#' @examples
 #' shinyApp(ui = shinyUI(
 #'     fluidPage(actionButton("haha", "haha"))
 #' ), server = function(input, output, session) {
-#'     observeEvent(input$haha, shinyCheckSpace(session, cran_pkg = "1",
+#'     observeEvent(input$haha, shinyCheckPkg(session, cran_pkg = "1",
 #'                  bioc_pkg = "haha", github = "sdasdd/asdsad"))
 #' })
-shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NULL, quietly = FALSE) {
+shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NULL, quietly = FALSE) {
     missing_cran <- checkNameSpace(cran_pkg, quietly, from = "CRAN")
     missing_bioc <- checkNameSpace(bioc_pkg, quietly, from = "BioC")
     github_pkg <- github %>% str_remove("^.*/")
     missing_github_pkg <- checkNameSpace(github_pkg, quietly, from = "GitHub")
     missing_github <- github[github_pkg %in% missing_github_pkg]
-    cran_cmd <- if (is.empty(missing_cran)) "" else
+    cran_cmd <- if (shinyAce::is.empty(missing_cran)) "" else
         paste0("install.packages(c('", paste0(missing_cran, collapse = "', '"), "'))")
-    bioc_cmd <- if (is.empty(missing_bioc)) "" else
+    bioc_cmd <- if (shinyAce::is.empty(missing_bioc)) "" else
         paste0(
         'if (!requireNamespace("BiocManager", quietly=TRUE))
         install.packages("BiocManager")\n',
         "BiocManager::install(c('", paste0(missing_bioc, collapse = "', '"), "'))"
         )
-    github_cmd <- if (is.empty(missing_github)) "" else
+    github_cmd <- if (shinyAce::is.empty(missing_github)) "" else
         paste0(
             'if (!requireNamespace("BiocManager", quietly=TRUE))
                 install.packages("BiocManager")\n',
@@ -217,7 +214,7 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
 #' @return reactive dataframe, need to extract the value inside reactive
 #' expression, observe, or inside `isolate`
 #' @export
-#'
+#' @importFrom shinyFiles getVolumes shinyFileChoose parseFilePaths
 #' @examples
 #' library(shiny)
 #' library(shinyFiles)
@@ -240,12 +237,12 @@ shinyCheckSpace <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = 
 dynamicFileServer <- function(input,session, id){
     file_return <- reactiveVal(NULL)
     if (getOption("sps")$mode == "local") {
-        roots <- c(current=getwd(), getVolumes()())
-        shinyFileChoose(input, id, roots = roots, session = session)
+        roots <- c(current=getwd(), shinyFiles::getVolumes()())
+        shinyFiles::shinyFileChoose(input, id, roots = roots, session = session)
         observeEvent(input[[id]],
             file_return({
                 req(is.list(input[[id]]))
-                file_selected <- parseFilePaths(roots, input[[id]])
+                file_selected <- shinyFiles::parseFilePaths(roots, input[[id]])
                 updateTextInput(inputId = glue("{id}-text"),
                                 session = session,
                                 placeholder = unname(file_selected$datapath))
@@ -269,7 +266,9 @@ dynamicFileServer <- function(input,session, id){
 #' @param value 0-100 real number to update the progress you use `pg_id` to
 #' choose
 #' @param session current shiny session
-#' @example
+#' @importFrom shinyWidgets updateProgressBar
+#' @export
+#' @examples
 #' library(shiny)
 #' library(shinydashboard)
 #' library(shinytoastr)
@@ -308,7 +307,7 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
         assert_that(is.character(pg_id))
         assert_that(value >= 0 & value <= 100,
                     msg = "Progress value needs to be 0-100")
-        updateProgressBar(session, id = glue("{pg_id}-pg"), value = value)
+        shinyWidgets::updateProgressBar(session, id = glue("{pg_id}-pg"), value = value)
         if(inherits(session, "session_proxy")){
             pane_id <- session$ns(pane_id)
             pg_id <- session$ns(pg_id)
@@ -330,11 +329,11 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 #' @param data any type of R object you want to store and use in other tabs
 #' @param shared the a shared reactivevalues object that is defined on the top
 #' level server
-#' @param type one of data, plot
 #' @param tab_id tab ID of current tab if using `addData` method and tab
 #' ID to get data from if using `getData`.
 #' @return Nothing to return with `add` method and returns original object for
 #' the `get` method
+#' @importFrom shinytoastr toastr_info
 #' @export
 #' @examples
 #' library(shiny)
@@ -384,13 +383,14 @@ addData <- function(data, shared, tab_id) {
         if(getOption('sps')$verbose) {
             info <- glue("Data for namespace {tab_id} added")
             message(info)
-            toastr_info(info, timeOut = 3000, position = "bottom-right")
+            shinytoastr::toastr_info(info, timeOut = 3000, position = "bottom-right")
         }
     }, blocking_level = "error")
 }
 
 #' @rdname addData
 #' @export
+#' @importFrom shinytoastr toastr_info
 getData <- function(tab_id, shared){
     shinyCatch({
         assert_that(inherits(shared, "reactivevalues"))
@@ -401,7 +401,7 @@ getData <- function(tab_id, shared){
         stop(glue("Data from tab `{tab_info}` is empty"))
         if(getOption('sps')$verbose){
             success_info <- glue("data for tab `{tab_info} found`")
-            toastr_info(success_info, timeOut = 3000, position = "bottom-right")
+            shinytoastr::toastr_info(success_info, timeOut = 3000, position = "bottom-right")
         }
         return(shared[['data']][[tab_id]])
     }, blocking_level = "error")

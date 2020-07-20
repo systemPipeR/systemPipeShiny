@@ -3,8 +3,8 @@
 \name{clearableTextInput}
 \alias{clearableTextInput}
 \title{Input component with a "X" button in the end to clear the entire typed text
-work the same as `Textinput`
-must be call `useSps` at header}
+work the same as \code{Textinput}
+must be call \code{useSps} at header}
 \usage{
 clearableTextInput(inputId, label, value = "", placeholder = "")
 }
@@ -22,8 +22,8 @@ a div
 }
 \description{
 Input component with a "X" button in the end to clear the entire typed text
-work the same as `Textinput`
-must be call `useSps` at header
+work the same as \code{Textinput}
+must be call \code{useSps} at header
 }
 \examples{
 library(shiny)

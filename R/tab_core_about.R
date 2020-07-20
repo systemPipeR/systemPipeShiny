@@ -1,11 +1,12 @@
 ## UI
+#' @importFrom shinydashboardPlus widgetUserBox
 core_aboutUI <- function(id){
     ns <- NS(id)
     tags$div(
         tabTitle("About this app"),
         h3("Our group"),
         fluidRow(
-            widgetUserBox(
+            shinydashboardPlus::widgetUserBox(
                 title = "Le Zhang",
                 subtitle = "Student",
                 type = NULL,
@@ -17,7 +18,7 @@ core_aboutUI <- function(id){
                 footer =  HTML('<a href="mailto:le.zhang001@email.ucr.edu">&lt;email Le Zhang&gt;</a>'),
                 includeMarkdown("www/about/lzhang.md")
             ),
-            widgetUserBox(
+            shinydashboardPlus::widgetUserBox(
                 title = "Ponmathi Ramasamy",
                 subtitle = "Student",
                 type = NULL,
@@ -29,7 +30,7 @@ core_aboutUI <- function(id){
                 footer = HTML('<a href="mailto:prama008@ucr.edu">&lt;email Ponmathi Ramasamy&gt;</a>'),
                 includeMarkdown("www/about/pramasamy.md")
             ),
-            widgetUserBox(
+            shinydashboardPlus::widgetUserBox(
                 title = "Daniela Cassol",
                 subtitle = "Postdoc",
                 type = NULL,
@@ -41,7 +42,7 @@ core_aboutUI <- function(id){
                 footer = HTML('<a href="mailto:danielac@ucr.edu">&lt;email Daniela Cassol&gt;</a>'),
                 includeMarkdown("www/about/dcassol.md")
             ),
-            widgetUserBox(
+            shinydashboardPlus::widgetUserBox(
                 title = "Jianhai Zhang",
                 subtitle = "Student",
                 type = NULL,
@@ -53,7 +54,7 @@ core_aboutUI <- function(id){
                 footer = HTML('<a href="mailto:jzhan067@ucr.edu">&lt;email Jianhai Zhang&gt;</a>'),
                 includeMarkdown("www/about/jzhang.md")
             ),
-            widgetUserBox(
+            shinydashboardPlus::widgetUserBox(
                 title = "Gordon Mosher",
                 subtitle = "Student",
                 type = NULL,
@@ -65,7 +66,7 @@ core_aboutUI <- function(id){
                 footer = HTML('<a href="mailto:gmosh001@ucr.edu ">&lt;email Gordon Mosher&gt;</a>'),
                 includeMarkdown("www/about/gmosher.md")
             ),
-            widgetUserBox(
+            shinydashboardPlus::widgetUserBox(
                 title = "Thomas Girke",
                 subtitle = "PI",
                 type = NULL,

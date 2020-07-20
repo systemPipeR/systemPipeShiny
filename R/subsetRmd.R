@@ -1,6 +1,5 @@
-library(magrittr)
-library(stringr)
-library(assertthat)
+# One function from systemPipeR, current SPS is not depending on SPR, so copy this
+# function over
 
 subsetRmd <- function(p, input_steps=NULL, exclude_steps=NULL, p_out=NULL, save_rmd=TRUE){
     # function start, check inputs
@@ -79,8 +78,8 @@ subsetRmd <- function(p, input_steps=NULL, exclude_steps=NULL, p_out=NULL, save_
     if (!not_empty(input_steps)) {
         cat("No input_steps is given, list all sections and exit\n")
         cat("This file contains following sections\n")
-        str_replace(t_text, "^", paste0(strrep("    ", (t_lvl - 1)), names(t_lvl), " ")) %>% 
-            paste0(., collapse = '\n') %>% str_replace("$", "\n") %>% cat() 
+        str_replace(t_text, "^", paste0(strrep("    ", (t_lvl - 1)), names(t_lvl), " ")) %>%
+            paste0(., collapse = '\n') %>% str_replace("$", "\n") %>% cat()
         return(rmd_df)
     }
     # parse steps
@@ -90,9 +89,9 @@ subsetRmd <- function(p, input_steps=NULL, exclude_steps=NULL, p_out=NULL, save_
     rmd_df$selected[index_final] <- TRUE
     # print again what will be write in the new file
     cat("The following sections are selected\n")
-    str_replace(t_text[index_final],"^", 
+    str_replace(t_text[index_final],"^",
                 paste0(strrep("    ", (t_lvl[index_final] - 1)),
-                            names(t_lvl[index_final]), " ")) %>% 
+                            names(t_lvl[index_final]), " ")) %>%
         paste0(., collapse = '\n') %>% str_replace("$", "\n") %>% cat()
     # to print new titles and return
     if (save_rmd == FALSE) return(rmd_df)
@@ -100,8 +99,8 @@ subsetRmd <- function(p, input_steps=NULL, exclude_steps=NULL, p_out=NULL, save_
     t_start[index_final]
     t_end[index_final]
     final_lines <- mapply(seq, t_start[index_final], t_end[index_final]) %>%
-        unlist() %>% 
-        append(1:(t_start[1] - 1), .) %>% 
+        unlist() %>%
+        append(1:(t_start[1] - 1), .) %>%
         unique()
     writeLines(file[final_lines], p_out)
     cat(paste("File write to", normalizePath(p_out), '\n'))
@@ -122,15 +121,15 @@ subsetRmd <- function(p, input_steps=NULL, exclude_steps=NULL, p_out=NULL, save_
         dash_parse <- unlist(lapply(dash_step, function(x) {
             which(t_lvl_name %in% x) %>% ifelse(length(.) > 0, ., stop(paste('Step', x, 'is not found')))
         })) %>% {
-            t_lvl_name[.[1]: .[2]] 
+            t_lvl_name[.[1]: .[2]]
         }
         dash_list <- append(dash_list, dash_parse)
     }
     # merge
     all_step_name <- unique(append(nocolon_steps, dash_list))
     # if upper level step is selected, all sub-level steps will be added
-    unlist(lapply(all_step_name, function(x) str_which(t_lvl_name, paste0('^', x, '\\..*')))) %>% 
-        append(which(t_lvl_name %in% all_step_name)) %>% 
+    unlist(lapply(all_step_name, function(x) str_which(t_lvl_name, paste0('^', x, '\\..*')))) %>%
+        append(which(t_lvl_name %in% all_step_name)) %>%
         unique() %>% sort() %>% return()
 }
 
@@ -144,14 +143,14 @@ subsetRmd <- function(p, input_steps=NULL, exclude_steps=NULL, p_out=NULL, save_
 # save_rmd: bool, default TRUE, if FALSE, list new selected tiles and exit
 ## return: a dataframe of title levels, title numbers, title text, whether it is selected, and R code under this title
 
-# if no input_steps, only list steps in a Rmd and return the dataframe but all titles are unselected (FALSE). 
-# input_steps and exclude_steps must be ONE character string. 
-# Jump from major step to sub-step is supported, but 
-# if a major step is selected/excluded, all sub-steps of this major step will be 
-# selected/excluded. Repeatedly selected steps will only result a unique step. 
-# It is recommended to put major steps in `input_steps`, like '1:4, 6:8, 10'; 
-# unwanted sub-steps in `exclude_steps`, like '1.1, 3.1.1-3.1.3, 6.5'. 
-# Reverse selecting is supported e.g. '10:1'. 
+# if no input_steps, only list steps in a Rmd and return the dataframe but all titles are unselected (FALSE).
+# input_steps and exclude_steps must be ONE character string.
+# Jump from major step to sub-step is supported, but
+# if a major step is selected/excluded, all sub-steps of this major step will be
+# selected/excluded. Repeatedly selected steps will only result a unique step.
+# It is recommended to put major steps in `input_steps`, like '1:4, 6:8, 10';
+# unwanted sub-steps in `exclude_steps`, like '1.1, 3.1.1-3.1.3, 6.5'.
+# Reverse selecting is supported e.g. '10:1'.
 
 ##### TRY THE FOLLOWING CODE
 # p = "../systemPipeR_testing/cwl_testing/systemPipeRNAseq.Rmd"

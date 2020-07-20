@@ -1,69 +1,105 @@
 # SPS core server functions, can only be used under SPS framework
 
-spsServer <- function(vstabs){
+#' @importFrom pushbar setup_pushbar
+#' @importFrom rlang parse_expr eval_tidy
+#' @importFrom shinyjs removeClass toggleClass hide show
+spsServer <- function(tabs, server_expr) {
+    spsinfo("Start to create server")
+    tab_modules <- if(nrow(tabs) > 0) {
+        sapply(tabs[['tab_name']], function(x){
+            glue('{x}Server("{x}", shared)') %>% rlang::parse_expr()
+        }, simplify = FALSE)
+    } else list(empty = substitute(spsinfo("No custom server to load.")))
 
+    function(input, output, session) {
+        # add a container to communicate tabs
+        spsinfo("Creating shared object")
+        shared <- reactiveValues()
+        # core tabs
+        spsinfo("Loading core tabs server")
+        core_dashboardServer("core_dashboard", shared)
+        core_topServer("core_top", shared)
+        # core_rightServer("core_right", shared)
+        core_canvasServer("core_canvas", shared)
+        core_aboutServer("core_about", shared)
+        # WF tabs server
+        spsinfo("Loading core workflow tabs server")
+        wf_mainServer("wf_main", shared)
+        wf_targetServer("wf_targets", shared)
+        wf_wfServer("wf_wf", shared)
+        wf_configServer("wf_config", shared)
+        wf_runServer("wf_run", shared)
+        # VS tabs
+        spsinfo("Loading vs tabs server")
+        vs_mainServer("vs_main", shared)
+        devComponents("server", shared = shared) # for templates
+        # user modules
+        mapply(function(module, name){
+            spsinfo(glue("Loading server for {name}"))
+            rlang::eval_tidy(module)
+        },
+        SIMPLIFY = FALSE,
+        module = tab_modules,
+        name = names(tab_modules))
+
+        # global server logic, usually no need to change below
+        ## pushbar set up
+        spsinfo("Add push bar")
+        pushbar::setup_pushbar()
+        ## loading screening
+        spsinfo("Add loading screen logic")
+        serverLoadingScreen(input, output, session)
+        ## for workflow control panel
+        spsinfo("Reslove workflow tabs progress tracker")
+        shinyjs::removeClass(id = "wf-panel", asis = TRUE, class = "tab-pane")
+        spsinfo("Loading other logic...")
+        observeEvent(input$left_sidebar, {
+            shinyjs::toggleClass(id = "wf-panel", class = "shinyjs-hide", asis = TRUE,
+                        condition = !str_detect(input$left_sidebar, "^wf_"))
+        })
+        shared$wf_flags <- data.frame(targets_ready = FALSE,
+                                      wf_ready = FALSE,
+                                      wf_conf_ready = FALSE)
+        output$wf_panel <- wfProgressPanel(shared)
+        # spsWarnings(session)
+        # TODO admin page, come back in next release
+        spsinfo("Loading admin panel server")
+        admin_url <- reactive({
+            names(getQueryString())
+        })
+        observe({
+            req(admin_url() == getOption('sps')$admin_url)
+            req(getOption('sps')$admin_page)
+            shinyjs::hide("page_user", asis = TRUE)
+            shinyjs::show("page_admin", asis = TRUE)
+            output$page_admin <- renderUI(adminUI())
+        })
+
+        # observeEvent(input$reload, ignoreInit = TRUE, {
+        #     sps_options <- getOption('sps')
+        #     sps_options[['loading_screen']] = isolate(input$change)
+        #     options(sps = sps_options)
+        #     server_file <- readLines("server.R", skipNul = FALSE)
+        #     server_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
+        #     writeLines(server_file, "server.R")
+        #     ui_file <- readLines("ui.R", skipNul = FALSE)
+        #     ui_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
+        #     writeLines(ui_file, "ui.R")
+        # })
+        spsinfo("Loading user defined expressions")
+        # additional user expressions
+        rlang::eval_tidy(server_expr)
+        appLoadingTime()
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #' Workflow Progress tracker server logic
 #' @description use it on the top level server not inside a module. Only
 #' designed for workflow tabs. For other purpose, use `pgPaneUI`.
 #' @param shared the shared object
-#'
+#' @importFrom shinydashboardPlus timelineBlock timelineItem timelineLabel
+#' @importFrom shinyWidgets progressBar
 #' @return reactive renderUI object
 #' @export
 #' @seealso pgPaneUpdate
@@ -72,40 +108,40 @@ spsServer <- function(vstabs){
 wfProgressPanel <- function(shared){
     renderUI({
         total_progress <- sum(as.numeric(shared$wf_flags))/0.03
-        timelineBlock(reversed = FALSE,
-                      timelineItem(
+        shinydashboardPlus::timelineBlock(reversed = FALSE,
+                      shinydashboardPlus::timelineItem(
                           title = "Targets file",
                           icon = timeline_icon(shared$wf_flags$targets_ready),
                           color = timeline_color(shared$wf_flags$targets_ready),
                           border = FALSE,
-                          progressBar(
+                          shinyWidgets::progressBar(
                               "pg_target",  striped = TRUE, status = "primary",
                               timeline_pg(shared$wf_flags$targets_ready))
                       ),
-                      timelineItem(
+                      shinydashboardPlus::timelineItem(
                           title = "Workflow Rmd",
                           icon = timeline_icon(shared$wf_flags$wf_ready),
                           color = timeline_color(shared$wf_flags$wf_ready),
                           border = FALSE,
-                          progressBar(
+                          shinyWidgets::progressBar(
                               "pg_rmd", striped = TRUE, status = "primary",
                               timeline_pg(shared$wf_flags$wf_ready))
                       ),
-                      timelineItem(
+                      shinydashboardPlus::timelineItem(
                           title = "Config",
                           icon = timeline_icon(shared$wf_flags$wf_conf_ready),
                           color = timeline_color(shared$wf_flags$wf_conf_ready),
                           border = FALSE,
-                          progressBar(
+                          shinyWidgets::progressBar(
                               "pg_config", striped = TRUE, status = "primary",
                               timeline_pg(shared$wf_flags$wf_conf_ready))
                       ),
-                      timelineLabel("Ready",
+                      shinydashboardPlus::timelineLabel("Ready",
                                     color = if(all(as.logical(shared$wf_flags)))
                                         "olive"
                                     else "orange"),
                       div(style = "margin-left: 60px; margin-right: 15px;",
-                          progressBar(
+                          shinyWidgets::progressBar(
                               "pg_wf_all", total_progress, striped = TRUE,
                               status = timline_pg_status(total_progress)
                           )
@@ -120,9 +156,7 @@ wfProgressPanel <- function(shared){
 #' @param session
 #'
 #' @return
-#' @export
-#'
-#' @examples
+#' @importFrom shinyWidgets sendSweetAlert
 spsWarnings <- function(session){
     sps_warnings <- list()
     if(getOption("sps")$dev) {
@@ -137,7 +171,7 @@ spsWarnings <- function(session){
     }
 
     if(getOption("sps")$warning_toast){
-        sendSweetAlert(session = session, html = TRUE,
+        shinyWidgets::sendSweetAlert(session = session, html = TRUE,
                        '<p style="color:var(--danger)">DANGER</p>',
                        div(class = "sps-warning",
                            tagList(sps_warnings)
@@ -165,7 +199,9 @@ spsWarnings <- function(session){
 #'
 #' @return a tibble
 #' @export
-#'
+#' @importFrom shinyAce is.empty
+#' @importFrom tibble as_tibble
+#' @importFrom vroom vroom
 #' @examples
 #' library(shiny)
 #' library(shinyWidgets)
@@ -192,11 +228,11 @@ spsWarnings <- function(session){
 #' shinyApp(ui, server)
 loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
                    comment = "#", delim = "\t",
-                   col_types = cols(), ...){
+                   col_types = vroom::cols(), ...){
     df <- shinyCatch({
         choice <- match.arg(choice, c("upload", "eg"))
         df_init <-
-            if(is.empty(df_init)) {
+            if(shinyAce::is.empty(df_init)) {
                 data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
                     tibble::as_tibble()
             }
@@ -205,13 +241,13 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
             stop("df_init need to be dataframe or tibble")
         }
         df_init <- tibble::as_tibble(df_init)
-        if (choice == "upload" & is.empty(upload_path)) return(df_init)
-        if (choice == "eg" & is.empty(eg_path)) return(df_init)
+        if (choice == "upload" & shinyAce::is.empty(upload_path)) return(df_init)
+        if (choice == "eg" & shinyAce::is.empty(eg_path)) return(df_init)
         upload_path <- switch(choice,
                               "upload" = upload_path,
                               "eg" = eg_path,
         )
-        df <- shinyCatch(vroom(
+        df <- shinyCatch(vroom::vroom(
             upload_path,  delim = delim, comment = comment,
             col_types = col_types, ...
         ))
@@ -234,11 +270,12 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' different function in  `validate_list`. `...` argument is not supported.
 #' Positional args will not work either.
 #' Have to specify the name of argument, position argument also is not working.
-#'
+#' @param title Title of this validator
 #' @return if any validation function returns FALSE, a error pop-up will show
 #' in the shiny app.
 #' @export
-#'
+#' @importFrom rlang is_missing is_bool
+#' @importFrom shinytoastr toastr_success
 #' @examples
 #' library(shiny)
 #' library(shinytoastr)
@@ -305,9 +342,9 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
         if (is.null(result)) {
             shinyCatch(stop(glue("Error(s) while running through validator: ",
                                  "{names(validate_list)[index]} ")),
-                       blocking = "error")
+                       blocking_level = "error")
         }
-        if (!is_bool(result) | length(result) > 1) {
+        if (!rlang::is_bool(result) | length(result) > 1) {
             msg(glue("Function {names(validate_list)[index]}",
                      "should only return `SINGLE` TRUE or FALSE"),
                 "error")}
@@ -318,10 +355,23 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
             failed_msg <- result %>% names %>%
                 c("Validation Failed: ", .) %>%
                 glue_collapse(sep = "\n- ")
-            shinyCatch(stop(failed_msg), blocking = "error")
+            shinyCatch(stop(failed_msg), blocking_level = "error")
         }
     }
-    toastr_success(glue("{title} Passed"), position = "bottom-right",
+    shinytoastr::toastr_success(glue("{title} Passed"), position = "bottom-right",
                    timeOut = 3500)
     return(invisible())
+}
+
+
+#' Print app loading time to console
+#'
+appLoadingTime <- function(){
+    if(exists('time_start')){
+        if(inherits(time_start, "POSIXct")){
+            load_time <- round(Sys.time() - time_start, 3)
+            spsinfo(glue("App UI server loading done in {load_time}s!"),
+                    verbose = TRUE)
+        }
+    }
 }
