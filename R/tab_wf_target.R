@@ -1,5 +1,11 @@
 
 ## submodule target UI
+
+#' @importFrom rhandsontable rHandsontableOutput
+#' @importFrom shinyAce aceEditor
+#' @importFrom shinydashboard valueBox
+#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinyWidgets radioGroupButtons
 wf_targetUI <- function(id){
     ns <- NS(id)
     tagList(
@@ -7,15 +13,15 @@ wf_targetUI <- function(id){
         fluidRow(
             column(3,
                    fluidRow(
-                       valueBox(width = 12,textOutput(ns("box_samples")), "Number of Samples", icon = icon("vials"))
+                       shinydashboard::valueBox(width = 12,textOutput(ns("box_samples")), "Number of Samples", icon = icon("vials"))
                    ),
                    fluidRow(
-                       valueBox(width = 12, textOutput(ns("box_ncol")), "Number of columns", icon = icon("columns"), color = "purple")
+                       shinydashboard::valueBox(width = 12, textOutput(ns("box_ncol")), "Number of columns", icon = icon("columns"), color = "purple")
                    ),
                    fluidRow(
                        uiOutput(ns("box_missing_ui"))
                    ),
-                   boxPlus("Missing files (first row is treated as column names)", width = 12,
+                   shinydashboardPlus::boxPlus("Missing files (first row is treated as column names)", width = 12,
                            p("Write down your path prefix if you use relative path in targets"),
                            clearableTextInput(ns("target_data_path"), label = "Add path prefix", placeholder = "long path"),
                            if (getOption('sps')$mode == 'server') {
@@ -39,7 +45,7 @@ wf_targetUI <- function(id){
                    )
             ),
             column(9,
-                   radioGroupButtons(
+                   shinyWidgets::radioGroupButtons(
                        inputId = ns("target_source"), label = "Choose target source:",
                        selected = "upload",
                        choiceNames = c("Upload", "Example PE", "Example SE"),
@@ -58,7 +64,7 @@ wf_targetUI <- function(id){
                    ),
                    h4("Targets header"),
                    p("You can edit your target file header below. All lines should start with #, a line of # <CMP> xxx is required."),
-                   aceEditor(
+                   shinyAce::aceEditor(
                        outputId = ns("ace_target_header"),
                        theme = "Chrome",
                        value = "",
@@ -67,7 +73,7 @@ wf_targetUI <- function(id){
                    p("You can edit your targets (metadata) below."),
                    p("Columns of 'FileName1', 'FileName2' are required for pair-end or 'FileName' for single-end. 'SampleName', 'Factor' are required for both."),
                    p("Columns names should be on the first row."),
-                   rHandsontableOutput(ns("targets_df"), height = "800px")
+                   rhandsontable::rHandsontableOutput(ns("targets_df"), height = "800px")
             )
 
         )
@@ -75,6 +81,14 @@ wf_targetUI <- function(id){
 }
 
 ## submodule server
+#' @importFrom rhandsontable renderRHandsontable rhandsontable hot_context_menu hot_to_r
+#' @importFrom shinyAce updateAceEditor
+#' @importFrom shinytoastr toastr_info
+#' @importFrom shinyWidgets confirmSweetAlert updateRadioGroupButtons sendSweetAlert
+#' @importFrom tibble as_tibble
+#' @importFrom vroom vroom cols
+#' @importFrom shinyAce is.empty
+#' @importFrom shinyjs disable enable
 wf_targetServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -92,14 +106,14 @@ wf_targetServer <- function(id, shared){
         t.df <- reactiveVal(df_init)
         target_upload <- dynamicFileServer(input, session, id = "target_upload")
         # update table
-        output$targets_df <- renderRHandsontable({
-            rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
-                hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
+        output$targets_df <- rhandsontable::renderRHandsontable({
+            rhandsontable::rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+                rhandsontable::hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
         })
 
         observeEvent(c(input$target_source, not_empty(target_upload())), ignoreInit = TRUE, ignoreNULL = TRUE, {# only c work here, dont know why
             if (selected_flag() == TRUE) {
-                confirmSweetAlert(
+                shinyWidgets::confirmSweetAlert(
                     session,inputId = "sweet_changetarget_confirm",
                     title = "Do you want to change target Source?",
                     text = "If you change target source or load new file, target data will be reset in this tab and 'Task' tab. You will LOSE unsaved data", type = "warning"
@@ -127,16 +141,16 @@ wf_targetServer <- function(id, shared){
                     targets_p_old(target_upload()$datapath)
                 }
                 if (input$target_source != "upload") header_lines <- ace_target_header_init
-                updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
+                shinyAce::updateAceEditor(session, editorId = "ace_target_header", value = header_lines)
                 # other server end updates
-                toastr_info(paste0("Changed target source to ", input$target_source, ". Target reset"),
+                shinytoastr::toastr_info(paste0("Changed target source to ", input$target_source, ". Target reset"),
                             closeButton = TRUE, position = "bottom-right", timeOut = 2000)
                 shared$wf_flags$targets_ready = FALSE
-                if (input$target_source != "upload") disable("target_upload") else enable("target_upload")
+                if (input$target_source != "upload") shinyjs::disable("target_upload") else shinyjs::enable("target_upload")
                 selected_old(input$target_source)
             } else {
                 #if cancelled alert
-                updateRadioGroupButtons(session, "target_source", selected = selected_old(),
+                shinyWidgets::updateRadioGroupButtons(session, "target_source", selected = selected_old(),
                                         checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
                 )
                 selected_flag(FALSE)
@@ -145,18 +159,18 @@ wf_targetServer <- function(id, shared){
         # left side checkers behaviors
         observeEvent({input$targets_df; input$column_check}, {
             if (!is.null(input$targets_df)) {
-                t.df(hot_to_r(input$targets_df))
+                t.df(rhandsontable::hot_to_r(input$targets_df))
             }
-            output$targets_df <- renderRHandsontable({
-                rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
-                    hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
+            output$targets_df <- rhandsontable::renderRHandsontable({
+                rhandsontable::rhandsontable(t.df(), selectCallback = TRUE, useTypes = FALSE) %>%
+                    rhandsontable::hot_context_menu(allowRowEdit = TRUE, allowColEdit = TRUE)
             })
 
             t.df.check <- t.df()[-1, ] %>% as.data.frame()
             output$box_samples <- renderText({nrow(t.df.check)})
             output$box_ncol <- renderText({ncol(t.df.check)})
             updateSelectInput(session, "column_check", choices = names(t.df()), selected = input$column_check)
-            long_path <- if (is.empty(input$target_data_path)) "." else input$target_data_path
+            long_path <- if (shinyAce::is.empty(input$target_data_path)) "." else input$target_data_path
             cheching_path <- file.path(long_path, as.character(t.df.check[[input$column_check]]))
             not_missing_index <- sapply(cheching_path, file.exists)
             missing_names <- cheching_path[!not_missing_index]
@@ -181,7 +195,7 @@ wf_targetServer <- function(id, shared){
                 "targets.txt"
             },
             content <- function(filename) {
-                writeLines(c(isolate(input$ace_target_header), apply(hot_to_r(input$targets_df), 1, paste, collapse = "\t")), filename)
+                writeLines(c(isolate(input$ace_target_header), apply(rhandsontable::hot_to_r(input$targets_df), 1, paste, collapse = "\t")), filename)
             })
         # add to task
         observeEvent(input$to_task_target, {
@@ -190,7 +204,7 @@ wf_targetServer <- function(id, shared){
             header_lines <- isolate(input$ace_target_header)
             check_results <- check_target(col_names = t.df()[1, ], headerlines = header_lines)
             if (all(check_results)) {
-                sendSweetAlert(
+                shinyWidgets::sendSweetAlert(
                     session = session,
                     title = "Added to Task",
                     text = "All target check passed, target added to task\n You can see workflow status by clicking top right",
@@ -222,10 +236,10 @@ wf_targetServer <- function(id, shared){
         )
         if (is.null(targets_p)) return(df_init)
         if ((choice != choice_old) | (targets_p != targets_p_old)) {
-            df.t <- shinyCatch(vroom(
+            df.t <- shinyCatch(vroom::vroom(
                 targets_p,  delim = "\t",
                 comment = "#", n_max = 10000,
-                col_names = FALSE, col_types = cols()
+                col_names = FALSE, col_types = vroom::cols()
             ))
             if(is.null(df.t)){warning("Can't read file, return empty"); return(df_init)}
         }

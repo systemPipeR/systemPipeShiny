@@ -1,25 +1,26 @@
 ################## A Collections of HTML components#############################
-
+# can be used outside SPS framework, like other shiny projects
 ## use on top of shiny
 
-#' @import shiny  stringr magrittr glue htmltools
-NULL
-
-
 #' Use SystemPipeShiny javascripts and css style
-#' call it in your header section
+#' call it in your head section
 #' @return
+#' @importFrom shinytoastr useToastr
 #' @export
 #'
 #' @examples
+#' library(shiny)
+#' ui <- fluidPage(
+#'     tags$head(useSps())
+#' )
 useSps <- function(){
-    # addResourcePath("sps", system.file("www", package = "systemPipeShiny"))
+    addResourcePath("sps", system.file("app/www", package = "systemPipeShiny"))
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css",
-                            href = "css/sps.css"),
-        tags$script(src = "js/sps.js"),
-        tags$script(src="js/sps_update_pg.js"),
-        useToastr()
+                            href = "sps/css/sps.css"),
+        tags$script(src = "sps/js/sps.js"),
+        tags$script(src="sps/js/sps_update_pg.js"),
+        shinytoastr::useToastr()
     )
 }
 
@@ -74,6 +75,18 @@ clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
 #' @export
 #'
 #' @examples
+#' library(shiny)
+#'
+#' ui <- fluidPage(
+#'     tags$head(useSps()),
+#'     textInputGroup("id1", "id2")
+#' )
+#'
+#' server <- function(input, output, session) {
+#'
+#' }
+#'
+#' shinyApp(ui, server)
 textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plane"){
     fluidRow(
         column(
@@ -94,6 +107,7 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #' @importFrom assertthat assert_that
 #' @param Id ID of this gallery
 #' @param title Title of gallery
+#' @param title_color Title color
 #' @param texts label under each image
 #' @param hrefs link when clicking each
 #' @param image_frame_size integer, 1-12, this controls width
@@ -146,45 +160,12 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 }
 
 
-#' generate gallery by only providing tab names
-#'
-#' @param tabnames tab names, string vector
-#' will be included
-#' @param Id div ID
-#' @param title gallery title
-#' @param title_color title color
-#' @param image_frame_size integer, 1-12
-#' @param img_height css style like '300px'
-#' @param img_width css style like '480px'
-#' @param type filter by tab type, then tabnames will be ignored: core, wf, data, vs
-#'
-#' @return gallery div
-#'
-#' @example
-#' library(shiny)
-#' ui <- fluidPage(
-#'     genGallery(c("tab_a", "tab_b"))
-#' )
-#' server <- function(input, output, session) {
-#'
-#' }
-#' shinyApp(ui, server)
-genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
-                       title_color = "#0275d8", image_frame_size = 3) {
-    tabs <- findTabInfo(tabnames, type)
-    if (is.null(tabs)) return(div("Nothing to display in gallery"))
-    tabs$images[tabs$images == ""] <- "img/noimg.png"
-    gallery(Id = Id, title = title, title_color = title_color,
-            image_frame_size = image_frame_size,
-            texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
-            images = tabs[['images']])
-}
-
 #' Show a list of tabs in buttons
 #' @details `hrefTab` can be use for any purpose of shiny.
 #' `genHrefTab` is upper level wrapper of `hrefTab` and should
 #' only be used under systemPipeShiny framework for fast retrieving tab info and
-#' generate the `hrefTab`.
+#' generate the `hrefTab`. To use `genHrefTab`, the `tab_info.csv` config file
+#' must be in `./config` directory.
 #' `label_text`, `hrefs` must be the same length
 #' @importFrom assertthat assert_that
 #' @param Id optional
@@ -224,17 +205,6 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
     )
 }
 
-
-#' @rdname hrefTab
-#' @param tabnames tab names, must have the \code{tab_info} dataframe or
-#' `tab_info.csv` config file in `./config` directory.
-genHrefTab <- function(tabnames, Id = NULL, title = "A bar to list tabs",
-                         text_color = "#0275d8", ...) {
-    tabs <- findTabInfo(tabnames)
-    hrefTab(Id = Id, title = title, text_color = text_color,
-            label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
-}
-
 #' A table of lists of hyper reference buttons
 #' `item_titles`, `item_labels`, `item_hrefs` must have the same length
 #' nth item in `item_labels`, `item_hrefs` must have the same length
@@ -254,7 +224,7 @@ genHrefTab <- function(tabnames, Id = NULL, title = "A bar to list tabs",
 #' library(shiny)
 #'
 #' ui <- fluidPage(
-#'     includeCSS("www/sps.css"),
+#'     useSps(),
 #'     hrefTable(item_titles = c("workflow 1", "workflow 2"),
 #'               item_labels = list(c("tab 1"), c("tab 3", "tab 4")),
 #'               item_hrefs = list(c("https://www.google.com/"), c("", "")),
@@ -311,47 +281,12 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
     )
 }
 
-#' generate a table of lists of hyper reference buttons by using tab config file
-#'
-#' @param rows a list of rows, each item name in the list will be the row name,
-#' each item is a vector of tab names
-#' @param Id element ID
-#' @param title table title
-#' @param text_color text color for table
-#' @param ... any additional args to the html element, like class, style ...
-#' @details For `rows`, there are some specially reserved characters
-#' for type and sub types. If indicated, it will return a list of tabs matching
-#' the indicated tabs instead of searching individual tab names. These words
-#' include: core, wf, vs, data, plot.
-#' @example
-#' library(shiny)
-#' rows <- list(wf1 = c("df_raw", "df_count"), wf2 =  "data")
-#' ui <- fluidPage(
-#'     genHrefTable(rows)
-#' )
-#' server <- function(input, output, session) {
-#'
-#' }
-#' shinyApp(ui, server)
-genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
-                         text_color = "#0275d8", ...) {
-    tab_list <- sapply(rows, function(x) {
-        if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
-            findTabInfo(type = x)
-        } else {findTabInfo(x)}
 
-    })
-    hrefTable(Id = Id, title = title,
-              text_color = text_color, item_titles = names(rows),
-              item_labels = tab_list[1,], item_hrefs = tab_list[2,], ...)
-}
-
-
-
-#' Render tab description
+#' Render some collapsible description
 #'
 #' @param desc one string in markdown format
-#'
+#' @param id HTML ID
+#' @importFrom markdown renderMarkdown
 #' @examples
 #' desc <-
 #' "
@@ -384,8 +319,8 @@ renderDesc <- function(id, desc) {
 #' @param icon button icon, only works for `local` mode
 #' @param style additional button style, only works for `local` mode
 #' @param multiple multiple files allowed
-#' `shinyFilesButton`
-#'
+#' @importFrom shinyAce is.empty
+#' @importFrom shinyFiles shinyFilesButton
 #' @return div
 #' @export
 #'
@@ -411,13 +346,13 @@ renderDesc <- function(id, desc) {
 dynamicFile <- function(id, title = "Select your file:",
                         label = "Browse", icon = NULL, style = "",
                         multiple = FALSE){
-    icon <- if(is.empty(icon)) icon("upload")
+    icon <- if(shinyAce::is.empty(icon)) icon("upload")
     if (getOption("sps")$mode == "local") {
         div(class = "form-group shiny-input-container sps-file",
             tags$label(class="control-label", `for`=id, title),
             div(class="input-group",
                 tags$label(class="input-group-btn input-group-prepend",
-                           shinyFilesButton(id, label,
+                           shinyFiles::shinyFilesButton(id, label,
                                             title = title, multiple = multiple,
                                             buttonType = "btn btn-primary", icon = icon,
                                             style = style)
@@ -434,49 +369,14 @@ dynamicFile <- function(id, title = "Select your file:",
     }
 }
 
-
-
-#' Create template tabs and servers
-#' @description generate UI and server part for template components if `dev`
-#' option is TRUE. See ui.R and server.R for example. Normally there is no need
-#' to change code of this function ui or server scripts.
-#' @param element choose from "ui_menu_df", "ui_menu_plot","ui_tab_df",
-#' "ui_tab_plot", "server"
-#' @param shared use only when `element` is 'server'
-#'
-#' @return ui_xx returns html tags, server will return a server function
-#' @export
-#'
-devComponents <- function(element, shared=NULL){
-    element <- match.arg(element, c("ui_menu_df", "ui_menu_plot",
-                                    "ui_tab_df", "ui_tab_plot", "server"))
-
-    if(is.null(getOption("sps")$dev)) {
-        options(sps = getOption("sps") %>% {.[['dev']] <- FALSE; .})
-        msg("dev option is not set, set to FALSE", "warning")
-    }
-    if(getOption("sps")$dev){
-        switch (element,
-                "ui_menu_df" = menuSubItem(text = "Template data", tabName = "df_template"),
-                "ui_menu_plot" = menuSubItem(text = "Template Plot", tabName = "plot_template"),
-                "ui_tab_df" = tabItem(tabName = "df_template", df_templateUI("df_template")),
-                "ui_tab_plot" = tabItem(tabName = "plot_template", plot_templateUI("plot_template")),
-                "server" = {
-                    df_templateServer("df_template", shared)
-                    plot_templateServer("plot_template", shared)
-                    }
-        )
-    } else {tabItem("")}
-}
-
-
 #' Example UI elements for plotting
 #' @description return some example UI elements can be toggled on plotting
 #' @param ns namespace function
 #'
 #' @return
-#' @export
-#'
+#' @importFrom shinyAce aceEditor
+#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinyWidgets dropdownButton tooltipOptions radioGroupButtons sliderTextInput
 #' @examples
 #' library(shiny)
 #' eg_UI <- function(id) {
@@ -492,13 +392,13 @@ devComponents <- function(element, shared=NULL){
 uiExamples <- function(ns){
     tagList(
         h4("Some examples for plotting controls"),
-        boxPlus(
+        shinydashboardPlus::boxPlus(
             width = 12, closable = FALSE, collapsible = TRUE,
-            footer = dropdownButton(
+            footer = shinyWidgets::dropdownButton(
                 size = "sm", icon = icon("code"), width = "500px",
-                tooltip = tooltipOptions(title = "Click to see code"),
+                tooltip = shinyWidgets::tooltipOptions(title = "Click to see code"),
                 label = "see code",
-                aceEditor(
+                shinyAce::aceEditor(
                     ns("code-chunk"), mode = "r", readOnly = TRUE,
                     fontSize = 14, value =
                         glue('
@@ -509,7 +409,7 @@ uiExamples <- function(ns){
                         label = "click me",
                         icon("cog")
                     ),
-                    radioGroupButtons(
+                    shinyWidgets::radioGroupButtons(
                         inputId = ns("radio_gp1"),
                         label = "radio group example",
                         choices = c("A",
@@ -519,7 +419,7 @@ uiExamples <- function(ns){
                             yes = icon("ok", lib = "glyphicon"),
                             no = icon("remove", lib = "glyphicon"))
                     ),
-                    sliderTextInput(
+                    shinyWidgets::sliderTextInput(
                         inputId = ns("slider1"),
                         label = "slider example",
                         choices = c(1, 10, 100, 500, 1000),
@@ -538,7 +438,7 @@ uiExamples <- function(ns){
                 label = "click me",
                 icon("cog")
             ),
-            radioGroupButtons(
+            shinyWidgets::radioGroupButtons(
                 inputId = ns("radio_gp1"),
                 label = "radio group example",
                 choices = c("A",
@@ -548,7 +448,7 @@ uiExamples <- function(ns){
                     yes = icon("ok", lib = "glyphicon"),
                     no = icon("remove", lib = "glyphicon"))
             ),
-            sliderTextInput(
+            shinyWidgets::sliderTextInput(
                 inputId = ns("slider1"),
                 label = "slider example",
                 choices = c(1, 10, 100, 500, 1000),
@@ -560,41 +460,15 @@ uiExamples <- function(ns){
 
 #' hr line with color #3b8dbc38
 #' @export
+#' @examples
+#' spsHr("Text")
 spsHr <- function() {
     hr(style ='border: 0.5px solid #3b8dbc38;')
 }
 
-#' Workflow progress tracker UI
-#' @description call it on top level UI not inside a module. Call this function
-#' only once. Do not repeat this function.
-#' @export
-#' @examples
-#' wfPanel()
-wfPanel <- function(){
-    div(class = "tab-pane", id = "wf-panel",
-        absolutePanel(
-            top = "3%", right = "1%", draggable = TRUE, width = "300",
-            height = "auto", class = "control-panel", cursor = "inherit",
-            style = "background-color: white; z-index:999;",
-            fluidRow(
-                column(2),
-                column(8, h4("Workflow Progress")),
-                column(2, HTML('<button class="action-button
-                                  bttn bttn-simple bttn-xs bttn-primary
-                                  bttn-no-outline" data-target="#wf-panel-main"
-                                  data-toggle="collapse">
-                                  <i class="fa fa-minus"></i></button>'))
-            ),
-            div(class = "collapse",
-                id = "wf-panel-main",
-                uiOutput("wf_panel"))
-        )
-    )
-}
-
-
-
 #' @rdname pgPaneUpdate
+#' @importFrom shinydashboardPlus timelineBlock timelineLabel
+#' @importFrom shinyWidgets progressBar
 #' @param titles labels to display for each progress, must have the same length
 #' as `pg_ids`
 #' @param pg_ids a character vector of IDs for each progress. Don't forget
@@ -622,7 +496,7 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
                 div(class = "timeline-item",
                     h3(class = "timeline-header no-border", titles[i]),
                     div(class="timeline-body", style = "padding: 0px;",
-                        progressBar(
+                        shinyWidgets::progressBar(
                             glue("{pg_ids[i]}-pg"), striped = TRUE,
                             status = "primary", 0
                         )
@@ -630,12 +504,12 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
                 )
         )
     }, simplify = FALSE) %>% {
-        timelineBlock(reversed = FALSE, id = glue("{pane_id}-timeline"),
+        shinydashboardPlus::timelineBlock(reversed = FALSE, id = glue("{pane_id}-timeline"),
                       .,
-                      timelineLabel(id = glue("{pane_id}-pg-label"), "Ready",
+                      shinydashboardPlus::timelineLabel(id = glue("{pane_id}-pg-label"), "Ready",
                                     color = "orange"),
                       div(style = "margin-left: 60px; margin-right: 15px;",
-                          progressBar(
+                          shinyWidgets::progressBar(
                               glue("{pane_id}-pg-all"), striped = TRUE,
                               status = "primary", 0
                           )
@@ -672,18 +546,18 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
 #' @param footer_link single value of `footer_links`
 #' @param x string, X offset
 #' @param y string, Y offset
-#'
+#' @importFrom shinyAce is.empty
 #' @export
 hexLogo <- function(id, title="", hex_img, hex_link = "" ,
                     footer = "", footer_link= "", x="-10", y="-20"){
-    title_text <- if(is.empty(title)) ''
+    title_text <- if(shinyAce::is.empty(title)) ''
     else glue('<span class="text-info">{title}</span><br>')
-    hex <-  if(is.empty(hex_link)) {
+    hex <-  if(shinyAce::is.empty(hex_link)) {
         glue('<polygon points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/>')
     } else {
         glue('<a href="{hex_link}" target="_blank"> <polygon class="hex" points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/></a>')
     }
-    footer_text <- if(is.empty(footer)) ''
+    footer_text <- if(shinyAce::is.empty(footer)) ''
     else glue('<text x=10 y=115><a class="powerby-link" href="{footer_link}" target="_blank">{footer}</a></text>')
     HTML(glue('
     <div id="{id}" class="hex-container">
@@ -779,7 +653,7 @@ hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
     }
 }
 
-#' SPS tab title
+#' h2 title with bootstrap info color
 #'
 #' @param title title text
 #' @param ... other attributes and children to this DOM

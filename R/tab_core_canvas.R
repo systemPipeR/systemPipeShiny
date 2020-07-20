@@ -1,5 +1,7 @@
 
 ## UI
+#' @importFrom colourpicker colourInput
+#' @importFrom shinyWidgets sliderTextInput
 core_canvasUI <- function(id){
     ns <- NS(id)
     desc <- "
@@ -29,7 +31,7 @@ core_canvasUI <- function(id){
         fluidRow(
             column(6,
                 h5("Number of plots per row to initiate canvas:"),
-                sliderTextInput(inputId = ns("ncols"),
+                shinyWidgets::sliderTextInput(inputId = ns("ncols"),
                                 label = NULL,
                                 choices = c(1:4, 12),
                                 selected = 2,
@@ -56,6 +58,8 @@ core_canvasUI <- function(id){
 }
 
 ## server
+#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinyjqui orderInput
 core_canvasServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -71,8 +75,8 @@ core_canvasServer <- function(id, shared){
             output$snap_choose <- renderUI({
                 shiny::validate(need(length(shared$canvas$server) > 0, message = "No snapshot yet"))
                 tagList(
-                    boxPlus(title = "Current snapshots", width = 6, closable = FALSE,
-                            orderInput(
+                    shinydashboardPlus::boxPlus(title = "Current snapshots", width = 6, closable = FALSE,
+                            shinyjqui::orderInput(
                                 ns("snaps"), NULL,
                                 items = names(shared$canvas$server),
                                 placeholder = 'Current snapshots',
@@ -80,8 +84,8 @@ core_canvasServer <- function(id, shared){
                                 connect = c(ns("snaps"), ns('snap_unselect'))
                             )
                     ),
-                    boxPlus(title = "Snapshots excluded", width = 6, closable = FALSE,
-                            orderInput(
+                    shinydashboardPlus::boxPlus(title = "Snapshots excluded", width = 6, closable = FALSE,
+                            shinyjqui::orderInput(
                                 ns('snap_unselect'), NULL, items = NULL,
                                 placeholder = 'Drag plots here if you don\'t want to see on canvas',
                                 connect = c(ns("snaps"), ns('snap_unselect'))

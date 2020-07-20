@@ -2,15 +2,17 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{renderDesc}
 \alias{renderDesc}
-\title{Render tab description}
+\title{Render some collapsible description}
 \usage{
 renderDesc(id, desc)
 }
 \arguments{
+\item{id}{HTML ID}
+
 \item{desc}{one string in markdown format}
 }
 \description{
-Render tab description
+Render some collapsible description
 }
 \examples{
 desc <-

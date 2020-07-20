@@ -3,8 +3,8 @@
 \name{hrefTable}
 \alias{hrefTable}
 \title{A table of lists of hyper reference buttons
-`item_titles`, `item_labels`, `item_hrefs` must have the same length
-nth item in `item_labels`, `item_hrefs` must have the same length}
+\code{item_titles}, \code{item_labels}, \code{item_hrefs} must have the same length
+nth item in \code{item_labels}, \code{item_hrefs} must have the same length}
 \usage{
 hrefTable(
   Id = NULL,
@@ -36,14 +36,14 @@ hrefTable(
 }
 \description{
 A table of lists of hyper reference buttons
-`item_titles`, `item_labels`, `item_hrefs` must have the same length
-nth item in `item_labels`, `item_hrefs` must have the same length
+\code{item_titles}, \code{item_labels}, \code{item_hrefs} must have the same length
+nth item in \code{item_labels}, \code{item_hrefs} must have the same length
 }
 \examples{
 library(shiny)
 
 ui <- fluidPage(
-    includeCSS("www/sps.css"),
+    useSps(),
     hrefTable(item_titles = c("workflow 1", "workflow 2"),
               item_labels = list(c("tab 1"), c("tab 3", "tab 4")),
               item_hrefs = list(c("https://www.google.com/"), c("", "")),

@@ -5,13 +5,7 @@
 #' @param mainUI a normal shiny page ui
 #'
 #' @return a `fluidPage`
-#'
-#' @examples
-#' ui <- fluidPage()
-#' server <- function(input, output, session) {}
-#' mainUI <- shinyApp(ui, server)
-#' spsUI(mainUI)
-spsUI <- function(mainUI){
+spsUIwrapper <- function(mainUI){
     fluidPage(
         spsUIuser(mainUI),
         spsUIadmin()
@@ -27,7 +21,7 @@ spsUIadmin <- function(){
     )
 }
 
-#' Internal functional to render user UI
+# Internal functional to render user UI
 spsUIuser <- function(mainUI){
     fluidPage(
         id = "page_user",
@@ -53,7 +47,7 @@ spsUIuser <- function(mainUI){
                       transform: translate(-50%, -10%);
                     }
                                '),
-                actionBttn(inputId = "toapp", "Continue to app", icon = icon("angle-double-right"), size = "lg"),
+                shinyWidgets::actionBttn(inputId = "toapp", "Continue to app", icon = icon("angle-double-right"), size = "lg"),
                 renderLoading(),
                 if(getOption('sps')$loading_particles) {
                     if (!requireNamespace("particlesjs", quietly = TRUE)){

@@ -1,6 +1,9 @@
 ########################## Template for data tab ###############################
 
 ## UI
+
+#' @importFrom DT DTOutput
+#' @importFrom shinyWidgets radioGroupButtons pickerInput
 df_templateUI <- function(id){
     ns <- NS(id)
     # describe your tab in markdown format, this will go right under the title
@@ -32,7 +35,7 @@ df_templateUI <- function(id){
         ),
         div(
             id = ns("tab_main"), class = "shinyjs-hide",
-            radioGroupButtons(
+            shinyWidgets::radioGroupButtons(
                 inputId = ns("data_source"), label = "Choose your data file source:",
                 selected = "upload",
                 choiceNames = c("Upload", "Example"),
@@ -43,7 +46,7 @@ df_templateUI <- function(id){
             fluidRow(
                 column(width = 5, dynamicFile(id = ns("file_upload"))),
                 column(width = 3,
-                       pickerInput(
+                       shinyWidgets::pickerInput(
                            inputId = ns("delim"), label = "File delimiter",
                            choices = c(`,`=",", space=" ", Tab="\t", `|`="|", `:`=":", `;`=";"),
                            options = list(style = "btn-primary")
@@ -56,7 +59,7 @@ df_templateUI <- function(id){
                 hr(), h4("Choose a proprocessing method"),
                 p("Depending on different ways of preprocessing, different plotting options will be available"),
                 column(4,
-                    pickerInput(
+                    shinyWidgets::pickerInput(
                         inputId = ns("select_prepro"),
                         choices = c(`Do Nothing`='nothing', `Method 1`='md1', `Method 2`='md2'),
                         options = list(style = "btn-primary")
@@ -74,13 +77,17 @@ df_templateUI <- function(id){
 }
 
 ## server
+
+#' @importFrom DT renderDT datatable
+#' @importFrom shiny validate
+#' @importFrom shinyjs show hide toggleState
 df_templateServer <-function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         tab_id <- "df_template"
         # start the tab by checking if required packages are installed
         observeEvent(input$validate_start, {
-            req(shinyCheckSpace(
+            req(shinyCheckPkg(
                 session = session,
                 cran_pkg = c("base"),
                 bioc_pkg = c(""),
@@ -90,7 +97,7 @@ df_templateServer <-function(id, shared){
             shinyjs::hide(id = "validate_start")
             pgPaneUpdate('pg', 'pkg', 100) # update progress
         })
-        observeEvent(input$data_source, toggleState(id = "file_upload"), ignoreInit = TRUE)
+        observeEvent(input$data_source, shinyjs::toggleState(id = "file_upload"), ignoreInit = TRUE)
         # get upload path, note path is in upload_path()$datapath
         upload_path <- dynamicFileServer(input, session, id = "file_upload") # this is reactive
         # load the file dynamically

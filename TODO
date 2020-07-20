@@ -326,8 +326,8 @@ shinyCatch : <anonymous>: no visible global function definition for
   ‘toastr_error’
 shinyCatch : <anonymous>: no visible global function definition for
   ‘is.empty’
-shinyCheckSpace: no visible global function definition for ‘str_remove’
-shinyCheckSpace: no visible global function definition for ‘is.empty’
+shinyCheckPkg: no visible global function definition for ‘str_remove’
+shinyCheckPkg: no visible global function definition for ‘is.empty’
 spsValidator : <anonymous> : <anonymous>: no visible global function
   definition for ‘glue’
 spsValidator: no visible global function definition for ‘glue’

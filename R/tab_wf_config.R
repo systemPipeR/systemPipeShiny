@@ -1,10 +1,12 @@
 ## UI
+#' @importFrom shinyAce aceEditor
+#' @importFrom shinyWidgets radioGroupButtons
 wf_configUI <- function(id){
     ns <- NS(id)
     tagList(
         tabTitle("Workflow Configuration"),
         fluidRow(
-            radioGroupButtons(
+            shinyWidgets::radioGroupButtons(
                 inputId = ns("config_source"), label = "Choose your config file source:",
                 selected = "upload",
                 choiceNames = c("Upload", "Example"),
@@ -26,7 +28,7 @@ wf_configUI <- function(id){
             )
         ),
         p("Edit your yaml here"),
-        aceEditor(
+        shinyAce::aceEditor(
             outputId = ns("ace_config"),
             theme = "Chrome",
             value = "",
@@ -37,6 +39,8 @@ wf_configUI <- function(id){
 }
 
 ## server
+#' @importFrom shinyAce updateAceEditor
+#' @importFrom shinyWidgets sendSweetAlert
 wf_configServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -46,8 +50,8 @@ wf_configServer <- function(id, shared){
             if (input$config_source == "eg") "inst/extdata/config.yaml" else input$config_upload$datapath
         })
         observeEvent(rmd_file_path(), {
-            updateAceEditor(session, editorId = "ace_config", value = {
-                shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"), blocking = "error")
+            shinyAce::updateAceEditor(session, editorId = "ace_config", value = {
+                shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"), blocking_level = "error")
             })
         })
 
@@ -59,7 +63,7 @@ wf_configServer <- function(id, shared){
         observeEvent(input$to_task_config, {
             if (!is.null(shared$config$file)) {
                 shared$wf_flags$wf_conf_ready = TRUE
-                sendSweetAlert(
+                shinyWidgets::sendSweetAlert(
                     session = session,
                     title = "Config added to Task",
                     text = "You can see workflow status by clicking top right",

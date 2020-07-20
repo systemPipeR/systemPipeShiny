@@ -1,16 +1,57 @@
 Package: systemPipeShiny
 Title: systemPipeShiny
-Version: 0.0.9
-Date: 2020-06-11
+Version: 0.1.0
+Date: 2020-07-19
 Authors@R: c(
-    person(given = "Daniela", family = "Cassol", role = c("aut", "cre"), email = "danielac@ucr.edu"),
-    person(given = "Thomas", family = "Girke", role = c("aut"), email = "thomas.girke@ucr.edu"),
-    person(given = "Le", family = "Zhang", role = c("aut"), email = "zhan140@ucr.edu"),
-    person(given = "Ponmathi", family = "Ramasamy", role = c("aut"), email = "prama008@ucr.edu"))
+    person(given = "Le", family = "Zhang", role = c("aut"), email = "le.zhang001@email.ucr.edu"),
+    person(given = "Ponmathi", family = "Ramasamy", role = c("aut"), email = "prama008@ucr.edu"),
+    person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danielac@ucr.edu"),
+    person(given = "Jianhai", family = "Zhang", role = c("aut"), email = "jzhan067@ucr.edu"),
+    person(given = "Gordon", family = "Mosher", role = c("aut"), email = "gmosh001@ucr.edu"),
+    person(given = "Thomas", family = "Girke", role = c("aut", "cre"), email = "thomas.girke@ucr.edu"))
 Description: systemPipeShiny
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
-Depends: shiny, shinydashboard, shinydashboardPlus, shinyWidgets, pushbar, rhandsontable, magrittr, shinyjs, shinyTree, networkD3, plotly, systemPipeR, systemPipeRdata, ggplot2
-URL: http://girke.bioinformatics.ucr.edu/systemPipeR/
+Depends:
+    R (>= 4.0.0),
+    assertthat,
+    glue,
+    magrittr,
+    shiny,
+    stringr,
+    ggplot2,
+    shinyTree
+Imports:
+    DOT,
+    DT,
+    R6,
+    RSQLite,
+    colourpicker,
+    crayon,
+    dplyr,
+    markdown,
+    networkD3,
+    openssl,
+    plotly,
+    pushbar,
+    rhandsontable,
+    rlang,
+    rsvg,
+    rstudioapi,
+    shinyAce,
+    shinyFiles,
+    shinyWidgets,
+    shinydashboard,
+    shinydashboardPlus,
+    shinyjqui,
+    shinyjs,
+    shinytoastr,
+    tibble,
+    vroom,
+    yaml
+Suggests:
+    testthat
+URL: https://github.com/systemPipeR/systemPipeShiny
 RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)

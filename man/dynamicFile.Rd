@@ -4,9 +4,9 @@
 \alias{dynamicFile}
 \title{dynamically generate select file input
 depending on the mode in options, render similar UI but server side works
-differently. `local` mode will not copy file, directly use a path pointer,
-`server` mode upload file and store in temp. Expect similar behavior as
-`fileInput`.}
+differently. \code{local} mode will not copy file, directly use a path pointer,
+\code{server} mode upload file and store in temp. Expect similar behavior as
+\code{fileInput}.}
 \usage{
 dynamicFile(
   id,
@@ -24,12 +24,11 @@ dynamicFile(
 
 \item{label}{upload button label}
 
-\item{icon}{button icon, only works for `local` mode}
+\item{icon}{button icon, only works for \code{local} mode}
 
-\item{style}{additional button style, only works for `local` mode}
+\item{style}{additional button style, only works for \code{local} mode}
 
-\item{multiple}{multiple files allowed
-`shinyFilesButton`}
+\item{multiple}{multiple files allowed}
 }
 \value{
 div
@@ -37,9 +36,9 @@ div
 \description{
 dynamically generate select file input
 depending on the mode in options, render similar UI but server side works
-differently. `local` mode will not copy file, directly use a path pointer,
-`server` mode upload file and store in temp. Expect similar behavior as
-`fileInput`.
+differently. \code{local} mode will not copy file, directly use a path pointer,
+\code{server} mode upload file and store in temp. Expect similar behavior as
+\code{fileInput}.
 }
 \examples{
 library(shiny)
