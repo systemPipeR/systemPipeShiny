@@ -106,7 +106,7 @@ df_templateServer <-function(id, shared){
             pgPaneUpdate('pg', 'data', 0) # set data progress to 0 every time reloads
             loadDF(choice = input$data_source, upload_path = df_path$datapath,
                    delim = input$delim, comment = input$comment,
-                   eg_path = "inst/extdata/iris.csv")
+                   eg_path = "data/iris.csv")
         })
         # display table
         output$df <- DT::renderDT({

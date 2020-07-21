@@ -18,7 +18,7 @@ Depends:
     assertthat,
     glue,
     magrittr,
-    shiny,
+    shiny (>= 1.5.0),
     stringr,
     ggplot2,
     shinyTree

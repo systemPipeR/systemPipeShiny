@@ -81,7 +81,7 @@ wf_wfServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         rmd_file_path <- reactive({
-            if (input$wf_source == "eg") "inst/extdata/systemPipeRNAseq.md" else input$rmd_file$datapath
+            if (input$wf_source == "eg") "data/systemPipeRNAseq.md" else input$rmd_file$datapath
         })
 
         rmd <- reactive({

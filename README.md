@@ -50,7 +50,7 @@ pkgdown::build_site()
 ### 1. App structure
 1. Directories:
     1. docs: `pagedown` docs, used to generate project website, can be ignored for app
-    2. inst/extdata: example datasets 
+    2. data: example datasets 
     3. R: all functions, sub-tabs. This folder will be automatically sourced
     4. vignettes: manuals for the app, can be ignored for app
     5. www: html web resources, will be treated as root of front-end resources
