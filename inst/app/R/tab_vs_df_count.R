@@ -95,7 +95,7 @@ df_countServer <- function(id, shared){
 hot_count <- function(choice, count_p=NULL){
     count_p <- switch(choice,
                       "upload" = count_p,
-                      "eg" = "inst/extdata/countDFeByg.xls"
+                      "eg" = "data/countDFeByg.xls"
     )
     if (is.empty(count_p)) return(data.frame(place_holder = NA, stringsAsFactors = FALSE))
     df.t <- read.csv(count_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)

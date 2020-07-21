@@ -112,7 +112,7 @@ df_edgeRServer <- function(id, shared){
 edgeR_up <- function(count_df, count_p=NULL, count_p_old=NULL, choice, choice_old){
   count_p <- switch(choice,
                     "upload" = count_p,
-                    "eg" = "./inst/extdata/edgeR_DF.xls"
+                    "eg" = "./data/edgeR_DF.xls"
   )
   if (is.empty(count_p)) return(data.frame(place_holder = NA, stringsAsFactors = FALSE))
   df.t <- read.csv(count_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)

@@ -96,8 +96,8 @@ df_targetsServer <- function(id, shared){
 df_target <- function(choice, count_p=NULL){
     count_p <- switch(choice,
                       "upload" = count_p,
-                      "se" = "inst/extdata/targets.txt",
-                      "pe" = "inst/extdata/targetsPE.txt"
+                      "se" = "data/targets.txt",
+                      "pe" = "data/targetsPE.txt"
     )
     if (is.empty(count_p)) return(data.frame(place_holder = NA, stringsAsFactors = FALSE))
     df.t <- read.csv(count_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)

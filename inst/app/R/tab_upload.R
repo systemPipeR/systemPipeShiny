@@ -25,7 +25,7 @@ uploadServer <- function(input, output, session, shared = shared){
       shared$count_table <- count_list$countDF
       shared$count_list <- count_list
     } else if (input$demo == T) {
-      count_list <<- load_count(targets_file = 'inst/extdata/targetsPE.txt', count_table = 'inst/extdata/countDFeByg.xls')
+      count_list <<- load_count(targets_file = 'data/targetsPE.txt', count_table = 'data/countDFeByg.xls')
       output$count_table <- renderRHandsontable({rhandsontable(count_df)})
       shared$count_table <- count_list$countDF
       shared$count_list <- count_list

@@ -112,7 +112,7 @@ df_degcountServer <- function(id, shared){
 hot_deg <- function(count_df, count_p=NULL, count_p_old=NULL, choice, choice_old){
   count_p <- switch(choice,
                     "upload" = count_p,
-                    "eg" = "./inst/extdata/DEGcounts.xls"
+                    "eg" = "./data/DEGcounts.xls"
   )
   if (is.empty(count_p)) return(data.frame(place_holder = NA, stringsAsFactors = FALSE))
   df.t <- read.csv(count_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)

@@ -259,17 +259,10 @@ msg <- function(msg,
         options(sps = getOption("sps") %>% {.[['use_crayon']] <- TRUE; .})
     }
     if (getOption('sps')$use_crayon){
-        if (!requireNamespace("crayon", quietly = TRUE)) {
-            options(sps = getOption("sps") %>% {.[['use_crayon']] <- FALSE; .})
-            message(glue("[INFO] {Sys.time()} If you want colorful",
-                         "systemPipeShiny messages, try install 'crayon'",
-                         "package"))
-        } else{
             info <- crayon::blue$bold
             warn <- crayon::make_style("orange")$bold
             err <- crayon::red$bold
             other <- crayon::make_style(.other_color)$bold
-        }
     }
     level_text <- switch(toupper(level),
         "WARNING" = warning_text,
@@ -297,6 +290,7 @@ getVerbose <- function(){
 #' @param msg
 #'
 #' @param verbose bool, default get from sps options
+#' @noRd
 spsinfo <- function(msg, verbose=NULL) {
     verbose <- if(is.null(verbose)) getVerbose()
                else {assert_that(is.logical(verbose)); verbose}
@@ -310,6 +304,7 @@ spserror <- function(msg) msg(msg, "error", error_text = "SPS-ERROR")
 #' @description borrowed from crayon package, since this package is just suggested
 #' by SPS, use some code from crayon
 #' @param string string
+#' @noRd
 remove_ANSI <- function(string) {
     ANSI <- paste0("(?:(?:\\x{001b}\\[)|\\x{009b})(?:(?:[0-9]{1,3})?(?:",
                    "(?:;[0-9]{0,3})*)?[A-M|f-m])|\\x{001b}[A-M]")

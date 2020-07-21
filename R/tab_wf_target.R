@@ -231,8 +231,8 @@ wf_targetServer <- function(id, shared){
     hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL, choice, choice_old, df_init){
         targets_p <- switch(choice,
                             "upload" = targets_p,
-                            "pe" = "inst/extdata/targetsPE.txt",
-                            "se" = "inst/extdata/targets.txt"
+                            "pe" = "data/targetsPE.txt",
+                            "se" = "data/targets.txt"
         )
         if (is.null(targets_p)) return(df_init)
         if ((choice != choice_old) | (targets_p != targets_p_old)) {

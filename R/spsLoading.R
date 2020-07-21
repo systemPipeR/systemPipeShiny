@@ -3,7 +3,7 @@
 #' render the app UI
 #' Combine mainUI defined in ui.R and add the loading screen and more
 #' @param mainUI a normal shiny page ui
-#'
+#' @noRd
 #' @return a `fluidPage`
 spsUIwrapper <- function(mainUI){
     fluidPage(

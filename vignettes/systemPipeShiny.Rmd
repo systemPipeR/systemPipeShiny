@@ -121,7 +121,7 @@ describe to the user how to use this fct
 
 1. Directories:
     1. docs: `pagedown` docs, used to generate project website, can be ignored for app
-    2. inst/extdata: example datasets 
+    2. data: example datasets 
     3. R: all functions
     4. vignettes: manuals for the app
     5. www: html web resources

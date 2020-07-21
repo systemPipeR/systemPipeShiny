@@ -47,7 +47,7 @@ wf_configServer <- function(id, shared){
         down_clicked <- reactiveValues(flag = 0)
 
         rmd_file_path <- reactive({
-            if (input$config_source == "eg") "inst/extdata/config.yaml" else input$config_upload$datapath
+            if (input$config_source == "eg") "data/config.yaml" else input$config_upload$datapath
         })
         observeEvent(rmd_file_path(), {
             shinyAce::updateAceEditor(session, editorId = "ace_config", value = {

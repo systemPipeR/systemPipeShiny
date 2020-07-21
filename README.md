@@ -5,13 +5,13 @@
 ![R-CMD-check](https://github.com/systemPipeR/systemPipeShiny/workflows/R-CMD-check/badge.svg)
 <!-- badges: end -->
 
-This tool is under devleopment, please do not install for now...
+This tool is under devleopment, you can install it from Github
 
-An online demo of [SystempipeShiny](https://lezhang.shinyapps.io/systemPipeS/). This application is hosted by a small server. Please do not use it for production activities. Heavy taks will crash it and disconnect you from it. 
+An online demo of [SystempipeShiny](https://tgirke.shinyapps.io/systemPipeShiny/). This application is hosted by a small server. Please do not use it for production activities. Heavy tasks will crash it and disconnect you from it. 
 
 ## Installation
 
-You can install the released version of systemPipeS from Github with:
+You can install the released version of systemPipeShiny from Github with:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
@@ -50,7 +50,7 @@ pkgdown::build_site()
 ### 1. App structure
 1. Directories:
     1. docs: `pagedown` docs, used to generate project website, can be ignored for app
-    2. inst/extdata: example datasets 
+    2. data: example datasets 
     3. R: all functions, sub-tabs. This folder will be automatically sourced
     4. vignettes: manuals for the app, can be ignored for app
     5. www: html web resources, will be treated as root of front-end resources

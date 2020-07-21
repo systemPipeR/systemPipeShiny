@@ -3,6 +3,7 @@
 #' @importFrom shinydashboard dashboardSidebar dashboardBody
 #' @importFrom shinydashboardPlus dashboardPagePlus dashboardHeaderPlus
 #' @importFrom shinyWidgets materialSwitch
+#' @noRd
 adminUI <- function(){
     ns <- NS("admin")
     shinydashboardPlus::dashboardPagePlus(
