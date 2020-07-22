@@ -2,6 +2,7 @@
 ## UI
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets sliderTextInput
+#' @noRd
 core_canvasUI <- function(id){
     ns <- NS(id)
     desc <- "
@@ -60,6 +61,7 @@ core_canvasUI <- function(id){
 ## server
 #' @importFrom shinydashboardPlus boxPlus
 #' @importFrom shinyjqui orderInput
+#' @noRd
 core_canvasServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

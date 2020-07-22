@@ -10,5 +10,5 @@ spsHr()
 hr line with color #3b8dbc38
 }
 \examples{
-spsHr("Text")
+spsHr()
 }

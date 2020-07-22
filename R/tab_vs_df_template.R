@@ -4,6 +4,7 @@
 
 #' @importFrom DT DTOutput
 #' @importFrom shinyWidgets radioGroupButtons pickerInput
+#' @noRd
 df_templateUI <- function(id){
     ns <- NS(id)
     # describe your tab in markdown format, this will go right under the title
@@ -81,6 +82,7 @@ df_templateUI <- function(id){
 #' @importFrom DT renderDT datatable
 #' @importFrom shiny validate
 #' @importFrom shinyjs show hide toggleState
+#' @noRd
 df_templateServer <-function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

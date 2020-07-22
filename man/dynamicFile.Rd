@@ -2,11 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{dynamicFile}
 \alias{dynamicFile}
-\title{dynamically generate select file input
-depending on the mode in options, render similar UI but server side works
-differently. \code{local} mode will not copy file, directly use a path pointer,
-\code{server} mode upload file and store in temp. Expect similar behavior as
-\code{fileInput}.}
+\title{dynamically generate select file input}
 \usage{
 dynamicFile(
   id,
@@ -34,29 +30,29 @@ dynamicFile(
 div
 }
 \description{
-dynamically generate select file input
 depending on the mode in options, render similar UI but server side works
 differently. \code{local} mode will not copy file, directly use a path pointer,
 \code{server} mode upload file and store in temp. Expect similar behavior as
 \code{fileInput}.
 }
 \examples{
-library(shiny)
-library(shinyFiles)
-library(shinyjs)
-options(sps = list(mode='server'))
-ui <- fluidPage(
-useShinyjs(),
-dynamicFile("getFile"),
-textOutput("txt_file")
-)
+if(interactive()){
+    library(systemPipeShiny)
+    library(shinyjs)
+    options(sps = list(mode='server')) # change to 'local' to see the difference
+    ui <- fluidPage(
+        useShinyjs(),
+        dynamicFile("getFile"),
+        textOutput("txt_file")
+    )
 
-server <- function(input,output,session){
-    runjs('$(".sps-file input").attr("readonly", true)')
-    myfile <- dynamicFileServer(input,session, id = "getFile")
-    observe({
-        print(myfile())
-    })
+    server <- function(input,output,session){
+        runjs('$(".sps-file input").attr("readonly", true)')
+        myfile <- dynamicFileServer(input,session, id = "getFile")
+        observe({
+            print(myfile())
+        })
+    }
+    shinyApp(ui = ui, server = server)
 }
-shinyApp(ui = ui, server = server)
 }

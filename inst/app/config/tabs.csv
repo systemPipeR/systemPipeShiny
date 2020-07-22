@@ -1,7 +1,7 @@
 # List of SPS tabs,,,,,
 # Editing by hand is not recommended ,,,,,
 # image paths use ‘www’ folder as root,,,,,
-tab_name,display_label,type,type_sub,image,displayed
+tab_id,display_label,type,type_sub,image,displayed
 core_about,About this App,core,,,1
 core_canvas,Plot Canvas,core,,,1
 core_dashboard,Home,core,,,1

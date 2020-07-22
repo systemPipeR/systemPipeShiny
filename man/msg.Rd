@@ -40,6 +40,6 @@ other levels use \code{cat}
 \examples{
 msg("this is info")
 msg("this is warning", "warning")
-msg("this is error", "error")
-msg("this is other", "error2")
+\dontrun{msg("this is error", "error"); print("you can't see me")}
+msg("this is other", "error2"); print("you can see me")
 }

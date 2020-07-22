@@ -40,20 +40,22 @@ A table of lists of hyper reference buttons
 nth item in \code{item_labels}, \code{item_hrefs} must have the same length
 }
 \examples{
-library(shiny)
+if(interactive()){
+    library(systemPipeShiny)
 
-ui <- fluidPage(
-    useSps(),
-    hrefTable(item_titles = c("workflow 1", "workflow 2"),
-              item_labels = list(c("tab 1"), c("tab 3", "tab 4")),
-              item_hrefs = list(c("https://www.google.com/"), c("", "")),
+    ui <- fluidPage(
+        useSps(),
+        hrefTable(item_titles = c("workflow 1", "workflow 2"),
+                  item_labels = list(c("tab 1"), c("tab 3", "tab 4")),
+                  item_hrefs = list(c("https://www.google.com/"), c("", "")),
+        )
+
     )
 
-)
+    server <- function(input, output, session) {
 
-server <- function(input, output, session) {
+    }
 
+    shinyApp(ui, server)
 }
-
-shinyApp(ui, server)
 }

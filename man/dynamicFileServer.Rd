@@ -22,22 +22,23 @@ expression, observe, or inside \code{isolate}
 Server side function for dynamicFile
 }
 \examples{
-library(shiny)
-library(shinyFiles)
-library(shinyjs)
-options(sps = list(mode='server'))
-ui <- fluidPage(
-useShinyjs(),
-dynamicFile("getFile"),
-textOutput("txt_file")
-)
+if(interactive()){
+    library(systemPipeShiny)
+    library(shinyjs)
+    options(sps = list(mode='server')) # Change the mode to 'local' to see difference
+    ui <- fluidPage(
+        useShinyjs(),
+        dynamicFile("getFile"),
+        textOutput("txt_file")
+    )
 
-server <- function(input,output,session){
-    runjs('$(".sps-file input").attr("readonly", true)')
-    myfile <- dynamicFileServer(input,session, id = "getFile")
-    observe({
-        print(myfile()) # remember to use `()` for reactive value
-    })
+    server <- function(input,output,session){
+        runjs('$(".sps-file input").attr("readonly", true)')
+        myfile <- dynamicFileServer(input,session, id = "getFile")
+        observe({
+            print(myfile()) # remember to use `()` for reactive value
+        })
+    }
+    shinyApp(ui = ui, server = server)
 }
-shinyApp(ui = ui, server = server)
 }

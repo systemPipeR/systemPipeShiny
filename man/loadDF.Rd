@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsCoreServer.R
 \name{loadDF}
 \alias{loadDF}
-\title{Load tibbles to server}
+\title{Load tabular files as tibbles to server}
 \usage{
 loadDF(
   choice,
@@ -40,30 +40,35 @@ a tibble
 }
 \description{
 load a file to server end. Designed to be used with the input
-file source switch button. Use \code{vroom} to load the file
+file source switch button. Use \code{vroom} to load the file. In SPS, this function
+is usually combined with \code{dynamicFile()} function to help users upload file and
+read the file. This loading function only works for parsing tabular data, use
+\code{vroom()} internally.
 }
 \examples{
-library(shiny)
-library(shinyWidgets)
-ui <- fluidPage(
-    shinyWidgets::radioGroupButtons(
-        inputId = "data_source", label = "Choose your data file source:",
-        selected = "upload",
-        choiceNames = c("Upload", "Example"),
-        choiceValues = c("upload", "eg")
-    ),
-    fileInput("df_path", label = "input file"),
-    dataTableOutput("df")
-)
+if(interactive()){
+    library(systemPipeShiny)
+    library(shinyWidgets)
+    ui <- fluidPage(
+        shinyWidgets::radioGroupButtons(
+            inputId = "data_source", label = "Choose your data file source:",
+            selected = "upload",
+            choiceNames = c("Upload", "Example"),
+            choiceValues = c("upload", "eg")
+        ),
+        fileInput("df_path", label = "input file"),
+        dataTableOutput("df")
+    )
 
-server <- function(input, output, session) {
-    tmp_file <- tempfile(fileext = ".csv")
-    write.csv(iris, file = tmp_file)
-    data_df <- reactive({
-        loadDF(choice = input$data_source, upload_path = input$df_path$datapath,
-               delim = ",", eg_path = tmp_file)
-    })
-    output$df <- renderDataTable(data_df())
+    server <- function(input, output, session) {
+        tmp_file <- tempfile(fileext = ".csv")
+        write.csv(iris, file = tmp_file)
+        data_df <- reactive({
+            loadDF(choice = input$data_source, upload_path = input$df_path$datapath,
+                   delim = ",", eg_path = tmp_file)
+        })
+        output$df <- renderDataTable(data_df())
+    }
+    shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

@@ -12,6 +12,7 @@ the db class, so there is no need to initiate the \code{spsDb} container.
 }
 \examples{
 dir.create("config")
+spsOption('verbose', TRUE)
 my_ecpt <- spsEncryption$new()
 my_ecpt$createDb()
 my_ecpt$keyChange()

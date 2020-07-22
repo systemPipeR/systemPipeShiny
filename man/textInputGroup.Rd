@@ -24,16 +24,18 @@ a row element
 Text input with a button right next to
 }
 \examples{
-library(shiny)
+if(interactive()){
+    library(systemPipeShiny)
 
-ui <- fluidPage(
-    tags$head(useSps()),
-    textInputGroup("id1", "id2")
-)
+    ui <- fluidPage(
+        useSps(),
+        textInputGroup("id1", "id2")
+    )
 
-server <- function(input, output, session) {
+    server <- function(input, output, session) {
 
+    }
+
+    shinyApp(ui, server)
 }
-
-shinyApp(ui, server)
 }

@@ -15,8 +15,6 @@ Use SystemPipeShiny javascripts and css style
 call it in your head section
 }
 \examples{
-library(shiny)
-ui <- fluidPage(
-    tags$head(useSps())
-)
+library(systemPipeShiny)
+useSps()
 }

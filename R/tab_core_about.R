@@ -1,5 +1,6 @@
 ## UI
 #' @importFrom shinydashboardPlus widgetUserBox
+#' @noRd
 core_aboutUI <- function(id){
     ns <- NS(id)
     tags$div(

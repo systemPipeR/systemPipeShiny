@@ -18,11 +18,13 @@ You can also overwrite other values.}
 SystemPipeShiny app start function
 }
 \examples{
+\dontrun{
 # on ui.R
 sps_app <<- sps(
-vstabs = "",
-server_expr = {
-    msg("Hello World", "GREETING", "green")
-}
+    vstabs = "",
+    server_expr = {
+        msg("Hello World", "GREETING", "green")
+    }
 )
+}
 }

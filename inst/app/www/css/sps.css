@@ -165,7 +165,7 @@ img-gallery:hover {
     content: '- Collapse Description';
 }
 .desc a {
-  font-size: 1.5em;
+  font-size: 1.1em;
 }
 .desc a:link {
   text-decoration: none;
