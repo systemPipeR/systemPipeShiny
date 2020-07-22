@@ -5,7 +5,6 @@
 #' @description  Initiate this container at the global level. This container is used to
 #' communicate plotting tabs with the canvas tab
 #' @importFrom R6 R6Class
-#' @rdname plotContainer
 #' @importFrom rlang eval_tidy parse_expr
 #' @export
 #' @examples
@@ -304,7 +303,6 @@ NULL
 #' A SQLite database by default is created inside `config` directory. If not, you
 #' can use `createDb` method to create one. On initiation, this class checks
 #' if the default db is there and gives warnings if not.
-#' @rdname spsDb
 #' @export
 #' @examples
 #' dir.create("config")
@@ -322,7 +320,7 @@ NULL
 #'     mydb$queryValueDp("sps_meta", dp_expr = "filter(., info %in% c('new1', 'new2')) %>% select(2)")
 #' }
 #' mydb$queryDel("sps_meta", WHERE = "value = '234'")
-spsDb <- R6::R6Class("spsdb",
+spsDb <- R6::R6Class("spsDb",
     public = list(
         initialize = function(){
             spsinfo("Created SPS database method container", verbose = TRUE)
@@ -518,7 +516,6 @@ spsDb <- R6::R6Class("spsdb",
 #' snapshots.
 #' This class requires the SPS database. This class inherits all functions from
 #' the db class, so there is no need to initiate the `spsDb` container.
-#' @rdname spsEncryption
 #' @export
 #' @examples
 #' dir.create("config")
