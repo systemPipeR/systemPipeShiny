@@ -22,6 +22,14 @@ if (!requireNamespace("BiocManager", quietly=TRUE))
 BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
 ```
 
+If you are on Linux, you also need 
+
+```
+sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install libv8-dev
+sudo apt-get install libssl-dev
+```
+
 ## Setup
 
 To start to use SPS
