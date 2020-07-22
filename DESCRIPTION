@@ -9,7 +9,7 @@ Authors@R: c(
     person(given = "Jianhai", family = "Zhang", role = c("aut"), email = "jzhan067@ucr.edu"),
     person(given = "Gordon", family = "Mosher", role = c("aut"), email = "gmosh001@ucr.edu"),
     person(given = "Thomas", family = "Girke", role = c("aut", "cre"), email = "thomas.girke@ucr.edu"))
-Description: systemPipeShiny
+Description: systemPipeShiny is a interactive shiny framework for workflow management and data visualization 
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true

@@ -213,7 +213,7 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
 }
 
 #' A table of lists of hyper reference buttons
-#' `item_titles`, `item_labels`, `item_hrefs` must have the same length
+#' @details `item_titles`, `item_labels`, `item_hrefs` must have the same length
 #' nth item in `item_labels`, `item_hrefs` must have the same length
 #' @importFrom assertthat assert_that
 #' @param Id optional

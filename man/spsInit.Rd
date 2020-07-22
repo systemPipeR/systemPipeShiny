@@ -11,7 +11,8 @@ spsInit(
   overwrite = FALSE,
   change_wd = TRUE,
   verbose = FALSE,
-  open_files = TRUE
+  open_files = TRUE,
+  colorful = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ spsInit(
 
 \item{open_files}{bool, If \code{change_wd == TRUE} and you are also in Rstudio,
 it will open up global.R, ui.R and server.R for you}
+
+\item{colorful}{bool, should message from this function be colorful?}
 }
 \value{
 
@@ -38,5 +41,5 @@ Create a SystemPipeShiny project
 }
 \examples{
 library(systemPipeShiny)
-spsInit()
+spsInit(change_wd = FALSE)
 }

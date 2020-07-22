@@ -96,7 +96,7 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
                ))),
                error = function(m) {
                    toastr_actions$error(m)
-                   shiny:::reactiveStop(class = "validation")
+                   reactiveStop(class = "validation")
                }),
            "warning" = tryCatch(
                suppressMessages(withCallingHandlers(
@@ -105,25 +105,25 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
                )),
                warning = function(m) {
                    toastr_actions$warning(m)
-                   shiny:::reactiveStop(class = "validation")
+                   reactiveStop(class = "validation")
                    },
                error = function(m) {
                    if(!is.empty(m$message)) toastr_actions$error(m)
-                   shiny:::reactiveStop(class = "validation")
+                   reactiveStop(class = "validation")
                }),
            "message" = tryCatch(
                expr,
                message = function(m) {
                    message = toastr_actions$message(m)
-                   shiny:::reactiveStop(class = "validation")
+                   reactiveStop(class = "validation")
                    },
                warning = function(m) {
                    toastr_actions$warning(m)
-                   shiny:::reactiveStop(class = "validation")
+                   reactiveStop(class = "validation")
                    },
                error = function(m) {
                    if(!is.empty(m$message)) toastr_actions$error(m)
-                   shiny:::reactiveStop(class = "validation")
+                   reactiveStop(class = "validation")
                }),
            tryCatch(
                suppressMessages(suppressWarnings(withCallingHandlers(

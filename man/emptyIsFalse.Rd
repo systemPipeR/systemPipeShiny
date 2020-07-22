@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsUti.R
 \name{emptyIsFalse}
 \alias{emptyIsFalse}
-\title{empty things will return FALSE}
+\title{empty things and FALSE will return FALSE}
 \usage{
 emptyIsFalse(x)
 }
@@ -10,7 +10,7 @@ emptyIsFalse(x)
 \item{x}{expression}
 }
 \description{
-empty things will return FALSE
+empty things and FALSE will return FALSE
 }
 \examples{
 emptyIsFalse(NULL)

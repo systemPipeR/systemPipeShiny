@@ -9,7 +9,7 @@
 #' @return shiny dash page
 #' @details Workflow tabs and other `core` tabs are loaded by default. You can
 #' only optionally choose visualization tabs. See config/tabs.csv for tab info.
-#' @importFrom rlang eval_tidy
+#' @importFrom rlang eval_tidy parse_expr
 #' @importFrom shinydashboard menuSubItem tabItem dashboardSidebar sidebarSearchForm sidebarMenu menuItem tabItems dashboardBody
 #' @importFrom shinydashboardPlus dashboardHeaderPlus dashboardPagePlus
 #' @importFrom shinyWidgets useSweetAlert
@@ -33,7 +33,7 @@ spsUI <- function(tabs_df, tabs_plot){
     spsinfo("Loading custom tab UI ...")
     tab_items <- c(tabs_df[['tab_id']], tabs_plot[['tab_id']]) %>% {.[. != ""]} %>%
         sapply(function(x){
-            tab_ui <- glue('{x}UI("{x}")') %>% parse_expr()
+            tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
             spsinfo(glue("Loading UI for {x}"))
             shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
         }, simplify = FALSE)

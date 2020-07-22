@@ -2,9 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{hrefTable}
 \alias{hrefTable}
-\title{A table of lists of hyper reference buttons
-\code{item_titles}, \code{item_labels}, \code{item_hrefs} must have the same length
-nth item in \code{item_labels}, \code{item_hrefs} must have the same length}
+\title{A table of lists of hyper reference buttons}
 \usage{
 hrefTable(
   Id = NULL,
@@ -36,6 +34,8 @@ hrefTable(
 }
 \description{
 A table of lists of hyper reference buttons
+}
+\details{
 \code{item_titles}, \code{item_labels}, \code{item_hrefs} must have the same length
 nth item in \code{item_labels}, \code{item_hrefs} must have the same length
 }

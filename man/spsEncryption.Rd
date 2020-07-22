@@ -21,9 +21,6 @@ my_ecpt$encrypt("test.txt", "test.bin")
 my_ecpt$decrypt("test.bin", "test_decpt.txt", TRUE)
 readLines('test_decpt.txt')
 }
-\seealso{
-\code{\link[systemPipeShiny::spsDb]{systemPipeShiny::spsDb()}}
-}
 \section{Super class}{
 \code{\link[systemPipeShiny:spsdb]{systemPipeShiny::spsdb}} -> \code{spsencrypt}
 }

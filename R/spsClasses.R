@@ -520,7 +520,6 @@ spsDb <- R6::R6Class("spsdb",
 #' the db class, so there is no need to initiate the `spsDb` container.
 #' @rdname spsEncryption
 #' @export
-#' @seealso \code{\link[systemPipeShiny::spsDb]{systemPipeShiny::spsDb()}}
 #' @examples
 #' dir.create("config")
 #' spsOption('verbose', TRUE)

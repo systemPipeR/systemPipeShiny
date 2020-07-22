@@ -6,7 +6,7 @@
 #' @importFrom shinyjs removeClass toggleClass hide show
 #' @noRd
 spsServer <- function(tabs, server_expr) {
-    spsinfo("Start to create server")
+    spsinfo("Start to create server function")
     tab_modules <- if(nrow(tabs) > 0) {
         sapply(tabs[['tab_id']], function(x){
             glue('{x}Server("{x}", shared)') %>% rlang::parse_expr()
@@ -15,6 +15,7 @@ spsServer <- function(tabs, server_expr) {
 
     function(input, output, session) {
         # add a container to communicate tabs
+        spsinfo("Start to load server")
         spsinfo("Creating shared object")
         shared <- reactiveValues()
         # core tabs
@@ -103,7 +104,6 @@ spsServer <- function(tabs, server_expr) {
 #' @importFrom shinydashboardPlus timelineBlock timelineItem timelineLabel
 #' @importFrom shinyWidgets progressBar
 #' @return reactive renderUI object
-#' @export
 #' @seealso pgPaneUpdate
 #' @noRd
 # @examples
