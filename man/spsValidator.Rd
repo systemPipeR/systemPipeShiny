@@ -28,38 +28,37 @@ meet the requirement. If any validation fails, it will show a pop-up message
 and block any further code execution, similar to \code{shiny::req()}
 }
 \examples{
-library(shiny)
-library(shinytoastr)
-df_validate_common <- list(
-    vd1 = function(df, apple){
-        print(apple)
-        if (is(df, "data.frame")) {result <- c(" " = TRUE)}
-        else {result <- c("Input is not dataframe or tibble" = FALSE)}
-        return(result)
-    },
-    vd2 = function(df, banana, orange="orange"){
-        print(banana)
-        print(orange)
-        # change < to > in next line to see failure
-        if (nrow(df) < 10) {result <- c(" " = TRUE)}
-        else {result <- c("Need more than 10 rows" = FALSE)}
-        Sys.sleep(1)
-        return(result)
+if(interactive()){
+    library(systemPipeShiny)
+    df_validate_common <- list(
+        vd1 = function(df, apple){
+            print(apple)
+            if (is(df, "data.frame")) {result <- c(" " = TRUE)}
+            else {result <- c("Input is not dataframe or tibble" = FALSE)}
+            return(result)
+        },
+        vd2 = function(df, banana, orange="orange"){
+            print(banana)
+            print(orange)
+            # change < to > in next line to see failure
+            if (nrow(df) < 10) {result <- c(" " = TRUE)}
+            else {result <- c("Need more than 10 rows" = FALSE)}
+            Sys.sleep(1)
+            return(result)
+        }
+    )
+    ui <- fluidPage(
+        actionButton("btn", "this btn")
+    )
+    server <- function(input, output, session) {
+        observeEvent(input$btn, {
+            spsValidator(df_validate_common,
+                         args = list(df = data.frame(),
+                                     apple = "apple",
+                                     banana = "banana"))
+            print(123)
+        })
     }
-)
-ui <- fluidPage(
-    actionButton("btn", "this btn"),
-    useToastr(),
-    use_waitress()
-)
-server <- function(input, output, session) {
-    observeEvent(input$btn, {
-        spsValidator(df_validate_common,
-                     args = list(df = data.frame(),
-                                 apple = "apple",
-                                 banana = "banana"))
-        print(123)
-    })
+    shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

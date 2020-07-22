@@ -54,8 +54,8 @@ server <- function(input, output, session) {
         names(getQueryString())
     })
     observe({
-        req(admin_url() == getOption('sps')$admin_url)
-        req(getOption('sps')$admin_page)
+        req(admin_url() == spsOption('admin_url'))
+        req(spsOption('admin_page'))
         shinyjs::hide("page_user", asis = TRUE)
         shinyjs::show("page_admin", asis = TRUE)
         output$page_admin <- renderUI(adminUI())

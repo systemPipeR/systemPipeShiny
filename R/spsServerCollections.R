@@ -9,7 +9,9 @@
 #' blocking at "warning" "message" level, and return `NULL` at error level.
 #' If blocks at `error`, function will be stopped and other code in the same
 #' reactive context will be blocked. If blocks at `warning` level, warning and
-#' error will be blocked; `message` level blocks all 3 levels.
+#' error will be blocked; `message` level blocks all 3 levels. The blocking works
+#' similar to shiny's `req()` and `validate()`. If anything inside fails, it will
+#' block the rest of the code in your reactive expression domain
 #' @param expr expression
 #' @param position toastr position, one of: c("top-right", "top-center", "top-left",
 # "top-full-width", "bottom-right", "bottom-center", "bottom-left",
@@ -22,43 +24,46 @@
 #' @export
 #'
 #' @examples
-#' ui <- fluidPage(
-#'     useToastr(),
-#'     actionButton("btn1","error and blocking"),
-#'     actionButton("btn2","error no blocking"),
-#'     actionButton("btn3","warning but still returns value"),
-#'     actionButton("btn4","warning but blocking returns"),
-#'     actionButton("btn5","message"),
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     ui <- fluidPage(
+#'         useToastr(),
+#'         actionButton("btn1","error and blocking"),
+#'         actionButton("btn2","error no blocking"),
+#'         actionButton("btn3","warning but still returns value"),
+#'         actionButton("btn4","warning but blocking returns"),
+#'         actionButton("btn5","message"),
 #'
-#'     textOutput("text")
-#' )
-#' server <- function(input, output, session) {
-#'     fn_warning <- function() {
-#'          warning("this is a warning!")
-#'          return(1)
-#'          }
-#'     observeEvent(input$btn1, {
-#'         shinyCatch(stop("error with blocking"), blocking_level = "error")
-#'          print("You shouldn't see me")
-#'     })
-#'     observeEvent(input$btn2, {
-#'         shinyCatch(stop("error without blocking"))
-#'         print("I am not blocked by error")
-#'     })
-#'     observeEvent(input$btn3, {
-#'         return_value <- shinyCatch(fn_warning())
-#'         print(return_value)
-#'     })
-#'     observeEvent(input$btn4, {
-#'         return_value <- shinyCatch(fn_warning(), blocking_level = "warning")
-#'         print(return_value)
-#'         print("other things")
-#'     })
-#'     observeEvent(input$btn5, {
-#'         shinyCatch(message("message"))
-#'     })
+#'         textOutput("text")
+#'     )
+#'     server <- function(input, output, session) {
+#'         fn_warning <- function() {
+#'             warning("this is a warning!")
+#'             return(1)
+#'         }
+#'         observeEvent(input$btn1, {
+#'             shinyCatch(stop("error with blocking"), blocking_level = "error")
+#'             print("You shouldn't see me")
+#'         })
+#'         observeEvent(input$btn2, {
+#'             shinyCatch(stop("error without blocking"))
+#'             print("I am not blocked by error")
+#'         })
+#'         observeEvent(input$btn3, {
+#'             return_value <- shinyCatch(fn_warning())
+#'             print(return_value)
+#'         })
+#'         observeEvent(input$btn4, {
+#'             return_value <- shinyCatch(fn_warning(), blocking_level = "warning")
+#'             print(return_value)
+#'             print("other things")
+#'         })
+#'         observeEvent(input$btn5, {
+#'             shinyCatch(message("message"))
+#'         })
+#'     }
+#'     shinyApp(ui, server)
 #' }
-#' shinyApp(ui, server)
 shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none") {
     toastr_actions <- list(
         message = function(m) {
@@ -150,12 +155,15 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
 #' @export
 #'
 #' @examples
-#' shinyApp(ui = shinyUI(
-#'     fluidPage(actionButton("haha", "haha"))
-#' ), server = function(input, output, session) {
-#'     observeEvent(input$haha, shinyCheckPkg(session, cran_pkg = "1",
-#'                  bioc_pkg = "haha", github = "sdasdd/asdsad"))
-#' })
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     shinyApp(ui = shinyUI(
+#'         fluidPage(actionButton("haha", "haha"))
+#'     ), server = function(input, output, session) {
+#'         observeEvent(input$haha, shinyCheckPkg(session, cran_pkg = "1",
+#'                                                bioc_pkg = "haha", github = "sdasdd/asdsad"))
+#'     })
+#' }
 shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NULL, quietly = FALSE) {
     missing_cran <- checkNameSpace(cran_pkg, quietly, from = "CRAN")
     missing_bioc <- checkNameSpace(bioc_pkg, quietly, from = "BioC")
@@ -216,27 +224,28 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 #' @export
 #' @importFrom shinyFiles getVolumes shinyFileChoose parseFilePaths
 #' @examples
-#' library(shiny)
-#' library(shinyFiles)
-#' library(shinyjs)
-#' options(sps = list(mode='server'))
-#' ui <- fluidPage(
-#' useShinyjs(),
-#' dynamicFile("getFile"),
-#' textOutput("txt_file")
-#' )
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     library(shinyjs)
+#'     options(sps = list(mode='server')) # Change the mode to 'local' to see difference
+#'     ui <- fluidPage(
+#'         useShinyjs(),
+#'         dynamicFile("getFile"),
+#'         textOutput("txt_file")
+#'     )
 #'
-#' server <- function(input,output,session){
-#'     runjs('$(".sps-file input").attr("readonly", true)')
-#'     myfile <- dynamicFileServer(input,session, id = "getFile")
-#'     observe({
-#'         print(myfile()) # remember to use `()` for reactive value
-#'     })
+#'     server <- function(input,output,session){
+#'         runjs('$(".sps-file input").attr("readonly", true)')
+#'         myfile <- dynamicFileServer(input,session, id = "getFile")
+#'         observe({
+#'             print(myfile()) # remember to use `()` for reactive value
+#'         })
+#'     }
+#'     shinyApp(ui = ui, server = server)
 #' }
-#' shinyApp(ui = ui, server = server)
 dynamicFileServer <- function(input,session, id){
     file_return <- reactiveVal(NULL)
-    if (getOption("sps")$mode == "local") {
+    if (spsOption('mode') == "local") {
         roots <- c(current=getwd(), shinyFiles::getVolumes()())
         shinyFiles::shinyFileChoose(input, id, roots = roots, session = session)
         observeEvent(input[[id]],
@@ -269,37 +278,39 @@ dynamicFileServer <- function(input,session, id){
 #' @importFrom shinyWidgets updateProgressBar
 #' @export
 #' @examples
-#' library(shiny)
-#' library(shinydashboard)
-#' library(shinytoastr)
-#' ui <- dashboardPage(header = dashboardHeader(),
-#'                     sidebar = dashboardSidebar(),
-#'                     body = dashboardBody(
-#'                         useSps(),
-#'                         actionButton("a", "a"),
-#'                         actionButton("b", "b"),
-#'                         sliderInput("c", min = -100, max = 100, value = 0,
-#'                                     label = "c"),
-#'                         pgPaneUI("thispg", c("this a", "this b", " this c"),
-#'                                  c("a", "b", "c"), "Example Progress")
-#'                     )
-#' )
-#' server <- function(input, output, session) {
-#'     observeEvent(input$a, {
-#'         for(i in 1:10){
-#'             pgPaneUpdate("thispg", "a", i*10)
-#'             Sys.sleep(0.3)
-#'         }
-#'     })
-#'     observeEvent(input$b, {
-#'         for(i in 1:10){
-#'             pgPaneUpdate("thispg", "b", i*10)
-#'             Sys.sleep(0.3)
-#'         }
-#'     })
-#'     observeEvent(input$c, pgPaneUpdate("thispg", "c", input$c))
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     library(shinydashboard)
+#'     ui <- dashboardPage(header = dashboardHeader(),
+#'                         sidebar = dashboardSidebar(),
+#'                         body = dashboardBody(
+#'                             useSps(),
+#'                             h4("you need to open up the progress tracker, it is collapsed ->"),
+#'                             actionButton("a", "a"),
+#'                             actionButton("b", "b"),
+#'                             sliderInput("c", min = -100, max = 100, value = 0,
+#'                                         label = "c"),
+#'                             pgPaneUI("thispg", c("this a", "this b", " this c"),
+#'                                      c("a", "b", "c"), "Example Progress")
+#'                         )
+#'     )
+#'     server <- function(input, output, session) {
+#'         observeEvent(input$a, {
+#'             for(i in 1:10){
+#'                 pgPaneUpdate("thispg", "a", i*10)
+#'                 Sys.sleep(0.3)
+#'             }
+#'         })
+#'         observeEvent(input$b, {
+#'             for(i in 1:10){
+#'                 pgPaneUpdate("thispg", "b", i*10)
+#'                 Sys.sleep(0.3)
+#'             }
+#'         })
+#'         observeEvent(input$c, pgPaneUpdate("thispg", "c", input$c))
+#'     }
+#'     shinyApp(ui, server)
 #' }
-#' shinyApp(ui, server)
 pgPaneUpdate <- function(pane_id, pg_id, value,
                          session = getDefaultReactiveDomain()){
     shinyCatch({
@@ -336,57 +347,54 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 #' @importFrom shinytoastr toastr_info
 #' @export
 #' @examples
-#' library(shiny)
-#' library(shinytoastr)
-#' resolveOptions()
-#' ui <- fluidPage(
-#'     useToastr(),
-#'     actionButton("add", "add"),
-#'     actionButton("get", "get"),
-#'     actionButton("wrong", "when it gets wrong")
-#' )
-#' server <- function(input, output, session) {
-#'     tab_info <- tibble::tibble(
-#'         Tab_name = 'df_count',
-#'         Display_label = 'Count Table',
-#'         type = 'data',
-#'         image = ''
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     spsInit()
+#'     options(sps = list(verbose = TRUE))
+#'     ui <- fluidPage(
+#'         useToastr(),
+#'         actionButton("add", "add"),
+#'         actionButton("get", "get"),
+#'         actionButton("wrong", "when it gets wrong")
 #'     )
-#'     shared <- reactiveValues()
-#'     data <- tibble::tibble(this = 123)
-#'     cat('before adding\n')
-#'     print(shared)
-#'     observeEvent(input$add, {
-#'         addData(data, shared, "thistab")
-#'         cat('after adding\n')
-#'         print(shared) # watch the data_intask object is created
-#'     })
-#'     observeEvent(input$get, {
-#'         cat("get data\n")
-#'         getData('thistab', shared)
-#'     })
-#'     observeEvent(input$wrong, {
-#'         cat("get wrong data\n")
-#'         getData('not_there', shared)
-#'     })
-#' }
-#' shinyApp(ui, server)
+#'     server <- function(input, output, session) {
+#'         shared <- reactiveValues()
+#'         data <- tibble::tibble(this = 123)
+#'         cat('before adding\n')
+#'         print(shared)
+#'         observeEvent(input$add, {
+#'             addData(data, shared, "core_about")
+#'             cat('after adding\n')
+#'             print(shared) # watch the data_intask object is created
+#'         })
+#'         observeEvent(input$get, {
+#'             cat("get data\n")
+#'             print(getData('core_about', shared))
+#'         })
+#'         observeEvent(input$wrong, {
+#'             cat("get wrong data\n")
+#'             getData('not_there', shared)
+#'         })
+#'     }
+#'     shinyApp(ui, server)
+#'}
 addData <- function(data, shared, tab_id) {
-    shinyCatch({
-        assert_that(inherits(shared, "reactivevalues"))
-        assert_that(is.character(tab_id))
-        findTabInfo(tab_id)
-        if(not_empty(shared[['data']][[tab_id]]) & getOption('sps')$verbose)
-            message(c(glue("found {tab_id} has already been added to "),
-                           "`shared$data_intask` list, overwrite"))
-        shared[['data']][[tab_id]] <- data
-        if(getOption('sps')$verbose) {
-            info <- glue("Data for namespace {tab_id} added")
-            message(info)
-            shinytoastr::toastr_info(info, timeOut = 3000, position = "bottom-right")
-        }
-    }, blocking_level = "error")
+        shinyCatch({
+            assert_that(inherits(shared, "reactivevalues"))
+            assert_that(is.character(tab_id))
+            findTabInfo(tab_id)
+            if(emptyIsFalse(shared[['data']][[tab_id]]) & spsOption('verbose'))
+                message(c(glue("found {tab_id} has already been added to "),
+                          "`shared$data_intask` list, overwrite"))
+            shared[['data']][[tab_id]] <- data
+            if(spsOption('verbose')) {
+                info <- glue("Data for namespace {tab_id} added")
+                message(info)
+                shinytoastr::toastr_info(info, timeOut = 3000, position = "bottom-right")
+            }
+        }, blocking_level = "error")
 }
+
 
 #' @rdname addData
 #' @export
@@ -398,8 +406,8 @@ getData <- function(tab_id, shared){
                     msg = "A character string of one tab name each time")
         tab_info <- findTabInfo(tab_id)$tab_labels
         if(is.empty(shared[['data']][[tab_id]]))
-        stop(glue("Data from tab `{tab_info}` is empty"))
-        if(getOption('sps')$verbose){
+            stop(glue("Data from tab `{tab_info}` is empty"))
+        if(spsOption('verbose')){
             success_info <- glue("data for tab `{tab_info} found`")
             shinytoastr::toastr_info(success_info, timeOut = 3000, position = "bottom-right")
         }

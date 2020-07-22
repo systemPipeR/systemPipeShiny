@@ -32,10 +32,13 @@ check name space in server
 check name space and pop up warnings in shiny if package is missing
 }
 \examples{
-shinyApp(ui = shinyUI(
-    fluidPage(actionButton("haha", "haha"))
-), server = function(input, output, session) {
-    observeEvent(input$haha, shinyCheckPkg(session, cran_pkg = "1",
-                 bioc_pkg = "haha", github = "sdasdd/asdsad"))
-})
+if(interactive()){
+    library(systemPipeShiny)
+    shinyApp(ui = shinyUI(
+        fluidPage(actionButton("haha", "haha"))
+    ), server = function(input, output, session) {
+        observeEvent(input$haha, shinyCheckPkg(session, cran_pkg = "1",
+                                               bioc_pkg = "haha", github = "sdasdd/asdsad"))
+    })
+}
 }

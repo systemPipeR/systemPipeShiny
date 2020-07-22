@@ -1,7 +1,7 @@
 ############################### SPS UIs#########################################
 # Can only be used inside SPS framework
 
-#' Generate SPS UI
+#' Generate SPS main UI
 #'
 #' @param tabs_df vs data tab IDs
 #' @param tabs_plot vs plot tab IDs
@@ -9,28 +9,29 @@
 #' @return shiny dash page
 #' @details Workflow tabs and other `core` tabs are loaded by default. You can
 #' only optionally choose visualization tabs. See config/tabs.csv for tab info.
-#' @examples
-#' spsUI()
 #' @importFrom rlang eval_tidy
 #' @importFrom shinydashboard menuSubItem tabItem dashboardSidebar sidebarSearchForm sidebarMenu menuItem tabItems dashboardBody
 #' @importFrom shinydashboardPlus dashboardHeaderPlus dashboardPagePlus
 #' @importFrom shinyWidgets useSweetAlert
 #' @importFrom shinyjs useShinyjs
+#' @noRd
+# @examples
+# spsUI()
 spsUI <- function(tabs_df, tabs_plot){
     spsinfo("Start to generate UI")
     menu_df <- if(nrow(tabs_df) > 0){
         sapply(seq_len(nrow(tabs_df)), function(x){
-            shinydashboard::menuSubItem(text = tabs_df$tab_labels[x], tabName = tabs_df$tab_name[x])
+            shinydashboard::menuSubItem(text = tabs_df$tab_labels[x], tabName = tabs_df$tab_id[x])
         }, simplify = FALSE) %>% tagList()
     } else tagList()
     menu_plot <- if(nrow(tabs_plot) > 0){
         sapply(seq_len(nrow(tabs_plot)), function(x){
-            shinydashboard::menuSubItem(text = tabs_plot$tab_labels[x], tabName = tabs_plot$tab_name[x])
+            shinydashboard::menuSubItem(text = tabs_plot$tab_labels[x], tabName = tabs_plot$tab_id[x])
         }, simplify = FALSE) %>% tagList()
     } else tagList()
 
     spsinfo("Loading custom tab UI ...")
-    tab_items <- c(tabs_df[['tab_name']], tabs_plot[['tab_name']]) %>% {.[. != ""]} %>%
+    tab_items <- c(tabs_df[['tab_id']], tabs_plot[['tab_id']]) %>% {.[. != ""]} %>%
         sapply(function(x){
             tab_ui <- glue('{x}UI("{x}")') %>% parse_expr()
             spsinfo(glue("Loading UI for {x}"))
@@ -133,28 +134,32 @@ spsUI <- function(tabs_df, tabs_plot){
 
 #' generate gallery by only providing tab names
 #'
-#' @param tabnames tab names, string vector
+#' @param tab_ids tab IDs, string vector
 #' will be included
 #' @param Id div ID
 #' @param title gallery title
 #' @param title_color title color
 #' @param image_frame_size integer, 1-12
-#' @param type filter by tab type, then tabnames will be ignored: core, wf, data, vs
+#' @param type filter by tab type, then tab_ids will be ignored: core, wf, data, vs
 #'
 #' @return gallery div
 #'
 #' @examples
-#' library(shiny)
-#' ui <- fluidPage(
-#'     genGallery(c("tab_a", "tab_b"))
-#' )
-#' server <- function(input, output, session) {
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     spsInit()
+#'     ui <- fluidPage(
+#'         genGallery(c("plot_template")),
+#'         genGallery(type = "plot")
+#'     )
+#'     server <- function(input, output, session) {
 #'
+#'     }
+#'     shinyApp(ui, server)
 #' }
-#' shinyApp(ui, server)
-genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
+genGallery <- function(tab_ids=NULL, Id = NULL, title = "Gallery", type = NULL,
                        title_color = "#0275d8", image_frame_size = 3) {
-    tabs <- findTabInfo(tabnames, type)
+    tabs <- findTabInfo(tab_ids, type)
     if (is.null(tabs)) return(div("Nothing to display in gallery"))
     tabs$images[tabs$images == ""] <- "img/noimg.png"
     gallery(Id = Id, title = title, title_color = title_color,
@@ -164,12 +169,12 @@ genGallery <- function(tabnames=NULL, Id = NULL, title = "Gallery", type = NULL,
 }
 
 #' @rdname hrefTab
-#' @param tabnames tab names, must have the \code{tab_info} dataframe
+#' @param tab_ids tab names, must have the \code{tab_info} dataframe
 #' @param text_color Table text color
 #' @export
-genHrefTab <- function(tabnames, Id = NULL, title = "A bar to list tabs",
+genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
                        text_color = "#0275d8", ...) {
-    tabs <- findTabInfo(tabnames)
+    tabs <- findTabInfo(tab_ids)
     hrefTab(Id = Id, title = title, text_color = text_color,
             label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
 }
@@ -191,15 +196,18 @@ genHrefTab <- function(tabnames, Id = NULL, title = "A bar to list tabs",
 #' include: core, wf, vs, data, plot.
 #' @export
 #' @examples
-#' library(shiny)
-#' rows <- list(wf1 = c("df_raw", "df_count"), wf2 =  "data")
-#' ui <- fluidPage(
-#'     genHrefTable(rows)
-#' )
-#' server <- function(input, output, session) {
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     spsInit()
+#'     rows <- list(wf1 = c("core_canvas", "core_about"), wf2 =  "data")
+#'     ui <- fluidPage(
+#'         genHrefTable(rows)
+#'     )
+#'     server <- function(input, output, session) {
 #'
+#'     }
+#'     shinyApp(ui, server)
 #' }
-#' shinyApp(ui, server)
 genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
                          text_color = "#0275d8", ...) {
     tab_list <- sapply(rows, function(x) {
@@ -224,15 +232,12 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
 #' @return ui_xx returns html tags, server will return a server function
 #'
 #' @importFrom shinydashboard menuSubItem tabItem
+#' @noRd
 devComponents <- function(element, shared=NULL){
     element <- match.arg(element, c("ui_menu_df", "ui_menu_plot",
                                     "ui_tab_df", "ui_tab_plot", "server"))
 
-    if(is.null(getOption("sps")$dev)) {
-        options(sps = getOption("sps") %>% {.[['dev']] <- FALSE; .})
-        spswarn("dev option is not set, set to FALSE")
-    }
-    if(getOption("sps")$dev){
+    if(spsOption('dev')){
         switch (element,
                 "ui_menu_df" = shinydashboard::menuSubItem(text = "Template data", tabName = "df_template"),
                 "ui_menu_plot" = shinydashboard::menuSubItem(text = "Template Plot", tabName = "plot_template"),
@@ -250,8 +255,8 @@ devComponents <- function(element, shared=NULL){
 #' Workflow progress tracker UI
 #' @description call it on top level UI not inside a module. Call this function
 #' only once. Do not repeat this function.
-#' @examples
-#' wfPanel()
+# @examples
+# wfPanel()
 wfPanel <- function(){
     div(class = "tab-pane", id = "wf-panel",
         absolutePanel(

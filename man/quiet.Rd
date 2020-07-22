@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsUti.R
 \name{quiet}
 \alias{quiet}
-\title{supress cat output}
+\title{suppress cat print output}
 \usage{
 quiet(x)
 }
@@ -13,8 +13,9 @@ quiet(x)
 
 }
 \description{
-supress cat output
+suppress cat print output
 }
 \examples{
 quiet(print(1))
+quiet(cat(1))
 }

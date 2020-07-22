@@ -1,6 +1,6 @@
 #################### SPS loading screen functions ######################
 
-#' render the app UI
+#' render the app UI container
 #' Combine mainUI defined in ui.R and add the loading screen and more
 #' @param mainUI a normal shiny page ui
 #' @noRd
@@ -25,7 +25,7 @@ spsUIadmin <- function(){
 spsUIuser <- function(mainUI){
     fluidPage(
         id = "page_user",
-        if (getOption("sps")$loading_screen)
+        if(spsOption('loading_screen'))
         {tagList(
             div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
                 mainUI
@@ -49,7 +49,7 @@ spsUIuser <- function(mainUI){
                                '),
                 shinyWidgets::actionBttn(inputId = "toapp", "Continue to app", icon = icon("angle-double-right"), size = "lg"),
                 renderLoading(),
-                if(getOption('sps')$loading_particles) {
+                if(spsOption('loading_particles')) {
                     if (!requireNamespace("particlesjs", quietly = TRUE)){
                         msg("Option loading_particles is `true` but package particlesjs is not installed. Try `remotes::install_github('dreamRs/particlesjs')`",
                             "SPS-WARING", "orange")
@@ -73,7 +73,7 @@ spsUIuser <- function(mainUI){
 
 # Use this on UI
 renderLoading <- function(){
-    switch(getOption("sps")$loading_theme %>% as.character(),
+    switch(spsOption('loading_theme') %>% as.character(),
            "vhelix" = loadingVhelix(),
            loading404()
     )
@@ -88,6 +88,7 @@ serverLoadingScreen <- function(input, output, session){
 
 
 #### loading screen collections
+# add more functions below to add more themes
 loading404 <- function(){
     includeHTML("www/loading_themes/nyan.html")
 }

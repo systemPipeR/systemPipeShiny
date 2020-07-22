@@ -24,7 +24,10 @@ mydb$queryInsert("sps_meta", value = c("'new2'", "'2'"))
 mydb$queryValue("sps_meta")
 mydb$queryUpdate("sps_meta", value = '234', col = "value", WHERE = "info = 'new1'")
 mydb$queryValue("sps_meta")
-mydb$queryValueDp("sps_meta", dp_expr = "filter(., info \%in\% c('new1', 'new2')) \%>\% select(2)")
+\dontrun{
+    library(dplyr)
+    mydb$queryValueDp("sps_meta", dp_expr = "filter(., info \%in\% c('new1', 'new2')) \%>\% select(2)")
+}
 mydb$queryDel("sps_meta", WHERE = "value = '234'")
 }
 \section{Methods}{

@@ -39,35 +39,37 @@ Use \code{pgPaneUI} on UI side and use \code{pgPaneUpdate} to update it. The UI 
 renders correctly inside \code{shinydashboard} or \code{shinydashboardPlus}.
 }
 \examples{
-library(shiny)
-library(shinydashboard)
-library(shinytoastr)
-ui <- dashboardPage(header = dashboardHeader(),
-                    sidebar = dashboardSidebar(),
-                    body = dashboardBody(
-                        useSps(),
-                        actionButton("a", "a"),
-                        actionButton("b", "b"),
-                        sliderInput("c", min = -100, max = 100, value = 0,
-                                    label = "c"),
-                        pgPaneUI("thispg", c("this a", "this b", " this c"),
-                                 c("a", "b", "c"), "Example Progress")
-                    )
-)
-server <- function(input, output, session) {
-    observeEvent(input$a, {
-        for(i in 1:10){
-            pgPaneUpdate("thispg", "a", i*10)
-            Sys.sleep(0.3)
-        }
-    })
-    observeEvent(input$b, {
-        for(i in 1:10){
-            pgPaneUpdate("thispg", "b", i*10)
-            Sys.sleep(0.3)
-        }
-    })
-    observeEvent(input$c, pgPaneUpdate("thispg", "c", input$c))
+if(interactive()){
+    library(systemPipeShiny)
+    library(shinydashboard)
+    ui <- dashboardPage(header = dashboardHeader(),
+                        sidebar = dashboardSidebar(),
+                        body = dashboardBody(
+                            useSps(),
+                            h4("you need to open up the progress tracker, it is collapsed ->"),
+                            actionButton("a", "a"),
+                            actionButton("b", "b"),
+                            sliderInput("c", min = -100, max = 100, value = 0,
+                                        label = "c"),
+                            pgPaneUI("thispg", c("this a", "this b", " this c"),
+                                     c("a", "b", "c"), "Example Progress")
+                        )
+    )
+    server <- function(input, output, session) {
+        observeEvent(input$a, {
+            for(i in 1:10){
+                pgPaneUpdate("thispg", "a", i*10)
+                Sys.sleep(0.3)
+            }
+        })
+        observeEvent(input$b, {
+            for(i in 1:10){
+                pgPaneUpdate("thispg", "b", i*10)
+                Sys.sleep(0.3)
+            }
+        })
+        observeEvent(input$c, pgPaneUpdate("thispg", "c", input$c))
+    }
+    shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

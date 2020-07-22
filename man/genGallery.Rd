@@ -5,7 +5,7 @@
 \title{generate gallery by only providing tab names}
 \usage{
 genGallery(
-  tabnames = NULL,
+  tab_ids = NULL,
   Id = NULL,
   title = "Gallery",
   type = NULL,
@@ -14,14 +14,14 @@ genGallery(
 )
 }
 \arguments{
-\item{tabnames}{tab names, string vector
+\item{tab_ids}{tab IDs, string vector
 will be included}
 
 \item{Id}{div ID}
 
 \item{title}{gallery title}
 
-\item{type}{filter by tab type, then tabnames will be ignored: core, wf, data, vs}
+\item{type}{filter by tab type, then tab_ids will be ignored: core, wf, data, vs}
 
 \item{title_color}{title color}
 
@@ -34,12 +34,16 @@ gallery div
 generate gallery by only providing tab names
 }
 \examples{
-library(shiny)
-ui <- fluidPage(
-    genGallery(c("tab_a", "tab_b"))
-)
-server <- function(input, output, session) {
+if(interactive()){
+    library(systemPipeShiny)
+    spsInit()
+    ui <- fluidPage(
+        genGallery(c("plot_template")),
+        genGallery(type = "plot")
+    )
+    server <- function(input, output, session) {
 
+    }
+    shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

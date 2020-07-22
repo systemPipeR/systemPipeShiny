@@ -1,6 +1,7 @@
 ## UI
 
 #' @importFrom pushbar pushbar_deps pushbar
+#' @noRd
 core_topUI <- function(id){
     ns <- NS(id)
     tagList(
@@ -52,6 +53,7 @@ core_topUI <- function(id){
 #' @importFrom shinyjqui orderInput
 #' @importFrom shinyWidgets actionBttn confirmSweetAlert
 #' @importFrom shinyjs toggleState
+#' @noRd
 core_topServer <- function(id, shared){
     module <- function(input, output, session){
         pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)

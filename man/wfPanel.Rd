@@ -10,6 +10,3 @@ wfPanel()
 call it on top level UI not inside a module. Call this function
 only once. Do not repeat this function.
 }
-\examples{
-wfPanel()
-}

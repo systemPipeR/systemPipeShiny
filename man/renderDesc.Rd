@@ -12,13 +12,34 @@ renderDesc(id, desc)
 \item{desc}{one string in markdown format}
 }
 \description{
-Render some collapsible description
+write some text in markdown format and it will help you render to
+a collapsible markdown section
 }
 \examples{
-desc <-
-"
-# Some desc
-- xxxx
-"
-renderDesc(desc, id = "desc")
+if(interactive()){
+    library(systemPipeShiny)
+    library(shiny)
+    desc <-
+        "
+    # Some desc
+    - xxxx
+    - bbbb
+
+    `Some other things`
+    > other markdown things
+    1. aaa
+    2. bbb
+    3. ccc
+    "
+    ui <- fluidPage(
+        useSps(),
+        renderDesc(id = "desc", desc)
+    )
+
+    server <- function(input, output, session) {
+
+    }
+
+    shinyApp(ui, server)
+}
 }

@@ -6,6 +6,7 @@
 #' @importFrom shinydashboard valueBox
 #' @importFrom shinydashboardPlus boxPlus
 #' @importFrom shinyWidgets radioGroupButtons
+#' @noRd
 wf_targetUI <- function(id){
     ns <- NS(id)
     tagList(
@@ -24,7 +25,7 @@ wf_targetUI <- function(id){
                    shinydashboardPlus::boxPlus("Missing files (first row is treated as column names)", width = 12,
                            p("Write down your path prefix if you use relative path in targets"),
                            clearableTextInput(ns("target_data_path"), label = "Add path prefix", placeholder = "long path"),
-                           if (getOption('sps')$mode == 'server') {
+                           if(spsOption('mode') == 'server') {
                                h5("File checking is disabled on 'server' mode")
                            } else {
                                tagList(
@@ -89,6 +90,7 @@ wf_targetUI <- function(id){
 #' @importFrom vroom vroom cols
 #' @importFrom shinyAce is.empty
 #' @importFrom shinyjs disable enable
+#' @noRd
 wf_targetServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

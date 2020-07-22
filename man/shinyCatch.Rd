@@ -23,44 +23,49 @@ also log the text on backend console. Will return original value if not
 blocking at "warning" "message" level, and return \code{NULL} at error level.
 If blocks at \code{error}, function will be stopped and other code in the same
 reactive context will be blocked. If blocks at \code{warning} level, warning and
-error will be blocked; \code{message} level blocks all 3 levels.
+error will be blocked; \code{message} level blocks all 3 levels. The blocking works
+similar to shiny's \code{req()} and \code{validate()}. If anything inside fails, it will
+block the rest of the code in your reactive expression domain
 }
 \examples{
-ui <- fluidPage(
-    useToastr(),
-    actionButton("btn1","error and blocking"),
-    actionButton("btn2","error no blocking"),
-    actionButton("btn3","warning but still returns value"),
-    actionButton("btn4","warning but blocking returns"),
-    actionButton("btn5","message"),
+if(interactive()){
+    library(systemPipeShiny)
+    ui <- fluidPage(
+        useToastr(),
+        actionButton("btn1","error and blocking"),
+        actionButton("btn2","error no blocking"),
+        actionButton("btn3","warning but still returns value"),
+        actionButton("btn4","warning but blocking returns"),
+        actionButton("btn5","message"),
 
-    textOutput("text")
-)
-server <- function(input, output, session) {
-    fn_warning <- function() {
-         warning("this is a warning!")
-         return(1)
-         }
-    observeEvent(input$btn1, {
-        shinyCatch(stop("error with blocking"), blocking_level = "error")
-         print("You shouldn't see me")
-    })
-    observeEvent(input$btn2, {
-        shinyCatch(stop("error without blocking"))
-        print("I am not blocked by error")
-    })
-    observeEvent(input$btn3, {
-        return_value <- shinyCatch(fn_warning())
-        print(return_value)
-    })
-    observeEvent(input$btn4, {
-        return_value <- shinyCatch(fn_warning(), blocking_level = "warning")
-        print(return_value)
-        print("other things")
-    })
-    observeEvent(input$btn5, {
-        shinyCatch(message("message"))
-    })
+        textOutput("text")
+    )
+    server <- function(input, output, session) {
+        fn_warning <- function() {
+            warning("this is a warning!")
+            return(1)
+        }
+        observeEvent(input$btn1, {
+            shinyCatch(stop("error with blocking"), blocking_level = "error")
+            print("You shouldn't see me")
+        })
+        observeEvent(input$btn2, {
+            shinyCatch(stop("error without blocking"))
+            print("I am not blocked by error")
+        })
+        observeEvent(input$btn3, {
+            return_value <- shinyCatch(fn_warning())
+            print(return_value)
+        })
+        observeEvent(input$btn4, {
+            return_value <- shinyCatch(fn_warning(), blocking_level = "warning")
+            print(return_value)
+            print("other things")
+        })
+        observeEvent(input$btn5, {
+            shinyCatch(message("message"))
+        })
+    }
+    shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

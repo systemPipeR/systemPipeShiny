@@ -15,5 +15,8 @@ Print systemPipeShiny default Options
 Make sure you created the app folder and has config.yaml in config folder
 }
 \examples{
+\dontrun{
+spsInit()
 viewSpsDefaults()
+}
 }

@@ -9,10 +9,8 @@
 #' @export
 #'
 #' @examples
-#' library(shiny)
-#' ui <- fluidPage(
-#'     tags$head(useSps())
-#' )
+#' library(systemPipeShiny)
+#' useSps()
 useSps <- function(){
     addResourcePath("sps", system.file("app/www", package = "systemPipeShiny"))
     tags$head(
@@ -37,18 +35,20 @@ useSps <- function(){
 #' @export
 #'
 #' @examples
-#' library(shiny)
+#' if(interactive()){
+#'     library(systemPipeShiny)
 #'
-#' ui <- fluidPage(
-#'     useSps(),
-#'     clearableTextInput("input1", "This is a input box")
-#' )
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         clearableTextInput("input1", "This is a input box")
+#'     )
 #'
-#' server <- function(input, output, session) {
+#'     server <- function(input, output, session) {
 #'
+#'     }
+#'
+#'     shinyApp(ui, server)
 #' }
-#'
-#' shinyApp(ui, server)
 clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
     tagList(tags$div(
         tags$label(label, `for` = inputId),
@@ -75,18 +75,20 @@ clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
 #' @export
 #'
 #' @examples
-#' library(shiny)
+#' if(interactive()){
+#'     library(systemPipeShiny)
 #'
-#' ui <- fluidPage(
-#'     tags$head(useSps()),
-#'     textInputGroup("id1", "id2")
-#' )
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         textInputGroup("id1", "id2")
+#'     )
 #'
-#' server <- function(input, output, session) {
+#'     server <- function(input, output, session) {
 #'
+#'     }
+#'
+#'     shinyApp(ui, server)
 #' }
-#'
-#' shinyApp(ui, server)
 textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plane"){
     fluidRow(
         column(
@@ -112,33 +114,36 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #' @param hrefs link when clicking each
 #' @param image_frame_size integer, 1-12, this controls width
 #' @param images image source,
-#'
+#' @export
 #' @return a div element
 #'
 #' @examples
-#' texts <- c("p1", "p2", "p3", "p4", "p5")
-#' hrefs <- c("https://unsplash.it/1200/768.jpg?image=251",
-#'            "https://unsplash.it/1200/768.jpg?image=252",
-#'            "https://unsplash.it/1200/768.jpg?image=253",
-#'            "https://unsplash.it/1200/768.jpg?image=254",
-#'            "https://unsplash.it/1200/768.jpg?image=255")
-#' images <- c("https://unsplash.it/600.jpg?image=251",
-#'             "https://unsplash.it/600.jpg?image=252",
-#'             "https://unsplash.it/600.jpg?image=253",
-#'             "https://unsplash.it/600.jpg?image=254",
-#'             "https://unsplash.it/600.jpg?image=255")
-#' library(shiny)
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     texts <- c("p1", "p2", "p3", "p4", "p5")
+#'     hrefs <- c("https://unsplash.it/1200/768.jpg?image=251",
+#'                "https://unsplash.it/1200/768.jpg?image=252",
+#'                "https://unsplash.it/1200/768.jpg?image=253",
+#'                "https://unsplash.it/1200/768.jpg?image=254",
+#'                "https://unsplash.it/1200/768.jpg?image=255")
+#'     images <- c("https://unsplash.it/600.jpg?image=251",
+#'                 "https://unsplash.it/600.jpg?image=252",
+#'                 "https://unsplash.it/600.jpg?image=253",
+#'                 "https://unsplash.it/600.jpg?image=254",
+#'                 "https://unsplash.it/600.jpg?image=255")
+#'     library(shiny)
 #'
-#' ui <- fluidPage(
-#'     includeCSS("www/sps.css"),
-#'     gallery(texts = texts, hrefs = hrefs, images = images)
-#' )
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         gallery(texts = texts, hrefs = hrefs, images = images)
+#'     )
 #'
-#' server <- function(input, output, session) {
+#'     server <- function(input, output, session) {
 #'
+#'     }
+#'
+#'     shinyApp(ui, server)
 #' }
-#'
-#' shinyApp(ui, server)
 gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts,
                     hrefs, images, image_frame_size = 4){
     if (is.null(Id)) Id <- glue("gallery{sample(1000000:9999999, 1)}")
@@ -177,17 +182,19 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #' @return a div element
 #' @export
 #' @examples
-#' ui <- fluidPage(
-#' useSps(),
-#' hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
-#'         hrefs = c("https://google.com/", "", ""))
-#' )
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
+#'                 hrefs = c("https://google.com/", "", ""))
+#'     )
 #'
-#' server <- function(input, output, session) {
+#'     server <- function(input, output, session) {
 #'
+#'     }
+#'     shinyApp(ui, server)
 #' }
-#'
-#' shinyApp(ui, server)
 hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8",
                     label_text, hrefs, ...
                     ){
@@ -221,22 +228,24 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
 #' @export
 #'
 #' @examples
-#' library(shiny)
+#' if(interactive()){
+#'     library(systemPipeShiny)
 #'
-#' ui <- fluidPage(
-#'     useSps(),
-#'     hrefTable(item_titles = c("workflow 1", "workflow 2"),
-#'               item_labels = list(c("tab 1"), c("tab 3", "tab 4")),
-#'               item_hrefs = list(c("https://www.google.com/"), c("", "")),
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         hrefTable(item_titles = c("workflow 1", "workflow 2"),
+#'                   item_labels = list(c("tab 1"), c("tab 3", "tab 4")),
+#'                   item_hrefs = list(c("https://www.google.com/"), c("", "")),
+#'         )
+#'
 #'     )
 #'
-#' )
+#'     server <- function(input, output, session) {
 #'
-#' server <- function(input, output, session) {
+#'     }
 #'
+#'     shinyApp(ui, server)
 #' }
-#'
-#' shinyApp(ui, server)
 hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
                       text_color = "#0275d8", item_titles, item_labels,
                       item_hrefs, ...
@@ -283,17 +292,39 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 
 
 #' Render some collapsible description
-#'
+#' @description write some text in markdown format and it will help you render to
+#' a collapsible markdown section
 #' @param desc one string in markdown format
 #' @param id HTML ID
 #' @importFrom markdown renderMarkdown
+#' @export
 #' @examples
-#' desc <-
-#' "
-#' # Some desc
-#' - xxxx
-#' "
-#' renderDesc(desc, id = "desc")
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     library(shiny)
+#'     desc <-
+#'         "
+#'     # Some desc
+#'     - xxxx
+#'     - bbbb
+#'
+#'     `Some other things`
+#'     > other markdown things
+#'     1. aaa
+#'     2. bbb
+#'     3. ccc
+#'     "
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         renderDesc(id = "desc", desc)
+#'     )
+#'
+#'     server <- function(input, output, session) {
+#'
+#'     }
+#'
+#'     shinyApp(ui, server)
+#' }
 renderDesc <- function(id, desc) {
     HTML(glue('
       <div class="desc">
@@ -309,7 +340,7 @@ renderDesc <- function(id, desc) {
 }
 
 #' dynamically generate select file input
-#' depending on the mode in options, render similar UI but server side works
+#' @description  depending on the mode in options, render similar UI but server side works
 #' differently. `local` mode will not copy file, directly use a path pointer,
 #' `server` mode upload file and store in temp. Expect similar behavior as
 #' `fileInput`.
@@ -325,29 +356,30 @@ renderDesc <- function(id, desc) {
 #' @export
 #'
 #' @examples
-#' library(shiny)
-#' library(shinyFiles)
-#' library(shinyjs)
-#' options(sps = list(mode='server'))
-#' ui <- fluidPage(
-#' useShinyjs(),
-#' dynamicFile("getFile"),
-#' textOutput("txt_file")
-#' )
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     library(shinyjs)
+#'     options(sps = list(mode='server')) # change to 'local' to see the difference
+#'     ui <- fluidPage(
+#'         useShinyjs(),
+#'         dynamicFile("getFile"),
+#'         textOutput("txt_file")
+#'     )
 #'
-#' server <- function(input,output,session){
-#'     runjs('$(".sps-file input").attr("readonly", true)')
-#'     myfile <- dynamicFileServer(input,session, id = "getFile")
-#'     observe({
-#'         print(myfile())
-#'     })
+#'     server <- function(input,output,session){
+#'         runjs('$(".sps-file input").attr("readonly", true)')
+#'         myfile <- dynamicFileServer(input,session, id = "getFile")
+#'         observe({
+#'             print(myfile())
+#'         })
+#'     }
+#'     shinyApp(ui = ui, server = server)
 #' }
-#' shinyApp(ui = ui, server = server)
 dynamicFile <- function(id, title = "Select your file:",
                         label = "Browse", icon = NULL, style = "",
                         multiple = FALSE){
     icon <- if(shinyAce::is.empty(icon)) icon("upload")
-    if (getOption("sps")$mode == "local") {
+    if (spsOption('mode') == "local") {
         div(class = "form-group shiny-input-container sps-file",
             tags$label(class="control-label", `for`=id, title),
             div(class="input-group",
@@ -377,18 +409,19 @@ dynamicFile <- function(id, title = "Select your file:",
 #' @importFrom shinyAce aceEditor
 #' @importFrom shinydashboardPlus boxPlus
 #' @importFrom shinyWidgets dropdownButton tooltipOptions radioGroupButtons sliderTextInput
-#' @examples
-#' library(shiny)
-#' eg_UI <- function(id) {
-#'     ns <- NS(id)
-#'     tagList(
-#'         useSps(),
-#'         uiExamples(ns)
-#'     )
-#' }
-#' ui <- fluidPage(eg_UI("eg"))
-#' server <- function(input, output, session) {}
-#' shinyApp(ui, server)
+#' @noRd
+# @examples
+# library(shiny)
+# eg_UI <- function(id) {
+#     ns <- NS(id)
+#     tagList(
+#         useSps(),
+#         uiExamples(ns)
+#     )
+# }
+# ui <- fluidPage(eg_UI("eg"))
+# server <- function(input, output, session) {}
+# shinyApp(ui, server)
 uiExamples <- function(ns){
     tagList(
         h4("Some examples for plotting controls"),
@@ -461,7 +494,7 @@ uiExamples <- function(ns){
 #' hr line with color #3b8dbc38
 #' @export
 #' @examples
-#' spsHr("Text")
+#' spsHr()
 spsHr <- function() {
     hr(style ='border: 0.5px solid #3b8dbc38;')
 }
@@ -612,16 +645,28 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
 #' @export
 #'
 #' @examples
-#' library(shiny)
-#' ui <- fluidPage(
-#'     useSps(),
-#'     hexPanel("haha", "DEMO OF:" ,
-#'     rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2)
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         hexPanel("demo1", "DEMO 1:" ,
+#'                  rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2)
+#'         ),
+#'         hexPanel("demo2", "DEMO 2:" ,
+#'                  rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
+#'                  rep("https://www.google.com", 2),
+#'                  c("hex1", "hex2")
+#'         ),
+#'         hexPanel("demo3", "DEMO 3:" ,
+#'                  rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
+#'                  footers = c("hex1", "hex2"),
+#'                  footer_links = rep("https://www.google.com", 2)
+#'         )
 #'     )
-#' )
-#' server <- function(input, output, session) {
+#'     server <- function(input, output, session) {
+#'     }
+#'     shinyApp(ui, server)
 #' }
-#' shinyApp(ui, server)
 hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
                      footers=NULL, footer_links=NULL, xs=NULL, ys=NULL){
     if(not_empty(hex_titles))

@@ -1,12 +1,14 @@
 # SPS core server functions, can only be used under SPS framework
 
+#' SPS main server function
 #' @importFrom pushbar setup_pushbar
 #' @importFrom rlang parse_expr eval_tidy
 #' @importFrom shinyjs removeClass toggleClass hide show
+#' @noRd
 spsServer <- function(tabs, server_expr) {
     spsinfo("Start to create server")
     tab_modules <- if(nrow(tabs) > 0) {
-        sapply(tabs[['tab_name']], function(x){
+        sapply(tabs[['tab_id']], function(x){
             glue('{x}Server("{x}", shared)') %>% rlang::parse_expr()
         }, simplify = FALSE)
     } else list(empty = substitute(spsinfo("No custom server to load.")))
@@ -68,8 +70,8 @@ spsServer <- function(tabs, server_expr) {
             names(getQueryString())
         })
         observe({
-            req(admin_url() == getOption('sps')$admin_url)
-            req(getOption('sps')$admin_page)
+            req(spsOption('admin_page'))
+            req(admin_url() == spsOption('admin_url'))
             shinyjs::hide("page_user", asis = TRUE)
             shinyjs::show("page_admin", asis = TRUE)
             output$page_admin <- renderUI(adminUI())
@@ -103,8 +105,9 @@ spsServer <- function(tabs, server_expr) {
 #' @return reactive renderUI object
 #' @export
 #' @seealso pgPaneUpdate
-#' @examples
-#' wfProgressPanel(shared)
+#' @noRd
+# @examples
+# wfProgressPanel(shared)
 wfProgressPanel <- function(shared){
     renderUI({
         total_progress <- sum(as.numeric(shared$wf_flags))/0.03
@@ -153,13 +156,13 @@ wfProgressPanel <- function(shared){
 
 #' Warning toast under some options when app starts
 #'
-#' @param session
-#'
+#' @param session shiny session
+#' @noRd
 #' @return
 #' @importFrom shinyWidgets sendSweetAlert
 spsWarnings <- function(session){
     sps_warnings <- list()
-    if(getOption("sps")$dev) {
+    if(spsOption('dev')) {
         msg("Developer mode is on. you shouldn't deploy app with this mode",
             "SPS-DANGER", "red")
         sps_warnings[['dev']] <- h4("You are on developer mode")
@@ -170,7 +173,7 @@ spsWarnings <- function(session){
         sps_warnings[['admin']] <- h4("Change default admin page url")
     }
 
-    if(getOption("sps")$warning_toast){
+    if(spsOption('warning_toast')){
         shinyWidgets::sendSweetAlert(session = session, html = TRUE,
                        '<p style="color:var(--danger)">DANGER</p>',
                        div(class = "sps-warning",
@@ -182,9 +185,12 @@ spsWarnings <- function(session){
 }
 
 
-#' Load tibbles to server
+#' Load tabular files as tibbles to server
 #' @description load a file to server end. Designed to be used with the input
-#' file source switch button. Use `vroom` to load the file
+#' file source switch button. Use `vroom` to load the file. In SPS, this function
+#' is usually combined with `dynamicFile()` function to help users upload file and
+#' read the file. This loading function only works for parsing tabular data, use
+#' `vroom()` internally.
 #' @param choice where this file comes from, from 'upload' or example 'eg'?
 #' @param df_init a tibble to return if `upload_path` or `eg_path` is not
 #' provided. Return a 8x8 empty tibble if not provided
@@ -203,29 +209,31 @@ spsWarnings <- function(session){
 #' @importFrom tibble as_tibble
 #' @importFrom vroom vroom
 #' @examples
-#' library(shiny)
-#' library(shinyWidgets)
-#' ui <- fluidPage(
-#'     shinyWidgets::radioGroupButtons(
-#'         inputId = "data_source", label = "Choose your data file source:",
-#'         selected = "upload",
-#'         choiceNames = c("Upload", "Example"),
-#'         choiceValues = c("upload", "eg")
-#'     ),
-#'     fileInput("df_path", label = "input file"),
-#'     dataTableOutput("df")
-#' )
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     library(shinyWidgets)
+#'     ui <- fluidPage(
+#'         shinyWidgets::radioGroupButtons(
+#'             inputId = "data_source", label = "Choose your data file source:",
+#'             selected = "upload",
+#'             choiceNames = c("Upload", "Example"),
+#'             choiceValues = c("upload", "eg")
+#'         ),
+#'         fileInput("df_path", label = "input file"),
+#'         dataTableOutput("df")
+#'     )
 #'
-#' server <- function(input, output, session) {
-#'     tmp_file <- tempfile(fileext = ".csv")
-#'     write.csv(iris, file = tmp_file)
-#'     data_df <- reactive({
-#'         loadDF(choice = input$data_source, upload_path = input$df_path$datapath,
-#'                delim = ",", eg_path = tmp_file)
-#'     })
-#'     output$df <- renderDataTable(data_df())
+#'     server <- function(input, output, session) {
+#'         tmp_file <- tempfile(fileext = ".csv")
+#'         write.csv(iris, file = tmp_file)
+#'         data_df <- reactive({
+#'             loadDF(choice = input$data_source, upload_path = input$df_path$datapath,
+#'                    delim = ",", eg_path = tmp_file)
+#'         })
+#'         output$df <- renderDataTable(data_df())
+#'     }
+#'     shinyApp(ui, server)
 #' }
-#' shinyApp(ui, server)
 loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
                    comment = "#", delim = "\t",
                    col_types = vroom::cols(), ...){
@@ -277,40 +285,39 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @importFrom rlang is_missing is_bool
 #' @importFrom shinytoastr toastr_success
 #' @examples
-#' library(shiny)
-#' library(shinytoastr)
-#' df_validate_common <- list(
-#'     vd1 = function(df, apple){
-#'         print(apple)
-#'         if (is(df, "data.frame")) {result <- c(" " = TRUE)}
-#'         else {result <- c("Input is not dataframe or tibble" = FALSE)}
-#'         return(result)
-#'     },
-#'     vd2 = function(df, banana, orange="orange"){
-#'         print(banana)
-#'         print(orange)
-#'         # change < to > in next line to see failure
-#'         if (nrow(df) < 10) {result <- c(" " = TRUE)}
-#'         else {result <- c("Need more than 10 rows" = FALSE)}
-#'         Sys.sleep(1)
-#'         return(result)
+#' if(interactive()){
+#'     library(systemPipeShiny)
+#'     df_validate_common <- list(
+#'         vd1 = function(df, apple){
+#'             print(apple)
+#'             if (is(df, "data.frame")) {result <- c(" " = TRUE)}
+#'             else {result <- c("Input is not dataframe or tibble" = FALSE)}
+#'             return(result)
+#'         },
+#'         vd2 = function(df, banana, orange="orange"){
+#'             print(banana)
+#'             print(orange)
+#'             # change < to > in next line to see failure
+#'             if (nrow(df) < 10) {result <- c(" " = TRUE)}
+#'             else {result <- c("Need more than 10 rows" = FALSE)}
+#'             Sys.sleep(1)
+#'             return(result)
+#'         }
+#'     )
+#'     ui <- fluidPage(
+#'         actionButton("btn", "this btn")
+#'     )
+#'     server <- function(input, output, session) {
+#'         observeEvent(input$btn, {
+#'             spsValidator(df_validate_common,
+#'                          args = list(df = data.frame(),
+#'                                      apple = "apple",
+#'                                      banana = "banana"))
+#'             print(123)
+#'         })
 #'     }
-#' )
-#' ui <- fluidPage(
-#'     actionButton("btn", "this btn"),
-#'     useToastr(),
-#'     use_waitress()
-#' )
-#' server <- function(input, output, session) {
-#'     observeEvent(input$btn, {
-#'         spsValidator(df_validate_common,
-#'                      args = list(df = data.frame(),
-#'                                  apple = "apple",
-#'                                  banana = "banana"))
-#'         print(123)
-#'     })
+#'     shinyApp(ui, server)
 #' }
-#' shinyApp(ui, server)
 spsValidator <- function(validate_list, args = list(), title = "Validation"){
     # pre checks
     if(!is.list(args)) msg("Args must be in a list", "error")

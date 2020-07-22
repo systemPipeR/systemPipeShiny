@@ -37,13 +37,16 @@ the indicated tabs instead of searching individual tab names. These words
 include: core, wf, vs, data, plot.
 }
 \examples{
-library(shiny)
-rows <- list(wf1 = c("df_raw", "df_count"), wf2 =  "data")
-ui <- fluidPage(
-    genHrefTable(rows)
-)
-server <- function(input, output, session) {
+if(interactive()){
+    library(systemPipeShiny)
+    spsInit()
+    rows <- list(wf1 = c("core_canvas", "core_about"), wf2 =  "data")
+    ui <- fluidPage(
+        genHrefTable(rows)
+    )
+    server <- function(input, output, session) {
 
+    }
+    shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

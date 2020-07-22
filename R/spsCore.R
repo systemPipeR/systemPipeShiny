@@ -17,13 +17,15 @@ NULL
 #' @importFrom rlang enexpr
 #' @export
 #' @examples
+#' \dontrun{
 #' # on ui.R
 #' sps_app <<- sps(
-#' vstabs = "",
-#' server_expr = {
-#'     msg("Hello World", "GREETING", "green")
-#' }
+#'     vstabs = "",
+#'     server_expr = {
+#'         msg("Hello World", "GREETING", "green")
+#'     }
 #' )
+#' }
 sps <- function(vstabs, server_expr=NULL){
     assert_that(is.character(vstabs))
     sps_env <- environment()
@@ -54,23 +56,87 @@ sps <- function(vstabs, server_expr=NULL){
 
 
 
+#' Create a SystemPipeShiny project
+#'
+#' @param dir_path path, where do you want to create this project
+#' @param project_name Your project name
+#' @param database_name project database name, recommend to use the default name
+#' @param overwrite bool, overwrite the `dir_path`?
+#' @param change_wd bool, when creation is done, change working directory?
+#' @param verbose bool, do you want additional message?
+#' @param open_files bool, If `change_wd == TRUE` and you are also in Rstudio,
+#' it will open up global.R, ui.R and server.R for you
+#' @importFrom rstudioapi isAvailable navigateToFile
+#' @return
+#' @export
+#'
+#' @examples
+#' library(systemPipeShiny)
+#' spsInit()
+spsInit <- function(dir_path=getwd(),
+                    project_name = glue("SPS_{format(Sys.time(), '%Y%m%d')}"),
+                    database_name = "sps.db",
+                    overwrite = FALSE,
+                    change_wd = TRUE,
+                    verbose = FALSE,
+                    open_files = TRUE
+){
+    options(sps=list(verbose = verbose))
+    if(is.writeable(dir_path)) spsinfo("Start to create a new SPS project", TRUE)
+    else spserror(glue("{dir_path} is not writeable."))
 
+    project_dir <- file.path(dir_path, project_name)
+    if(dir.exists(project_dir) & !overwrite) {
+        spserror(glue("{project_dir} exists"))
+    } else if(dir.exists(project_dir) & overwrite) {
+        spswarn(glue("Overwrite things in {project_dir}"))
+    } else {
+        spsinfo(glue("Create project under {project_dir}"), TRUE)
+        dir.create(project_dir)
+    }
+
+    spsinfo("Now copy files", TRUE)
+    copySPSfiles("app/www/", project_dir, TRUE, FALSE, verbose)
+    copySPSfiles("app/config", project_dir, TRUE, FALSE, verbose)
+    copySPSfiles("app/R", project_dir, TRUE, FALSE, verbose)
+    copySPSfiles("app/data", project_dir, TRUE, FALSE, verbose)
+    copySPSfiles("app/results", project_dir, TRUE, FALSE, verbose)
+    copySPSfiles("app/README.md", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/deploy.R", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/app_ez/global.R", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
+
+    spsinfo("Create SPS database", TRUE)
+    suppressWarnings(spsDb$new()$createDb(db_name=file.path(project_dir, "config", database_name)))
+    if(change_wd) {
+        spsinfo(glue("Change working directory to {project_dir}"))
+        setwd(project_dir)
+        if(rstudioapi::isAvailable() & open_files){
+            rstudioapi::navigateToFile("server.R")
+            rstudioapi::navigateToFile("ui.R")
+            rstudioapi::navigateToFile("global.R")
+        }
+    }
+    msg("SPS project setup done!", "SPS-INFO", "green")
+}
 
 
 #' Pre start SPS checks
 #'
 #' @param appDir where is the app directory root location, default current
 #' working folder
-#' @export
-#'
-#' @examples
-#' checkSps()
+#' @noRd
+# @examples
+# checkSps()
 checkSps <- function(appDir = getwd()) {
     resolveOptions(appDir)
     checkTabs(appDir)
 }
 
 #' @importFrom yaml yaml.load_file
+#' @noRd
 verifyConfig <- function(appDir) {
     sps_options <- yaml::yaml.load_file(glue("{appDir}/config/sps_options.yaml"))
     sps_defaults <- sapply(names(sps_options),
@@ -93,9 +159,11 @@ verifyConfig <- function(appDir) {
 #' need to use the sps_options.yaml file
 #' @param appDir default current working folder
 #' @export
-#' @examples
-#' options(sps = list(mode = c("asas", "sas"), place = "here", time = c("now", "then"), loading_screen = FALSE))
-#' resolveOptions()
+#' @noRd
+# @examples
+# spsInit()
+# options(sps = list(mode = c("asas", "sas"), place = "here", time = c("now", "then"), loading_screen = FALSE))
+# resolveOptions()
 resolveOptions <- function(appDir = getwd()){
     ops <- options()$sps
     ops$appDir <- NULL
@@ -140,15 +208,6 @@ resolveOptions <- function(appDir = getwd()){
     for (x in names(ops)){
         sps_defaults[[x]] <- ops[[x]]
     }
-    # check options of suggested packages
-    # if (sps_defaults[["display_code"]]) {
-    #     if (!requireNamespace("shinymeta", quietly = TRUE)) {
-            # msg(c("Option use_shinymeta is `TRUE` but",
-            #       "package shinymeta is not installed, turn off this option"),
-            #     level = "SPS-WARNING", .other_color = "orange")
-    #         sps_defaults[["display_code"]] <- FALSE
-    #     }
-    # }
     # add hidden appdir
     sps_defaults[['appDir']] <- appDir
     # replace global env
@@ -162,7 +221,10 @@ resolveOptions <- function(appDir = getwd()){
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' spsInit()
 #' viewSpsDefaults()
+#' }
 viewSpsDefaults <- function(appDir = getwd()){
     sps_defaults <- verifyConfig(appDir)[[1]]
     cat(glue("{names(sps_defaults)}: {sps_defaults}\n\n"))
@@ -171,6 +233,7 @@ viewSpsDefaults <- function(appDir = getwd()){
 #' Check sps tab file on start
 #' @importFrom vroom vroom
 #' @param appDir App dir
+#' @noRd
 checkTabs <- function(appDir){
     spsinfo("Now check the tab info in tab.csv ")
     tab_info <- if (exists("tab_info")) {
@@ -179,11 +242,11 @@ checkTabs <- function(appDir){
         suppressMessages(vroom::vroom(glue("{appDir}/config/tabs.csv"),
                                       comment = "#", na = character()))
     }
-    ta_dup <- tab_info$tab_name[base::duplicated(tab_info$tab_name)] %>% unique()
+    ta_dup <- tab_info$tab_id[base::duplicated(tab_info$tab_id)] %>% unique()
     if(length(ta_dup) > 0){
         spserror(glue("Tabname must be unique, find duplicates name(s) '{paste(ta_dup, collapse = ', ')}'"))
     }
-    no_img <- tab_info$tab_name[tab_info$type_sub == "plot" & tab_info$image == ""]
+    no_img <- tab_info$tab_id[tab_info$type_sub == "plot" & tab_info$image == ""]
     if(length(no_img) > 0){
         spswarn(glue("These plot tabs has no image path:
                   '{paste(no_img, collapse = ', ')}'
@@ -193,73 +256,7 @@ checkTabs <- function(appDir){
     spsinfo("tab.csv info check pass")
 }
 
-#' Create a SystemPipeShiny project
-#'
-#' @param dir_path path, where do you want to create this project
-#' @param project_name Your project name
-#' @param database_name project database name, recommend to use the default name
-#' @param overwrite bool, overwrite the `dir_path`?
-#' @param change_wd bool, when creation is done, change working directory?
-#' @param verbose bool, do you want additional message?
-#' @param open_files bool, If `change_wd == TRUE` and you are also in Rstudio,
-#' it will open up global.R, ui.R and server.R for you
-#' @importFrom rstudioapi isAvailable navigateToFile
-#' @return
-#' @export
-#'
-#' @examples
-#' library(systemPipeShiny)
-#' spsInit()
-spsInit <- function(dir_path=getwd(),
-                    project_name = glue("SPS_{format(Sys.time(), '%Y%m%d')}"),
-                    database_name = "sps.db",
-                    overwrite = FALSE,
-                    change_wd = TRUE,
-                    verbose = FALSE,
-                    open_files = TRUE
-                    ){
-    options(sps=list(verbose = verbose))
-    if(is.writeable(dir_path)) spsinfo("Start to create a new SPS project", TRUE)
-    else spserror(glue("{dir_path} is not writeable."))
-
-    project_dir <- file.path(dir_path, project_name)
-    if(dir.exists(project_dir) & !overwrite) {
-        spserror(glue("{project_dir} exists"))
-    } else if(dir.exists(project_dir) & overwrite) {
-        spswarn(glue("Overwrite things in {project_dir}"))
-    } else {
-        spsinfo(glue("Create project under {project_dir}"), TRUE)
-        dir.create(project_dir)
-    }
-
-    spsinfo("Now copy files", TRUE)
-    copySPSfiles("app/www/", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/config", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/R", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/data", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/results", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/README.md", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/deploy.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/global.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
-
-    spsinfo("Create SPS database", TRUE)
-    spsDb$new()$createDb(db_name=file.path(project_dir, "config", database_name))
-    if(change_wd) {
-        spsinfo(glue("Change working directory to {project_dir}"))
-        setwd(project_dir)
-        if(rstudioapi::isAvailable() & open_files){
-            rstudioapi::navigateToFile("server.R")
-            rstudioapi::navigateToFile("ui.R")
-            rstudioapi::navigateToFile("global.R")
-        }
-    }
-    msg("SPS project setup done!", "SPS-INFO", "green")
-}
-
-
+# internal function for `sps` to copy files
 copySPSfiles <- function(file_path,
                        project_dir,
                        is_dir=TRUE,
@@ -280,11 +277,32 @@ copySPSfiles <- function(file_path,
 }
 
 
-
-
-
-
-
-
-
+#' Get or set SPS options
+#'
+#' @param opt string, length 1, what option you want to get or set
+#' @param value if this is not `NULL`, this function will set the option you choose
+#' to this value
+#' @param empty_is_false bool, when you get an option, if the option is `NULL`, `NA`,
+#'  `""` or length is 0, return `FALSE`?
+#'
+#' @export
+#'
+#' @examples
+#' spsOption("test1", 1)
+#' spsOption("test1")
+#' spsOption("test2")
+#' spsOption("test2", empty_is_false = FALSE)
+spsOption <- function(opt, value = NULL, empty_is_false = TRUE){
+    assert_that(is.character(opt) & length(opt) == 1)
+    if(not_empty(value)) options(sps = getOption('sps') %>% {.[[opt]] <- value; .})
+    else {
+        get_value <- getOption('sps')[[opt]]
+        if(!emptyIsFalse(get_value)){
+            spswarn(glue("Option {opt} is empty"))
+            if(empty_is_false) FALSE
+            else get_value
+        }
+        else get_value
+    }
+}
 

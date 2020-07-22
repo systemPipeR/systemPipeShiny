@@ -4,6 +4,7 @@
 #' @importFrom shinydashboardPlus boxPlus
 #' @importFrom shinyTree shinyTree
 #' @importFrom shinyWidgets radioGroupButtons
+#' @noRd
 wf_wfUI <- function(id){shinyCheckPkg
     ns <- NS(id)
     tagList(
@@ -77,6 +78,7 @@ wf_wfUI <- function(id){shinyCheckPkg
 #' @importFrom shinyTree get_selected updateTree renderTree
 #' @importFrom shinyWidgets sendSweetAlert
 #' @importFrom shinyjs runjs enable disable
+#' @noRd
 wf_wfServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

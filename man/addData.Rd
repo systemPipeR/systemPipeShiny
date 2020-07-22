@@ -26,39 +26,35 @@ the \code{get} method
 These function groups are designed to be used inside shiny modules
 }
 \examples{
-library(shiny)
-library(shinytoastr)
-resolveOptions()
-ui <- fluidPage(
-    useToastr(),
-    actionButton("add", "add"),
-    actionButton("get", "get"),
-    actionButton("wrong", "when it gets wrong")
-)
-server <- function(input, output, session) {
-    tab_info <- tibble::tibble(
-        Tab_name = 'df_count',
-        Display_label = 'Count Table',
-        type = 'data',
-        image = ''
+if(interactive()){
+    library(systemPipeShiny)
+    spsInit()
+    options(sps = list(verbose = TRUE))
+    ui <- fluidPage(
+        useToastr(),
+        actionButton("add", "add"),
+        actionButton("get", "get"),
+        actionButton("wrong", "when it gets wrong")
     )
-    shared <- reactiveValues()
-    data <- tibble::tibble(this = 123)
-    cat('before adding\n')
-    print(shared)
-    observeEvent(input$add, {
-        addData(data, shared, "thistab")
-        cat('after adding\n')
-        print(shared) # watch the data_intask object is created
-    })
-    observeEvent(input$get, {
-        cat("get data\n")
-        getData('thistab', shared)
-    })
-    observeEvent(input$wrong, {
-        cat("get wrong data\n")
-        getData('not_there', shared)
-    })
+    server <- function(input, output, session) {
+        shared <- reactiveValues()
+        data <- tibble::tibble(this = 123)
+        cat('before adding\n')
+        print(shared)
+        observeEvent(input$add, {
+            addData(data, shared, "core_about")
+            cat('after adding\n')
+            print(shared) # watch the data_intask object is created
+        })
+        observeEvent(input$get, {
+            cat("get data\n")
+            print(getData('core_about', shared))
+        })
+        observeEvent(input$wrong, {
+            cat("get wrong data\n")
+            getData('not_there', shared)
+        })
+    }
+    shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

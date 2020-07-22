@@ -8,90 +8,90 @@ Initiate this container at the global level. This container is used to
 communicate plotting tabs with the canvas tab
 }
 \examples{
-library(shiny)
-library(shinydashboard)
-library(shinytoastr)
-library(shinyjs)
-plots = plotContainer$new()
+if(interactive()){
+    library(shiny)
+    library(shinydashboard)
+    library(shinyjs)
+    plots = plotContainer$new()
+    mod1_UI <- function(id) {
+        ns <- NS(id)
+        tagList(
+            h1("a tiny example of how Canvas work in SPS"),
+            actionButton(ns("render"), "render"),
+            jqui_resizable(plots$addUI(plotlyOutput(ns("plot1")), id)),
+            sliderInput(ns("slide"), label = "rows", min = 1, max = nrow(iris), value = nrow(iris))
 
-mod1_UI <- function(id) {
-    ns <- NS(id)
-    tagList(
-        actionButton(ns("render"), "render"),
-        jqui_resizable(plots$addUI(plotlyOutput(ns("plot1")), id)),
-        sliderInput(ns("slide"), label = "rows", min = 1, max = nrow(iris), value = nrow(iris))
-
-    )
-}
-mod1 <- function(input, output, session, shared) {
-    observeEvent(input$render, {
-        output$plot1 <- plots$addServer(renderPlotly, 'mod1', {
-            ggplotly(ggplot(iris[1:input$slide, ], aes(Sepal.Length, Sepal.Width)) +
-                         geom_point(aes(colour = Species)))
+        )
+    }
+    mod1 <- function(input, output, session, shared) {
+        observeEvent(input$render, {
+            output$plot1 <- plots$addServer(renderPlotly, 'mod1', {
+                ggplotly(ggplot(iris[1:input$slide, ], aes(Sepal.Length, Sepal.Width)) +
+                             geom_point(aes(colour = Species)))
+            })
+            shared$snap_signal <- plots$notifySnap("mod1")
+            req(shared$snap_signal)
+            toastr_info(glue("Snapshot {glue_collapse(shared$snap_signal, '-')} added to canvas"),
+                        position = "bottom-right")
         })
-        shared$snap_signal <- plots$notifySnap("mod1")
-        req(shared$snap_signal)
-        toastr_info(glue("Snapshot {glue_collapse(shared$snap_signal, '-')} added to canvas"),
-                    position = "bottom-right")
-    })
-}
-mod2_UI <- function(id){
-    ns <- NS(id)
-    tagList(
-        actionButton(ns("refresh"), 'refresh'),
-        sliderTextInput(
-            inputId = ns("ncols"),
-            label = "Number of columns per row to initiate canvas:",
-            choices = c(1:4, 12), selected = 2, grid = TRUE
-        ),
-        fluidRow(uiOutput(ns("new")), class = "sps-canvas")
-    )
-}
+    }
+    mod2_UI <- function(id){
+        ns <- NS(id)
+        tagList(
+            actionButton(ns("refresh"), 'refresh'),
+            sliderTextInput(
+                inputId = ns("ncols"),
+                label = "Number of columns per row to initiate canvas:",
+                choices = c(1:4, 12), selected = 2, grid = TRUE
+            ),
+            fluidRow(uiOutput(ns("new")), class = "sps-canvas")
+        )
+    }
 
-mod2 <- function(input, output, session, shared) {
-    ns <- session$ns
-    make_plots <- reactiveValues(ui = list(), server = list())
-    observeEvent(shared$snap_signal, {
-        tab_id <- shared$snap_signal[1]
-        new_plot_id <- glue("{tab_id}-{shared$snap_signal[2]}")
-        print(new_plot_id)
-        make_plots$ui[[new_plot_id]] <- list(plots$getUI(tab_id,
-                                                         ns(new_plot_id)),
-                                             ns(new_plot_id))
-        make_plots$server[[new_plot_id]] <- plots$getServer(tab_id)
-    })
-    observeEvent(input$refresh, {
-        ui <- make_plots$ui
-        output$new <- renderUI({
-            sapply(seq_along(ui), function(i){
-                column(
-                    width = 12/isolate(input$ncols),
-                    class = "collapse in",
-                    id = glue("{ui[[i]][2]}-container"),
-                    div(class = "snap-drag bg-primary",
-                        h4(glue("Plot {ui[[i]][2]}")),
-                        tags$button(
-                            class = "btn action-button canvas-close",
-                            icon("times"),
-                            `data-toggle`="collapse",
-                            `data-target`=glue("#{ui[[i]][2]}-container"),
-                            `plot-toggle` = ui[[i]][2]
-                        )
-                    ),
-                    jqui_resizable(make_plots$ui[[i]][[1]]),
-                    tags$script(glue(.open = '@', .close = '@',
-                                     '$("#@ui[[i]][2]@-container")',
-                                     '.draggable({ handle: ".snap-drag"})'))
-                )
-            }, simplify = FALSE) \%>\%{
-                fluidRow(id = ns('plots'),
-                         tags$head(tags$style(
-                             '
+    mod2 <- function(input, output, session, shared) {
+        ns <- session$ns
+        make_plots <- reactiveValues(ui = list(), server = list())
+        observeEvent(shared$snap_signal, {
+            tab_id <- shared$snap_signal[1]
+            new_plot_id <- glue("{tab_id}-{shared$snap_signal[2]}")
+            print(new_plot_id)
+            make_plots$ui[[new_plot_id]] <- list(plots$getUI(tab_id,
+                                                             ns(new_plot_id)),
+                                                 ns(new_plot_id))
+            make_plots$server[[new_plot_id]] <- plots$getServer(tab_id)
+        })
+        observeEvent(input$refresh, {
+            ui <- make_plots$ui
+            output$new <- renderUI({
+                sapply(seq_along(ui), function(i){
+                    column(
+                        width = 12/isolate(input$ncols),
+                        class = "collapse in",
+                        id = glue("{ui[[i]][2]}-container"),
+                        div(class = "snap-drag bg-primary",
+                            h4(glue("Plot {ui[[i]][2]}")),
+                            tags$button(
+                                class = "btn action-button canvas-close",
+                                icon("times"),
+                                `data-toggle`="collapse",
+                                `data-target`=glue("#{ui[[i]][2]}-container"),
+                                `plot-toggle` = ui[[i]][2]
+                            )
+                        ),
+                        jqui_resizable(make_plots$ui[[i]][[1]]),
+                        tags$script(glue(.open = '@', .close = '@',
+                                         '$("#@ui[[i]][2]@-container")',
+                                         '.draggable({ handle: ".snap-drag"})'))
+                    )
+                }, simplify = FALSE) \%>\%{
+                    fluidRow(id = ns('plots'),
+                             tags$head(tags$style(
+                                 '
                              .snap-drag {
                              opacity: 0;
                              };'),
-                             tags$style(
-                                 '
+                                 tags$style(
+                                     '
                              .snap-drag button{
                              position: absolute;
                              outline: none;
@@ -99,54 +99,53 @@ mod2 <- function(input, output, session, shared) {
                              top: 2px;
                              right: 4px;
                              };'),
-                             tags$style(
-                                 '
+                                 tags$style(
+                                     '
                              .snap-drag h4{
                              margin-bottom: 0;
                              padding-bottom: 10px;
                              };'),
-                             tags$style(
-                                 '
+                                 tags$style(
+                                     '
                              .snap-drag button:focus {
                              outline: 0 !important;
                              box-shadow: none !important;
                              };'),
-                             tags$style('.snap-drag:hover {
+                                 tags$style('.snap-drag:hover {
                              opacity: 1;
                              }
                              '
-                             )),
-                         tagList(.)
-                )
+                                 )),
+                             tagList(.)
+                    )
+                }
+            })
+            for(plot_id in names(make_plots$server)){
+                output[[plot_id]] <- make_plots$server[[plot_id]]
             }
         })
-        for(plot_id in names(make_plots$server)){
-            output[[plot_id]] <- make_plots$server[[plot_id]]
-        }
-    })
-    observeEvent(input$hide_title, {
-        shinyjs::toggleClass(selector = ".snap-drag", class = "collapse")
-    })
+        observeEvent(input$hide_title, {
+            shinyjs::toggleClass(selector = ".snap-drag", class = "collapse")
+        })
 
+    }
+    ui <- dashboardPagePlus(
+        header = dashboardHeaderPlus(),
+        sidebar = dashboardSidebar(),
+        body = dashboardBody(
+            useShinyjs(),
+            useSps(),
+            mod1_UI("mod1"),
+            mod2_UI("mod2")),
+        title = "Test",
+    )
+    server <- function(input, output, session) {
+        shared = reactiveValues()
+        callModule(mod1, "mod1",  shared)
+        callModule(mod2, "mod2",  shared)
+    }
+    shinyApp(ui, server)
 }
-ui <- dashboardPagePlus(
-    header = dashboardHeaderPlus(),
-    sidebar = dashboardSidebar(),
-    body = dashboardBody(
-        useShinyjs(),
-        useToastr(),
-        mod1_UI("mod1"),
-        mod2_UI("mod2")),
-
-    rightsidebar = rightSidebar(),
-    title = "Test",
-)
-server <- function(input, output, session) {
-    shared = reactiveValues()
-    callModule(mod1, "mod1",  shared)
-    callModule(mod2, "mod2",  shared)
-}
-shinyApp(ui, server)
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

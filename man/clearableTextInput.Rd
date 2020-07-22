@@ -26,16 +26,18 @@ work the same as \code{Textinput}
 must be call \code{useSps} at header
 }
 \examples{
-library(shiny)
+if(interactive()){
+    library(systemPipeShiny)
 
-ui <- fluidPage(
-    useSps(),
-    clearableTextInput("input1", "This is a input box")
-)
+    ui <- fluidPage(
+        useSps(),
+        clearableTextInput("input1", "This is a input box")
+    )
 
-server <- function(input, output, session) {
+    server <- function(input, output, session) {
 
+    }
+
+    shinyApp(ui, server)
 }
-
-shinyApp(ui, server)
 }

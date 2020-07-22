@@ -6,7 +6,7 @@
 \title{Show a list of tabs in buttons}
 \usage{
 genHrefTab(
-  tabnames,
+  tab_ids,
   Id = NULL,
   title = "A bar to list tabs",
   text_color = "#0275d8",
@@ -23,7 +23,7 @@ hrefTab(
 )
 }
 \arguments{
-\item{tabnames}{tab names, must have the \code{tab_info} dataframe}
+\item{tab_ids}{tab names, must have the \code{tab_info} dataframe}
 
 \item{Id}{optional}
 
@@ -54,15 +54,17 @@ must be in \code{./config} directory.
 \code{label_text}, \code{hrefs} must be the same length
 }
 \examples{
-ui <- fluidPage(
-useSps(),
-hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
-        hrefs = c("https://google.com/", "", ""))
-)
+if(interactive()){
+    library(systemPipeShiny)
+    ui <- fluidPage(
+        useSps(),
+        hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
+                hrefs = c("https://google.com/", "", ""))
+    )
 
-server <- function(input, output, session) {
+    server <- function(input, output, session) {
 
+    }
+    shinyApp(ui, server)
 }
-
-shinyApp(ui, server)
 }
