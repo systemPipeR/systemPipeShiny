@@ -22,7 +22,7 @@ my_ecpt$decrypt("test.bin", "test_decpt.txt", TRUE)
 readLines('test_decpt.txt')
 }
 \section{Super class}{
-\code{\link[systemPipeShiny:spsdb]{systemPipeShiny::spsdb}} -> \code{spsencrypt}
+\code{\link[systemPipeShiny:spsDb]{systemPipeShiny::spsDb}} -> \code{spsencrypt}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -38,12 +38,12 @@ readLines('test_decpt.txt')
 \if{html}{
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsdb" data-id="createDb">}\href{../../systemPipeShiny/html/spsdb.html#method-createDb}{\code{systemPipeShiny::spsdb$createDb()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsdb" data-id="queryDel">}\href{../../systemPipeShiny/html/spsdb.html#method-queryDel}{\code{systemPipeShiny::spsdb$queryDel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsdb" data-id="queryInsert">}\href{../../systemPipeShiny/html/spsdb.html#method-queryInsert}{\code{systemPipeShiny::spsdb$queryInsert()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsdb" data-id="queryUpdate">}\href{../../systemPipeShiny/html/spsdb.html#method-queryUpdate}{\code{systemPipeShiny::spsdb$queryUpdate()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsdb" data-id="queryValue">}\href{../../systemPipeShiny/html/spsdb.html#method-queryValue}{\code{systemPipeShiny::spsdb$queryValue()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsdb" data-id="queryValueDp">}\href{../../systemPipeShiny/html/spsdb.html#method-queryValueDp}{\code{systemPipeShiny::spsdb$queryValueDp()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb">}\href{../../systemPipeShiny/html/spsDb.html#method-createDb}{\code{systemPipeShiny::spsDb$createDb()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel">}\href{../../systemPipeShiny/html/spsDb.html#method-queryDel}{\code{systemPipeShiny::spsDb$queryDel()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert">}\href{../../systemPipeShiny/html/spsDb.html#method-queryInsert}{\code{systemPipeShiny::spsDb$queryInsert()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate">}\href{../../systemPipeShiny/html/spsDb.html#method-queryUpdate}{\code{systemPipeShiny::spsDb$queryUpdate()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue">}\href{../../systemPipeShiny/html/spsDb.html#method-queryValue}{\code{systemPipeShiny::spsDb$queryValue()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp">}\href{../../systemPipeShiny/html/spsDb.html#method-queryValueDp}{\code{systemPipeShiny::spsDb$queryValueDp()}}\out{</span>}
 }
 \out{</details>}
 }
