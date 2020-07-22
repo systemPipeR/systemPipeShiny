@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny
-Version: 0.1.0
-Date: 2020-07-19
+Version: 0.99.0
+Date: 2020-07-21
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Ponmathi", family = "Ramasamy", role = c("aut"), email = "prama008@ucr.edu"),
@@ -52,6 +52,7 @@ Imports:
     yaml
 Suggests:
     testthat
+License: Artistic-2.0
 URL: https://github.com/systemPipeR/systemPipeShiny
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
