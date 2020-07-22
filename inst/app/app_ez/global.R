@@ -1,25 +1,22 @@
-# use runApp() or click right top button in Rstudio to start app,
+# use shiny::runApp() in console or click right top button in Rstudio to start app,
 # but do not write this code in script, type it in console
 
 time_start <- Sys.time()
 library(systemPipeShiny)
 
-## for functions
-# library(DESeq2, quietly = TRUE)
-# library(edgeR, quietly = TRUE)
-# library(ape, warn.conflicts = FALSE)
-# library(glmpca)
-# library(RColorBrewer)
-# library(pheatmap)
-# library(limma)
-# library(Rtsne)
-# library(DOT)
-# library(rsvg)
 
 # suggested to install, no need to library them:
-# remotes::install_github("dreamRs/particlesjs") # particlesjs for loading theme
-# install.packages("crayon") # colorful terminal message
-
+# to unlock some tabs, visualizations and more
+# BiocManager::install("dreamRs/particlesjs") # particlesjs for loading theme
+# BiocManager::install("systemPipeR")
+# BiocManager::install("DESeq2")
+# BiocManager::install("edgeR")
+# BiocManager::install("ape")
+# BiocManager::install("glmpca")
+# BiocManager::install("RColorBrewer")
+# BiocManager::install("pheatmap")
+# BiocManager::install("limma")
+# BiocManager::install("Rtsne")
 
 # SPS options
 # mode: running mode - local, server
@@ -34,11 +31,11 @@ library(systemPipeShiny)
 options(sps = list(
     mode = "local",
     warning_toast = TRUE,
-    loading_screen = F,
+    loading_screen = TRUE,
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
-    verbose = T,
+    verbose = TRUE,
     dev = TRUE,
     admin_page = FALSE,
     admin_url = "admin"
@@ -46,7 +43,7 @@ options(sps = list(
 
 
 # other useful shiny options
-# max upload size
+# max upload size, 30Mb here
 options(shiny.maxRequestSize = 30*1e6)
 
 # for debugging
@@ -59,13 +56,18 @@ options(shiny.maxRequestSize = 30*1e6)
 
 # load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-
 # use `sps_enc$createDb()` to create a new database if there is no db
 ## to save plot snap shots
 sps_plots <- plotContainer$new()
 ## for database and encryption functions
 sps_enc <- spsEncryption$new()
 
-####### you can add additional code #########
+####### Main App Function Starts #########
 
+sps_app <- sps(
+    vstabs = "",
+    server_expr = {
+        msg("Custom expression runs -- Hello World", "GREETING", "green")
+    }
+)
 

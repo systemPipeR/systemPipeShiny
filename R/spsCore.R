@@ -28,10 +28,14 @@ NULL
 #' }
 sps <- function(vstabs, server_expr=NULL){
     assert_that(is.character(vstabs))
-    sps_env <- environment()
+    if(any(duplicated(vstabs))) spserror(glue("You input duplicated tab IDs: {vstabs[duplicated(vstabs)]}"))
+    sps_env <- new.env(parent = globalenv())
+    sapply(file.path("R", list.files("R", "\\.[rR]$")), function(x) source(x, local = sps_env)) %>%
+        invisible()
+    if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
+    attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = T)
     checkSps()
-
-    if(length(vstabs) > 1 & sum(nchar(vstabs)) > 0){
+    if(length(vstabs) >= 1 & sum(nchar(vstabs)) > 0){
         spsinfo("Now check input tabs")
         spsinfo("Find tab info ...")
         tabs <- findTabInfo(vstabs) %>% dplyr::as_tibble()
@@ -49,7 +53,7 @@ sps <- function(vstabs, server_expr=NULL){
     spsinfo("UI created")
     server_expr <- rlang::enexpr(server_expr)
     server <- spsServer(tabs, server_expr)
-    spsinfo("Server created")
+    spsinfo("Server functions created")
     spsinfo("App starts ...", verbose = TRUE)
     list(ui = ui, server = server)
 }
@@ -66,22 +70,24 @@ sps <- function(vstabs, server_expr=NULL){
 #' @param verbose bool, do you want additional message?
 #' @param open_files bool, If `change_wd == TRUE` and you are also in Rstudio,
 #' it will open up global.R, ui.R and server.R for you
+#' @param colorful bool, should message from this function be colorful?
 #' @importFrom rstudioapi isAvailable navigateToFile
 #' @return
 #' @export
 #'
 #' @examples
 #' library(systemPipeShiny)
-#' spsInit()
+#' spsInit(change_wd = FALSE)
 spsInit <- function(dir_path=getwd(),
                     project_name = glue("SPS_{format(Sys.time(), '%Y%m%d')}"),
                     database_name = "sps.db",
                     overwrite = FALSE,
                     change_wd = TRUE,
                     verbose = FALSE,
-                    open_files = TRUE
+                    open_files = TRUE,
+                    colorful = TRUE
 ){
-    options(sps=list(verbose = verbose))
+    options(sps=list(verbose = verbose, use_crayon = colorful))
     if(is.writeable(dir_path)) spsinfo("Start to create a new SPS project", TRUE)
     else spserror(glue("{dir_path} is not writeable."))
 
@@ -158,7 +164,6 @@ verifyConfig <- function(appDir) {
 #' Resolve SPS options
 #' need to use the sps_options.yaml file
 #' @param appDir default current working folder
-#' @export
 #' @noRd
 # @examples
 # spsInit()
@@ -171,7 +176,7 @@ resolveOptions <- function(appDir = getwd()){
     sps_options <- verified_ops[[1]]
     sps_defaults <- verified_ops[[2]]
 
-    msg(glue("App has {length(sps_defaults)} default configs, ",
+    spsinfo(glue("App has {length(sps_defaults)} default configs, ",
              "resolving {length(ops)} custom configs"))
     if (!is.list(ops)) {
         spswarn("Options are not in a list, reset all")
@@ -298,11 +303,9 @@ spsOption <- function(opt, value = NULL, empty_is_false = TRUE){
     else {
         get_value <- getOption('sps')[[opt]]
         if(!emptyIsFalse(get_value)){
-            spswarn(glue("Option {opt} is empty"))
             if(empty_is_false) FALSE
             else get_value
         }
         else get_value
     }
 }
-

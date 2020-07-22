@@ -89,7 +89,7 @@ is not mentioned in the DESCRIPTION file.
   ‘yaml’
 'loadNamespace' or 'requireNamespace' calls not declared from:
   ‘crayon’ ‘particlesjs’
-Unexported object imported by a ':::' call: ‘shiny:::reactiveStop’
+Unexported object imported by a ':::' call: �::reactiveStop’
   See the note in ?`:::` about the use of this operator.
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK

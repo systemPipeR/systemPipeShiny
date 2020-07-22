@@ -326,7 +326,7 @@ timline_pg_status <- function(progress = 0){
     else "success"
 }
 
-#' empty things will return FALSE
+#' empty things and FALSE will return FALSE
 #'
 #' @param x expression
 #'
@@ -346,3 +346,12 @@ emptyIsFalse <- function(x){
     else TRUE
 }
 
+# can't import shiny internal function, gives warnings, so rewrite here
+reactiveStop <- function(message = "", class = NULL){
+    cond <- structure(list(message = message),
+                      class = c(c("shiny.silent.error", class),
+                                "error",
+                                "condition")
+    )
+    stop(cond)
+}
