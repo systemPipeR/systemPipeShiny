@@ -10,13 +10,16 @@ viewSpsDefaults(appDir = getwd())
 \arguments{
 \item{appDir}{where is the app directory}
 }
+\value{
+cat to console the default options
+}
 \description{
 Print systemPipeShiny default Options
 Make sure you created the app folder and has config.yaml in config folder
 }
 \examples{
-\dontrun{
-spsInit()
-viewSpsDefaults()
+if(interactive()){
+    spsInit()
+    viewSpsDefaults()
 }
 }

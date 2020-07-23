@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-18.04, r: '4.0', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
-          - {os: macOS-latest, r: '4.0'}
-          - {os: windows-latest, r: '4.0'}
+          - {os: ubuntu-16.04, r: '4.0', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+          #- {os: macOS-latest, r: '4.0'}
+          #- {os: windows-latest, r: '4.0'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -59,7 +59,6 @@ jobs:
           sudo apt-get install libcurl3 libcurl-openssl1.0-dev
           sudo apt-get install libv8-dev
           sudo apt-get install libssl-dev
-
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)

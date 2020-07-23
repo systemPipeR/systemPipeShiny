@@ -30,16 +30,17 @@ Other levels ok.}
 \item{error_text}{error level text prefix}
 }
 \value{
-
+see description
 }
 \description{
-If \code{crayon} is installed, the message will be colorful.
+If SPS \code{use_crayon}option is \code{TRUE}, the message will
+be colorful.
 "INFO" level spawns \code{message}, "WARNING" is \code{warning}, "ERROR" spawns \code{stop},
 other levels use \code{cat}
 }
 \examples{
 msg("this is info")
 msg("this is warning", "warning")
-\dontrun{msg("this is error", "error"); print("you can't see me")}
-msg("this is other", "error2"); print("you can see me")
+try(msg("this is error", "error"))
+msg("this is other", "error2")
 }

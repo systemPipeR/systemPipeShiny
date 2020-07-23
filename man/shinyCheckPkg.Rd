@@ -33,7 +33,6 @@ check name space and pop up warnings in shiny if package is missing
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     shinyApp(ui = shinyUI(
         fluidPage(actionButton("haha", "haha"))
     ), server = function(input, output, session) {

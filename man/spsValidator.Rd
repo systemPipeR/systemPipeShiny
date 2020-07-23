@@ -29,7 +29,6 @@ and block any further code execution, similar to \code{shiny::req()}
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     df_validate_common <- list(
         vd1 = function(df, apple){
             print(apple)

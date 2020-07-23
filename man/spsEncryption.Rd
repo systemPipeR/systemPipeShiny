@@ -4,9 +4,9 @@
 \alias{spsEncryption}
 \title{SPS encryption functions}
 \description{
-Initiate this container at global level. Methods in this class can help admin to
-encrypt files been output from sps. For now it is only used to encypt and decrypt
-snapshots.
+Initiate this container at global level.
+Methods in this class can help admin to encrypt files been output from sps.
+For now it is only used to encypt and decrypt snapshots.
 This class requires the SPS database. This class inherits all functions from
 the db class, so there is no need to initiate the \code{spsDb} container.
 }

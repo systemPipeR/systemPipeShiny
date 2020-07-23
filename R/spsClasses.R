@@ -2,8 +2,8 @@
 
 #' SPS snapshots container
 #'
-#' @description  Initiate this container at the global level. This container is used to
-#' communicate plotting tabs with the canvas tab
+#' @description  Initiate this container at the global level.
+#' This container is used to communicate plotting tabs with the canvas tab
 #' @importFrom R6 R6Class
 #' @importFrom rlang eval_tidy parse_expr
 #' @export
@@ -19,19 +19,24 @@
 #'             h1("a tiny example of how Canvas work in SPS"),
 #'             actionButton(ns("render"), "render"),
 #'             jqui_resizable(plots$addUI(plotlyOutput(ns("plot1")), id)),
-#'             sliderInput(ns("slide"), label = "rows", min = 1, max = nrow(iris), value = nrow(iris))
+#'             sliderInput(ns("slide"), label = "rows",
+#'                         min = 1, max = nrow(iris),
+#'                         value = nrow(iris))
 #'
 #'         )
 #'     }
 #'     mod1 <- function(input, output, session, shared) {
 #'         observeEvent(input$render, {
 #'             output$plot1 <- plots$addServer(renderPlotly, 'mod1', {
-#'                 ggplotly(ggplot(iris[1:input$slide, ], aes(Sepal.Length, Sepal.Width)) +
+#'                 ggplotly(ggplot(iris[1:input$slide, ],
+#'                                 aes(Sepal.Length, Sepal.Width)) +
 #'                              geom_point(aes(colour = Species)))
 #'             })
 #'             shared$snap_signal <- plots$notifySnap("mod1")
 #'             req(shared$snap_signal)
-#'             toastr_info(glue("Snapshot {glue_collapse(shared$snap_signal, '-')} added to canvas"),
+#'             toastr_info(
+#'                 glue("Snapshot {glue_collapse(shared$snap_signal, '-')}",
+#'                      "added to canvas"),
 #'                         position = "bottom-right")
 #'         })
 #'     }
@@ -55,9 +60,8 @@
 #'             tab_id <- shared$snap_signal[1]
 #'             new_plot_id <- glue("{tab_id}-{shared$snap_signal[2]}")
 #'             print(new_plot_id)
-#'             make_plots$ui[[new_plot_id]] <- list(plots$getUI(tab_id,
-#'                                                              ns(new_plot_id)),
-#'                                                  ns(new_plot_id))
+#'             make_plots$ui[[new_plot_id]] <-
+#'                 list(plots$getUI(tab_id, ns(new_plot_id)), ns(new_plot_id))
 #'             make_plots$server[[new_plot_id]] <- plots$getServer(tab_id)
 #'         })
 #'         observeEvent(input$refresh, {
@@ -156,8 +160,9 @@ plotContainer <- R6::R6Class("plot_container",
         #' You shouldn't manually edit this list, use `add/getUI` method
         plot_ui = list(),
 
-        #' @field plot_server a list of plot server snapshots will be stored here. You shouldn't
-        #' manually edit this list, use `add/getServer` method
+        #' @field plot_server a list of plot server snapshots will be stored
+        #' here. You shouldn't manually edit this list, use `add/getServer`
+        #' method
         plot_server = list(),
 
         #' @description
@@ -170,7 +175,8 @@ plotContainer <- R6::R6Class("plot_container",
                 msg("plot UI is not shinytag or shiny.taglist", "error")
             DOM_id <- private$tagAttrib(plot_DOM, 'id')
             if (length(DOM_id) < 1)
-                spswarn(c("Can't find ID for this plot UI output function. If you ",
+                spswarn(
+                    c("Can't find ID for this plot UI output function. If you ",
                       "are sure you have use the right function, then this ",
                       "plotting UI function is an exception.\n",
                       "Please open an issue on our Github page.",
@@ -184,7 +190,8 @@ plotContainer <- R6::R6Class("plot_container",
 
         #' @description Get plot UI to the container.
         #' @param tab_id unique ID, usually the tab ID if used in a module
-        #' @param plot_id_new string, usually if taking a snapshot of a plot DOM,
+        #' @param plot_id_new string, usually if taking a
+        #' snapshot of a plot DOM,
         #' they can't use the same ID on HTML. When get the UI, change the ID
         #' to a new value
         #' @return a saved plotting DOM
@@ -200,10 +207,12 @@ plotContainer <- R6::R6Class("plot_container",
 
         #' @description
         #' add plot server function to the container. use it to wrap around the
-        #' original plot output server function, like `renderPlot`, `renderPlotly`
+        #' original plot output server function, like `renderPlot`,
+        #' `renderPlotly`
         #' @param render_func plot output server function
         #' @param tab_id unique ID, usually the tab ID if used in a module
-        #' @param expr the reactive expression to render the plot, same as `expr`
+        #' @param expr the reactive expression to render the plot,
+        #' same as `expr`
         #' in other render function
         #' @param env default `parent.frame()`, see shiny documents
         #' @param quoted Is you `expr` quoted?
@@ -217,7 +226,9 @@ plotContainer <- R6::R6Class("plot_container",
                 msg(glue("Plot server with id {tab_id} already exists ",
                          "in the container, overwrite"))}
             self$plot_server[[tab_id]] <- list(func = render_func,
-                                               args = list(isolate(expr_func()), ...))
+                                               args = list(
+                                                   isolate(expr_func()), ...)
+                                               )
             return(render_func(expr_func(), ...))
         },
 
@@ -288,19 +299,23 @@ plotContainer <- R6::R6Class("plot_container",
 
 # Imports for database handling classes
 #' @importFrom R6 R6Class
-#' @importFrom RSQLite dbDisconnect dbListTables dbWriteTable dbGetQuery dbSendStatement dbGetRowsAffected dbClearResult dbConnect SQLite
+#' @importFrom RSQLite dbDisconnect dbListTables dbWriteTable dbGetQuery
+#' @importFrom RSQLite dbSendStatement dbGetRowsAffected
+#' @importFrom RSQLite dbClearResult dbConnect SQLite
 #' @importFrom dplyr tribble tbl collect pull
 #' @importFrom openssl rsa_keygen encrypt_envelope decrypt_envelope
 NULL
 
 #' SPS database functions
 #'
-#' @description Initiate this container at global level. Methods in this class can help admin to
+#' @description Initiate this container at global level.
+#' Methods in this class can help admin to
 #' manage general information of sps. For now it only stores some meta data and
-#' the encryption key pairs. You can use this database to store other useful things,
-#' like user pass hash, IP, browsing info ...
+#' the encryption key pairs. You can use this database to store
+#' other useful things, like user pass hash, IP, browsing info ...
 #'
-#' A SQLite database by default is created inside `config` directory. If not, you
+#' A SQLite database by default is created inside `config` directory.
+#' If not, you
 #' can use `createDb` method to create one. On initiation, this class checks
 #' if the default db is there and gives warnings if not.
 #' @export
@@ -313,11 +328,14 @@ NULL
 #' mydb$queryValue("sps_meta")
 #' mydb$queryInsert("sps_meta", value = c("'new2'", "'2'"))
 #' mydb$queryValue("sps_meta")
-#' mydb$queryUpdate("sps_meta", value = '234', col = "value", WHERE = "info = 'new1'")
+#' mydb$queryUpdate("sps_meta", value = '234',
+#'                  col = "value", WHERE = "info = 'new1'")
 #' mydb$queryValue("sps_meta")
 #' \dontrun{
 #'     library(dplyr)
-#'     mydb$queryValueDp("sps_meta", dp_expr = "filter(., info %in% c('new1', 'new2')) %>% select(2)")
+#'     mydb$queryValueDp(
+#'         "sps_meta",
+#'         dp_expr="filter(., info %in% c('new1', 'new2') %>% select(2)")
 #' }
 #' mydb$queryDel("sps_meta", WHERE = "value = '234'")
 spsDb <- R6::R6Class("spsDb",
@@ -327,14 +345,17 @@ spsDb <- R6::R6Class("spsDb",
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't find default SPS db. ",
                           "Use `createDb` method",
-                          " to create new or be careful to change default db_name ",
+                          " to create new or be careful ",
+                          "to change default db_name ",
                           "when you use other methods")
             con <- private$dbConnect("config/sps.db")
 
             if(is.null(con)){
                 spswarn(fail_msg)
-            } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
-                spsinfo("Connected, but tables missing, seems like a new db.", TRUE)
+            } else if(!all(c("sps_raw", "sps_meta") %in%
+                           RSQLite::dbListTables(con))){
+                spsinfo("Connected, but tables missing, seems like a new db.",
+                        TRUE)
                 spsinfo("Use CreateDb method to create tables", TRUE)
             } else {
                 spsinfo("Default SPS-db found and is working")
@@ -343,11 +364,13 @@ spsDb <- R6::R6Class("spsDb",
 
         #' @description Create a snap hash database
         #'
-        #' @param db_name database path, you need to manually create parent directory
+        #' @param db_name database path, you need to
+        #' manually create parent directory
         #' if not exists
         createDb = function(db_name="config/sps.db"){
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            if(!dir.exists(dirname(db_name))) dir.create(dirname(db_name), recursive = TRUE)
+            if(!dir.exists(dirname(db_name)))
+                dir.create(dirname(db_name), recursive = TRUE)
             con <- private$dbConnect(db_name)
             if(is.null(con)){
                 spserror("Can't create db. Make sure your wd is writeable")
@@ -355,9 +378,11 @@ spsDb <- R6::R6Class("spsDb",
                 spsinfo("Creating SPS db...", TRUE)
                 sps_meta <- dplyr::tribble(
                     ~info, ~value,
-                    "creation_date", as.character(format(Sys.time(), "%Y%m%d%H%M%S")),
+                    "creation_date",
+                    as.character(format(Sys.time(), "%Y%m%d%H%M%S")),
                 )
-                RSQLite::dbWriteTable(con, 'sps_meta', sps_meta, overwrite = TRUE)
+                RSQLite::dbWriteTable(con, 'sps_meta',
+                                      sps_meta, overwrite = TRUE)
                 spsinfo("Db write meta")
                 key <- private$genkey()
                 key_encode <- key %>% serialize(NULL)
@@ -367,9 +392,11 @@ spsDb <- R6::R6Class("spsDb",
                 )
                 RSQLite::dbWriteTable(con, 'sps_raw', sps_raw, overwrite = TRUE)
                 spsinfo("Key generated and stored in db")
-                msg(glue("Db created at '{db_name}'. DO NOT share this file with others"),
+                msg(c(glue("Db created at '{db_name}'. "),
+                      "DO NOT share this file with others"),
                     "SPS-DANGER", "red")
-                msg(glue("Key md5 {glue_collapse(key$pubkey$fingerprint)}"), "SPS-INFO", "orange")
+                msg(glue("Key md5 {glue_collapse(key$pubkey$fingerprint)}"),
+                    "SPS-INFO", "orange")
             }
         },
 
@@ -380,7 +407,8 @@ spsDb <- R6::R6Class("spsDb",
         #' @param SELECT  SQL select grammar
         #' @param WHERE SQL select where
         #' @return query result, usually a dataframe
-        queryValue = function(table, SELECT="*", WHERE="1", db_name="config/sps.db"){
+        queryValue = function(table, SELECT="*",
+                              WHERE="1", db_name="config/sps.db"){
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             con <- private$dbConnect(db_name)
             if(is.null(con)){
@@ -399,8 +427,9 @@ spsDb <- R6::R6Class("spsDb",
         #' @description Query database with dplyr grammar
         #'
         #' Only supports simple selections, like comparison, %in%, `between()`,
-        #' `is.na()`, etc. Advanced selections like wildcard, using outside dplyr
-        #' functions like `str_detect`, `grepl` are not supported.
+        #' `is.na()`, etc. Advanced selections like wildcard,
+        #' using outside dplyr functions like `str_detect`, `grepl`
+        #' are not supported.
         #'
         #' @param db_name  database path
         #' @param table  table name
@@ -429,7 +458,8 @@ spsDb <- R6::R6Class("spsDb",
         #' @param value  new value
         #' @param col  which column
         #' @param WHERE SQL where statement, conditions to select rows
-        queryUpdate =  function(table, value, col, WHERE="1", db_name="config/sps.db"){
+        queryUpdate =  function(table, value, col,
+                                WHERE="1", db_name="config/sps.db"){
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             con <- private$dbConnect(db_name)
             if(is.null(con)){
@@ -439,7 +469,9 @@ spsDb <- R6::R6Class("spsDb",
                     "UPDATE {table} SET {col}={value} WHERE {WHERE}"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
                     spsinfo("No row updated", verbose = TRUE)
-                } else {spsinfo(glue("Updated {aff_rows} rows"), verbose = TRUE)}
+                } else {
+                    spsinfo(glue("Updated {aff_rows} rows"), verbose = TRUE)
+                }
                 RSQLite::dbClearResult(res)
             }
         },
@@ -459,7 +491,9 @@ spsDb <- R6::R6Class("spsDb",
                     "DELETE FROM {table} WHERE {WHERE}"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
                     spsinfo("No row deleted", verbose = TRUE)
-                } else {spsinfo(glue("Deleted {aff_rows} rows"), verbose = TRUE)}
+                } else {
+                    spsinfo(glue("Deleted {aff_rows} rows"), verbose = TRUE)
+                }
                 RSQLite::dbClearResult(res)
             }
         },
@@ -481,7 +515,9 @@ spsDb <- R6::R6Class("spsDb",
                     "INSERT INTO {table} VALUES ({value})"))
                 if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
                     spswarn("No row inserted")
-                } else {spsinfo(glue("Inerted {aff_rows} rows"), verbose = TRUE)}
+                } else {
+                    spsinfo(glue("Inerted {aff_rows} rows"), verbose = TRUE)
+                }
                 RSQLite::dbClearResult(res)
             }
         }
@@ -511,9 +547,9 @@ spsDb <- R6::R6Class("spsDb",
 
 #' SPS encryption functions
 #'
-#' @description Initiate this container at global level. Methods in this class can help admin to
-#' encrypt files been output from sps. For now it is only used to encypt and decrypt
-#' snapshots.
+#' @description Initiate this container at global level.
+#' Methods in this class can help admin to encrypt files been output from sps.
+#' For now it is only used to encypt and decrypt snapshots.
 #' This class requires the SPS database. This class inherits all functions from
 #' the db class, so there is no need to initiate the `spsDb` container.
 #' @export
@@ -537,13 +573,15 @@ spsEncryption <- R6::R6Class(
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
             fail_msg <- c("Can't create default SPS db. ",
                           "Default name 'config/sps.db'. Use `createDb` method",
-                          " to create new or be careful to change default db_name ",
+                          " to create new or be careful ",
+                          "to change default db_name ",
                           "when you use other methods")
             con <- private$dbConnect("config/sps.db")
 
             if(is.null(con)){
                 spswarn(fail_msg)
-            } else if(!all(c("sps_raw", "sps_meta") %in% RSQLite::dbListTables(con))){
+            } else if(!all(c("sps_raw", "sps_meta") %in%
+                           RSQLite::dbListTables(con))){
                 spsinfo("Connected, but tables missing, seems like a new db.")
             } else {
                 spsinfo("Default SPS-db found and is working", verbose = TRUE)
@@ -573,10 +611,12 @@ spsEncryption <- R6::R6Class(
                 key <- private$genkey()
                 key_encode <- key %>% serialize(NULL)
                 res <- RSQLite::dbSendStatement(con, glue(
-                    "UPDATE sps_raw SET value=x'{glue_collapse(key_encode)}' WHERE info='key'"))
+                    "UPDATE sps_raw SET value=x'{glue_collapse(key_encode)}'",
+                    "WHERE info='key'"))
                 if(RSQLite::dbGetRowsAffected(res) != 0){
                     spsinfo("You new key has been generated and saved in db")
-                    msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"), "SPS-INFO", "orange")
+                    msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"),
+                        "SPS-INFO", "orange")
                 } else {spserror("Update key failed")}
                 RSQLite::dbClearResult(res)
             }
@@ -589,7 +629,8 @@ spsEncryption <- R6::R6Class(
             key <- self$queryValue(table = 'sps_raw', SELECT="value",
                                    WHERE="info='key'", db_name) %>%
                 dplyr::pull() %>% unlist() %>% unserialize()
-                spsinfo(glue("OpenSSL key found md5 {glue_collapse(key$pubkey$fingerprint)}"))
+                spsinfo(glue("OpenSSL key found md5",
+                             "{glue_collapse(key$pubkey$fingerprint)}"))
             key
         },
 
@@ -599,7 +640,8 @@ spsEncryption <- R6::R6Class(
         #' @param db_name  database path
         #' @param out_path if provided, encrypted data will be write to a file
         #' @param overwrite if `out_path` file exists, overwrite?
-        encrypt = function(data, out_path=NULL, overwrite = FALSE, db_name="config/sps.db"){
+        encrypt = function(data, out_path=NULL,
+                           overwrite = FALSE, db_name="config/sps.db"){
             if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
                 spserror(glue("File {normalizePath(out_path)} exists"))
             }
@@ -619,7 +661,8 @@ spsEncryption <- R6::R6Class(
         #' @param out_path if provided, encrypted data will be write to a file
         #' @param overwrite if `out_path` file exists, overwrite?
         #' @param db_name  database path
-        decrypt = function(data, out_path=NULL, overwrite = FALSE, db_name="config/sps.db"){
+        decrypt = function(data, out_path=NULL,
+                           overwrite = FALSE, db_name="config/sps.db"){
             if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
                 spserror(glue("File {normalizePath(out_path)} exists"))
             }

@@ -9,22 +9,25 @@ sps(vstabs, server_expr = NULL)
 \arguments{
 \item{vstabs}{your custom visualization tabs you want to display}
 
-\item{server_expr}{additional top level sever expression you want to run. This
-will run after the default server expressions. It means you can have access to
-internal server expression objects, like the reactiveValues object \code{shared}.
-You can also overwrite other values.}
+\item{server_expr}{additional top level sever expression you want
+to run. This will run after the default server expressions. It means you can
+have access to internal server expression objects, like the reactiveValues
+object \code{shared}. You can also overwrite other values.}
+}
+\value{
+a list contains the UI and server
 }
 \description{
 SystemPipeShiny app start function
 }
 \examples{
-\dontrun{
-# on ui.R
-sps_app <<- sps(
-    vstabs = "",
-    server_expr = {
-        msg("Hello World", "GREETING", "green")
-    }
-)
+if(interactive()){
+    spsInit()
+    sps_app <- sps(
+        vstabs = "",
+        server_expr = {
+            msg("Hello World", "GREETING", "green")
+        }
+    )
 }
 }

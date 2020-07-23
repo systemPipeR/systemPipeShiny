@@ -9,11 +9,16 @@ spsOption(opt, value = NULL, empty_is_false = TRUE)
 \arguments{
 \item{opt}{string, length 1, what option you want to get or set}
 
-\item{value}{if this is not \code{NULL}, this function will set the option you choose
-to this value}
+\item{value}{if this is not \code{NULL}, this function will set the
+option you choose to this value}
 
-\item{empty_is_false}{bool, when you get an option, if the option is \code{NULL}, \code{NA},
-\code{""} or length is 0, return \code{FALSE}?}
+\item{empty_is_false}{bool, when you get an option, if the option is
+\code{NULL}, \code{NA}, \code{""} or length is 0, return \code{FALSE}?}
+}
+\value{
+option value if value exists; \code{FALSE} if the value is empty,
+like \code{NULL}, \code{NA}, \code{""}; \code{NULL} if \code{empty_is_false = FALSE};
+if \code{value != NULL} will set the value
 }
 \description{
 Get or set SPS options

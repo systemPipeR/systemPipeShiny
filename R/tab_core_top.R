@@ -20,23 +20,30 @@ core_topUI <- function(id){
             tagList(
                 fluidRow(
                     div(style = " position: fixed; top: 0; right: 0; margin:0;",
-                        shinyWidgets::actionBttn(ns("close_snap"), style = "simple", icon = icon("times"),
-                                                 color = "danger", size = "sm")),
-                    div(class = "text-center", tabTitle("Manage your plot snapshots")),
+                        shinyWidgets::actionBttn(ns("close_snap"),
+                                                 style = "simple",
+                                                 icon = icon("times"),
+                                                 color = "danger",
+                                                 size = "sm")),
+                    div(class = "text-center",
+                        tabTitle("Manage your plot snapshots")),
                     spsHr(),uiOutput(ns("top_snap"))
                 ), spsHr(),
                 fluidRow(
-                    h4(class = "text-center", "Save or load your snapshots"), br(),
+                    h4(class = "text-center", "Save or load your snapshots"),
+                    br(),
                     #TODO transfer file to another project option
                     p("Snapshot files are encrypted. Files downloaded from this
-                      page will not work on other SPS projects. Each SPS project has
-                      its unique key. You should download and upload snapshot files
-                      to the same SPS project.", class="text-orange text-center"),
+                      page will not work on other SPS projects. Each SPS
+                      project has its unique key. You should download and
+                      upload snapshot files to the same SPS project.",
+                      class="text-orange text-center"),
                     column(3),
                     column(3, dynamicFile(id = ns("snap_upload"))),
                     column(3, strong("Download your snapshots"), br(),
                            tags$a(id = ns("save_snap"),
-                                  class = "btn btn-default bttn-default shiny-download-link bttn-simple bttn-md",
+                                  class = "btn btn-default bttn-default
+                                    shiny-download-link bttn-simple bttn-md",
                                   href = "", target = "_blank", download = NA,
                                   icon("file-download"), "Download")
                     )
@@ -69,17 +76,39 @@ core_topServer <- function(id, shared){
                 shared$canvas$ui <- shared$canvas$ui[-snap_remove]
             }
             output$top_snap <- renderUI({
-                shiny::validate(need(length(isolate(shared$canvas$server)) > 0, message = "No snapshot yet"))
+                shiny::validate(need(length(isolate(shared$canvas$server)) > 0,
+                                     message = "No snapshot yet"))
                 tagList(
-                    shinydashboardPlus::boxPlus(title = "Current snapshots", width = 6, closable = FALSE,
-                            shinyjqui::orderInput(ns("snaps"), NULL, items = snaps, placeholder = 'Current snapshots',
-                                       item_class = "success", connect = c(ns("snaps"), ns('destroy')))
+                    shinydashboardPlus::boxPlus(
+                        title = "Current snapshots",
+                        width = 6, closable = FALSE,
+                        shinyjqui::orderInput(
+                            ns("snaps"),
+                            NULL,
+                            items = snaps,
+                            placeholder = 'Current snapshots',
+                            item_class = "success",
+                            connect = c(ns("snaps"), ns('destroy'))
+                        )
                     ),
-                    shinydashboardPlus::boxPlus(title = "Snapshots to destroy", width = 6, closable = FALSE,
-                            shinyjqui::orderInput(ns('destroy'), NULL, items = NULL, placeholder = 'Drag plots you want to destroy here',
-                                       connect = c(ns("snaps"), ns('destroy'))),
-                            br(), br(), br(),
-                            shinyWidgets::actionBttn(ns("trash"), "destroy", icon = icon("trash"),  style = "material-flat", color = "danger")
+                    shinydashboardPlus::boxPlus(
+                        title = "Snapshots to destroy",
+                        width = 6,
+                        closable = FALSE,
+                        shinyjqui::orderInput(
+                            ns('destroy'),
+                            NULL,
+                            items = NULL,
+                            placeholder = 'Drag plots you want to destroy here',
+                            connect = c(ns("snaps"), ns('destroy'))
+                        ),
+                        br(), br(), br(),
+                        shinyWidgets::actionBttn(
+                            ns("trash"), "destroy",
+                            icon = icon("trash"),
+                            style = "material-flat",
+                            color = "danger"
+                        )
                     ),
                     tags$script(glue(.open = '@', .close = '@', '
                   $("#@ns("destroy")@").bind("DOMSubtreeModified", function(){
@@ -123,11 +152,13 @@ core_topServer <- function(id, shared){
                 if(!inherits(snap_temp, "list"))
                     stop("This is not a SPS snapshot file.")
                 if(!all(names(snap_temp) %in% c("ui", "server")))
-                    stop("Items in snapshot file should only have UI and Server")
+                    stop("Items in snapshot file should",
+                         "only have UI and Server")
                 if(length(snap_temp$ui) == 0)
                     stop("Empty snapshot file")
                 if(length(snap_temp$ui) != length(snap_temp$server))
-                    stop("UI and Server in snapshot file doesn't have the same length")
+                    stop("UI and Server in snapshot",
+                         "file doesn't have the same length")
                 snap_up$set()
                 snap_temp
             }, blocking_level = "error")

@@ -27,9 +27,11 @@ return \code{df_init} if this param is not provided}
 \item{eg_path}{when \code{choice} is "eg", where to load the file, will
 return \code{df_init} if this param is not provided}
 
-\item{comment}{comment characters when load the file, see help file of \code{vroom}}
+\item{comment}{comment characters when load the file,
+see help file of \code{vroom}}
 
-\item{delim}{delimiter characters when load the file, see help file of \code{vroom}}
+\item{delim}{delimiter characters when load the file,
+see help file of \code{vroom}}
 
 \item{col_types}{columns specifications, see help file of \code{vroom}}
 
@@ -40,14 +42,13 @@ a tibble
 }
 \description{
 load a file to server end. Designed to be used with the input
-file source switch button. Use \code{vroom} to load the file. In SPS, this function
-is usually combined with \code{dynamicFile()} function to help users upload file and
-read the file. This loading function only works for parsing tabular data, use
-\code{vroom()} internally.
+file source switch button. Use \code{vroom} to load the file. In SPS, this
+function is usually combined with \code{dynamicFile()} function to help users
+upload file and read the file. This loading function only works for parsing
+tabular data, use \code{vroom()} internally.
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     library(shinyWidgets)
     ui <- fluidPage(
         shinyWidgets::radioGroupButtons(
@@ -64,7 +65,8 @@ if(interactive()){
         tmp_file <- tempfile(fileext = ".csv")
         write.csv(iris, file = tmp_file)
         data_df <- reactive({
-            loadDF(choice = input$data_source, upload_path = input$df_path$datapath,
+            loadDF(choice = input$data_source,
+                   upload_path = input$df_path$datapath,
                    delim = ",", eg_path = tmp_file)
         })
         output$df <- renderDataTable(data_df())

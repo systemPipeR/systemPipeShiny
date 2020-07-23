@@ -33,6 +33,9 @@ to use \code{ns} wrap each ID.}
 'Plot Prepare'; has 'df' will be 'Data Prepare', if neither will be
 "Progress"}
 }
+\value{
+HTML elements
+}
 \description{
 A draggable progress panel
 Use \code{pgPaneUI} on UI side and use \code{pgPaneUpdate} to update it. The UI only
@@ -40,18 +43,20 @@ renders correctly inside \code{shinydashboard} or \code{shinydashboardPlus}.
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     library(shinydashboard)
     ui <- dashboardPage(header = dashboardHeader(),
                         sidebar = dashboardSidebar(),
                         body = dashboardBody(
                             useSps(),
-                            h4("you need to open up the progress tracker, it is collapsed ->"),
+                            h4("you need to open up the progress
+                                tracker, it is collapsed ->"),
                             actionButton("a", "a"),
                             actionButton("b", "b"),
-                            sliderInput("c", min = -100, max = 100, value = 0,
+                            sliderInput("c", min = -100,
+                                        max = 100, value = 0,
                                         label = "c"),
-                            pgPaneUI("thispg", c("this a", "this b", " this c"),
+                            pgPaneUI("thispg",
+                                     c("this a", "this b", " this c"),
                                      c("a", "b", "c"), "Example Progress")
                         )
     )

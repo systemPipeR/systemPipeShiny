@@ -41,7 +41,6 @@ Must be used with Bootstrap3 and sps.css file
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     texts <- c("p1", "p2", "p3", "p4", "p5")
     hrefs <- c("https://unsplash.it/1200/768.jpg?image=251",
                "https://unsplash.it/1200/768.jpg?image=252",

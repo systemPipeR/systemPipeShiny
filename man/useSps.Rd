@@ -8,13 +8,12 @@ call it in your head section}
 useSps()
 }
 \value{
-
+HTML head
 }
 \description{
 Use SystemPipeShiny javascripts and css style
 call it in your head section
 }
 \examples{
-library(systemPipeShiny)
 useSps()
 }

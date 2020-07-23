@@ -6,7 +6,9 @@ vs_mainUI <- function(id){
         HTML('
         <p><strong>This is the visualization module. The main purpose is to help
         you quickly generate some plots.&nbsp;</strong></p>
-        <p><strong>There are <em>two</em> ways you can use this tab:</strong></p>
+        <p>
+          <strong>There are <em>two</em> ways you can use this tab:</strong>
+        </p>
         <ol>
         <li>If you know what workflow you have run and have some results but
         don&#39;t know what you can plot from these results, browse the table
@@ -18,12 +20,14 @@ vs_mainUI <- function(id){
         the gallery below and you will jump to the plotting tab directly. You
         will see what input data type this plot is accepting. By clicking your
         desired data type, you will go to a data prep tab and once you have
-        prepared the required data, you will be guided back to this plotting tab.
+        prepared the required data, you will be guided back to this
+        plotting tab.
         </li>
         </ol>
              '),
         br(),
-        genHrefTable(rows = list(workflow1 = c("df_targets", "df_count"), workflow2 =  "data"),
+        genHrefTable(rows = list(workflow1 = c("df_targets", "df_count"),
+                                 workflow2 =  "data"),
                      title = "All SPS data input options"),
         br(),
         genGallery(type = "plot", title = "All SPS plot options")

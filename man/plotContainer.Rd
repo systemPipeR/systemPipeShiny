@@ -4,8 +4,8 @@
 \alias{plotContainer}
 \title{SPS snapshots container}
 \description{
-Initiate this container at the global level. This container is used to
-communicate plotting tabs with the canvas tab
+Initiate this container at the global level.
+This container is used to communicate plotting tabs with the canvas tab
 }
 \examples{
 if(interactive()){
@@ -19,19 +19,24 @@ if(interactive()){
             h1("a tiny example of how Canvas work in SPS"),
             actionButton(ns("render"), "render"),
             jqui_resizable(plots$addUI(plotlyOutput(ns("plot1")), id)),
-            sliderInput(ns("slide"), label = "rows", min = 1, max = nrow(iris), value = nrow(iris))
+            sliderInput(ns("slide"), label = "rows",
+                        min = 1, max = nrow(iris),
+                        value = nrow(iris))
 
         )
     }
     mod1 <- function(input, output, session, shared) {
         observeEvent(input$render, {
             output$plot1 <- plots$addServer(renderPlotly, 'mod1', {
-                ggplotly(ggplot(iris[1:input$slide, ], aes(Sepal.Length, Sepal.Width)) +
+                ggplotly(ggplot(iris[1:input$slide, ],
+                                aes(Sepal.Length, Sepal.Width)) +
                              geom_point(aes(colour = Species)))
             })
             shared$snap_signal <- plots$notifySnap("mod1")
             req(shared$snap_signal)
-            toastr_info(glue("Snapshot {glue_collapse(shared$snap_signal, '-')} added to canvas"),
+            toastr_info(
+                glue("Snapshot {glue_collapse(shared$snap_signal, '-')}",
+                     "added to canvas"),
                         position = "bottom-right")
         })
     }
@@ -55,9 +60,8 @@ if(interactive()){
             tab_id <- shared$snap_signal[1]
             new_plot_id <- glue("{tab_id}-{shared$snap_signal[2]}")
             print(new_plot_id)
-            make_plots$ui[[new_plot_id]] <- list(plots$getUI(tab_id,
-                                                             ns(new_plot_id)),
-                                                 ns(new_plot_id))
+            make_plots$ui[[new_plot_id]] <-
+                list(plots$getUI(tab_id, ns(new_plot_id)), ns(new_plot_id))
             make_plots$server[[new_plot_id]] <- plots$getServer(tab_id)
         })
         observeEvent(input$refresh, {
@@ -153,8 +157,9 @@ if(interactive()){
 \item{\code{plot_ui}}{a list of plot UI snapshots will be stored here.
 You shouldn't manually edit this list, use \code{add/getUI} method}
 
-\item{\code{plot_server}}{a list of plot server snapshots will be stored here. You shouldn't
-manually edit this list, use \code{add/getServer} method}
+\item{\code{plot_server}}{a list of plot server snapshots will be stored
+here. You shouldn't manually edit this list, use \code{add/getServer}
+method}
 }
 \if{html}{\out{</div>}}
 }
@@ -213,7 +218,8 @@ Get plot UI to the container.
 \describe{
 \item{\code{tab_id}}{unique ID, usually the tab ID if used in a module}
 
-\item{\code{plot_id_new}}{string, usually if taking a snapshot of a plot DOM,
+\item{\code{plot_id_new}}{string, usually if taking a
+snapshot of a plot DOM,
 they can't use the same ID on HTML. When get the UI, change the ID
 to a new value}
 }
@@ -228,7 +234,8 @@ a saved plotting DOM
 \if{latex}{\out{\hypertarget{method-addServer}{}}}
 \subsection{Method \code{addServer()}}{
 add plot server function to the container. use it to wrap around the
-original plot output server function, like \code{renderPlot}, \code{renderPlotly}
+original plot output server function, like \code{renderPlot},
+\code{renderPlotly}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{plotContainer$addServer(
   render_func,
@@ -247,7 +254,8 @@ original plot output server function, like \code{renderPlot}, \code{renderPlotly
 
 \item{\code{tab_id}}{unique ID, usually the tab ID if used in a module}
 
-\item{\code{expr}}{the reactive expression to render the plot, same as \code{expr}
+\item{\code{expr}}{the reactive expression to render the plot,
+same as \code{expr}
 in other render function}
 
 \item{\code{env}}{default \code{parent.frame()}, see shiny documents}

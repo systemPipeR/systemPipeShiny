@@ -13,6 +13,7 @@ spsUIwrapper <- function(mainUI){
 }
 
 #' Internal functional to render admin UI
+#' @noRd
 spsUIadmin <- function(){
     uiOutput(
         "page_admin", container = fluidPage,
@@ -27,10 +28,14 @@ spsUIuser <- function(mainUI){
         id = "page_user",
         if(spsOption('loading_screen'))
         {tagList(
-            div(id = "app-main", style = "margin-left: -2em; margin-right: -2em; height:auto;", class = "shinyjs-hide",
+            div(
+                id = "app-main",
+                style = "margin-left: -2em; margin-right: -2em; height:auto;",
+                class = "shinyjs-hide",
                 mainUI
             ),
-            div(id = "loading-screen", style="height: 100vh; width: 100vw; overflow: hidden;",
+            div(id = "loading-screen",
+                style="height: 100vh; width: 100vw; overflow: hidden;",
                 sytle="z-index:100; position:absolute;",
                 tags$style('
                     #toapp{
@@ -47,11 +52,17 @@ spsUIuser <- function(mainUI){
                       transform: translate(-50%, -10%);
                     }
                                '),
-                shinyWidgets::actionBttn(inputId = "toapp", "Continue to app", icon = icon("angle-double-right"), size = "lg"),
+                shinyWidgets::actionBttn(
+                    inputId = "toapp", "Continue to app",
+                    icon = icon("angle-double-right"),
+                    size = "lg"),
                 renderLoading(),
                 if(spsOption('loading_particles')) {
                     if (!requireNamespace("particlesjs", quietly = TRUE)){
-                        msg("Option loading_particles is `true` but package particlesjs is not installed. Try `remotes::install_github('dreamRs/particlesjs')`",
+                        msg(c("Option loading_particles is `true` but package",
+                              "particlesjs is not installed. Try",
+                              "`remotes::install_github",
+                              "('dreamRs/particlesjs')`"),
                             "SPS-WARING", "orange")
                         div()
                     } else {
@@ -66,7 +77,9 @@ spsUIuser <- function(mainUI){
         )}
         else
         {
-            div(id = "app-main", style='position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px;', mainUI)
+            div(id = "app-main",
+                style='position: absolute; left: 0px; top: 0px;
+                       right: 0px; bottom: 0px;', mainUI)
         }
     )
 }
