@@ -27,6 +27,9 @@ type info.}
 
 \item{...}{any additional args to the html element, like class, style ...}
 }
+\value{
+HTML elements
+}
 \description{
 generate a table of lists of hyper reference buttons by using tab config file
 }
@@ -38,7 +41,6 @@ include: core, wf, vs, data, plot.
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     spsInit()
     rows <- list(wf1 = c("core_canvas", "core_about"), wf2 =  "data")
     ui <- fluidPage(

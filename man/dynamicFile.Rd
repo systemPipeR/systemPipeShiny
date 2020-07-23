@@ -30,16 +30,17 @@ dynamicFile(
 div
 }
 \description{
-depending on the mode in options, render similar UI but server side works
-differently. \code{local} mode will not copy file, directly use a path pointer,
-\code{server} mode upload file and store in temp. Expect similar behavior as
+depending on the mode in options, render similar UI but
+server side works differently. \code{local} mode will not copy file, directly
+use a path pointer, \code{server} mode upload file and store in temp. Expect
+similar behavior as
 \code{fileInput}.
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     library(shinyjs)
-    options(sps = list(mode='server')) # change to 'local' to see the difference
+    # change to 'local' to see the difference
+    options(sps = list(mode='server'))
     ui <- fluidPage(
         useShinyjs(),
         dynamicFile("getFile"),

@@ -9,38 +9,43 @@ NULL
 #' SystemPipeShiny app start function
 #' @param vstabs your custom visualization tabs you want to display
 #'
-#' @param server_expr additional top level sever expression you want to run. This
-#' will run after the default server expressions. It means you can have access to
-#' internal server expression objects, like the reactiveValues object `shared`.
-#' You can also overwrite other values.
+#' @param server_expr additional top level sever expression you want
+#' to run. This will run after the default server expressions. It means you can
+#' have access to internal server expression objects, like the reactiveValues
+#' object `shared`. You can also overwrite other values.
 #' @importFrom dplyr as_tibble filter tibble
 #' @importFrom rlang enexpr
 #' @export
+#' @return a list contains the UI and server
 #' @examples
-#' \dontrun{
-#' # on ui.R
-#' sps_app <<- sps(
-#'     vstabs = "",
-#'     server_expr = {
-#'         msg("Hello World", "GREETING", "green")
-#'     }
-#' )
+#' if(interactive()){
+#'     spsInit()
+#'     sps_app <- sps(
+#'         vstabs = "",
+#'         server_expr = {
+#'             msg("Hello World", "GREETING", "green")
+#'         }
+#'     )
 #' }
 sps <- function(vstabs, server_expr=NULL){
     assert_that(is.character(vstabs))
-    if(any(duplicated(vstabs))) spserror(glue("You input duplicated tab IDs: {vstabs[duplicated(vstabs)]}"))
+    if(any(duplicated(vstabs)))
+        spserror(glue("You input duplicated tab IDs: ",
+                      "{vstabs[duplicated(vstabs)]}"))
     sps_env <- new.env(parent = globalenv())
-    sapply(file.path("R", list.files("R", "\\.[rR]$")), function(x) source(x, local = sps_env)) %>%
+    vapply(file.path("R", list.files("R", "\\.[rR]$")),
+           function(x) source(x, local = sps_env), list(1)) %>%
         invisible()
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
-    attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = T)
+    attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = FALSE)
     checkSps()
     if(length(vstabs) >= 1 & sum(nchar(vstabs)) > 0){
         spsinfo("Now check input tabs")
         spsinfo("Find tab info ...")
         tabs <- findTabInfo(vstabs) %>% dplyr::as_tibble()
         if(sum(not_in_vs <- tabs$tpye != 'vs') > 0)
-            spserror(glue("Tab '{glue_collapse(vstabs[not_in_vs], ', ')}' is/are not visulization tabs"))
+            spserror(glue("Tab '{glue_collapse(vstabs[not_in_vs], ', ')}'",
+                          "is/are not visulization tabs"))
         tabs_df <- tabs %>% dplyr::filter(type_sub == "data")
         tabs_plot <- tabs %>% dplyr::filter(type_sub == "plot")
     } else {
@@ -72,12 +77,12 @@ sps <- function(vstabs, server_expr=NULL){
 #' it will open up global.R, ui.R and server.R for you
 #' @param colorful bool, should message from this function be colorful?
 #' @importFrom rstudioapi isAvailable navigateToFile
-#' @return
 #' @export
-#'
+#' @return creates the project folder
 #' @examples
-#' library(systemPipeShiny)
-#' spsInit(change_wd = FALSE)
+#' if(interactive()){
+#'     spsInit(change_wd = FALSE)
+#' }
 spsInit <- function(dir_path=getwd(),
                     project_name = glue("SPS_{format(Sys.time(), '%Y%m%d')}"),
                     database_name = "sps.db",
@@ -88,7 +93,8 @@ spsInit <- function(dir_path=getwd(),
                     colorful = TRUE
 ){
     options(sps=list(verbose = verbose, use_crayon = colorful))
-    if(is.writeable(dir_path)) spsinfo("Start to create a new SPS project", TRUE)
+    if(is.writeable(dir_path))
+        spsinfo("Start to create a new SPS project", TRUE)
     else spserror(glue("{dir_path} is not writeable."))
 
     project_dir <- file.path(dir_path, project_name)
@@ -115,7 +121,11 @@ spsInit <- function(dir_path=getwd(),
     copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
 
     spsinfo("Create SPS database", TRUE)
-    suppressWarnings(spsDb$new()$createDb(db_name=file.path(project_dir, "config", database_name)))
+    suppressWarnings(
+        spsDb$new()$createDb(db_name=file.path(project_dir,
+                                               "config",
+                                               database_name))
+    )
     if(change_wd) {
         spsinfo(glue("Change working directory to {project_dir}"))
         setwd(project_dir)
@@ -144,10 +154,11 @@ checkSps <- function(appDir = getwd()) {
 #' @importFrom yaml yaml.load_file
 #' @noRd
 verifyConfig <- function(appDir) {
-    sps_options <- yaml::yaml.load_file(glue("{appDir}/config/sps_options.yaml"))
-    sps_defaults <- sapply(names(sps_options),
+    sps_options <-
+        yaml::yaml.load_file(glue("{appDir}/config/sps_options.yaml"))
+    sps_defaults <- vapply(names(sps_options),
                            function(x) sps_options[[x]][['default']],
-                           simplify = F)
+                           list(1))
     vapply(seq_along(sps_defaults),
            function(x) if(length(sps_defaults[x]) != 1)
            {
@@ -167,7 +178,9 @@ verifyConfig <- function(appDir) {
 #' @noRd
 # @examples
 # spsInit()
-# options(sps = list(mode = c("asas", "sas"), place = "here", time = c("now", "then"), loading_screen = FALSE))
+# options(sps = list(mode = c("asas", "sas"),
+#                    place = "here", time = c("now", "then"),
+#                    loading_screen = FALSE))
 # resolveOptions()
 resolveOptions <- function(appDir = getwd()){
     ops <- options()$sps
@@ -195,13 +208,15 @@ resolveOptions <- function(appDir = getwd()){
         if(is.null(sps_options[[x]]))
             {spswarn(glue("option {x} unknown, skip")); next}
         if("*" %in% sps_options[[x]] & ops[[x]] != sps_defaults[[x]]){
-            spsinfo(glue("Option {x} can be any value, overwrite default to '{ops[[x]]}'"), TRUE)
+            spsinfo(glue("Option {x} can be any value,",
+                         "overwrite default to '{ops[[x]]}'"), TRUE)
             opt_value <- ops[[x]]
         } else{
             opt_value <- if (!ops[[x]] %in% sps_options[[x]] %>% unlist()) {
                 spswarn(glue(
-                    "option'{x}' has unknown value '{ops[[x]]}', set to default. \n",
-                    "valid values are {glue_collapse(c(sps_options[[x]]), sep=', ')}"
+                    "option'{x}' has unknown value '{ops[[x]]}', ",
+                    "set to default. \n valid values are ",
+                    "{glue_collapse(c(sps_options[[x]]), sep=', ')}"
                 ))
                 sps_defaults[[x]]
             } else {ops[[x]]}
@@ -224,11 +239,11 @@ resolveOptions <- function(appDir = getwd()){
 #' @param appDir where is the app directory
 #'
 #' @export
-#'
+#' @return cat to console the default options
 #' @examples
-#' \dontrun{
-#' spsInit()
-#' viewSpsDefaults()
+#' if(interactive()){
+#'     spsInit()
+#'     viewSpsDefaults()
 #' }
 viewSpsDefaults <- function(appDir = getwd()){
     sps_defaults <- verifyConfig(appDir)[[1]]
@@ -249,14 +264,17 @@ checkTabs <- function(appDir){
     }
     ta_dup <- tab_info$tab_id[base::duplicated(tab_info$tab_id)] %>% unique()
     if(length(ta_dup) > 0){
-        spserror(glue("Tabname must be unique, find duplicates name(s) '{paste(ta_dup, collapse = ', ')}'"))
+        spserror(glue("Tabname must be unique, find duplicates name(s)",
+                      "'{paste(ta_dup, collapse = ', ')}'"))
     }
-    no_img <- tab_info$tab_id[tab_info$type_sub == "plot" & tab_info$image == ""]
+    no_img <- tab_info$tab_id[tab_info$type_sub == "plot" &
+                              tab_info$image == ""]
     if(length(no_img) > 0){
         spswarn(glue("These plot tabs has no image path:
                   '{paste(no_img, collapse = ', ')}'
-                  It is recommended to add an image. It will be used to generate gallery.
-                  Now an empty image is used for these tabs' gallery."))
+                  It is recommended to add an image. It will be used",
+                  "to generate gallery. Now an empty image is used for ",
+                  "these tabs' gallery."))
     }
     spsinfo("tab.csv info check pass")
 }
@@ -270,13 +288,16 @@ copySPSfiles <- function(file_path,
     sps_path <- system.file(file_path, package = "systemPipeShiny")
 
     if(sps_path == "")
-        spserror(glue("Can't find required SPS files {file_path}, did you install SPS correctly?"))
+        spserror(glue("Can't find required SPS files {file_path}.
+                       Did you install SPS correctly?"))
     dir_path <- file.path(project_dir, basename(sps_path))
     if(dir.exists(dir_path) | !is_dir){
-        file.copy(sps_path, project_dir, recursive = TRUE, overwrite = overwrite)
+        file.copy(sps_path, project_dir,
+                  recursive = TRUE, overwrite = overwrite)
     } else {
         dir.create(dir_path)
-        file.copy(sps_path, project_dir, recursive = TRUE, overwrite = overwrite)
+        file.copy(sps_path, project_dir,
+                  recursive = TRUE, overwrite = overwrite)
     }
     spsinfo(glue("File(s) copied for {dir_path}"), verbose)
 }
@@ -285,11 +306,13 @@ copySPSfiles <- function(file_path,
 #' Get or set SPS options
 #'
 #' @param opt string, length 1, what option you want to get or set
-#' @param value if this is not `NULL`, this function will set the option you choose
-#' to this value
-#' @param empty_is_false bool, when you get an option, if the option is `NULL`, `NA`,
-#'  `""` or length is 0, return `FALSE`?
-#'
+#' @param value if this is not `NULL`, this function will set the
+#' option you choose to this value
+#' @param empty_is_false bool, when you get an option, if the option is
+#' `NULL`, `NA`, `""` or length is 0, return `FALSE`?
+#' @return option value if value exists; `FALSE` if the value is empty,
+#' like `NULL`, `NA`, `""`; `NULL` if `empty_is_false = FALSE`;
+#' if `value != NULL` will set the value
 #' @export
 #'
 #' @examples
@@ -299,7 +322,8 @@ copySPSfiles <- function(file_path,
 #' spsOption("test2", empty_is_false = FALSE)
 spsOption <- function(opt, value = NULL, empty_is_false = TRUE){
     assert_that(is.character(opt) & length(opt) == 1)
-    if(not_empty(value)) options(sps = getOption('sps') %>% {.[[opt]] <- value; .})
+    if(not_empty(value))
+        options(sps = getOption('sps') %>% {.[[opt]] <- value; .})
     else {
         get_value <- getOption('sps')[[opt]]
         if(!emptyIsFalse(get_value)){

@@ -7,12 +7,14 @@ wf_configUI <- function(id){
         tabTitle("Workflow Configuration"),
         fluidRow(
             shinyWidgets::radioGroupButtons(
-                inputId = ns("config_source"), label = "Choose your config file source:",
+                inputId = ns("config_source"),
+                label = "Choose your config file source:",
                 selected = "upload",
                 choiceNames = c("Upload", "Example"),
                 choiceValues = c("upload", "eg"),
                 justified = TRUE, status = "primary",
-                checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
+                checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+                                 no = icon(""))
             ),
             fileInput(
                 ns("config_upload"), "If upload, choose your config file here:",
@@ -47,11 +49,16 @@ wf_configServer <- function(id, shared){
         down_clicked <- reactiveValues(flag = 0)
 
         rmd_file_path <- reactive({
-            if (input$config_source == "eg") "data/config.yaml" else input$config_upload$datapath
+            if(input$config_source == "eg") "data/config.yaml"
+            else input$config_upload$datapath
         })
         observeEvent(rmd_file_path(), {
-            shinyAce::updateAceEditor(session, editorId = "ace_config", value = {
-                shinyCatch(readLines(rmd_file_path()) %>% paste(collapse = "\n"), blocking_level = "error")
+            shinyAce::updateAceEditor(
+                session, editorId = "ace_config",
+                value = {
+                    shinyCatch(
+                        readLines(rmd_file_path()) %>%
+                            paste(collapse = "\n"), blocking_level = "error")
             })
         })
 

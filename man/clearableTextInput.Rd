@@ -27,7 +27,6 @@ must be call \code{useSps} at header
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
 
     ui <- fluidPage(
         useSps(),

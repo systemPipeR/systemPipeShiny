@@ -34,12 +34,13 @@ it will open up global.R, ui.R and server.R for you}
 \item{colorful}{bool, should message from this function be colorful?}
 }
 \value{
-
+creates the project folder
 }
 \description{
 Create a SystemPipeShiny project
 }
 \examples{
-library(systemPipeShiny)
-spsInit(change_wd = FALSE)
+if(interactive()){
+    spsInit(change_wd = FALSE)
+}
 }

@@ -23,7 +23,6 @@ Server side function for dynamicFile
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     library(shinyjs)
     options(sps = list(mode='server')) # Change the mode to 'local' to see difference
     ui <- fluidPage(

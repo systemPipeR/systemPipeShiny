@@ -29,7 +29,6 @@ block the rest of the code in your reactive expression domain
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     ui <- fluidPage(
         useToastr(),
         actionButton("btn1","error and blocking"),

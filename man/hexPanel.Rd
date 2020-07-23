@@ -64,6 +64,9 @@ default -10}
 
 \item{ys}{Y coordinates offset, must be the same length as \code{xs}, default -20}
 }
+\value{
+HTML elements
+}
 \description{
 Hexagon logo and logo panel
 }
@@ -87,21 +90,23 @@ occupy space in the vector. e.g. I have 3 logos, but I only want to add
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     ui <- fluidPage(
         useSps(),
-        hexPanel("demo1", "DEMO 1:" ,
-                 rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2)
+        hexPanel(
+            "demo1", "DEMO 1:" ,
+            rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2)
         ),
-        hexPanel("demo2", "DEMO 2:" ,
-                 rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
-                 rep("https://www.google.com", 2),
+        hexPanel(
+            "demo2", "DEMO 2:" ,
+            rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
+            rep("https://www.google.com", 2),
                  c("hex1", "hex2")
         ),
-        hexPanel("demo3", "DEMO 3:" ,
-                 rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
-                 footers = c("hex1", "hex2"),
-                 footer_links = rep("https://www.google.com", 2)
+        hexPanel(
+            "demo3", "DEMO 3:" ,
+            rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
+            footers = c("hex1", "hex2"),
+            footer_links = rep("https://www.google.com", 2)
         )
     )
     server <- function(input, output, session) {

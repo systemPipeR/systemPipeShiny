@@ -27,7 +27,6 @@ These function groups are designed to be used inside shiny modules
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     spsInit()
     options(sps = list(verbose = TRUE))
     ui <- fluidPage(

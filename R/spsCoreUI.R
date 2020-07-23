@@ -10,7 +10,9 @@
 #' @details Workflow tabs and other `core` tabs are loaded by default. You can
 #' only optionally choose visualization tabs. See config/tabs.csv for tab info.
 #' @importFrom rlang eval_tidy parse_expr
-#' @importFrom shinydashboard menuSubItem tabItem dashboardSidebar sidebarSearchForm sidebarMenu menuItem tabItems dashboardBody
+#' @importFrom shinydashboard menuSubItem tabItem dashboardSidebar
+#' @importFrom shinydashboard sidebarSearchForm sidebarMenu menuItem tabItems
+#' @importFrom shinydashboard dashboardBody
 #' @importFrom shinydashboardPlus dashboardHeaderPlus dashboardPagePlus
 #' @importFrom shinyWidgets useSweetAlert
 #' @importFrom shinyjs useShinyjs
@@ -20,23 +22,26 @@
 spsUI <- function(tabs_df, tabs_plot){
     spsinfo("Start to generate UI")
     menu_df <- if(nrow(tabs_df) > 0){
-        sapply(seq_len(nrow(tabs_df)), function(x){
-            shinydashboard::menuSubItem(text = tabs_df$tab_labels[x], tabName = tabs_df$tab_id[x])
-        }, simplify = FALSE) %>% tagList()
+        vapply(seq_len(nrow(tabs_df)), function(x){
+            shinydashboard::menuSubItem(text = tabs_df$tab_labels[x],
+                                        tabName = tabs_df$tab_id[x])
+        }, list(1)) %>% tagList()
     } else tagList()
     menu_plot <- if(nrow(tabs_plot) > 0){
-        sapply(seq_len(nrow(tabs_plot)), function(x){
-            shinydashboard::menuSubItem(text = tabs_plot$tab_labels[x], tabName = tabs_plot$tab_id[x])
-        }, simplify = FALSE) %>% tagList()
+        vapply(seq_len(nrow(tabs_plot)), function(x){
+            shinydashboard::menuSubItem(text = tabs_plot$tab_labels[x],
+                                        tabName = tabs_plot$tab_id[x])
+        }, list(1)) %>% tagList()
     } else tagList()
 
     spsinfo("Loading custom tab UI ...")
-    tab_items <- c(tabs_df[['tab_id']], tabs_plot[['tab_id']]) %>% {.[. != ""]} %>%
-        sapply(function(x){
+    tab_items <- c(tabs_df[['tab_id']],
+                   tabs_plot[['tab_id']]) %>% {.[. != ""]} %>%
+        vapply(function(x){
             tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
             spsinfo(glue("Loading UI for {x}"))
             shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
-        }, simplify = FALSE)
+        }, list(1))
     # header
     spsinfo("Create UI header ...")
     dashboardHeader <- shinydashboardPlus::dashboardHeaderPlus(
@@ -51,21 +56,31 @@ spsUI <- function(tabs_df, tabs_plot){
     # side bar
     spsinfo("Create UI sidebar menu ...")
     dashboardSidebar <-  shinydashboard::dashboardSidebar(
-        shinydashboard::sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
-                          label = "Search..."),
+        shinydashboard::sidebarSearchForm(textId = "searchText",
+                                          buttonId = "searchButton",
+                                          label = "Search..."),
         shinydashboard::sidebarMenu(id = "left_sidebar",
-                    shinydashboard::menuItem("Dashboard", tabName = "core_dashboard", icon = icon("sitemap")
+                    shinydashboard::menuItem("Dashboard",
+                                             tabName = "core_dashboard",
+                                             icon = icon("sitemap")
                     ),
                     shinydashboard::menuItem(id = 'wf-control',
-                             HTML('Workflow Mangement<small class="badge pull-right bg-olive">Beta</small>'),
+                             HTML('Workflow Mangement<small class="badge
+                                  pull-right bg-olive">Beta</small>'),
                              tabName = "wf_main",
-                             shinydashboard::menuSubItem(text = "Targets", tabName = "wf_targets", ),
-                             shinydashboard::menuSubItem(text = "Workflow File", tabName = "wf_wf"),
-                             shinydashboard::menuSubItem(text = "Workflow Config", tabName = "wf_config"),
-                             shinydashboard::menuSubItem(text = "Run Workflow", tabName = "wf_run")
+                             shinydashboard::menuSubItem(text="Targets",
+                                                         tabName="wf_targets"),
+                             shinydashboard::menuSubItem(text="Workflow File",
+                                                         tabName="wf_wf"),
+                             shinydashboard::menuSubItem(text="Workflow Config",
+                                                         tabName="wf_config"),
+                             shinydashboard::menuSubItem(text="Run Workflow",
+                                                         tabName="wf_run")
                     ),
                     shinydashboard::menuItem(
-                        "Visualization", icon = icon("images"), tabName = "vs_main",
+                        "Visualization",
+                        icon = icon("images"),
+                        tabName = "vs_main",
                         shinydashboard::menuItem(
                             text = "Prepare dataset",
                             ## vs dfs add to sidebar
@@ -79,9 +94,16 @@ spsUI <- function(tabs_df, tabs_plot){
                             menu_plot
                         )
                     ),
-                    shinydashboard::menuItem("Canvas", tabName = "core_canvas", icon = icon("paint-brush")
+                    shinydashboard::menuItem(
+                        "Canvas",
+                        tabName = "core_canvas",
+                        icon = icon("paint-brush")
                     ),
-                    shinydashboard::menuItem("About", icon = icon("info"), tabName = "core_about")
+                    shinydashboard::menuItem(
+                        "About",
+                        icon = icon("info"),
+                        tabName = "core_about"
+                    )
         )
     )
     # body
@@ -90,18 +112,23 @@ spsUI <- function(tabs_df, tabs_plot){
         # WF tabs
         shinydashboard::tabItem(tabName = "wf_main", wf_mainUI("wf_main")),
         wfPanel(),
-        shinydashboard::tabItem(tabName = "wf_targets", wf_targetUI("wf_targets")),
+        shinydashboard::tabItem(tabName = "wf_targets",
+                                wf_targetUI("wf_targets")),
         shinydashboard::tabItem(tabName = "wf_wf", wf_wfUI("wf_wf")),
-        shinydashboard::tabItem(tabName = "wf_config", wf_configUI("wf_config")),
+        shinydashboard::tabItem(tabName = "wf_config",
+                                wf_configUI("wf_config")),
         shinydashboard::tabItem(tabName = "wf_run", wf_runUI("wf_run")),
         # VS tabs
         shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         devComponents("ui_tab_df"),
         devComponents("ui_tab_plot"),
         # core tabs
-        shinydashboard::tabItem(tabName = "core_dashboard", core_dashboardUI("core_dashboard")),
-        shinydashboard::tabItem(tabName = "core_canvas", core_canvasUI("core_canvas")),
-        shinydashboard::tabItem(tabName = "core_about", core_aboutUI("core_about"))
+        shinydashboard::tabItem(tabName = "core_dashboard",
+                                core_dashboardUI("core_dashboard")),
+        shinydashboard::tabItem(tabName = "core_canvas",
+                                core_canvasUI("core_canvas")),
+        shinydashboard::tabItem(tabName = "core_about",
+                                core_aboutUI("core_about"))
     )
     sps_tabs$children <- append(sps_tabs$children, tab_items)
     spsinfo("Add tab content to body ...")
@@ -121,12 +148,15 @@ spsUI <- function(tabs_df, tabs_plot){
     # )
     # app main UI
     spsinfo("Merge header, menu, body to dashboard ...")
-    mainUI <- shinydashboardPlus::dashboardPagePlus(header = dashboardHeader, sidebar = dashboardSidebar,
-                                title = "systemPipeShiny",
-                                body =  dashboardBody #,rightsidebar = rightsidebar
+    mainUI <- shinydashboardPlus::dashboardPagePlus(
+        header = dashboardHeader,
+        sidebar = dashboardSidebar,
+        title = "systemPipeShiny",
+        body =  dashboardBody #,rightsidebar = rightsidebar
     )
     # merge everything together
-    spsinfo("Add overlay loading screen, admin panel. Merge everything to app container ...")
+    spsinfo("Add overlay loading screen, admin panel.
+            Merge everything to app container ...")
     spsUIwrapper(mainUI)
 }
 
@@ -140,13 +170,13 @@ spsUI <- function(tabs_df, tabs_plot){
 #' @param title gallery title
 #' @param title_color title color
 #' @param image_frame_size integer, 1-12
-#' @param type filter by tab type, then tab_ids will be ignored: core, wf, data, vs
+#' @param type filter by tab type, then tab_ids will be
+#' ignored: core, wf, data, vs
 #'
 #' @return gallery div
 #'
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     spsInit()
 #'     ui <- fluidPage(
 #'         genGallery(c("plot_template")),
@@ -194,10 +224,10 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
 #' for type and sub types. If indicated, it will return a list of tabs matching
 #' the indicated tabs instead of searching individual tab names. These words
 #' include: core, wf, vs, data, plot.
+#' @return HTML elements
 #' @export
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     spsInit()
 #'     rows <- list(wf1 = c("core_canvas", "core_about"), wf2 =  "data")
 #'     ui <- fluidPage(
@@ -210,11 +240,11 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
 #' }
 genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
                          text_color = "#0275d8", ...) {
-    tab_list <- sapply(rows, function(x) {
+    tab_list <- vapply(rows, function(x) {
         if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
             findTabInfo(type = x)
         } else {findTabInfo(x)}
-    })
+    }, list(1))
     hrefTable(Id = Id, title = title,
               text_color = text_color, item_titles = names(rows),
               item_labels = tab_list[2,], item_hrefs = tab_list[3,], ...)
@@ -239,10 +269,16 @@ devComponents <- function(element, shared=NULL){
 
     if(spsOption('dev')){
         switch (element,
-                "ui_menu_df" = shinydashboard::menuSubItem(text = "Template data", tabName = "df_template"),
-                "ui_menu_plot" = shinydashboard::menuSubItem(text = "Template Plot", tabName = "plot_template"),
-                "ui_tab_df" = shinydashboard::tabItem(tabName = "df_template", df_templateUI("df_template")),
-                "ui_tab_plot" = shinydashboard::tabItem(tabName = "plot_template", plot_templateUI("plot_template")),
+                "ui_menu_df" = shinydashboard::menuSubItem(
+                    text = "Template data", tabName = "df_template"),
+                "ui_menu_plot" = shinydashboard::menuSubItem(
+                    text = "Template Plot", tabName = "plot_template"),
+                "ui_tab_df" = shinydashboard::tabItem(
+                    tabName = "df_template", df_templateUI("df_template")),
+                "ui_tab_plot" = shinydashboard::tabItem(
+                    tabName = "plot_template",
+                    plot_templateUI("plot_template")
+                ),
                 "server" = {
                     df_templateServer("df_template", shared)
                     plot_templateServer("plot_template", shared)
@@ -255,6 +291,7 @@ devComponents <- function(element, shared=NULL){
 #' Workflow progress tracker UI
 #' @description call it on top level UI not inside a module. Call this function
 #' only once. Do not repeat this function.
+#' @noRd
 # @examples
 # wfPanel()
 wfPanel <- function(){

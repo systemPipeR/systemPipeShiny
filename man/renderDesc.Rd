@@ -11,13 +11,15 @@ renderDesc(id, desc)
 
 \item{desc}{one string in markdown format}
 }
+\value{
+HTML elements
+}
 \description{
-write some text in markdown format and it will help you render to
-a collapsible markdown section
+write some text in markdown format and it will help you
+render to a collapsible markdown section
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     library(shiny)
     desc <-
         "

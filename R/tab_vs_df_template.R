@@ -32,42 +32,55 @@ df_templateUI <- function(id){
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
         renderDesc(id = ns("desc"), desc),
         div(style = "text-align: center;",
-            actionButton(inputId = ns("validate_start"), label = "Start with this tab")
+            actionButton(inputId = ns("validate_start"),
+                         label = "Start with this tab")
         ),
         div(
             id = ns("tab_main"), class = "shinyjs-hide",
             shinyWidgets::radioGroupButtons(
-                inputId = ns("data_source"), label = "Choose your data file source:",
+                inputId = ns("data_source"),
+                label = "Choose your data file source:",
                 selected = "upload",
                 choiceNames = c("Upload", "Example"),
                 choiceValues = c("upload", "eg"),
                 justified = TRUE, status = "primary",
-                checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
+                checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+                                 no = icon(""))
             ),
             fluidRow(
                 column(width = 5, dynamicFile(id = ns("file_upload"))),
                 column(width = 3,
                        shinyWidgets::pickerInput(
                            inputId = ns("delim"), label = "File delimiter",
-                           choices = c(`,`=",", space=" ", Tab="\t", `|`="|", `:`=":", `;`=";"),
+                           choices = c(`,`=",", space=" ",
+                                       Tab="\t", `|`="|", `:`=":", `;`=";"),
                            options = list(style = "btn-primary")
                 )),
-                column(width = 3, clearableTextInput(ns("comment"), "File comments", value = "#"))
+                column(
+                    width = 3,
+                    clearableTextInput(
+                        ns("comment"), "File comments", value = "#")
+                    )
             ),
             fluidRow(h4("Input Data", style="text-align: center;")),
             div(style = "background-color: #F1F1F1;", DT::DTOutput(ns("df"))),
             fluidRow(
                 hr(), h4("Choose a proprocessing method"),
-                p("Depending on different ways of preprocessing, different plotting options will be available"),
+                p("Depending on different ways of preprocessing,
+                  different plotting options will be available"),
                 column(4,
                     shinyWidgets::pickerInput(
                         inputId = ns("select_prepro"),
-                        choices = c(`Do Nothing`='nothing', `Method 1`='md1', `Method 2`='md2'),
+                        choices = c(`Do Nothing`='nothing',
+                                    `Method 1`='md1',
+                                    `Method 2`='md2'),
                         options = list(style = "btn-primary")
                     )
                 ),
                 column(2,
-                      actionButton(ns("preprocess"), label = "Preprocess", icon("paper-plane"))
+                      actionButton(ns("preprocess"),
+                                   label = "Preprocess",
+                                   icon("paper-plane"))
                 )
             ),
             fluidRow(id = ns("plot_option_row"), class = "shinyjs-hide",
@@ -99,13 +112,17 @@ df_templateServer <-function(id, shared){
             shinyjs::hide(id = "validate_start")
             pgPaneUpdate('pg', 'pkg', 100) # update progress
         })
-        observeEvent(input$data_source, shinyjs::toggleState(id = "file_upload"), ignoreInit = TRUE)
+        observeEvent(input$data_source,
+                     shinyjs::toggleState(id = "file_upload"),
+                     ignoreInit = TRUE)
         # get upload path, note path is in upload_path()$datapath
-        upload_path <- dynamicFileServer(input, session, id = "file_upload") # this is reactive
+        upload_path <- dynamicFileServer(input,
+                                         session,
+                                         id = "file_upload") # this is reactive
         # load the file dynamically
         data_df <- reactive({
             df_path <- upload_path()
-            pgPaneUpdate('pg', 'data', 0) # set data progress to 0 every time reloads
+            pgPaneUpdate('pg', 'data', 0) # set data progress to 0 every reload
             loadDF(choice = input$data_source, upload_path = df_path$datapath,
                    delim = input$delim, comment = input$comment,
                    eg_path = "data/iris.csv")
@@ -117,12 +134,17 @@ df_templateServer <-function(id, shared){
             )
             pgPaneUpdate('pg', 'data', 100)
             DT::datatable(
-                data_df(), style = "bootstrap", class = "compact",  filter = "top",
-                extensions = c( 'Scroller','Buttons'), options = list(
+                data_df(),
+                style = "bootstrap",
+                class = "compact",  filter = "top",
+                extensions = c( 'Scroller','Buttons'),
+                options = list(
                     dom = 'Bfrtip',
                     buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                    deferRender = TRUE, scrollY = 580, scrollX = TRUE, scroller = TRUE,
-                    columnDefs = list(list(className = 'dt-center', targets = "_all"))
+                    deferRender = TRUE,
+                    scrollY = 580, scrollX = TRUE, scroller = TRUE,
+                    columnDefs = list(list(className = 'dt-center',
+                                           targets = "_all"))
                 ))
         })
 
@@ -171,27 +193,30 @@ df_templateServer <-function(id, shared){
                 input$select_prepro,
                 'md1' = spsValidator(
                     df_validate_method1,
-                    args = list(df = df_filter, special1 = "validation for method 1\n"),
+                    args = list(df = df_filter,
+                                special1 = "validation for method 1\n"),
                     title = "Special validation for method 1"
                 ),
                 'md2' = spsValidator(
                     df_validate_method2,
-                    args = list(df = df_filter, special2 = "validation for method 2\n"),
+                    args = list(df = df_filter,
+                                special2 = "validation for method 2\n"),
                     title = "Special validation for method 2"
                 ),
                 msg('No addition validation required')
             )
             pgPaneUpdate('pg', 'vd_data', 100)
             # if validation passed, start reprocess
-            df_processed <- shinyCatch(switch(input$select_prepro,
-                                              'md1' = {
-                                                  # your preprocess function, e.g
-                                                  df_filter[, 1] = df_filter[, 1] + 1
-                                              },
-                                              'md2' = {
-                                                  df_filter[, 1] = log(df_filter[, 1])
-                                              },
-                                              df_filter
+            df_processed <- shinyCatch(
+                switch(input$select_prepro,
+                       'md1' = {
+                           # your preprocess function, e.g
+                           df_filter[, 1] = df_filter[, 1] + 1
+                       },
+                       'md2' = {
+                           df_filter[, 1] = log(df_filter[, 1])
+                       },
+                       df_filter
             ), blocking_level = 'error')
             req(!is.null(df_processed))
             pgPaneUpdate('pg', 'prepro', 100)
@@ -204,10 +229,11 @@ df_templateServer <-function(id, shared){
                 position = "bottom-right"
             )
             shinyjs::show(id = "plot_option_row")
-            gallery <- switch(input$select_prepro,
-                              'md1' = genGallery("plot_pca"),
-                              'md2' = genGallery(c("plot_template", "plot_pca")),
-                              genGallery(type = "plot")
+            gallery <- switch(
+                input$select_prepro,
+                'md1' = genGallery("plot_pca"),
+                'md2' = genGallery(c("plot_template", "plot_pca")),
+                genGallery(type = "plot")
             )
             output$plot_option <- renderUI({
                 gallery

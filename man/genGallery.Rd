@@ -21,7 +21,8 @@ will be included}
 
 \item{title}{gallery title}
 
-\item{type}{filter by tab type, then tab_ids will be ignored: core, wf, data, vs}
+\item{type}{filter by tab type, then tab_ids will be
+ignored: core, wf, data, vs}
 
 \item{title_color}{title color}
 
@@ -35,7 +36,6 @@ generate gallery by only providing tab names
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     spsInit()
     ui <- fluidPage(
         genGallery(c("plot_template")),

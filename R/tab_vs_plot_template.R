@@ -39,10 +39,17 @@ plot_templateUI <- function(id){
         renderDesc(id = ns("desc"), desc),
         spsHr(), h3("Data preparation"),
         fluidRow(
-            column(6, genHrefTab(c("df_targets"), title = "You need to meta data from these tabs:")),
-            column(6, genHrefTab(c("df_template"), title = "You need to tabular data from these tabs:"))
+            column(6,
+                   genHrefTab(
+                       c("df_targets"),
+                       title = "You need to meta data from these tabs:")),
+            column(6,
+                   genHrefTab(
+                       c("df_template"),
+                       title = "You need to tabular data from these tabs:"))
         ),
-        h5("Once you have prepared the data, select which tab(s) your data is coming from:"),
+        h5("Once you have prepared the data,
+           select which tab(s) your data is coming from:"),
         column(6, shinyWidgets::pickerInput(ns("source_meta"), "Meta Data",
                     choices = c("Meta Data" = "df_targets"),
                     options = list(style = "btn-primary"))),
@@ -62,7 +69,9 @@ plot_templateUI <- function(id){
                              icon("paper-plane")),
             ),
             div(class = "sps-plot-container",
-                shinyjqui::jqui_resizable(sps_plots$addUI(plotly::plotlyOutput(ns("plot")), id)),
+                shinyjqui::jqui_resizable(
+                    sps_plots$addUI(plotly::plotlyOutput(ns("plot")), id)
+                ),
                 tags$script(glue('stretchPlotTab("{ns("plot")}")'))
             )
         )
@@ -124,14 +133,18 @@ plot_templateServer <- function(id, shared){
         })
         observeEvent(input$render, {
             output$plot <- sps_plots$addServer(plotly::renderPlotly, tab_id, {
-                plotly::ggplotly(ggplot2::ggplot(mydata$df, ggplot2::aes(Sepal.Length, Sepal.Width)) +
-                             ggplot2::geom_point(ggplot2::aes(colour = Species))
+                plotly::ggplotly(
+                    ggplot(mydata$df,
+                           aes(Sepal.Length, Sepal.Width)) +
+                    geom_point(ggplot2::aes(colour = Species))
                 )
             })
             shared$snap_signal <- sps_plots$notifySnap(tab_id)
             req(shared$snap_signal)
-            shinytoastr::toastr_info(glue("Snapshot {glue_collapse(shared$snap_signal, '-')} added to canvas"),
-                        position = "bottom-right")
+            shinytoastr::toastr_info(
+                glue("Snapshot {glue_collapse(shared$snap_signal, '-')}",
+                     "added to canvas"),
+                position = "bottom-right")
         })
     }
     moduleServer(id, module)

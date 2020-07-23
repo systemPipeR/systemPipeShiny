@@ -6,6 +6,9 @@
 \usage{
 spsHr()
 }
+\value{
+HTML elements
+}
 \description{
 hr line with color #3b8dbc38
 }

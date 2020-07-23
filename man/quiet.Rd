@@ -10,7 +10,7 @@ quiet(x)
 \item{x}{function or expression or value assignment expression}
 }
 \value{
-
+invisible value
 }
 \description{
 suppress cat print output

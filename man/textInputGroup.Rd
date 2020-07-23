@@ -25,7 +25,6 @@ Text input with a button right next to
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
 
     ui <- fluidPage(
         useSps(),

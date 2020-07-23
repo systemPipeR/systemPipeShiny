@@ -25,7 +25,6 @@
 #'
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     ui <- fluidPage(
 #'         useToastr(),
 #'         actionButton("btn1","error and blocking"),
@@ -156,7 +155,6 @@ shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none")
 #'
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     shinyApp(ui = shinyUI(
 #'         fluidPage(actionButton("haha", "haha"))
 #'     ), server = function(input, output, session) {
@@ -225,7 +223,6 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 #' @importFrom shinyFiles getVolumes shinyFileChoose parseFilePaths
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     library(shinyjs)
 #'     options(sps = list(mode='server')) # Change the mode to 'local' to see difference
 #'     ui <- fluidPage(
@@ -276,21 +273,24 @@ dynamicFileServer <- function(input,session, id){
 #' choose
 #' @param session current shiny session
 #' @importFrom shinyWidgets updateProgressBar
+#' @return HTML elements
 #' @export
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     library(shinydashboard)
 #'     ui <- dashboardPage(header = dashboardHeader(),
 #'                         sidebar = dashboardSidebar(),
 #'                         body = dashboardBody(
 #'                             useSps(),
-#'                             h4("you need to open up the progress tracker, it is collapsed ->"),
+#'                             h4("you need to open up the progress
+#'                                 tracker, it is collapsed ->"),
 #'                             actionButton("a", "a"),
 #'                             actionButton("b", "b"),
-#'                             sliderInput("c", min = -100, max = 100, value = 0,
+#'                             sliderInput("c", min = -100,
+#'                                         max = 100, value = 0,
 #'                                         label = "c"),
-#'                             pgPaneUI("thispg", c("this a", "this b", " this c"),
+#'                             pgPaneUI("thispg",
+#'                                      c("this a", "this b", " this c"),
 #'                                      c("a", "b", "c"), "Example Progress")
 #'                         )
 #'     )
@@ -318,7 +318,9 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
         assert_that(is.character(pg_id))
         assert_that(value >= 0 & value <= 100,
                     msg = "Progress value needs to be 0-100")
-        shinyWidgets::updateProgressBar(session, id = glue("{pg_id}-pg"), value = value)
+        shinyWidgets::updateProgressBar(session,
+                                        id = glue("{pg_id}-pg"),
+                                        value = value)
         if(inherits(session, "session_proxy")){
             pane_id <- session$ns(pane_id)
             pg_id <- session$ns(pg_id)
@@ -348,7 +350,6 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 #' @export
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     spsInit()
 #'     options(sps = list(verbose = TRUE))
 #'     ui <- fluidPage(
@@ -390,7 +391,9 @@ addData <- function(data, shared, tab_id) {
             if(spsOption('verbose')) {
                 info <- glue("Data for namespace {tab_id} added")
                 message(info)
-                shinytoastr::toastr_info(info, timeOut = 3000, position = "bottom-right")
+                shinytoastr::toastr_info(info,
+                                         timeOut = 3000,
+                                         position = "bottom-right")
             }
         }, blocking_level = "error")
 }
@@ -409,7 +412,9 @@ getData <- function(tab_id, shared){
             stop(glue("Data from tab `{tab_info}` is empty"))
         if(spsOption('verbose')){
             success_info <- glue("data for tab `{tab_info} found`")
-            shinytoastr::toastr_info(success_info, timeOut = 3000, position = "bottom-right")
+            shinytoastr::toastr_info(success_info,
+                                     timeOut = 3000,
+                                     position = "bottom-right")
         }
         return(shared[['data']][[tab_id]])
     }, blocking_level = "error")

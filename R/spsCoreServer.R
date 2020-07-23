@@ -8,9 +8,9 @@
 spsServer <- function(tabs, server_expr) {
     spsinfo("Start to create server function")
     tab_modules <- if(nrow(tabs) > 0) {
-        sapply(tabs[['tab_id']], function(x){
+        vapply(tabs[['tab_id']], function(x){
             glue('{x}Server("{x}", shared)') %>% rlang::parse_expr()
-        }, simplify = FALSE)
+        }, list(1))
     } else list(empty = substitute(spsinfo("No custom server to load.")))
 
     function(input, output, session) {
@@ -57,8 +57,11 @@ spsServer <- function(tabs, server_expr) {
         shinyjs::removeClass(id = "wf-panel", asis = TRUE, class = "tab-pane")
         spsinfo("Loading other logic...")
         observeEvent(input$left_sidebar, {
-            shinyjs::toggleClass(id = "wf-panel", class = "shinyjs-hide", asis = TRUE,
-                        condition = !str_detect(input$left_sidebar, "^wf_"))
+            shinyjs::toggleClass(
+                id = "wf-panel",
+                class = "shinyjs-hide",
+                asis = TRUE,
+                condition = !str_detect(input$left_sidebar, "^wf_"))
         })
         shared$wf_flags <- data.frame(targets_ready = FALSE,
                                       wf_ready = FALSE,
@@ -78,17 +81,19 @@ spsServer <- function(tabs, server_expr) {
             output$page_admin <- renderUI(adminUI())
         })
 
-        # observeEvent(input$reload, ignoreInit = TRUE, {
-        #     sps_options <- getOption('sps')
-        #     sps_options[['loading_screen']] = isolate(input$change)
-        #     options(sps = sps_options)
-        #     server_file <- readLines("server.R", skipNul = FALSE)
-        #     server_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
-        #     writeLines(server_file, "server.R")
-        #     ui_file <- readLines("ui.R", skipNul = FALSE)
-        #     ui_file[3] <- glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
-        #     writeLines(ui_file, "ui.R")
-        # })
+    # observeEvent(input$reload, ignoreInit = TRUE, {
+    #     sps_options <- getOption('sps')
+    #     sps_options[['loading_screen']] = isolate(input$change)
+    #     options(sps = sps_options)
+    #     server_file <- readLines("server.R", skipNul = FALSE)
+    #     server_file[3] <-
+    #         glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
+    #     writeLines(server_file, "server.R")
+    #     ui_file <- readLines("ui.R", skipNul = FALSE)
+    #     ui_file[3] <-
+    #         glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
+    #     writeLines(ui_file, "ui.R")
+    # })
         spsinfo("Loading user defined expressions")
         # additional user expressions
         rlang::eval_tidy(server_expr)
@@ -168,7 +173,7 @@ spsWarnings <- function(session){
         sps_warnings[['dev']] <- h4("You are on developer mode")
     }
     if(getQueryString() == "admin"){
-        msg("You admin page url is default, consider change it to a different one",
+        msg("You admin page url is default, consider to change it",
             "SPS-DANGER", "red")
         sps_warnings[['admin']] <- h4("Change default admin page url")
     }
@@ -187,10 +192,10 @@ spsWarnings <- function(session){
 
 #' Load tabular files as tibbles to server
 #' @description load a file to server end. Designed to be used with the input
-#' file source switch button. Use `vroom` to load the file. In SPS, this function
-#' is usually combined with `dynamicFile()` function to help users upload file and
-#' read the file. This loading function only works for parsing tabular data, use
-#' `vroom()` internally.
+#' file source switch button. Use `vroom` to load the file. In SPS, this
+#' function is usually combined with `dynamicFile()` function to help users
+#' upload file and read the file. This loading function only works for parsing
+#' tabular data, use `vroom()` internally.
 #' @param choice where this file comes from, from 'upload' or example 'eg'?
 #' @param df_init a tibble to return if `upload_path` or `eg_path` is not
 #' provided. Return a 8x8 empty tibble if not provided
@@ -198,8 +203,10 @@ spsWarnings <- function(session){
 #' return `df_init` if this param is not provided
 #' @param eg_path when `choice` is "eg", where to load the file, will
 #' return `df_init` if this param is not provided
-#' @param comment comment characters when load the file, see help file of `vroom`
-#' @param delim delimiter characters when load the file, see help file of `vroom`
+#' @param comment comment characters when load the file,
+#' see help file of `vroom`
+#' @param delim delimiter characters when load the file,
+#' see help file of `vroom`
 #' @param col_types columns specifications, see help file of `vroom`
 #' @param ... other params for vroom, see help file of `vroom`
 #'
@@ -210,7 +217,6 @@ spsWarnings <- function(session){
 #' @importFrom vroom vroom
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     library(shinyWidgets)
 #'     ui <- fluidPage(
 #'         shinyWidgets::radioGroupButtons(
@@ -227,7 +233,8 @@ spsWarnings <- function(session){
 #'         tmp_file <- tempfile(fileext = ".csv")
 #'         write.csv(iris, file = tmp_file)
 #'         data_df <- reactive({
-#'             loadDF(choice = input$data_source, upload_path = input$df_path$datapath,
+#'             loadDF(choice = input$data_source,
+#'                    upload_path = input$df_path$datapath,
 #'                    delim = ",", eg_path = tmp_file)
 #'         })
 #'         output$df <- renderDataTable(data_df())
@@ -249,8 +256,10 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
             stop("df_init need to be dataframe or tibble")
         }
         df_init <- tibble::as_tibble(df_init)
-        if (choice == "upload" & shinyAce::is.empty(upload_path)) return(df_init)
-        if (choice == "eg" & shinyAce::is.empty(eg_path)) return(df_init)
+        if (choice == "upload" & shinyAce::is.empty(upload_path))
+            return(df_init)
+        if (choice == "eg" & shinyAce::is.empty(eg_path))
+            return(df_init)
         upload_path <- switch(choice,
                               "upload" = upload_path,
                               "eg" = eg_path,
@@ -286,7 +295,6 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @importFrom shinytoastr toastr_success
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     df_validate_common <- list(
 #'         vd1 = function(df, apple){
 #'             print(apple)
@@ -322,15 +330,16 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
     # pre checks
     if(!is.list(args)) msg("Args must be in a list", "error")
     if(!is.list(validate_list)) msg("Validate_list must be in a list", "error")
-    if(any(is.null(validate_list))) msg("All functions need to be named", "error")
+    if(any(is.null(validate_list)))
+        msg("All functions need to be named", "error")
     arg_names <- names(args)
     if(any(is.null(arg_names))) msg("All args must be named", "error")
     # check if all required args are provided
-    inject_args <- sapply(seq_along(validate_list), function(each_vd) {
+    inject_args <- vapply(seq_along(validate_list), function(each_vd) {
         if(!is.function(validate_list[[each_vd]])) {
             msg("Each item in `validate_list` must be a function", "error")}
         each_vd_args <- formals(validate_list[[each_vd]])
-        sapply(seq_along(each_vd_args), function(each_arg) {
+        vapply(seq_along(each_vd_args), function(each_arg) {
             required_arg <- rlang::is_missing(each_vd_args[[each_arg]])
             if(required_arg & !names(each_vd_args)[[each_arg]] %in% arg_names) {
                 msg(glue("Validation function ",
@@ -339,9 +348,9 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
                          "with no defaults but it is not in your args list"),
                     "error")
             }
-        })
+        }, list(1))
         arg_names  %in% names(each_vd_args)
-    }, simplify = FALSE)
+    }, list(1))
     for(index in seq_along(validate_list)){
         result <- shinyCatch(do.call(
             validate_list[[index]], args = args[inject_args[[index]]]
@@ -365,14 +374,15 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
             shinyCatch(stop(failed_msg), blocking_level = "error")
         }
     }
-    shinytoastr::toastr_success(glue("{title} Passed"), position = "bottom-right",
-                   timeOut = 3500)
+    shinytoastr::toastr_success(glue("{title} Passed"),
+                                position = "bottom-right",
+                                timeOut = 3500)
     return(invisible())
 }
 
 
 #' Print app loading time to console
-#'
+#' @noRd
 appLoadingTime <- function(){
     if(exists('time_start')){
         if(inherits(time_start, "POSIXct")){

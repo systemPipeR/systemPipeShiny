@@ -4,12 +4,10 @@
 
 #' Use SystemPipeShiny javascripts and css style
 #' call it in your head section
-#' @return
 #' @importFrom shinytoastr useToastr
 #' @export
-#'
+#' @return HTML head
 #' @examples
-#' library(systemPipeShiny)
 #' useSps()
 useSps <- function(){
     addResourcePath("sps", system.file("app/www", package = "systemPipeShiny"))
@@ -36,7 +34,6 @@ useSps <- function(){
 #'
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'
 #'     ui <- fluidPage(
 #'         useSps(),
@@ -55,8 +52,14 @@ clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
         tags$span(
             class = "text-input-clearable",
             style = "background-color: #f5f5f5;",
-            tags$input(id = inputId, type = "text", value = value, placeholder = placeholder),
-            HTML('<span id="clear_input" class="glyphicon glyphicon-remove"></span>')
+            tags$input(
+                id = inputId,
+                type = "text",
+                value = value,
+                placeholder = placeholder
+            ),
+            HTML('<span id="clear_input"
+                 class="glyphicon glyphicon-remove"></span>')
             )
         ),
         tags$script(glue("clearText('{inputId}')"))
@@ -76,7 +79,6 @@ clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
 #'
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'
 #'     ui <- fluidPage(
 #'         useSps(),
@@ -89,7 +91,8 @@ clearableTextInput <- function(inputId, label, value = "", placeholder = ""){
 #'
 #'     shinyApp(ui, server)
 #' }
-textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plane"){
+textInputGroup <- function(textId, btnId, title="",
+                           label="", icon = "paper-plane"){
     fluidRow(
         column(
             9, style = "padding-right: 0; bottom: 10px",
@@ -119,7 +122,6 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #'
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     texts <- c("p1", "p2", "p3", "p4", "p5")
 #'     hrefs <- c("https://unsplash.it/1200/768.jpg?image=251",
 #'                "https://unsplash.it/1200/768.jpg?image=252",
@@ -144,14 +146,18 @@ textInputGroup <- function(textId, btnId, title="", label="", icon = "paper-plan
 #'
 #'     shinyApp(ui, server)
 #' }
-gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts,
+gallery <- function(Id = NULL, title = "Gallery",
+                    title_color = "#0275d8", texts,
                     hrefs, images, image_frame_size = 4){
     if (is.null(Id)) Id <- glue("gallery{sample(1000000:9999999, 1)}")
-    assert_that(length(texts) == length(hrefs) & length(hrefs) == length(images),
-                msg = "texts, hrefs and images must have the same length")
+    assert_that(
+        length(texts) == length(hrefs) & length(hrefs) == length(images),
+        msg = "texts, hrefs and images must have the same length")
     tags$div(
         id = Id, class = "col",
-        p(class = "text-center h2", style = glue("color: {title_color};"), title),
+        p(class = "text-center h2",
+          style = glue("color: {title_color};"),
+          title),
         tags$div(
             class = "row", style = "  margin: 10px;",
             HTML(glue('
@@ -183,7 +189,6 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #' @export
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     ui <- fluidPage(
 #'         useSps(),
 #'         hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
@@ -195,7 +200,8 @@ gallery <- function(Id = NULL, title = "Gallery", title_color = "#0275d8", texts
 #'     }
 #'     shinyApp(ui, server)
 #' }
-hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8",
+hrefTab <- function(Id = NULL, title = "A list of tabs",
+                    title_color = "#0275d8",
                     label_text, hrefs, ...
                     ){
     if (is.null(Id)) Id <- glue("list-tab{sample(1000000:9999999, 1)}")
@@ -203,10 +209,13 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
                 msg = "texts and hrefs must have the same length")
     tags$div(
         id = Id, class = "col", ... ,
-        p(class = "h4",  style = glue("color: {title_color}; text-align: left;"), title),
+        p(class = "h4",
+          style = glue("color: {title_color}; text-align: left;"),
+          title),
         tags$div(
             HTML(glue('
-              <a href="{hrefs}" class="href-button sps-tab-link">{label_text}</a>\n
+            <a href="{hrefs}" class="href-button
+            sps-tab-link">{label_text}</a>\n
                 '))
         )
     )
@@ -223,13 +232,10 @@ hrefTab <- function(Id = NULL, title = "A list of tabs", title_color = "#0275d8"
 #' @param item_labels list, a list of button lables in each table item
 #' @param item_hrefs list, a list of hrefs for each button
 #' @param ... other HTML args
-#'
-#' @return
 #' @export
-#'
+#' @return HTML elements
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'
 #'     ui <- fluidPage(
 #'         useSps(),
@@ -252,8 +258,10 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
                       ){
     if (is.null(Id)) Id <- glue("list-table{sample(1000000:9999999, 1)}")
     assert_that(is.list(item_labels)); assert_that(is.list(item_hrefs))
-    assert_that(length(item_titles) == length(item_labels) & length(item_labels) == length(item_hrefs),
-                msg = "item_titles, item_labels and item_hrefs must have the same length")
+    assert_that(length(item_titles) == length(item_labels) &
+                    length(item_labels) == length(item_hrefs),
+                msg = glue("item_titles, item_labels and ",
+                            "item_hrefs must have the same length"))
     mapply(
         function(label, href) {
             assert_that(length(href) == length(label),
@@ -266,13 +274,17 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
         )
     btns <- mapply(
         function(label, href) {
-            glue('<a href="{href}" class="href-button sps-tab-link">{label}</a>') %>% glue_collapse()
+            glue('<a href="{href}" class="href-button',
+                 'sps-tab-link">{label}</a>') %>%
+                glue_collapse()
             },
         item_labels, item_hrefs
         )
     tags$table(
         id = Id, class = "table table-hover table-href table-striped",
-        tags$caption(class = "text-center h2",  style = glue("color: {text_color};"), title),
+        tags$caption(class = "text-center h2",
+                     style = glue("color: {text_color};"),
+                     title),
         HTML('<thead>
                 <tr class="info">
                   <th>Category</th>
@@ -292,15 +304,15 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 
 
 #' Render some collapsible description
-#' @description write some text in markdown format and it will help you render to
-#' a collapsible markdown section
+#' @description write some text in markdown format and it will help you
+#' render to a collapsible markdown section
 #' @param desc one string in markdown format
 #' @param id HTML ID
 #' @importFrom markdown renderMarkdown
 #' @export
+#' @return HTML elements
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     library(shiny)
 #'     desc <-
 #'         "
@@ -340,9 +352,10 @@ renderDesc <- function(id, desc) {
 }
 
 #' dynamically generate select file input
-#' @description  depending on the mode in options, render similar UI but server side works
-#' differently. `local` mode will not copy file, directly use a path pointer,
-#' `server` mode upload file and store in temp. Expect similar behavior as
+#' @description  depending on the mode in options, render similar UI but
+#' server side works differently. `local` mode will not copy file, directly
+#' use a path pointer, `server` mode upload file and store in temp. Expect
+#' similar behavior as
 #' `fileInput`.
 #' @param id element id
 #' @param title element title
@@ -357,9 +370,9 @@ renderDesc <- function(id, desc) {
 #'
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     library(shinyjs)
-#'     options(sps = list(mode='server')) # change to 'local' to see the difference
+#'     # change to 'local' to see the difference
+#'     options(sps = list(mode='server'))
 #'     ui <- fluidPage(
 #'         useShinyjs(),
 #'         dynamicFile("getFile"),
@@ -386,7 +399,8 @@ dynamicFile <- function(id, title = "Select your file:",
                 tags$label(class="input-group-btn input-group-prepend",
                            shinyFiles::shinyFilesButton(id, label,
                                             title = title, multiple = multiple,
-                                            buttonType = "btn btn-primary", icon = icon,
+                                            buttonType = "btn btn-primary",
+                                            icon = icon,
                                             style = style)
                 ),
                 textInput(inputId = glue("{id}-text"), label = NULL,
@@ -408,7 +422,8 @@ dynamicFile <- function(id, title = "Select your file:",
 #' @return
 #' @importFrom shinyAce aceEditor
 #' @importFrom shinydashboardPlus boxPlus
-#' @importFrom shinyWidgets dropdownButton tooltipOptions radioGroupButtons sliderTextInput
+#' @importFrom shinyWidgets dropdownButton tooltipOptions
+#' @importFrom shinyWidgets  radioGroupButtons sliderTextInput
 #' @noRd
 # @examples
 # library(shiny)
@@ -429,7 +444,8 @@ uiExamples <- function(ns){
             width = 12, closable = FALSE, collapsible = TRUE,
             footer = shinyWidgets::dropdownButton(
                 size = "sm", icon = icon("code"), width = "500px",
-                tooltip = shinyWidgets::tooltipOptions(title = "Click to see code"),
+                tooltip = shinyWidgets::tooltipOptions(
+                    title = "Click to see code"),
                 label = "see code",
                 shinyAce::aceEditor(
                     ns("code-chunk"), mode = "r", readOnly = TRUE,
@@ -493,6 +509,7 @@ uiExamples <- function(ns){
 
 #' hr line with color #3b8dbc38
 #' @export
+#' @return HTML elements
 #' @examples
 #' spsHr()
 spsHr <- function() {
@@ -522,7 +539,7 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
     assert_that(is.character(pg_ids))
     assert_that(length(titles) == length(pg_ids))
 
-    sapply(seq_along(pg_ids), function(i) {
+    vapply(seq_along(pg_ids), function(i) {
         tags$li(style = "margin-bottom: 0;",
                 tags$i(id = glue("{pg_ids[i]}-icon"),
                        class = "fa fa-times bg-red"),
@@ -536,11 +553,14 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
                     )
                 )
         )
-    }, simplify = FALSE) %>% {
-        shinydashboardPlus::timelineBlock(reversed = FALSE, id = glue("{pane_id}-timeline"),
+    }, list(1)) %>% {
+        shinydashboardPlus::timelineBlock(reversed = FALSE,
+                                          id = glue("{pane_id}-timeline"),
                       .,
-                      shinydashboardPlus::timelineLabel(id = glue("{pane_id}-pg-label"), "Ready",
-                                    color = "orange"),
+                      shinydashboardPlus::timelineLabel(
+                          id = glue("{pane_id}-pg-label"),
+                          "Ready",
+                          color = "orange"),
                       div(style = "margin-left: 60px; margin-right: 15px;",
                           shinyWidgets::progressBar(
                               glue("{pane_id}-pg-all"), striped = TRUE,
@@ -586,12 +606,18 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
     title_text <- if(shinyAce::is.empty(title)) ''
     else glue('<span class="text-info">{title}</span><br>')
     hex <-  if(shinyAce::is.empty(hex_link)) {
-        glue('<polygon points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/>')
+        glue('<polygon points="50 1 95 25 95 75 50 99 5 75 5 25"',
+             'fill="url(#{id}-hex)" stroke="var(--primary)"',
+             'stroke-width="2"/>')
     } else {
-        glue('<a href="{hex_link}" target="_blank"> <polygon class="hex" points="50 1 95 25 95 75 50 99 5 75 5 25" fill="url(#{id}-hex)" stroke="var(--primary)" stroke-width="2"/></a>')
+        glue('<a href="{hex_link}" target="_blank">',
+             '<polygon class="hex" points="50 1 95 25 95 75 50 99 5 75 5 25"',
+             'fill="url(#{id}-hex)" stroke="var(--primary)"',
+             'stroke-width="2"/></a>')
     }
     footer_text <- if(shinyAce::is.empty(footer)) ''
-    else glue('<text x=10 y=115><a class="powerby-link" href="{footer_link}" target="_blank">{footer}</a></text>')
+    else glue('<text x=10 y=115><a class="powerby-link"',
+              'href="{footer_link}" target="_blank">{footer}</a></text>')
     HTML(glue('
     <div id="{id}" class="hex-container">
       {title_text}
@@ -643,24 +669,26 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
 #' `footer_links = c("", "https://mylink", "")`. By doing so  `footers` and
 #' `footer_links` has the same required length.
 #' @export
-#'
+#' @return HTML elements
 #' @examples
 #' if(interactive()){
-#'     library(systemPipeShiny)
 #'     ui <- fluidPage(
 #'         useSps(),
-#'         hexPanel("demo1", "DEMO 1:" ,
-#'                  rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2)
+#'         hexPanel(
+#'             "demo1", "DEMO 1:" ,
+#'             rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2)
 #'         ),
-#'         hexPanel("demo2", "DEMO 2:" ,
-#'                  rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
-#'                  rep("https://www.google.com", 2),
+#'         hexPanel(
+#'             "demo2", "DEMO 2:" ,
+#'             rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
+#'             rep("https://www.google.com", 2),
 #'                  c("hex1", "hex2")
 #'         ),
-#'         hexPanel("demo3", "DEMO 3:" ,
-#'                  rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
-#'                  footers = c("hex1", "hex2"),
-#'                  footer_links = rep("https://www.google.com", 2)
+#'         hexPanel(
+#'             "demo3", "DEMO 3:" ,
+#'             rep("https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg", 2),
+#'             footers = c("hex1", "hex2"),
+#'             footer_links = rep("https://www.google.com", 2)
 #'         )
 #'     )
 #'     server <- function(input, output, session) {
@@ -683,14 +711,14 @@ hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
         assert_that(length(hex_imgs) == length(ys))
     if(is.null(xs)) xs <- rep("-10", length(hex_imgs))
     if(is.null(ys)) ys <- rep("-20", length(hex_imgs))
-    sapply(seq_along(hex_imgs), function(i){
+    vapply(seq_along(hex_imgs), function(i){
         div(class="hex-item",
             hexLogo(id = paste0(id, i), title = hex_titles[i],
                     hex_img = hex_imgs[i], hex_link = hex_links[i],
                     footer = footers[i], footer_link = footer_links[i],
                     x = xs[i], y=ys[i])
         )
-    }, simplify = FALSE) %>% {
+    }, list(1)) %>% {
         fluidRow(class = "hex-panel",
                  h5(class = "text-primary", title),
                  tagList(.)

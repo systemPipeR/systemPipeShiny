@@ -30,7 +30,7 @@ hrefTable(
 \item{...}{other HTML args}
 }
 \value{
-
+HTML elements
 }
 \description{
 A table of lists of hyper reference buttons
@@ -41,7 +41,6 @@ nth item in \code{item_labels}, \code{item_hrefs} must have the same length
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
 
     ui <- fluidPage(
         useSps(),

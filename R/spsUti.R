@@ -133,8 +133,7 @@ step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
 #'
 #' @param x function or expression or value assignment expression
 #' @export
-#' @return
-#'
+#' @return invisible value
 #' @examples
 #' quiet(print(1))
 #' quiet(cat(1))
@@ -187,7 +186,8 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 # examples
 # tab_ids <- c("core_about", "vs_main")
 # findTabInfo(tab_ids, tab_file = tab_file)
-findTabInfo <- function(tab_ids=NULL, type = NULL, tab_file = "config/tabs.csv") {
+findTabInfo <- function(tab_ids=NULL, type = NULL,
+                        tab_file = "config/tabs.csv") {
     if(is.null(type)) assert_that(is.character(tab_ids))
     tabs <- if (exists("tab_info")) {
         tab_info
@@ -203,7 +203,8 @@ findTabInfo <- function(tab_ids=NULL, type = NULL, tab_file = "config/tabs.csv")
         tab_nos <- tabs$type %in% type
         if (!any(tab_nos)) tab_nos <- tabs$type_sub %in% type
         if (!any(tab_nos)){
-            spswarn(glue("This tab type '{type}' contains no tab, check the type"))
+            spswarn(glue("This tab type '{type}'",
+                         "contains no tab, check the type"))
             return(NULL)
         }
     } else {
@@ -225,10 +226,12 @@ findTabInfo <- function(tab_ids=NULL, type = NULL, tab_file = "config/tabs.csv")
         ) %>% return()
 }
 
-# LZ note: do not use spsOption function here, because it is depend on this function.
+# LZ note: do not use spsOption function here,
+# because it is depend on this function.
 # If used, two functions depending on each other and creates infinite loop
 #' SPS terminal message
-#' @description If `crayon` is installed, the message will be colorful.
+#' @description If SPS `use_crayon`option is `TRUE`, the message will
+#' be colorful.
 #' "INFO" level spawns `message`, "WARNING" is `warning`, "ERROR" spawns `stop`,
 #' other levels use `cat`
 #'
@@ -242,14 +245,13 @@ findTabInfo <- function(tab_ids=NULL, type = NULL, tab_file = "config/tabs.csv")
 #' @param warning_text warning level text prefix
 #' @param error_text error level text prefix
 #' @importFrom crayon blue make_style red
-#' @return
 #' @export
-#'
+#' @return see description
 #' @examples
 #' msg("this is info")
 #' msg("this is warning", "warning")
-#' \dontrun{msg("this is error", "error"); print("you can't see me")}
-#' msg("this is other", "error2"); print("you can see me")
+#' try(msg("this is error", "error"))
+#' msg("this is other", "error2")
 msg <- function(msg,
                 level = "INFO",
                 .other_color="white",
@@ -258,13 +260,11 @@ msg <- function(msg,
                 error_text = "ERROR"){
     msg <- paste0(msg, collapse = "")
     info <- warn <- err <- other <- function(msg){return(msg)}
-    if(!is.null(getOption('sps')[['use_crayon']])){
-        if(getOption('sps')[['use_crayon']]){
-            info <- crayon::blue$bold
-            warn <- crayon::make_style("orange")$bold
-            err <- crayon::red$bold
-            other <- crayon::make_style(.other_color)$bold
-        }
+    if(getOption('sps')[['use_crayon']]){
+        info <- crayon::blue$bold
+        warn <- crayon::make_style("orange")$bold
+        err <- crayon::red$bold
+        other <- crayon::make_style(.other_color)$bold
     }
     level_text <- switch(toupper(level),
         "WARNING" = warning_text,
@@ -298,7 +298,8 @@ spserror <- function(msg) msg(msg, "error", error_text = "SPS-ERROR")
 ###
 
 #' Remove ANSI color code
-#' @description borrowed from crayon package, since this package is just suggested
+#' @description borrowed from crayon package, since
+#' this package is just suggested
 #' by SPS, use some code from crayon
 #' @param string string
 #' @noRd
@@ -331,7 +332,8 @@ timline_pg_status <- function(progress = 0){
 #' @param x expression
 #'
 #' @export
-#'
+#' @return `NA`, `""`, `NULL`, `length(0)`, `nchar == 0` and `FALSE` will return
+#' `FALSE`, otherwise `TRUE`.
 #' @examples
 #' emptyIsFalse(NULL)
 #' emptyIsFalse(NA)

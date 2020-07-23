@@ -34,11 +34,11 @@ library(systemPipeShiny)
 options(sps = list(
     mode = "local",
     warning_toast = TRUE,
-    loading_screen = F,
+    loading_screen = FALSE,
     loading_theme = "vhelix",
     loading_particles = TRUE,
     use_crayon = TRUE,
-    verbose = T,
+    verbose = TRUE,
     dev = TRUE,
     admin_page = FALSE,
     admin_url = "admin"

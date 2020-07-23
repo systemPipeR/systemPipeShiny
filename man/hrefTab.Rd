@@ -55,7 +55,6 @@ must be in \code{./config} directory.
 }
 \examples{
 if(interactive()){
-    library(systemPipeShiny)
     ui <- fluidPage(
         useSps(),
         hrefTab(label_text = c("Bar Plot", "PCA Plot", "Scatter Plot"),
