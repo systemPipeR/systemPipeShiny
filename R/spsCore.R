@@ -34,7 +34,7 @@ sps <- function(vstabs, server_expr=NULL){
                       "{vstabs[duplicated(vstabs)]}"))
     sps_env <- new.env(parent = globalenv())
     vapply(file.path("R", list.files("R", "\\.[rR]$")),
-           function(x) source(x, local = sps_env), list(1)) %>%
+           function(x) source(x, local = sps_env), list(1, 2)) %>%
         invisible()
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
     attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = FALSE)
@@ -156,9 +156,10 @@ checkSps <- function(appDir = getwd()) {
 verifyConfig <- function(appDir) {
     sps_options <-
         yaml::yaml.load_file(glue("{appDir}/config/sps_options.yaml"))
-    sps_defaults <- vapply(names(sps_options),
+    # can't use vapply, mix types of returns
+    sps_defaults <- sapply(names(sps_options),
                            function(x) sps_options[[x]][['default']],
-                           list(1))
+                           simplify = FALSE)
     vapply(seq_along(sps_defaults),
            function(x) if(length(sps_defaults[x]) != 1)
            {

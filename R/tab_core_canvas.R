@@ -125,7 +125,7 @@ core_canvasServer <- function(id, shared){
                                      message = "Need at least one snapshot"))
                 ui <- ui[snaps]
                 snap_severs <- snap_severs[snaps]
-                vapply(seq_along(ui), function(i){
+                sapply(seq_along(ui), function(i){
                     column(
                         width = 12/isolate(input$ncols),
                         class = "collapse in",
@@ -149,7 +149,7 @@ core_canvasServer <- function(id, shared){
                                          '$("#@ui[[i]][2]@")',
                                          '.resizable()'))
                     )
-                }, list(1)) %>%{
+                }, simplify = FALSE) %>%{
                     fluidRow(id = ns('plots'),
                              style = glue("background-color: {isolate(input$canvas_color)};"),
                              class = "sps-canvas",

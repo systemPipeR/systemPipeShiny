@@ -43,7 +43,7 @@ Then there should be a project folder created for you. By default, it is named `
 Your working directory should be set inside that project folder automatically. 
 If you are using Rstudio, three main files will be opened for you: `global.R`, `ui.R` and `server.R`. 
 Now you can just run the app by type `shiny::runApp()` in console or click on the green `> Run App` 
-button on top right concern of the any these 3 files in Rstudio. 
+button on top right corner of the any these 3 files in Rstudio. 
 In your global.R, scroll down to the bottom, you should see:
 
 

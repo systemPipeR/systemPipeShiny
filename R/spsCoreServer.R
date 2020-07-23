@@ -335,11 +335,11 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
     arg_names <- names(args)
     if(any(is.null(arg_names))) msg("All args must be named", "error")
     # check if all required args are provided
-    inject_args <- vapply(seq_along(validate_list), function(each_vd) {
+    inject_args <- sapply(seq_along(validate_list), function(each_vd) {
         if(!is.function(validate_list[[each_vd]])) {
             msg("Each item in `validate_list` must be a function", "error")}
         each_vd_args <- formals(validate_list[[each_vd]])
-        vapply(seq_along(each_vd_args), function(each_arg) {
+        sapply(seq_along(each_vd_args), function(each_arg) {
             required_arg <- rlang::is_missing(each_vd_args[[each_arg]])
             if(required_arg & !names(each_vd_args)[[each_arg]] %in% arg_names) {
                 msg(glue("Validation function ",
@@ -348,9 +348,9 @@ spsValidator <- function(validate_list, args = list(), title = "Validation"){
                          "with no defaults but it is not in your args list"),
                     "error")
             }
-        }, list(1))
+        }, simplify = FALSE)
         arg_names  %in% names(each_vd_args)
-    }, list(1))
+    }, simplify = FALSE)
     for(index in seq_along(validate_list)){
         result <- shinyCatch(do.call(
             validate_list[[index]], args = args[inject_args[[index]]]
