@@ -28,7 +28,7 @@ df_templateUI <- function(id){
         ),
         tabTitle("Title for this kind of dataframe"), spsHr(),
         hexPanel(ns("poweredby"), "POWERED BY:",
-                 hex_imgs = c("img/systemPipeR_site.png"),
+                 hex_imgs = c("img/sps.png"),
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
         renderDesc(id = ns("desc"), desc),
         div(style = "text-align: center;",

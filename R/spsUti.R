@@ -4,7 +4,8 @@
 #' @description Data prepare for ShinyTree
 #' @param t_lvl positive integers, vector, levels of all title levels in Rmd
 #' @param t_text character strings, vector, text of titles
-#' @param start_lvl integer, default value is 0, but default level is 1 (0 + 1). level to start to create list
+#' @param start_lvl integer, default value is 0, but default
+#' level is 1 (0 + 1). level to start to create list
 #' @noRd
 #' @return a nested list
 #'
@@ -19,7 +20,8 @@
 # ui = shinyUI(
 #     pageWithSidebar(
 #         mainPanel(
-#             shinyTree("tree", stripes = TRUE, multiple = FALSE, animation = FALSE)
+#             shinyTree("tree", stripes = TRUE,
+#                       multiple = FALSE, animation = FALSE)
 #         )
 #     ))
 # server = shinyServer(function(input, output, session) {
@@ -48,7 +50,8 @@ step2listTree <- function(t_lvl, t_text, start_lvl = 0){
             } else {
                 children_lvl <- t_lvl[(t_index[i] + 1): (t_index[i + 1] -1)]
                 children_name <- t_text[(t_index[i] + 1): (t_index[i + 1] -1)]
-                tmp_lst[[t_text[t_index[i]]]] <- step2listTree(children_lvl, children_name, start_lvl)
+                tmp_lst[[t_text[t_index[i]]]] <-
+                    step2listTree(children_lvl, children_name, start_lvl)
             }
         }
         return(tmp_lst)
@@ -94,7 +97,8 @@ findTreeParent <- function(step_names){
 # str(test)
 # diagonalNetwork(test)
 step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
-    if (is.null(t_lvl) | is.null(t_text)) return(list(name = "Nothing has been loaded"))
+    if (is.null(t_lvl) | is.null(t_text))
+        return(list(name = "Nothing has been loaded"))
     findChildren <- function(t_lvl, t_text, start_lvl){
         start_lvl <- start_lvl + 1
 
@@ -113,7 +117,11 @@ step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
                 t_index <- c(t_index, length(t_lvl) + 1)
                 children_lvl <- t_lvl[(t_index[i] + 1) : (t_index[i+1] - 1)]
                 children_name <- t_text[(t_index[i] + 1) : (t_index[i+1] - 1)]
-                list(name =  t_text[t_index[i]], children = findChildren(children_lvl, children_name, start_lvl))
+                list(name = t_text[t_index[i]],
+                     children = findChildren(children_lvl,
+                                             children_name,
+                                             start_lvl)
+                     )
             })
             return(tmp_lst)
         } else { return(list(name = ""))}
@@ -121,11 +129,14 @@ step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
     if (t_lvl %>% unique() %>% length == 1){
         tmp_lst = list()
         for (i in t_text){
-            tmp_lst <- append(tmp_lst, list(list(name = i, children = list(name = ""))))
+            tmp_lst <- append(tmp_lst,
+                              list(list(name = i, children = list(name = ""))))
         }
         return(list(name = "File", children = tmp_lst))
     }
-    return(list(name = "File", children = findChildren(t_lvl, t_text, start_lvl)))
+    return(
+        list(name = "File", children = findChildren(t_lvl, t_text, start_lvl))
+    )
 }
 
 
@@ -145,7 +156,8 @@ quiet <- function(x) {
 
 
 #' check namespace
-#' @description  Help you to check if you have certain packages and return missing package names
+#' @description  Help you to check if you have certain packages and
+#' return missing package names
 #' @param packages vector of strings
 #' @param quietly bool, give you error on fail?
 #' @param from  string, where this package is from like, "CRAN", "GitHub", only
@@ -179,7 +191,8 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' @param tab_file tab file path
 #' @importFrom shinyAce is.empty
 #' @importFrom vroom vroom
-#' @return a list contains `tab_id`, `tab_labels`, `hrefs` reference, `image` path,
+#' @return a list contains `tab_id`, `tab_labels`, `hrefs`
+#' reference, `image` path,
 #' `tpye` and `tpye_sub`
 #' @noRd
 #'
@@ -260,11 +273,13 @@ msg <- function(msg,
                 error_text = "ERROR"){
     msg <- paste0(msg, collapse = "")
     info <- warn <- err <- other <- function(msg){return(msg)}
-    if(getOption('sps')[['use_crayon']]){
-        info <- crayon::blue$bold
-        warn <- crayon::make_style("orange")$bold
-        err <- crayon::red$bold
-        other <- crayon::make_style(.other_color)$bold
+    if(!is.null(getOption('sps')[['use_crayon']])){
+        if(getOption('sps')[['use_crayon']]){
+            info <- crayon::blue$bold
+            warn <- crayon::make_style("orange")$bold
+            err <- crayon::red$bold
+            other <- crayon::make_style(.other_color)$bold
+        }
     }
     level_text <- switch(toupper(level),
         "WARNING" = warning_text,

@@ -34,7 +34,7 @@ plot_templateUI <- function(id){
         tabTitle("Title for this kind of plot"),
         spsHr(), h3("Descrption"),
         hexPanel(ns("poweredby"), "POWERED BY:",
-                 hex_imgs = c("img/systemPipeR_site.png"),
+                 hex_imgs = c("img/sps.png"),
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
         renderDesc(id = ns("desc"), desc),
         spsHr(), h3("Data preparation"),
