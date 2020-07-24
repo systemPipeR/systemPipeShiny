@@ -18,7 +18,7 @@ core_dashboardUI <- function(id){
                 shinydashboardPlus::carouselItem(
                     caption = "SPS",
                     tags$img(style = "width: 500px;",
-                             src = "img/systemPipeR_site.png",
+                             src = "img/sps.png",
                              class = "center-block")
                 ),
                 shinydashboardPlus::carouselItem(

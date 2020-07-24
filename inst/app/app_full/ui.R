@@ -3,7 +3,7 @@
 dashboardHeader <- dashboardHeaderPlus(
     title = tagList(
         span(class = "logo-lg", "systemPipeShiny"),
-        img(src = "img/systemPipe_small.png")
+        img(src = "img/sps_small.png")
     ),
     enable_rightsidebar = FALSE,
     rightSidebarIcon = "clipboard-check",
@@ -56,7 +56,7 @@ dashboardSidebar <-  dashboardSidebar(
 # body
 dashboardBody <- dashboardBody(
     tags$head(
-        tags$link(rel="shortcut icon", href="img/systemPipe_small.png"),
+        tags$link(rel="shortcut icon", href="img/sps_small.png"),
         useShinyjs(),
         useSweetAlert(),
         useSps(),

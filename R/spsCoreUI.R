@@ -47,7 +47,7 @@ spsUI <- function(tabs_df, tabs_plot){
     dashboardHeader <- shinydashboardPlus::dashboardHeaderPlus(
         title = tagList(
             span(class = "logo-lg", "systemPipeShiny"),
-            img(src = "img/systemPipe_small.png")
+            img(src = "img/sps_small.png")
         ),
         enable_rightsidebar = FALSE,
         rightSidebarIcon = "clipboard-check",
@@ -134,7 +134,7 @@ spsUI <- function(tabs_df, tabs_plot){
     spsinfo("Add tab content to body ...")
     dashboardBody <- shinydashboard::dashboardBody(
         tags$head(
-            tags$link(rel="shortcut icon", href="img/systemPipe_small.png"),
+            tags$link(rel="shortcut icon", href="img/sps_small.png"),
             shinyjs::useShinyjs(),
             shinyWidgets::useSweetAlert(),
             useSps(),

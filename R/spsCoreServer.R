@@ -276,108 +276,80 @@ loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
     return(df)
 }
 
-#' Validate some inputs
-#' @description Useful to check if a input dataframe, list or other things
-#' meet the requirement. If any validation fails, it will show a pop-up message
-#' and block any further code execution, similar to `shiny::req()`
-#' @param validate_list a list of function which are in a named list and only
-#' returns a single value of TRUE or FALSE. this return value needs to be named.
-#' This return name will be used as error message.
-#' @param args a `named`(very important) list of arguments that will be used in
-#' different function in  `validate_list`. `...` argument is not supported.
-#' Positional args will not work either.
-#' Have to specify the name of argument, position argument also is not working.
-#' @param title Title of this validator
-#' @return if any validation function returns FALSE, a error pop-up will show
-#' in the shiny app.
+#' Validate expressions
+#' @description this function is usually used on server side to validate input
+#' dataframe or some expression
+#' @param expr the expression to validate data or other things. It should
+#' return `TRUE` if pass or use `stop("your message")` if fail. Other types of
+#' return are acceptable but not recommended. As long as it is not empty or
+#' `FALSE` by the `emptyIsFalse()` function, it will return `TRUE`
+#' @param vd_name validate title
+#' @param pass_msg string, if pass, what message do you want to show
+#' @param fail_msg string, optional, if your expression does not contain the
+#' use of `stop()`  for failure and only returns `FALSE` or other empty values,
+#' this message will show and generate `shiny reactive stop`
+#' @param shiny you can use this function outside shiny,
+#' see `shinyCatch()` for more
+#' @param verbose bool, show pass message? Default follows project verbose
+#' setting
+#' @seealso \code{\link{shinyCatch}}, \code{\link{emptyIsFalse}}
+#' @return If expression returns empty or `FALSE` make it `shiny reactive stop`
+#' and no final return, else `TRUE`.
 #' @export
-#' @importFrom rlang is_missing is_bool
-#' @importFrom shinytoastr toastr_success
+#'
 #' @examples
+#' spsOption("verbose", TRUE)
 #' if(interactive()){
-#'     df_validate_common <- list(
-#'         vd1 = function(df, apple){
-#'             print(apple)
-#'             if (is(df, "data.frame")) {result <- c(" " = TRUE)}
-#'             else {result <- c("Input is not dataframe or tibble" = FALSE)}
-#'             return(result)
-#'         },
-#'         vd2 = function(df, banana, orange="orange"){
-#'             print(banana)
-#'             print(orange)
-#'             # change < to > in next line to see failure
-#'             if (nrow(df) < 10) {result <- c(" " = TRUE)}
-#'             else {result <- c("Need more than 10 rows" = FALSE)}
-#'             Sys.sleep(1)
-#'             return(result)
-#'         }
-#'     )
 #'     ui <- fluidPage(
-#'         actionButton("btn", "this btn")
+#'         useSps(),
+#'         actionButton("vd1", "validate1"),
+#'         actionButton("vd2", "validate2")
 #'     )
 #'     server <- function(input, output, session) {
-#'         observeEvent(input$btn, {
-#'             spsValidator(df_validate_common,
-#'                          args = list(df = data.frame(),
-#'                                      apple = "apple",
-#'                                      banana = "banana"))
-#'             print(123)
+#'         mydata <- datasets::iris
+#'         observeEvent(input$vd1, {
+#'             spsValidate({
+#'                 is.data.frame(mydata)
+#'             }, vd_name = "Is df")
+#'             print("continue other things")
+#'         })
+#'         observeEvent(input$vd2, {
+#'             spsValidate({
+#'                 nrow(mydata) > 200
+#'             }, vd_name = "more than 200 rows")
+#'             print("other things blocked")
 #'         })
 #'     }
 #'     shinyApp(ui, server)
 #' }
-spsValidator <- function(validate_list, args = list(), title = "Validation"){
-    # pre checks
-    if(!is.list(args)) msg("Args must be in a list", "error")
-    if(!is.list(validate_list)) msg("Validate_list must be in a list", "error")
-    if(any(is.null(validate_list)))
-        msg("All functions need to be named", "error")
-    arg_names <- names(args)
-    if(any(is.null(arg_names))) msg("All args must be named", "error")
-    # check if all required args are provided
-    inject_args <- sapply(seq_along(validate_list), function(each_vd) {
-        if(!is.function(validate_list[[each_vd]])) {
-            msg("Each item in `validate_list` must be a function", "error")}
-        each_vd_args <- formals(validate_list[[each_vd]])
-        sapply(seq_along(each_vd_args), function(each_arg) {
-            required_arg <- rlang::is_missing(each_vd_args[[each_arg]])
-            if(required_arg & !names(each_vd_args)[[each_arg]] %in% arg_names) {
-                msg(glue("Validation function ",
-                         "`{names(validate_list)[each_vd]}`",
-                         " requires arg `{names(each_vd_args)[[each_arg]]}` ",
-                         "with no defaults but it is not in your args list"),
-                    "error")
+#' # outside shiny example
+#' mydata2 <- list(a = 1, b = 2)
+#' spsValidate({(mydata2)}, "Not empty", shiny = FALSE)
+#' try(spsValidate(is.data.frame(mydata2),
+#'                 "is dataframe?",
+#'                 shiny = FALSE),
+#'     silent = TRUE)
+spsValidate <- function(expr,
+                        vd_name="validation",
+                        pass_msg = glue("{vd_name} passed"),
+                        fail_msg = glue("{vd_name} failed"),
+                        shiny = TRUE,
+                        verbose = spsOption('verbose')){
+    result <- shinyCatch(expr,
+                         blocking_level = "error",
+                         shiny = shiny) %>% emptyIsFalse()
+    if(result){
+        if(verbose){
+            spsinfo(pass_msg, TRUE)
+            if(shiny){
+                shinytoastr::toastr_success(
+                    pass_msg, position = "bottom-right", timeOut = 3000)
             }
-        }, simplify = FALSE)
-        arg_names  %in% names(each_vd_args)
-    }, simplify = FALSE)
-    for(index in seq_along(validate_list)){
-        result <- shinyCatch(do.call(
-            validate_list[[index]], args = args[inject_args[[index]]]
-        ))
-        if (is.null(result)) {
-            shinyCatch(stop(glue("Error(s) while running through validator: ",
-                                 "{names(validate_list)[index]} ")),
-                       blocking_level = "error")
         }
-        if (!rlang::is_bool(result) | length(result) > 1) {
-            msg(glue("Function {names(validate_list)[index]}",
-                     "should only return `SINGLE` TRUE or FALSE"),
-                "error")}
-        if (is.null(names(result))) {
-            msg(glue("Function {names(validate_list)[index]}",
-                     "return needs to be named"), "error")}
-        if (!result) {
-            failed_msg <- result %>% names %>%
-                c("Validation Failed: ", .) %>%
-                glue_collapse(sep = "\n- ")
-            shinyCatch(stop(failed_msg), blocking_level = "error")
-        }
+        return(TRUE)
+    } else {
+        shinyCatch(stop(fail_msg), blocking_level = 'error', shiny = shiny)
     }
-    shinytoastr::toastr_success(glue("{title} Passed"),
-                                position = "bottom-right",
-                                timeOut = 3500)
-    return(invisible())
 }
 
 

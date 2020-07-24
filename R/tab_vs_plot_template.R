@@ -34,7 +34,7 @@ plot_templateUI <- function(id){
         tabTitle("Title for this kind of plot"),
         spsHr(), h3("Descrption"),
         hexPanel(ns("poweredby"), "POWERED BY:",
-                 hex_imgs = c("img/systemPipeR_site.png"),
+                 hex_imgs = c("img/sps.png"),
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
         renderDesc(id = ns("desc"), desc),
         spsHr(), h3("Data preparation"),
@@ -88,21 +88,6 @@ plot_templateServer <- function(id, shared){
         tab_id <- "plot_template"
         # define data containers
         mydata <- reactiveValues()
-        # define validators
-        validate_meta <- list(
-            meta = function(meta, data1) {
-                cat(data1)
-                if (ncol(meta) > 1) return(c(" " = TRUE))
-                else return(c("Need more than 1 column" = FALSE))
-            }
-        )
-        validate_data <- list(
-            data = function(data, data2) {
-                cat(data2)
-                if (ncol(data) > 1) return(c(" " = TRUE))
-                else return(c("Need more than 1 column" = FALSE))
-            }
-        )
         # start the tab by checking if required packages are installed
         observeEvent(input$validate_start, {
             req(shinyCheckPkg(session = session,
@@ -115,15 +100,16 @@ plot_templateServer <- function(id, shared){
             # pgPaneUpdate('pg', 'meta', 100)
             mydata$df <- getData(isolate(input$source_data), shared)
             pgPaneUpdate('pg', 'data', 100)
-            # spsValidator(validate_meta,
-            #              args = list(meta = mydata$meta,
-            #                          data1 = "this is data1\n"),
-            #              title = "Meta Validations")
+            spsValidate({
+                if (ncol(mydata$meta) > 1) TRUE
+                else stop("Need more than 1 column")
+            }, "metadata column check")
             # pgPaneUpdate('pg', 'vd_meta', 100)
-            spsValidator(validate_data,
-                         args = list(data = mydata$df,
-                                     data2 = "this is data2\n"),
-                         title = "Data Validations")
+            spsValidate({
+                if (ncol(mydata$df) > 1) TRUE
+                else stop("Need more than 1 column")
+            }, "Raw data column check")
+
             pgPaneUpdate('pg', 'vd_data', 100)
             shinyjs::show(id = "tab_main")
             shinytoastr::toastr_success(
