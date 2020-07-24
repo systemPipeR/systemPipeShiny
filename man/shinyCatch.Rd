@@ -4,15 +4,26 @@
 \alias{shinyCatch}
 \title{Catch  error, warning, message text}
 \usage{
-shinyCatch(expr, position = "bottom-right", blocking_level = "none")
+shinyCatch(
+  expr,
+  position = "bottom-right",
+  blocking_level = "none",
+  shiny = TRUE
+)
 }
 \arguments{
 \item{expr}{expression}
 
-\item{position}{toastr position, one of: c("top-right", "top-center", "top-left",}
+\item{position}{toastr position, one of: c("top-right", "top-center", "top-left",
+"top-full-width", "bottom-right", "bottom-center", "bottom-left",
+"bottom-full-width")}
 
 \item{blocking_level}{what level you want to block the execution, one
 of "error", "warning", "message"}
+
+\item{shiny}{bool, It is also possible to use without a shiny session. Only
+shows on console log, works very similar as \code{tryCatch} and can block at
+multiple levels}
 }
 \value{
 see description
@@ -67,4 +78,10 @@ if(interactive()){
     }
     shinyApp(ui, server)
 }
+#outside shiny examples
+shinyCatch(message("this message"), shiny = FALSE)
+try({shinyCatch(stop("this error"), shiny = FALSE); "no block"}, silent = TRUE)
+try({shinyCatch(stop("this error"), shiny = FALSE, blocking_level = "error")
+    "blocked"},
+    silent = TRUE)
 }

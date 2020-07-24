@@ -364,7 +364,7 @@ emptyIsFalse <- function(x){
 }
 
 # can't import shiny internal function, gives warnings, so rewrite here
-reactiveStop <- function(message = "", class = NULL){
+reactiveStop <- function(message = "\r              ", class = NULL){
     cond <- structure(list(message = message),
                       class = c(c("shiny.silent.error", class),
                                 "error",

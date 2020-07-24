@@ -14,11 +14,13 @@
 #' block the rest of the code in your reactive expression domain
 #' @param expr expression
 #' @param position toastr position, one of: c("top-right", "top-center", "top-left",
-# "top-full-width", "bottom-right", "bottom-center", "bottom-left",
-# "bottom-full-width")
+#' "top-full-width", "bottom-right", "bottom-center", "bottom-left",
+#' "bottom-full-width")
 #' @param blocking_level  what level you want to block the execution, one
 #' of "error", "warning", "message"
-#'
+#' @param shiny bool, It is also possible to use without a shiny session. Only
+#' shows on console log, works very similar as `tryCatch` and can block at
+#' multiple levels
 #' @return see description
 #' @importFrom shinytoastr toastr_info toastr_warning toastr_error
 #' @export
@@ -63,27 +65,35 @@
 #'     }
 #'     shinyApp(ui, server)
 #' }
-shinyCatch <- function(expr, position = "bottom-right", blocking_level = "none") {
+#' #outside shiny examples
+#' shinyCatch(message("this message"), shiny = FALSE)
+#' try({shinyCatch(stop("this error"), shiny = FALSE); "no block"}, silent = TRUE)
+#' try({shinyCatch(stop("this error"), shiny = FALSE, blocking_level = "error")
+#'     "blocked"},
+#'     silent = TRUE)
+shinyCatch <- function(expr, position = "bottom-right",
+                       blocking_level = "none", shiny = TRUE) {
+    assert_that(is.logical(shiny))
     toastr_actions <- list(
         message = function(m) {
             msg(m$message, "SPS-INFO", "blue")
-            shinytoastr::toastr_info(message = remove_ANSI(m$message),
+            if(shiny) shinytoastr::toastr_info(message = remove_ANSI(m$message),
                         position = position, closeButton = TRUE,
                         timeOut = 3000, preventDuplicates = TRUE)
         },
         warning = function(m) {
             msg(m$message, "SPS-WARNING", "orange")
-            shinytoastr::toastr_warning(message = remove_ANSI(m$message),
-                           position = position, closeButton = TRUE,
-                           timeOut = 5000, preventDuplicates = TRUE)
+            if(shiny) shinytoastr::toastr_warning(
+                message = remove_ANSI(m$message),
+                position = position, closeButton = TRUE,
+                timeOut = 5000, preventDuplicates = TRUE)
         },
         error = function(m) {
             msg(m$message, "SPS-ERROR", "red")
-            shinytoastr::toastr_error(
-                message = remove_ANSI(m$message), position = position,
-                closeButton = TRUE, timeOut = 0, preventDuplicates = TRUE,
-                title = "There is an error", hideDuration = 300
-            )
+            if(shiny) shinytoastr::toastr_error(
+                    message = remove_ANSI(m$message), position = position,
+                    closeButton = TRUE, timeOut = 0, preventDuplicates = TRUE,
+                    title = "There is an error", hideDuration = 300)
         }
     )
     switch(tolower(blocking_level),

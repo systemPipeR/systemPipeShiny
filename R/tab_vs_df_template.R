@@ -147,62 +147,28 @@ df_templateServer <-function(id, shared){
                                            targets = "_all"))
                 ))
         })
-
-        # preprocess
-        ## define validators
-        df_validate_common <- list(
-            vd1 = function(df){
-                if (is(df, "data.frame")) {result <- c(" " = TRUE)}
-                else {result <- c("Input is not dataframe or tibble" = FALSE)}
-                return(result)
-            },
-            vd2 = function(df){
-                if (ncol(df) > 1) {result <- c(" " = TRUE)}
-                else {result <- c("Input is not dataframe or tibble" = FALSE)}
-                Sys.sleep(1)
-                return(result)
-            }
-        )
-        ## define special validations for different reprocesses
-        df_validate_method1 <- list(
-            md1 = function(df, special1) {
-                cat(special1)
-                if (ncol(df) > 1) return(c(" " = TRUE))
-                else return(c("Need more than 1 column" = FALSE))
-            }
-        )
-        df_validate_method2 <- list(
-            md1 = function(df, special2) {
-                cat(special2)
-                if (ncol(df) > 1) return(c(" " = TRUE))
-                else return(c("Need more than 1 column" = FALSE))
-            }
-        )
         # start validation and preprocess
         observeEvent(input$preprocess, ignoreInit = TRUE, {
             # get filtered df
             df_filter <-  data_df()[input$df_rows_all, ]
             # validate data
-            spsValidator(df_validate_common,
-                         args = list(df = df_filter,
-                                     apple = "apple\n",
-                                     banana = "banana\n"),
-                         title = "Common Validations")
-            # validate special requirements for different preprocess
+            spsValidate({
+                if (is(df_filter, "data.frame")) TRUE
+                else stop("Input data is not a dataframe")
+                if (ncol(df_filter) >= 1) TRUE
+                else stop("Data need to have at least one column")
+            }, "Data common checks")
+            # validate special requirements for different preprocess methods
             switch(
                 input$select_prepro,
-                'md1' = spsValidator(
-                    df_validate_method1,
-                    args = list(df = df_filter,
-                                special1 = "validation for method 1\n"),
-                    title = "Special validation for method 1"
-                ),
-                'md2' = spsValidator(
-                    df_validate_method2,
-                    args = list(df = df_filter,
-                                special2 = "validation for method 2\n"),
-                    title = "Special validation for method 2"
-                ),
+                'md1' = spsValidate({
+                    if (nrow(df_filter) >= 1) TRUE
+                    else stop("Data need to have at least one row")
+                }, "Requirements for method 1"),
+                'md2' = spsValidate({
+                    if (nrow(df_filter) < 1000) TRUE
+                    else stop("Data need to have at most 1000 rows")
+                }, "Requirements for method 2"),
                 msg('No addition validation required')
             )
             pgPaneUpdate('pg', 'vd_data', 100)
@@ -211,14 +177,18 @@ df_templateServer <-function(id, shared){
                 switch(input$select_prepro,
                        'md1' = {
                            # your preprocess function, e.g
-                           df_filter[, 1] = df_filter[, 1] + 1
+                           print(df_filter)
+                           print(df_filter[, 1])
+                           if(is.numeric(df_filter[[1]]))
+                               df_filter[, 1] = df_filter[, 1] + 1
                        },
                        'md2' = {
-                           df_filter[, 1] = log(df_filter[, 1])
+                           if(is.numeric(df_filter[[1]]))
+                               df_filter[, 1] = log(df_filter[, 1])
                        },
                        df_filter
             ), blocking_level = 'error')
-            req(!is.null(df_processed))
+            spsValidate(not_empty(df_processed), "Final data is not empty")
             pgPaneUpdate('pg', 'prepro', 100)
             # add data to task
             addData(df_processed, shared, tab_id)
