@@ -97,6 +97,8 @@ BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, depend
 
 ## Visualization 
 
+systemPipeShiny offers interactive data visualization to users and supports graphics in workflow reports. In systemPipeShiny's visualization tab, there are many features for data visualization of various statistical results. Users can upload different input data types, and apply various options for preprocessing those datasets. Users can then create downstream analysis plots, as per the type of uploaded data. Some available plotting options include: bar plots of differentially expressed genes, heat maps, dendrogram, principal component analysis (PCA) plots, and multidimensional scaling (MDS) plots. Depending on the nature of the plots, there are also options to adjust the plot such as normalizing the data. Additionally, systemPipeShiny provides users with plot templates and plotting functions that they can then customize according to their necessities for visualization.
+
 Table with all exported functions
 
 | Function Name | Description                                                     |   |   |
