@@ -173,6 +173,7 @@ spsUI <- function(tabs_df, tabs_plot){
 #' @param type filter by tab type, then tab_ids will be
 #' ignored: core, wf, data, vs
 #'
+#' @export
 #' @return gallery div
 #'
 #' @examples

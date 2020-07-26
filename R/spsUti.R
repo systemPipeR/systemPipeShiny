@@ -189,6 +189,10 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' @param tab_ids vector of strings, tab names you want to get
 #' @param type tab type and sub type, one of: core, wf, vs, data, plot
 #' @param tab_file tab file path
+#' @param force_reload bool, tab info usually stores at a variable
+#' called `tab_info`. This function first look for that one, if not exists,
+#' read from file. This argument forcedly read from file and ignore that
+#' variable.
 #' @importFrom shinyAce is.empty
 #' @importFrom vroom vroom
 #' @return a list contains `tab_id`, `tab_labels`, `hrefs`
@@ -200,12 +204,14 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 # tab_ids <- c("core_about", "vs_main")
 # findTabInfo(tab_ids, tab_file = tab_file)
 findTabInfo <- function(tab_ids=NULL, type = NULL,
-                        tab_file = "config/tabs.csv") {
+                        tab_file = "config/tabs.csv",
+                        force_reload = FALSE) {
     if(is.null(type)) assert_that(is.character(tab_ids))
-    tabs <- if (exists("tab_info")) {
+    tabs <- if(exists("tab_info") & !force_reload) {
         tab_info
     } else {
-        vroom::vroom(tab_file, comment = "#", na = character())
+         suppressMessages(
+             vroom::vroom(tab_file, comment = "#", na = character()))
     }
     if(!spsOption('dev')){
         tabs <- tabs[!str_detect(tabs$tab_id, "_template$"), ]
@@ -222,7 +228,7 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
         }
     } else {
         tab_nos <- vapply(tab_ids, function(x) {
-            tab_no <- str_which(glue("^{x}$"), tabs$tab_id)
+            tab_no <- str_which(pattern = glue("^{x}$"), string = tabs$tab_id)
             if (shinyAce::is.empty(tab_no)){
                 spserror(glue("Tab {x} is not in the tab list"))
             }
@@ -242,12 +248,19 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
 # LZ note: do not use spsOption function here,
 # because it is depend on this function.
 # If used, two functions depending on each other and creates infinite loop
-#' SPS terminal message
+#' SPS terminal message logging methods
 #' @description If SPS `use_crayon`option is `TRUE`, the message will
 #' be colorful.
 #' "INFO" level spawns `message`, "WARNING" is `warning`, "ERROR" spawns `stop`,
-#' other levels use `cat`
+#' other levels use `cat`.
+#' `spsinfo`, `spswarn`, `spserror` are higher level wrappers of `msg`. The
+#' only difference is they have `SPS-` prefix.
 #'
+#' `spsinfo` has an additional
+#' arg `verbose`. This arg works similar to all other `verbose` args in this
+#' package, if not specified, it follows the project option, can be be forced to
+#' `TRUE` and `FALSE`. `TRUE` will forcefully generate the msg, and `FALSE`
+#' will be no message.
 #' @param msg a character string of message or a vector of character strings,
 #' each item in the vector presents one line of words
 #' @param .other_color hex color code or named colors, when levels are not in
@@ -298,19 +311,21 @@ msg <- function(msg,
     )
 }
 
-### internal sps msg warn error, just simple wrappers of msg
-#' @param msg
-#'
-#' @param verbose bool, default get from sps options
-#' @noRd
+
+#' @param verbose bool, default NULL, get from sps project options
+#' @rdname msg
 spsinfo <- function(msg, verbose=NULL) {
     verbose <- if(is.null(verbose)) spsOption('verbose')
                else {assert_that(is.logical(verbose)); verbose}
     if(verbose) msg(msg, "SPS-INFO", "blue")
 }
+
+#' @rdname msg
 spswarn <- function(msg) msg(msg, "warning", warning_text = "SPS-WARNING")
+
+#' @rdname msg
 spserror <- function(msg) msg(msg, "error", error_text = "SPS-ERROR")
-###
+
 
 #' Remove ANSI color code
 #' @description borrowed from crayon package, since
@@ -372,3 +387,5 @@ reactiveStop <- function(message = "\r              ", class = NULL){
     )
     stop(cond)
 }
+
+

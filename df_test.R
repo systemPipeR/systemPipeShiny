@@ -1,24 +1,13 @@
-########################## Template for data tab ###############################
+######################SPS #@tab_displayname@# tab######################
+# creation date: #@crt_date@#
+# Author: #@author@#
 
-## UI
-
-#' @importFrom DT DTOutput
-#' @importFrom shinyWidgets radioGroupButtons pickerInput
-#' @noRd
-df_templateUI <- function(id){
+# #@tab_id@# UI
+df_#@tab_id@#UI <- function(id){
     ns <- NS(id)
     # describe your tab in markdown format, this will go right under the title
     desc <- "
-    #### Some Description of this data
-    - you should ...
-        1. eg 1.
-        2. eg 2.
-        - **Notice**: ...`this` ...
-
-
-    ```
-    some code demo ...
-    ```
+    #@{desc}@#
     "
     tagList(
         pgPaneUI(ns("pg"),
@@ -26,7 +15,7 @@ df_templateUI <- function(id){
                             "Input Data Validation", "Preprocess"),
                  pg_ids = c(ns("pkg"), ns("data"), ns("vd_data"), ns("prepro"))
         ),
-        tabTitle("Title for this kind of dataframe"), spsHr(),
+        tabTitle("Title for #@tab_displayname@#"), spsHr(),
         hexPanel(ns("poweredby"), "POWERED BY:",
                  hex_imgs = c("img/sps.png"),
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
@@ -71,9 +60,7 @@ df_templateUI <- function(id){
                 column(4,
                     shinyWidgets::pickerInput(
                         inputId = ns("select_prepro"),
-                        choices = c(`Do Nothing`='nothing',
-                                    `Method 1`='md1',
-                                    `Method 2`='md2'),
+                        choices = #@choices@#,
                         options = list(style = "btn-primary")
                     )
                 ),
@@ -90,16 +77,12 @@ df_templateUI <- function(id){
     )
 }
 
-## server
+## #@tab_id@# server
 
-#' @importFrom DT renderDT datatable
-#' @importFrom shiny validate
-#' @importFrom shinyjs show hide toggleState
-#' @noRd
-df_templateServer <-function(id, shared){
+df_#@tab_id@#Server <-function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
-        tab_id <- "df_template"
+        tab_id <- "#@tab_id@#"
         # start the tab by checking if required packages are installed
         observeEvent(input$validate_start, {
             req(shinyCheckPkg(
@@ -125,7 +108,7 @@ df_templateServer <-function(id, shared){
             pgPaneUpdate('pg', 'data', 0) # set data progress to 0 every reload
             loadDF(choice = input$data_source, upload_path = df_path$datapath,
                    delim = input$delim, comment = input$comment,
-                   eg_path = "data/iris.csv")
+                   eg_path = '#@eg_path@#')
         })
         # display table
         output$df <- DT::renderDT({
@@ -151,42 +134,18 @@ df_templateServer <-function(id, shared){
         observeEvent(input$preprocess, ignoreInit = TRUE, {
             # get filtered df
             df_filtered <-  data_df()[input$df_rows_all, ]
-            # validate data
-            spsValidate({
-                if (is(df_filtered, "data.frame")) TRUE
-                else stop("Input data is not a dataframe")
-                if (ncol(df_filtered) >= 1) TRUE
-                else stop("Data need to have at least one column")
-            }, "Data common checks")
+            # validate data with common validation checks
+            #@common_validation@#
             # validate special requirements for different preprocess methods
             switch(
                 input$select_prepro,
-                'md1' = spsValidate({
-                    if (nrow(df_filtered) >= 1) TRUE
-                    else stop("Data need to have at least one row")
-                }, "Requirements for method 1"),
-                'md2' = spsValidate({
-                    if (nrow(df_filtered) < 1000) TRUE
-                    else stop("Data need to have at most 1000 rows")
-                }, "Requirements for method 2"),
-                msg('No addition validation required')
+                #@vds@#
             )
             pgPaneUpdate('pg', 'vd_data', 100)
             # if validation passed, start reprocess
             df_processed <- shinyCatch(
                 switch(input$select_prepro,
-                       'md1' = {
-                           # your preprocess function, e.g
-                           print(df_filtered)
-                           print(df_filtered[, 1])
-                           if(is.numeric(df_filtered[[1]]))
-                               df_filtered[, 1] = df_filtered[, 1] + 1
-                       },
-                       'md2' = {
-                           if(is.numeric(df_filtered[[1]]))
-                               df_filtered[, 1] = log(df_filtered[, 1])
-                       },
-                       df_filtered
+                       #@pre@#
             ), blocking_level = 'error')
             spsValidate(not_empty(df_processed), "Final data is not empty")
             pgPaneUpdate('pg', 'prepro', 100)
@@ -199,14 +158,11 @@ df_templateServer <-function(id, shared){
                 position = "bottom-right"
             )
             shinyjs::show(id = "plot_option_row")
-            gallery <- switch(
-                input$select_prepro,
-                'md1' = genGallery("plot_pca"),
-                'md2' = genGallery(c("plot_template", "plot_pca")),
-                genGallery(type = "plot")
-            )
             output$plot_option <- renderUI({
-                gallery
+                switch(
+                    input$select_prepro,
+                    #@pt_options@#
+                )
             })
         })
     }
