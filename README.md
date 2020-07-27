@@ -8,7 +8,7 @@
 systemPipeShiny is a framework for workflow management and data visualization. 
 This tool is under devleopment, you can install it from Github.
 
-An online demo of [SystempipeShiny](https://tgirke.shinyapps.io/systemPipeShiny/). 
+An online demo of [systempipeShiny](https://tgirke.shinyapps.io/systemPipeShiny/). 
 This application is hosted by a small server. Please do not use it for production activities. 
 Heavy tasks will crash it and disconnect you from it. 
 
