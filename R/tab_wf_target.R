@@ -123,14 +123,14 @@ wf_targetServer <- function(id, shared){
          # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
          # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
          # <CMP> CMPset2: ALL"
-        df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
+        data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
             tibble::as_tibble()
         ns <- session$ns
         # some reactive values to pass around observe
         selected_old <- reactiveVal("upload")
         selected_flag <- reactiveVal(TRUE)
         targets_p_old <- reactiveVal("")
-        t.df <- reactiveVal(df_init)
+        t.df <- reactiveVal(data_init)
         target_upload <- dynamicFileServer(input, session, id = "target_upload")
         # update table
         output$targets_df <- rhandsontable::renderRHandsontable({
@@ -165,7 +165,7 @@ wf_targetServer <- function(id, shared){
                                targets_p_old = targets_p_old(),
                                choice = input$target_source,
                                choice_old = selected_old(),
-                               df_init = df_init)
+                               data_init = data_init)
                 )
                 # header
                 header_lines <- ""
@@ -313,21 +313,21 @@ wf_targetServer <- function(id, shared){
     }
     # load target file
     hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL,
-                           choice, choice_old, df_init){
+                           choice, choice_old, data_init){
         targets_p <- switch(choice,
                             "upload" = targets_p,
                             "pe" = "data/targetsPE.txt",
                             "se" = "data/targets.txt"
         )
-        if (is.null(targets_p)) return(df_init)
-        if ((choice != choice_old) | (targets_p != targets_p_old)) {
+        if(is.null(targets_p)) return(data_init)
+        if((choice != choice_old) | (targets_p != targets_p_old)) {
             df.t <- shinyCatch(vroom::vroom(
                 targets_p,  delim = "\t",
                 comment = "#", n_max = 10000,
                 col_names = FALSE, col_types = vroom::cols()
             ))
             if(is.null(df.t)){
-                warning("Can't read file, return empty"); return(df_init)}
+                warning("Can't read file, return empty"); return(data_init)}
         }
         names(df.t) <- paste0("X", seq_len(ncol(df.t)))
         return(df.t)

@@ -5,7 +5,7 @@ Here you can upload your targets file. The specifications file can be found in t
 
 "
 ## UI
-df_targetsUI <- function(id, description = targets_desc){
+data_targetsUI <- function(id, description = targets_desc){
     ns <- NS(id)
     tagList(
         h2("Targets Data Frame"),
@@ -18,7 +18,7 @@ df_targetsUI <- function(id, description = targets_desc){
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
         ),
-        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
+        textInputGroup(textId = ns("data_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
@@ -37,14 +37,14 @@ df_targetsUI <- function(id, description = targets_desc){
 
 
 ## server
-df_targetsServer <- function(id, shared){
+data_targetsServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         shinyjs::hide(id = "plot_options")
 
         t.df <- reactive(shinyCatch({
             df_target(
-                count_p = input$df_path,
+                count_p = input$data_path,
                 choice = input$plot_source
             )
         }))
@@ -62,10 +62,10 @@ df_targetsServer <- function(id, shared){
         # })
         # update table
         observeEvent(c(input$plot_source, input$upload) , {
-            if (input$plot_source == "upload" &  is.empty(input$df_path)) shinyjs::hide("df")
+            if (input$plot_source == "upload" &  is.empty(input$data_path)) shinyjs::hide("df")
             else {
                 shinyjs::show("df")
-                disable("upload"); disable("df_path")
+                disable("upload"); disable("data_path")
             }
 
         })

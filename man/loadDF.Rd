@@ -6,7 +6,7 @@
 \usage{
 loadDF(
   choice,
-  df_init = NULL,
+  data_init = NULL,
   upload_path = NULL,
   eg_path = NULL,
   comment = "#",
@@ -18,14 +18,14 @@ loadDF(
 \arguments{
 \item{choice}{where this file comes from, from 'upload' or example 'eg'?}
 
-\item{df_init}{a tibble to return if \code{upload_path} or \code{eg_path} is not
+\item{data_init}{a tibble to return if \code{upload_path} or \code{eg_path} is not
 provided. Return a 8x8 empty tibble if not provided}
 
 \item{upload_path}{when \code{choice} is "upload", where to load the file, will
-return \code{df_init} if this param is not provided}
+return \code{data_init} if this param is not provided}
 
 \item{eg_path}{when \code{choice} is "eg", where to load the file, will
-return \code{df_init} if this param is not provided}
+return \code{data_init} if this param is not provided}
 
 \item{comment}{comment characters when load the file,
 see help file of \code{vroom}}
@@ -57,7 +57,7 @@ if(interactive()){
             choiceNames = c("Upload", "Example"),
             choiceValues = c("upload", "eg")
         ),
-        fileInput("df_path", label = "input file"),
+        fileInput("data_path", label = "input file"),
         dataTableOutput("df")
     )
 
@@ -66,7 +66,7 @@ if(interactive()){
         write.csv(iris, file = tmp_file)
         data_df <- reactive({
             loadDF(choice = input$data_source,
-                   upload_path = input$df_path$datapath,
+                   upload_path = input$data_path$datapath,
                    delim = ",", eg_path = tmp_file)
         })
         output$df <- renderDataTable(data_df())

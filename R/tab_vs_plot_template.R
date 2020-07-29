@@ -41,20 +41,20 @@ plot_templateUI <- function(id){
         fluidRow(
             column(6,
                    genHrefTab(
-                       c("df_targets"),
+                       c("data_targets"),
                        title = "You need to meta data from these tabs:")),
             column(6,
                    genHrefTab(
-                       c("df_template"),
+                       c("data_template"),
                        title = "You need to tabular data from these tabs:"))
         ),
         h5("Once you have prepared the data,
            select which tab(s) your data is coming from:"),
         column(6, shinyWidgets::pickerInput(ns("source_meta"), "Meta Data",
-                    choices = c("Meta Data" = "df_targets"),
+                    choices = c("Meta Data" = "data_targets"),
                     options = list(style = "btn-primary"))),
         column(6, shinyWidgets::pickerInput(ns("source_data"), "Tabular Data",
-                    choices = c("Template Data Tab" = "df_template"),
+                    choices = c("Template Data Tab" = "data_template"),
                     options = list(style = "btn-primary"))), spsHr(),
         div(style = "text-align: center;",
             strong("Click the button below to start or reload data"), br(),
@@ -96,17 +96,10 @@ plot_templateServer <- function(id, shared){
                                 github = c("")
             ))
             pgPaneUpdate('pg', 'pkg', 100)
-            # mydata$meta <- getData(isolate(input$source_meta), shared)
-            # pgPaneUpdate('pg', 'meta', 100)
-            mydata$df <- getData(isolate(input$source_data), shared)
+            mydata$data <- getData(isolate(input$source_data), shared)
             pgPaneUpdate('pg', 'data', 100)
             spsValidate({
-                if (ncol(mydata$meta) > 1) TRUE
-                else stop("Need more than 1 column")
-            }, "metadata column check")
-            # pgPaneUpdate('pg', 'vd_meta', 100)
-            spsValidate({
-                if (ncol(mydata$df) > 1) TRUE
+                if (ncol(mydata$data) > 1) TRUE
                 else stop("Need more than 1 column")
             }, "Raw data column check")
 

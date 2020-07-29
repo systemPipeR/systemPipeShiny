@@ -21,10 +21,10 @@ server <- function(input, output, session) {
     vs_mainServer("vs_main", shared)
     devComponents("server", shared = shared) # for templates
     ## data
-    df_targetsServer("df_targets", shared)
-    df_countServer("df_count", shared)
-    df_degcountServer("df_degcount", shared)
-    df_edgeRServer("df_edgeR", shared)
+    data_targetsServer("data_targets", shared)
+    data_countServer("data_count", shared)
+    data_degcountServer("data_degcount", shared)
+    data_edgeRServer("data_edgeR", shared)
     ## plots
     plot_pcaServer("plot_pca", shared)
     plot_boxServer("plot_box", shared)

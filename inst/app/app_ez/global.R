@@ -20,7 +20,7 @@ library(systemPipeShiny)
 
 # SPS options
 # mode: running mode - local, server
-# warning_toast: toast popup message when you are under some dangerious options - TRUE, FALSE
+# warning_toast: toast popup message when you are under some dangerous options - TRUE, FALSE
 # loading_screen: to show loading screen? - TRUE, FALSE
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
 # loading_particles: particle effects on loading, loading_screen must be TRUE - TRUE, FALSE

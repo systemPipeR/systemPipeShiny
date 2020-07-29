@@ -33,8 +33,8 @@ sps <- function(vstabs, server_expr=NULL){
         spserror(glue("You input duplicated tab IDs: ",
                       "{vstabs[duplicated(vstabs)]}"))
     sps_env <- new.env(parent = globalenv())
-    vapply(file.path("R", list.files("R", "\\.[rR]$")),
-           function(x) source(x, local = sps_env), list(1, 2)) %>%
+    lapply(file.path("R", list.files("R", "\\.[rR]$")),
+           function(x) source(x, local = sps_env)) %>%
         invisible()
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
     attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = FALSE)
@@ -46,15 +46,15 @@ sps <- function(vstabs, server_expr=NULL){
         if(sum(not_in_vs <- tabs$tpye != 'vs') > 0)
             spserror(glue("Tab '{glue_collapse(vstabs[not_in_vs], ', ')}'",
                           "is/are not visulization tabs"))
-        tabs_df <- tabs %>% dplyr::filter(type_sub == "data")
+        tabs_data <- tabs %>% dplyr::filter(type_sub == "data")
         tabs_plot <- tabs %>% dplyr::filter(type_sub == "plot")
     } else {
         spsinfo("Using default tabs")
         tabs <- dplyr::tibble()
-        tabs_df <- dplyr::tibble()
+        tabs_data <- dplyr::tibble()
         tabs_plot <- dplyr::tibble()
     }
-    ui <- spsUI(tabs_df, tabs_plot)
+    ui <- spsUI(tabs_data, tabs_plot)
     spsinfo("UI created")
     server_expr <- rlang::enexpr(server_expr)
     server <- spsServer(tabs, server_expr)

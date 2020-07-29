@@ -41,8 +41,8 @@ plot_boxServer <- function(id, shared){
             countDF <- countDF[,-1]
             filter <- c(Fold = 2, FDR = 10)
             mytitle <- paste("edgeR DEG Counts (", names(filter)[1], ": ", filter[1], " & " , names(filter)[2], ": ", filter[2], "%)", sep="")
-            df_plot <- data.frame(Comparisons=rep(as.character(rownames(countDF)), 2), Counts=c(countDF$Counts_Up, countDF$Counts_Down), Type=rep(c("Up", "Down"), each=length(countDF[,1])))
-            p <- ggplot(df_plot, aes(Comparisons, Counts, fill = Type)) + geom_bar(position="stack", stat="identity") + coord_flip() + theme(axis.text.y=element_text(angle=0, hjust=1)) + ggtitle(mytitle)
+            data_plot <- data.frame(Comparisons=rep(as.character(rownames(countDF)), 2), Counts=c(countDF$Counts_Up, countDF$Counts_Down), Type=rep(c("Up", "Down"), each=length(countDF[,1])))
+            p <- ggplot(data_plot, aes(Comparisons, Counts, fill = Type)) + geom_bar(position="stack", stat="identity") + coord_flip() + theme(axis.text.y=element_text(angle=0, hjust=1)) + ggtitle(mytitle)
             output$plot_ui <- renderUI(
                 plotlyOutput(ns("box"))
             )

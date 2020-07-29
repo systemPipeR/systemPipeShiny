@@ -1,50 +1,49 @@
-edgeR_desc <-
+degcounts_desc <-
   "
-#### Here you can upload your EdgeR Dataframe
+#### Here you can upload DEG counts
 
 "
 ## UI
-df_edgeRUI <- function(id, description = edgeR_desc){
-  ns <- NS(id)
-  tagList(
-    h2("Deg Count Data Frame"),
-    HTML(markdown::renderMarkdown(text = glue(description))),
-    radioGroupButtons(
-      inputId = ns("plot_source"), label = "Choose your plot file source:",
-      selected = "upload",
-      choiceNames = c("Upload", "Example"),
-      choiceValues = c("upload", "eg"),
-      justified = TRUE, status = "primary",
-      checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
-    ),
-    textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
-    column(width = 12, style = "padding-left: 0;",
-           downloadButton(ns("down_config"), "Save"),
-           actionButton(ns("to_task"),
-                        label = "Add to task",
-                        icon("paper-plane"))
-    ),
-    rHandsontableOutput(ns("df")),
-    fluidRow(id = "plot_options",
-             a("Box Plot", href = "#shiny-tab-plot_box"),
-             a("plot2"),
-             a("plot3"),
-             p("...")
-    )
-  )
+data_degcountUI <- function(id, description = degcounts_desc){
+    ns <- NS(id)
+    tagList(
+        h2("Deg Count Data Frame"),
+        HTML(markdown::renderMarkdown(text = glue(description))),
+        radioGroupButtons(
+            inputId = ns("plot_source"), label = "Choose your plot file source:",
+            selected = "upload",
+            choiceNames = c("Upload", "Example"),
+            choiceValues = c("upload", "eg"),
+            justified = TRUE, status = "primary",
+            checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
+        ),
+        textInputGroup(textId = ns("data_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
+        column(width = 12, style = "padding-left: 0;",
+               downloadButton(ns("down_config"), "Save"),
+               actionButton(ns("to_task"),
+                            label = "Add to task",
+                            icon("paper-plane"))
+        ),
+        rHandsontableOutput(ns("df")),
+        fluidRow(id = "plot_options",
+                 a("Box Plot", href = "#shiny-tab-plot_box"),
+                 a("plot2"),
+                 a("plot3"),
+                 p("...")
+        )
+        )
 }
 
 ## server
-df_edgeRServer <- function(id, shared){
+data_degcountServer <- function(id, shared){
     module <- function(input, output, session){
-        ns <- session$ns
-        df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
+        data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
         ns <- session$ns
         shinyjs::hide(id = "plot_options")
         selected_old <- reactiveVal("upload")
         selected_flag <- reactiveVal(TRUE)
         count_p_old <- reactiveVal("")
-        t.df <- reactiveVal(df_init)
+        t.df <- reactiveVal(data_init)
         # start the tab
         shinyjs::hide(id = "tab_main")
         observeEvent(input$validate, {
@@ -58,8 +57,8 @@ df_edgeRServer <- function(id, shared){
             }
         })
         # update table
-        observeEvent(c(input$plot_source, input$df_path) , {
-            if (input$plot_source == "upload" & input$df_path == "") shinyjs::hide("df") else shinyjs::show("df")
+        observeEvent(c(input$plot_source, input$data_path) , {
+            if (input$plot_source == "upload" & input$data_path == "") shinyjs::hide("df") else shinyjs::show("df")
         })
 
         output$df <- renderRHandsontable({
@@ -95,24 +94,25 @@ df_edgeRServer <- function(id, shared){
         observeEvent(input$sweet_changecount_confirm, ignoreNULL = TRUE, {
             if (isTRUE(input$sweet_changecount_confirm)) {
                 t.df(
-                    edgeR_up(count_df = input$df,
-                             count_p = input$df_path,
-                             count_p_old = count_p_old(),
-                             choice = input$plot_source,
-                             choice_old = selected_old()
+                    hot_deg(count_df = input$df,
+                            count_p = input$data_path,
+                            count_p_old = count_p_old(),
+                            choice = input$plot_source,
+                            choice_old = selected_old()
                     )
                 )
             }
         })
+
     }
     moduleServer(id, module)
 }
 
-# load deg DF file
-edgeR_up <- function(count_df, count_p=NULL, count_p_old=NULL, choice, choice_old){
+# load deg count file
+hot_deg <- function(count_df, count_p=NULL, count_p_old=NULL, choice, choice_old){
   count_p <- switch(choice,
                     "upload" = count_p,
-                    "eg" = "./data/edgeR_DF.xls"
+                    "eg" = "./data/DEGcounts.xls"
   )
   if (is.empty(count_p)) return(data.frame(place_holder = NA, stringsAsFactors = FALSE))
   df.t <- read.csv(count_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)

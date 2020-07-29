@@ -4,7 +4,7 @@ count_desc <-
 
 "
 ## UI
-df_countUI <- function(id, description = count_desc){
+data_countUI <- function(id, description = count_desc){
     ns <- NS(id)
     tagList(
         h2("Raw Count Data Frame"),
@@ -17,7 +17,7 @@ df_countUI <- function(id, description = count_desc){
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
         ),
-        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
+        textInputGroup(textId = ns("data_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
@@ -36,14 +36,14 @@ df_countUI <- function(id, description = count_desc){
 
 
 ## server
-df_countServer <- function(id, shared){
+data_countServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         shinyjs::hide(id = "plot_options")
 
         t.df <- reactive(shinyCatch({
             hot_count(
-                count_p = input$df_path,
+                count_p = input$data_path,
                 choice = input$plot_source
             )
         }))
@@ -61,10 +61,10 @@ df_countServer <- function(id, shared){
         })
         # update table
         observeEvent(c(input$plot_source, input$upload) , {
-            if (input$plot_source == "upload" &  is.empty(input$df_path)) shinyjs::hide("df")
+            if (input$plot_source == "upload" &  is.empty(input$data_path)) shinyjs::hide("df")
             else {
                 shinyjs::show("df")
-                disable("upload"); disable("df_path")
+                disable("upload"); disable("data_path")
             }
 
         })

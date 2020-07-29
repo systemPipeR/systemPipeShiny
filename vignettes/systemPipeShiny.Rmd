@@ -260,10 +260,10 @@ All you need is to change code in `global`
     - All store in `R` folder;
     - All should be named as `tab_xx.R`; if a submodule contains submodule. If 
     this tab is a sub tab, name it `tab_type_id.R`, e.g. a tab for 
-    visualization new data type will be `tab_vs_df_xxx.R`, a new plot tab will be 
+    visualization new data type will be `tab_vs_data_xxx.R`, a new plot tab will be 
     `tab_vs_plot_xxx.R`.
     - All tab info should also be updated in `tabs.csv` as the tab metadata.
-        - visualization data tabs should hava tab name as `df_xx`, plot tab 
+        - visualization data tabs should hava tab name as `data_xx`, plot tab 
         should be `plot_xx`
     
 2. functions:
