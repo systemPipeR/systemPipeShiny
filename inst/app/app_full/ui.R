@@ -29,10 +29,10 @@ dashboardSidebar <-  dashboardSidebar(
                 text = "Prepare dataset",
                 ## vs dfs add to sidebar
                 devComponents("ui_menu_df"),
-                menuSubItem(text = "Targets", tabName = "df_targets"),
-                menuSubItem(text = "Count data", tabName = "df_count"),
-                menuSubItem(text = "DEG Count data", tabName = "df_degcount"),
-                menuSubItem(text = "EdgeR data", tabName = "df_edgeR")
+                menuSubItem(text = "Targets", tabName = "data_targets"),
+                menuSubItem(text = "Count data", tabName = "data_count"),
+                menuSubItem(text = "DEG Count data", tabName = "data_degcount"),
+                menuSubItem(text = "EdgeR data", tabName = "data_edgeR")
                 ),
             menuItem(
                 text = "Collection of plots",
@@ -73,10 +73,10 @@ dashboardBody <- dashboardBody(
         tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         ## vs dfs
         devComponents("ui_tab_df"),
-        tabItem(tabName = "df_targets", df_targetsUI("df_targets")),
-        tabItem(tabName = "df_count", df_countUI("df_count")),
-        tabItem(tabName = "df_degcount", df_degcountUI("df_degcount")),
-        tabItem(tabName = "df_edgeR", df_edgeRUI("df_edgeR")),
+        tabItem(tabName = "data_targets", df_targetsUI("data_targets")),
+        tabItem(tabName = "data_count", df_countUI("data_count")),
+        tabItem(tabName = "data_degcount", df_degcountUI("data_degcount")),
+        tabItem(tabName = "data_edgeR", df_edgeRUI("data_edgeR")),
         ## vs plots
         devComponents("ui_tab_plot"),
         tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),

@@ -13,10 +13,10 @@ wf_run,Workflow Run,wf,,,1
 wf_target,Workflow Metadata,wf,,,1
 wf_wf,Workflow Steps,wf,,,1
 vs_main,Visualization Main Page,vs,,,1
-df_template,Template Data Tab,vs,data,,1
+data_template,Template Data Tab,vs,data,,1
 plot_template,Template Plot Tab,vs,plot,plot_list/plot_point.png,1
-df_targets,Metadata ,vs,data,,1
-df_count,Count Table,vs,data,,1
+data_targets,Metadata ,vs,data,,1
+data_count,Count Table,vs,data,,1
 plot_pca,PCA Plot,vs,plot,,1
 plot_box,Box Plot,vs,plot,,1
 plot_tsne,t-SNE,vs,plot,,1
@@ -25,5 +25,5 @@ plot_glm,GLM-PCA,vs,plot,,1
 plot_heat,heat map,vs,plot,,1
 plot_clust,H-Clust,vs,plot,,1
 plot_volcano,Volcano,vs,plot,,1
-df_degcount,DEG Count data,vs,data,,1
-df_edgeR,EdgeR data,vs,data,,1
+data_degcount,DEG Count data,vs,data,,1
+data_edgeR,EdgeR data,vs,data,,1

@@ -8,11 +8,11 @@
 spsServer <- function(tabs, server_expr) {
     spsinfo("Start to create server function")
     tab_modules <- if(nrow(tabs) > 0) {
-        vapply(tabs[['tab_id']], function(x){
+        names(tabs[['tab_id']]) <- tabs[['tab_id']]
+        lapply(tabs[['tab_id']], function(x){
             glue('{x}Server("{x}", shared)') %>% rlang::parse_expr()
-        }, list(1))
+        })
     } else list(empty = substitute(spsinfo("No custom server to load.")))
-
     function(input, output, session) {
         # add a container to communicate tabs
         spsinfo("Start to load server")
@@ -197,12 +197,12 @@ spsWarnings <- function(session){
 #' upload file and read the file. This loading function only works for parsing
 #' tabular data, use `vroom()` internally.
 #' @param choice where this file comes from, from 'upload' or example 'eg'?
-#' @param df_init a tibble to return if `upload_path` or `eg_path` is not
+#' @param data_init a tibble to return if `upload_path` or `eg_path` is not
 #' provided. Return a 8x8 empty tibble if not provided
 #' @param upload_path when `choice` is "upload", where to load the file, will
-#' return `df_init` if this param is not provided
+#' return `data_init` if this param is not provided
 #' @param eg_path when `choice` is "eg", where to load the file, will
-#' return `df_init` if this param is not provided
+#' return `data_init` if this param is not provided
 #' @param comment comment characters when load the file,
 #' see help file of `vroom`
 #' @param delim delimiter characters when load the file,
@@ -225,7 +225,7 @@ spsWarnings <- function(session){
 #'             choiceNames = c("Upload", "Example"),
 #'             choiceValues = c("upload", "eg")
 #'         ),
-#'         fileInput("df_path", label = "input file"),
+#'         fileInput("data_path", label = "input file"),
 #'         dataTableOutput("df")
 #'     )
 #'
@@ -234,32 +234,32 @@ spsWarnings <- function(session){
 #'         write.csv(iris, file = tmp_file)
 #'         data_df <- reactive({
 #'             loadDF(choice = input$data_source,
-#'                    upload_path = input$df_path$datapath,
+#'                    upload_path = input$data_path$datapath,
 #'                    delim = ",", eg_path = tmp_file)
 #'         })
 #'         output$df <- renderDataTable(data_df())
 #'     }
 #'     shinyApp(ui, server)
 #' }
-loadDF <- function(choice, df_init=NULL, upload_path=NULL, eg_path=NULL,
+loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
                    comment = "#", delim = "\t",
                    col_types = vroom::cols(), ...){
     df <- shinyCatch({
         choice <- match.arg(choice, c("upload", "eg"))
-        df_init <-
-            if(shinyAce::is.empty(df_init)) {
+        data_init <-
+            if(shinyAce::is.empty(data_init)) {
                 data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
                     tibble::as_tibble()
             }
-        else {df_init}
-        if(!any(class(df_init) %in% c("tbl_df", "tbl", "data.frame"))) {
-            stop("df_init need to be dataframe or tibble")
+        else {data_init}
+        if(!any(class(data_init) %in% c("tbl_df", "tbl", "data.frame"))) {
+            stop("data_init need to be dataframe or tibble")
         }
-        df_init <- tibble::as_tibble(df_init)
+        data_init <- tibble::as_tibble(data_init)
         if (choice == "upload" & shinyAce::is.empty(upload_path))
-            return(df_init)
+            return(data_init)
         if (choice == "eg" & shinyAce::is.empty(eg_path))
-            return(df_init)
+            return(data_init)
         upload_path <- switch(choice,
                               "upload" = upload_path,
                               "eg" = eg_path,

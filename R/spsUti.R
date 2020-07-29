@@ -162,13 +162,13 @@ quiet <- function(x) {
 #' @param quietly bool, give you error on fail?
 #' @param from  string, where this package is from like, "CRAN", "GitHub", only
 #' for output message display purpose
-#'
+#' @importFrom shinyAce is.empty
 #' @return vector strings, of missing package names
 #' @noRd
 # @examples
 # checkNameSpace("ggplot2")
 checkNameSpace <- function(packages, quietly = FALSE, from = "") {
-    if (is.empty(packages)) return(NULL)
+    if (shinyAce::is.empty(packages)) return(NULL)
     missing_pkgs <- lapply(packages, function(pkg) {
         if (!requireNamespace(pkg, quietly = TRUE)) pkg
     })
@@ -187,7 +187,9 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' @importFrom vroom vroom
 #'
 #' @param tab_ids vector of strings, tab names you want to get
-#' @param type tab type and sub type, one of: core, wf, vs, data, plot
+#' @param type tab type and sub type, one of: core, wf, vs, data, plot, or
+#' addition type you specific in type or type_sub column, first search type and
+#' then type_sub
 #' @param tab_file tab file path
 #' @param force_reload bool, tab info usually stores at a variable
 #' called `tab_info`. This function first look for that one, if not exists,
@@ -204,21 +206,24 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 # tab_ids <- c("core_about", "vs_main")
 # findTabInfo(tab_ids, tab_file = tab_file)
 findTabInfo <- function(tab_ids=NULL, type = NULL,
-                        tab_file = "config/tabs.csv",
+                        tab_file = file.path("config", "tabs.csv"),
                         force_reload = FALSE) {
     if(is.null(type)) assert_that(is.character(tab_ids))
     tabs <- if(exists("tab_info") & !force_reload) {
         tab_info
     } else {
          suppressMessages(
-             vroom::vroom(tab_file, comment = "#", na = character()))
+             vroom::vroom(tab_file, comment = "#", na = character(),
+                          altrep = FALSE))
     }
-    if(!spsOption('dev')){
-        tabs <- tabs[!str_detect(tabs$tab_id, "_template$"), ]
-        tab_ids <- tab_ids[!str_detect(tab_ids, "_template$")]
-        }
+    # if(!spsOption('dev')){
+    #     tabs <- tabs[!str_detect(tabs$tab_id, "_template$"), ]
+    #     tab_ids <- tab_ids[!str_detect(tab_ids, "_template$")]
+    #     }
     if(not_empty(type)) {
-        type <- match.arg(type, c('core', 'wf', 'vs', 'data', 'plot'))
+        type <- match.arg(type,
+                          unique(c(tabs[['type']], tabs[['type_sub']])) %>%
+                              {.[. != ""]})
         tab_nos <- tabs$type %in% type
         if (!any(tab_nos)) tab_nos <- tabs$type_sub %in% type
         if (!any(tab_nos)){
@@ -231,18 +236,24 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
             tab_no <- str_which(pattern = glue("^{x}$"), string = tabs$tab_id)
             if (shinyAce::is.empty(tab_no)){
                 spserror(glue("Tab {x} is not in the tab list"))
+            } else if(length(tab_no) > 1){
+                glue_collapse(tabs$tab_id[duplicated(tabs$tab_id)], sep=", ")%>%
+                    {spserror(glue("Find duplicated ID(s) {.}"))}
             }
             tab_no
         }, 1)
     }
-    list(
+    structure(
+        list(
         tab_id = tabs$tab_id[tab_nos],
         tab_labels = tabs$display_label[tab_nos],
         hrefs = glue("#shiny-tab-{tabs$tab_id[tab_nos]}"),
         images = tabs$image[tab_nos],
         tpye = tabs$type[tab_nos],
         type_sub = tabs$type_sub[tab_nos]
-        ) %>% return()
+        ),
+        class = c("list", "sps-tabinfo")
+    )
 }
 
 # LZ note: do not use spsOption function here,

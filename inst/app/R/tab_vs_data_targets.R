@@ -1,23 +1,24 @@
-count_desc <-
+
+targets_desc <-
     "
-#### Here you can upload the raw count data frame
+Here you can upload your targets file. The specifications file can be found in the Workflow management tab
 
 "
 ## UI
-df_countUI <- function(id, description = count_desc){
+data_targetsUI <- function(id, description = targets_desc){
     ns <- NS(id)
     tagList(
-        h2("Raw Count Data Frame"),
+        h2("Targets Data Frame"),
         HTML(markdown::renderMarkdown(text = glue(description))),
         radioGroupButtons(
             inputId = ns("plot_source"), label = "Choose your plot file source:",
             selected = "upload",
-            choiceNames = c("Upload", "Example"),
-            choiceValues = c("upload", "eg"),
+            choiceNames = c("Upload", "Example SE","Example PE"),
+            choiceValues = c("upload", "se","pe"),
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
         ),
-        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
+        textInputGroup(textId = ns("data_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
@@ -36,54 +37,54 @@ df_countUI <- function(id, description = count_desc){
 
 
 ## server
-df_countServer <- function(id, shared){
+data_targetsServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         shinyjs::hide(id = "plot_options")
 
         t.df <- reactive(shinyCatch({
-            hot_count(
-                count_p = input$df_path,
+            df_target(
+                count_p = input$data_path,
                 choice = input$plot_source
             )
         }))
         # start the tab
-        shinyjs::hide(id = "tab_main")
-        observeEvent(input$validate, {
-            if (shinyCheckPkg(
-                session = session#,
-                # cran_pkg = "pkg-1",
-                # bioc_pkg = c("pkg-1", "pkg-2"),
-                # github = "haha/pkg-3"
-            )) {
-                shinyjs::show(id = "tab_main")
-            }
-        })
+        # shinyjs::hide(id = "tab_main")
+        # observeEvent(input$validate, {
+        #     if (shinyCheckPkg(
+        #         session = session#,
+        #         # cran_pkg = "pkg-1",
+        #         # bioc_pkg = c("pkg-1", "pkg-2"),
+        #         # github = "haha/pkg-3"
+        #     )) {
+        #         shinyjs::show(id = "tab_main")
+        #     }
+        # })
         # update table
         observeEvent(c(input$plot_source, input$upload) , {
-            if (input$plot_source == "upload" &  is.empty(input$df_path)) shinyjs::hide("df")
+            if (input$plot_source == "upload" &  is.empty(input$data_path)) shinyjs::hide("df")
             else {
                 shinyjs::show("df")
-                disable("upload"); disable("df_path")
+                disable("upload"); disable("data_path")
             }
 
         })
         # only display first 100 rows
         output$df <- renderRHandsontable({
-            rhandsontable(head(t.df(), 100), readOnly = TRUE)
+            rhandsontable(head(t.df()), readOnly = TRUE)
         })
 
         onclick("to_task", shinyjs::show(id = "plot_options"))
         check_results <- T
         observeEvent(input$to_task, {
-            shared$count$file <- tempfile(pattern = "countDFeByg", fileext = ".xls")
+            shared$df$file <- tempfile(pattern = "target", fileext = ".txt")
             if (all(check_results)) {
                 sendSweetAlert(
                     session = session, type = "success",
                     title = "Data added", text = "Choose a plot type"
                 )
-                shared$count$df <- t.df()
-                writeLines(apply(shared$count$df, 1, paste, collapse = "\t"), shared$count$file)
+                shared$df$target <- t.df()
+                writeLines(apply(shared$df$target, 1, paste, collapse = "\t"), shared$df$file)
             }
         })
 
@@ -92,10 +93,11 @@ df_countServer <- function(id, shared){
 }
 
 # load raw count file
-hot_count <- function(choice, count_p=NULL){
+df_target <- function(choice, count_p=NULL){
     count_p <- switch(choice,
                       "upload" = count_p,
-                      "eg" = "data/countDFeByg.xls"
+                      "se" = "data/targets.txt",
+                      "pe" = "data/targetsPE.txt"
     )
     if (is.empty(count_p)) return(data.frame(place_holder = NA, stringsAsFactors = FALSE))
     df.t <- read.csv(count_p, sep = '\t', comment.char = "#", stringsAsFactors = FALSE, header = FALSE)

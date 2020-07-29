@@ -185,7 +185,7 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html',
     sub_number <- wf[sub_steps_lines] %>%
         str_remove_all("[->;\n]") %>% str_remove("^.*[ ]+") %>%
                 str_remove("n") %>% str_replace_all("_", "\\.") %>%
-        vapply(function(x) df_wf$t_number[df_wf$t_number == x], list(1)) %>%
+        lapply(function(x) df_wf$t_number[df_wf$t_number == x]) %>%
             unlist()
     move_line_num <- sub_steps_lines[!sub_number %in% df_wf$t_number[long]]
     if (length(move_line_num) == 0) return(wf)

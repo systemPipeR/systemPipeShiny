@@ -2,7 +2,10 @@
 % Please edit documentation in R/spsUti.R
 \name{msg}
 \alias{msg}
-\title{SPS terminal message}
+\alias{spsinfo}
+\alias{spswarn}
+\alias{spserror}
+\title{SPS terminal message logging methods}
 \usage{
 msg(
   msg,
@@ -12,6 +15,12 @@ msg(
   warning_text = "WARNING",
   error_text = "ERROR"
 )
+
+spsinfo(msg, verbose = NULL)
+
+spswarn(msg)
+
+spserror(msg)
 }
 \arguments{
 \item{msg}{a character string of message or a vector of character strings,
@@ -28,6 +37,8 @@ Other levels ok.}
 \item{warning_text}{warning level text prefix}
 
 \item{error_text}{error level text prefix}
+
+\item{verbose}{bool, default NULL, get from sps project options}
 }
 \value{
 see description
@@ -36,7 +47,15 @@ see description
 If SPS \code{use_crayon}option is \code{TRUE}, the message will
 be colorful.
 "INFO" level spawns \code{message}, "WARNING" is \code{warning}, "ERROR" spawns \code{stop},
-other levels use \code{cat}
+other levels use \code{cat}.
+\code{spsinfo}, \code{spswarn}, \code{spserror} are higher level wrappers of \code{msg}. The
+only difference is they have \verb{SPS-} prefix.
+
+\code{spsinfo} has an additional
+arg \code{verbose}. This arg works similar to all other \code{verbose} args in this
+package, if not specified, it follows the project option, can be be forced to
+\code{TRUE} and \code{FALSE}. \code{TRUE} will forcefully generate the msg, and \code{FALSE}
+will be no message.
 }
 \examples{
 msg("this is info")

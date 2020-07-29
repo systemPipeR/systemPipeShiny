@@ -4,7 +4,7 @@ degcounts_desc <-
 
 "
 ## UI
-df_degcountUI <- function(id, description = degcounts_desc){
+data_degcountUI <- function(id, description = degcounts_desc){
     ns <- NS(id)
     tagList(
         h2("Deg Count Data Frame"),
@@ -17,7 +17,7 @@ df_degcountUI <- function(id, description = degcounts_desc){
             justified = TRUE, status = "primary",
             checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon(""))
         ),
-        textInputGroup(textId = ns("df_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
+        textInputGroup(textId = ns("data_path"), btnId = ns("upload"), title = "Specify your data path", label = "Upload"),
         column(width = 12, style = "padding-left: 0;",
                downloadButton(ns("down_config"), "Save"),
                actionButton(ns("to_task"),
@@ -35,15 +35,15 @@ df_degcountUI <- function(id, description = degcounts_desc){
 }
 
 ## server
-df_degcountServer <- function(id, shared){
+data_degcountServer <- function(id, shared){
     module <- function(input, output, session){
-        df_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
+        data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE)
         ns <- session$ns
         shinyjs::hide(id = "plot_options")
         selected_old <- reactiveVal("upload")
         selected_flag <- reactiveVal(TRUE)
         count_p_old <- reactiveVal("")
-        t.df <- reactiveVal(df_init)
+        t.df <- reactiveVal(data_init)
         # start the tab
         shinyjs::hide(id = "tab_main")
         observeEvent(input$validate, {
@@ -57,8 +57,8 @@ df_degcountServer <- function(id, shared){
             }
         })
         # update table
-        observeEvent(c(input$plot_source, input$df_path) , {
-            if (input$plot_source == "upload" & input$df_path == "") shinyjs::hide("df") else shinyjs::show("df")
+        observeEvent(c(input$plot_source, input$data_path) , {
+            if (input$plot_source == "upload" & input$data_path == "") shinyjs::hide("df") else shinyjs::show("df")
         })
 
         output$df <- renderRHandsontable({
@@ -95,7 +95,7 @@ df_degcountServer <- function(id, shared){
             if (isTRUE(input$sweet_changecount_confirm)) {
                 t.df(
                     hot_deg(count_df = input$df,
-                            count_p = input$df_path,
+                            count_p = input$data_path,
                             count_p_old = count_p_old(),
                             choice = input$plot_source,
                             choice_old = selected_old()

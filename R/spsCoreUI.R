@@ -22,26 +22,26 @@
 spsUI <- function(tabs_df, tabs_plot){
     spsinfo("Start to generate UI")
     menu_df <- if(nrow(tabs_df) > 0){
-        vapply(seq_len(nrow(tabs_df)), function(x){
+        lapply(seq_len(nrow(tabs_df)), function(x){
             shinydashboard::menuSubItem(text = tabs_df$tab_labels[x],
                                         tabName = tabs_df$tab_id[x])
-        }, list(1)) %>% tagList()
+        }) %>% tagList()
     } else tagList()
     menu_plot <- if(nrow(tabs_plot) > 0){
-        vapply(seq_len(nrow(tabs_plot)), function(x){
+        lapply(seq_len(nrow(tabs_plot)), function(x){
             shinydashboard::menuSubItem(text = tabs_plot$tab_labels[x],
                                         tabName = tabs_plot$tab_id[x])
-        }, list(1)) %>% tagList()
+        }) %>% tagList()
     } else tagList()
 
     spsinfo("Loading custom tab UI ...")
     tab_items <- c(tabs_df[['tab_id']],
                    tabs_plot[['tab_id']]) %>% {.[. != ""]} %>%
-        vapply(function(x){
+        lapply(function(x){
             tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
             spsinfo(glue("Loading UI for {x}"))
             shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
-        }, list(1))
+        })
     # header
     spsinfo("Create UI header ...")
     dashboardHeader <- shinydashboardPlus::dashboardHeaderPlus(
@@ -269,19 +269,19 @@ devComponents <- function(element, shared=NULL){
                                     "ui_tab_df", "ui_tab_plot", "server"))
 
     if(spsOption('dev')){
-        switch (element,
+        switch(element,
                 "ui_menu_df" = shinydashboard::menuSubItem(
-                    text = "Template data", tabName = "df_template"),
+                    text = "Template data", tabName = "data_template"),
                 "ui_menu_plot" = shinydashboard::menuSubItem(
                     text = "Template Plot", tabName = "plot_template"),
                 "ui_tab_df" = shinydashboard::tabItem(
-                    tabName = "df_template", df_templateUI("df_template")),
+                    tabName = "data_template", data_templateUI("data_template")),
                 "ui_tab_plot" = shinydashboard::tabItem(
                     tabName = "plot_template",
                     plot_templateUI("plot_template")
                 ),
                 "server" = {
-                    df_templateServer("df_template", shared)
+                    data_templateServer("data_template", shared)
                     plot_templateServer("plot_template", shared)
                 }
         )
