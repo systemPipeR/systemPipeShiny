@@ -52,6 +52,9 @@ only be used under systemPipeShiny framework for fast retrieving tab info and
 generate the \code{hrefTab}. To use \code{genHrefTab}, the \code{tab_info.csv} config file
 must be in \code{./config} directory.
 \code{label_text}, \code{hrefs} must be the same length
+
+\emph{genHrefTab} require a SPS project and the config/tabs.csv file.
+If you want to use hrefTab outside a SPS project just use \emph{hrefTab}
 }
 \examples{
 if(interactive()){

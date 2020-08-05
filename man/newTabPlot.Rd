@@ -2,7 +2,8 @@
 % Please edit documentation in R/spsNewtab.R
 \name{newTabPlot}
 \alias{newTabPlot}
-\title{Title}
+\alias{newTabData}
+\title{Create a new SPS Tab}
 \usage{
 newTabPlot(
   tab_id = "plot_id1",
@@ -26,13 +27,204 @@ newTabPlot(
   verbose = spsOption("verbose"),
   colorful = spsOption("use_crayon")
 )
+
+newTabData(
+  tab_id = "data_id1",
+  tab_displayname = "Data Tab Title",
+  desc = "default",
+  pkgs = list(cran_pkg = c("base"), bioc_pkg = c(""), github = c("")),
+  common_validation = spsValidate({     "pass" }, "common"),
+  prepro_methods = list(makePrepro("nothing", "do nothing"), makePrepro("md1",
+    "method1", vd_expr = {     nrow(data_filtered) > 1 })),
+  app_path = getwd(),
+  out_folder_path = file.path(app_path, "R"),
+  eg_path = file.path(app_path, "data", "iris.csv"),
+  author = "",
+  preview = FALSE,
+  reformat = TRUE,
+  open_file = TRUE,
+  use_string = FALSE,
+  verbose = spsOption("verbose"),
+  colorful = spsOption("use_crayon")
+)
 }
 \arguments{
-\item{colorful}{}
+\item{tab_id}{character string, length 1, must start with "\code{plot_}" for plot
+tabs and "\code{data_}" for data tabs. Must be a unique value.}
+
+\item{tab_displayname}{character string, length 1, the name to be displayed
+on sidebar tab list and tab}
+
+\item{desc}{character string, length 1 in markdown format. Tab description
+and instructions. You can make type it in multiple lines but in only one
+string (one pair of quotes). e.g.\preformatted{"
+# some desc
+## second line,
+- bullet 1
+- bullet 2
+"
+}}
+
+\item{img}{an example image of the kind of plot users can make out of this
+tab. It can be a internet link or a local link which uses the \code{www} folder as
+the root. e.g. drop your image \code{plot.png} inside \code{www/plot_list}, then the
+link here is "plot_list/plot.png". Only needed for plot tabs.}
+
+\item{plot_expr}{the plot expression, like all other expression in other
+shiny reactive expressions. e.g for more than one line use \code{{}}. default is\preformatted{plotly::ggplotly(
+    ggplot(mydata$data,
+           aes_string(names(mydata$data)[1],
+                      names(mydata$data)[2])) +
+        geom_point(aes(
+            color = seq_len(nrow(mydata$data))
+        ))
+)
+}}
+
+\item{pkgs}{which packages you require users to install, list. specify
+CRAN, bioconductor or github packages in a vector. see
+\link{shinyCheckPkg}\preformatted{list(
+    cran_pkg = c("base"),
+    bioc_pkg = c(""),
+    github = c("")
+)
+}}
+
+\item{plot_data}{a list of \emph{makePlotData()} results, see \link{makePlotData} for
+details.\preformatted{list(
+    makePlotData("plot_1", ...),
+    makePlotData("plot_2", ...),
+    ...
+)
+}}
+
+\item{plot_out_func}{the plot output function to use on UI,
+like \link[shiny:plotOutput]{shiny::plotOutput}, just the function name without quotes
+and without \verb{()}. default is \link[plotly:plotly-shiny]{plotly::plotlyOutput}.}
+
+\item{plot_render_func}{The render plot function to use on server. No quotes,
+no \verb{()}. Must be \strong{paired} with \code{plot_out_func}. e.g
+If \link[plotly:plotly-shiny]{plotly::plotlyOutput} is used on UI, server must use
+\link[plotly:plotly-shiny]{plotly::renderPlotly}. If you use \link[shiny:renderPlot]{shiny::renderPlot},
+plot will not show up.}
+
+\item{app_path}{string, app directory, default is current directory}
+
+\item{out_folder_path}{string, which directory to write the new tab file,
+default is the \code{R} folder a SPS project}
+
+\item{plot_control_ui}{additional UI components you want to
+add to control plotting options, like additional slider bar, some on/off
+switches, text input etc. If more than one components, put them in a
+\link[shiny:reexports]{shiny::tagList}}
+
+\item{author}{character string, or a vector of strings. authors of the tab}
+
+\item{preview}{bool, \code{TRUE} will print the new tab code to console and will
+not write the file and will not register the tab}
+
+\item{use_string}{bool, sometimes parsing an expression in R may not be
+totally accurate. To aviod this problem, turn this to \code{TRUE} and for
+\code{plot_control_ui}, \code{plot_expr}, \code{p_out_func}, \code{p_render_func}, wrap your
+expression in a quoted string. What you have provided in the string will be
+what on the new tab file, no expression parsing will happen. Can only be
+controlled as a group, which means use string for all of them or none of
+them in plot tabs. For data tab, the affected argument is \code{common_validation}
+. When turn this to \code{TRUE}, be careful with quotes in your expression,
+escape or use alternative of single/double quotes.\preformatted{newTabPlot(
+    ...
+    use_string = TRUE,
+    plot_control_ui = "
+    tagList(clearableTextInput('id1', 'label')), h5('this title')
+    ",
+    plot_expr = "
+    plotly::ggplotly(
+        ggplot(mydata$data,
+               aes_string(names(mydata$data)[1],
+                          names(mydata$data)[2])) +
+            geom_point(aes(
+                color = seq_len(nrow(mydata$data))
+            ))
+    )
+    ",
+    p_out_func = "plotly::plotlyOutput"
+    ...
+)
+}}
+
+\item{reformat}{bool, whether to use \link[styler:style_file]{styler::style_file} reformat the code}
+
+\item{open_file}{bool, if Rstudio is detected, open the new tab file?}
+
+\item{verbose}{bool, default follows the project verbosity level.
+\code{TRUE} will give you more information on progress and debugging}
+
+\item{colorful}{bool, whether the message will be colorful or not}
+
+\item{common_validation}{expression, use '{}' to wrap around multiple line
+expressions. Usually a \link{spsValidate} object. You can use shiny's built in
+\link[shiny:req]{shiny::req} or \link[shiny:validate]{shiny::validate} for a simpler version.}
+
+\item{prepro_methods}{a list of \link{makePrepro} method returns, read help for
+that function for details}
+
+\item{eg_path}{example data set path. Each data tab requires an example data
+set to be displayed when users don't have anything to upload. Usually this
+data file is a tabular file and stored in the \emph{data} folder in a SPS
+project}
 }
 \value{
-
+a tab file in R folder and tab info registered on config/tabs.csv
 }
 \description{
-Title
+functions to create a new SPS tab. It is recommended to create
+the data tab first then linked plot tabs.
+}
+\details{
+\itemize{
+\item Must use this function inside a SPS project, use \code{spsInit()} if
+there is no project.
+\item For a new data tab, different preprocessing methods, their
+pre-prequirements and what plotting options available after each
+preprocess is controlled by the \link{makePrepro} function. Each call from
+this function specify one preprocessing method. All preprocess methods
+should be provided in a list to the \code{prepro_methods} argument.
+\item A new plot tab can have more than one data set as the input. For example a
+plot can require a metadata table and a log transformed table as inputs.
+There maybe multiple data tabs can preprocess and produce the same log table.
+So you need to specify how many data inputs this plot requires; for each
+input which data tab(s) this plot tab can receive data from; for each input
+data type, what validations (data format checks) you want to do. All of these
+are controlled by \link{makePlotData} and return(s) of this function should be
+provided in a list to the \code{plot_data} argument.
+is controlled by the \link{makePrepro} function. Each call from
+this function specify one preprocessing method. All preprocess methods
+should be provided in a list to the \code{prepro_methods} argument.
+\item One step in creating plot tab is specify incoming data source options by
+the \link{makePlotData} method. It requires the data tab IDs exist in the
+config file \code{config/tabs.csv}. So, it is best to create all required data
+tabs first. Or specify it to any existing data tab like 'data_raw' and
+when the template is created, manually change it.
+}
+}
+\examples{
+spsInit(change_wd = FALSE, overwrite = TRUE)
+newTabData(
+    tab_id = "data_new",
+    tab_displayname = "my first data tab",
+    prepro_methods = list(makePrepro(label = "do nothing",
+                                     plot_options = "plot_new")),
+    app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}")
+)
+newTabPlot(
+    tab_id = "plot_new",
+    tab_displayname = "my first plot tab",
+    plot_data = list(
+        makePlotData(dataset_label = "Data from my new tab",
+                     receive_datatab_ids = "data_new",
+                     app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
+    ),
+    app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
+    verbose = TRUE
+)
 }

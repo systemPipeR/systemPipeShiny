@@ -3,9 +3,7 @@
 \name{pgPaneUpdate}
 \alias{pgPaneUpdate}
 \alias{pgPaneUI}
-\title{A draggable progress panel
-Use \code{pgPaneUI} on UI side and use \code{pgPaneUpdate} to update it. The UI only
-renders correctly inside \code{shinydashboard} or \code{shinydashboardPlus}.}
+\title{A draggable progress panel}
 \usage{
 pgPaneUpdate(pane_id, pg_id, value, session = getDefaultReactiveDomain())
 
@@ -37,8 +35,8 @@ to use \code{ns} wrap each ID.}
 HTML elements
 }
 \description{
-A draggable progress panel
-Use \code{pgPaneUI} on UI side and use \code{pgPaneUpdate} to update it. The UI only
+Use \code{pgPaneUI} on UI side and use \code{pgPaneUpdate} to update it.
+The UI only
 renders correctly inside \code{shinydashboard} or \code{shinydashboardPlus}.
 }
 \examples{

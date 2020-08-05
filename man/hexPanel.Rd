@@ -68,7 +68,8 @@ default -10}
 HTML elements
 }
 \description{
-Hexagon logo and logo panel
+\code{hexLogo()} generates a single hexagon, and \code{hexPanel()}
+generates a panel of hex logos
 }
 \details{
 The image in each hexagon is resized to the same size as the hex and then

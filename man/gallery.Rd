@@ -2,9 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{gallery}
 \alias{gallery}
-\title{A shiny gallery component
-\code{texts}, \code{hrefs}, \code{images} Must have the same length
-Must be used with Bootstrap3 and sps.css file}
+\title{A shiny gallery component}
 \usage{
 gallery(
   Id = NULL,
@@ -35,7 +33,6 @@ gallery(
 a div element
 }
 \description{
-A shiny gallery component
 \code{texts}, \code{hrefs}, \code{images} Must have the same length
 Must be used with Bootstrap3 and sps.css file
 }

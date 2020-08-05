@@ -175,7 +175,8 @@ spsUI <- function(tabs_df, tabs_plot){
 #'
 #' @export
 #' @return gallery div
-#'
+#' @details require a SPS project and the config/tabs.csv file. If you want to
+#' use gallery outside a SPS project, use [gallery]
 #' @examples
 #' if(interactive()){
 #'     spsInit()
@@ -210,7 +211,7 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
             label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
 }
 
-#' generate a table of lists of hyper reference buttons by using tab config file
+#' generate a table that lists of hyper reference buttons by rows
 #'
 #' @param rows a named list of character vector, each item name in the list
 #' will be the row name, each item is a vector of tab names. Or you can use one
@@ -226,6 +227,8 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
 #' the indicated tabs instead of searching individual tab names. These words
 #' include: core, wf, vs, data, plot.
 #' @return HTML elements
+#' @details require a SPS project and the config/tabs.csv file. If you want to
+#' use hrefTable outside a SPS project, use [hrefTable]
 #' @export
 #' @examples
 #' if(interactive()){

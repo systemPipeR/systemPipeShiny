@@ -2,8 +2,7 @@
 % Please edit documentation in R/spsCore.R
 \name{viewSpsDefaults}
 \alias{viewSpsDefaults}
-\title{Print systemPipeShiny default Options
-Make sure you created the app folder and has config.yaml in config folder}
+\title{Print systemPipeShiny default Options}
 \usage{
 viewSpsDefaults(appDir = getwd())
 }
@@ -14,8 +13,8 @@ viewSpsDefaults(appDir = getwd())
 cat to console the default options
 }
 \description{
-Print systemPipeShiny default Options
-Make sure you created the app folder and has config.yaml in config folder
+Make sure you created the app folder and has config.yaml
+in config folder
 }
 \examples{
 if(interactive()){

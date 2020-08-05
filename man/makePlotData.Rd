@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsNewtab.R
 \name{makePlotData}
 \alias{makePlotData}
-\title{Title}
+\title{Create data receive methods for plot tabs}
 \usage{
 makePlotData(
   dataset_id = "data",
@@ -10,15 +10,76 @@ makePlotData(
   receive_datatab_ids = "data_template",
   vd_expr = spsValidate({     if (is.data.frame(mydata$data))          TRUE     else
     stop("Data xx needs to be a dataframe or tibble") }),
+  app_path = getwd(),
   use_string = FALSE
 )
 }
 \arguments{
-\item{use_string}{}
+\item{dataset_id}{string, length 1, a unique ID within this plot
+tab.}
+
+\item{dataset_label}{string, length 1, what label to display on UI for this
+type of input data}
+
+\item{receive_datatab_ids}{a vector of tab IDs: For this kind of data input,
+which data tabs that can be used as input source(s). For example, if this
+plot tab requires a dataframe and can be produced from "data_df1" or
+"data_df2", \code{receive_datatab_ids = c("data_df1", "data_df2")}. These options
+are later rendered as a drop down menu for users to choose for this where
+they have prepared the required data from.}
+
+\item{vd_expr}{what expression to validate(check) the incoming data set.
+Usually it is a \link{spsValidate} object}
+
+\item{app_path}{SPS project folder}
+
+\item{use_string}{bool, if you don't want to parse \code{vd_expr}, use quoted
+string for \code{vd_expr} amd turn this to TRUE. see \link{newTabPlot}}
 }
 \value{
-
+a special list storing the incoming data info
 }
 \description{
-Title
+This function specify for each input data type in a plot tab,
+where the data is coming from, how to validate incoming data. To use this
+function, make sure there is a SPS project and \emph{config/tabs.csv} exists.
+}
+\details{
+For the validation expression, the incoming data is stored in a
+reactive values object, and you can access this data object
+by \emph{mydata$dataset_id},
+e.g. the dataset_id is "raw_data", then when the time you validate this
+type of incoming data set, a variable \code{mydata$raw_data} is accessible.
+
+It is recommended to create data tabs first before running this function,
+because \code{receive_datatab_ids} required data tab id exists in the \emph{tabs.csv}
+file.
+}
+\examples{
+spsInit(change_wd = FALSE, overwrite = TRUE)
+newTabData("data_df1", "df 1",
+           app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
+           open_file = FALSE)
+newTabData("data_df2", "df 2",
+           app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
+           open_file = FALSE)
+plotdata_raw <- makePlotData("raw", "raw data",
+             receive_datatab_ids = "data_df1",
+             vd_expr = spsValidate({
+                 if(!is.data.frame(mydata$raw))
+                     stop("Input raw data need to be a dataframe")
+             }, vd_name = "Validate raw data"),
+             app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
+plotdata_meta <- makePlotData("meta", "meta data",
+             receive_datatab_ids = c("data_df1", "data_df2"),
+             vd_expr = spsValidate({
+                 if(!is.data.frame(mydata$meta))
+                     stop("Input raw data need to be a dataframe")
+                 if(nrow(mydata$meta) < 1)
+                     stop("Input raw data need to have at least one row")
+             }, vd_name = "Validate meta data"),
+             app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
+newTabPlot("plot_test1",
+           app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
+           plot_data = list(plotdata_raw, plotdata_meta))
 }

@@ -1,6 +1,6 @@
 ---
 title: "systemPipeShiny" 
-author: "Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Thomas Girke"
+author: "Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher, Thomas Girke"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`" 
 output:
   BiocStyle::html_document:
@@ -71,11 +71,29 @@ Shiny application for interactive workflow management and results visualization 
 
 ```{r, eval=FALSE}
 library(systemPipeShiny)
+spsInit()
 ```
 
+Then there should be a project folder created for you. By default, it is named `SPS_`+`DATE`. 
+Your working directory should be set inside that project folder automatically. 
+If you are using Rstudio, three main files will be opened for you: `global.R`, `ui.R` and `server.R`. 
+Now you can just run the app by type `shiny::runApp()` in console or click on the green `> Run App` 
+button on top right corner of the any these 3 files in Rstudio. 
+In your global.R, scroll down to the bottom, you should see:
+
+
 ```{r, eval=FALSE}
-shiny::runApp("../")
+sps_app <- sps(
+    vstabs = "",
+    server_expr = {
+        msg("Custom expression runs -- Hello World", "GREETING", "green")
+    }
+)
 ```
+
+This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
+`c("tab1", "tab2)`. See `config/tabs.csv` in your project folder for what tabs IDs can be load and other 
+tab information. 
 
 # Install
 
@@ -85,15 +103,41 @@ if (!requireNamespace("BiocManager", quietly=TRUE))
 BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
 ```
 
+If you are on Linux, you also need:
+
+```{bash, eval=FALSE}
+# use ubuntu as example
+sudo apt-get install libv8-dev
+sudo apt-get install libssl-dev
+sudo apt-get install libcurl4-openssl-dev
+```
+*libcurl4-openssl-dev* may not be required for Ubuntu >= 18.04
+
 # Setting up the data
 
 # Launching the application
 
 # Description of the user interface
-
-# Description of *systemPipeShiny* functionality
-
+## dashboard
+## layout 
+## each tab
 ## Workflow Management system
+# Description of *systemPipeShiny* functionality
+# SPS configurations
+## the config folder
+## SPS options
+## SPS tab
+## SPS database
+# For developers
+## Tab control
+### Tab classification
+### New data tab
+### New plot tab
+### Load new tab to the framework
+### Remove a tab
+### a Empty tab for advanced devleopers
+## 
+
 
 ## Visualization 
 
@@ -283,7 +327,7 @@ All you need is to change code in `global`
 be passed around tabs(modules). This is very important if you want to transfer like a 
 dataframe from df tabs to plotting tabs. 
 
-To access values in `shared`, use `$`, e.g. `shared$xxx$subxxx`.
+To access values in `shared`, use `$` or `[['name']]`, e.g. `shared$xxx$subxxx` or `shared[['xxx']][['subxxx']]`.
 
 ### default stored objects
 
