@@ -2,8 +2,7 @@
 % Please edit documentation in R/spsServerCollections.R
 \name{shinyCheckPkg}
 \alias{shinyCheckPkg}
-\title{check name space in server
-check name space and pop up warnings in shiny if package is missing}
+\title{check name space in server}
 \usage{
 shinyCheckPkg(
   session,
@@ -28,8 +27,8 @@ shinyCheckPkg(
 TRUE if pass, sweet alert massage and FALSE if fail
 }
 \description{
-check name space in server
-check name space and pop up warnings in shiny if package is missing
+check name space and pop up warnings in shiny
+if package is missing.
 }
 \examples{
 if(interactive()){

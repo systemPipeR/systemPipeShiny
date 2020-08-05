@@ -20,9 +20,10 @@ useSps <- function(){
     )
 }
 
-#' Input component with a "X" button in the end to clear the entire typed text
-#' work the same as `Textinput`
-#' must be call `useSps` at header
+#' A clearable text inputInput UI
+#' @description An UI component with a "X" button in the end to clear the entire
+#' typed text. It works the same as `Textinput`, must be call `useSps` at head
+#' to load css and js
 #'
 #' @param inputId ID
 #' @param label text label above
@@ -107,7 +108,7 @@ textInputGroup <- function(textId, btnId, title="",
 
 
 #' A shiny gallery component
-#' `texts`, `hrefs`, `images` Must have the same length
+#' @description `texts`, `hrefs`, `images` Must have the same length
 #' Must be used with Bootstrap3 and sps.css file
 #' @importFrom assertthat assert_that
 #' @param Id ID of this gallery
@@ -186,6 +187,8 @@ gallery <- function(Id = NULL, title = "Gallery",
 #' @param hrefs individual tab links
 #' @param ... other args pass to the html container
 #' @return a div element
+#' @details *genHrefTab* require a SPS project and the config/tabs.csv file.
+#' If you want to use hrefTab outside a SPS project just use *hrefTab*
 #' @export
 #' @examples
 #' if(interactive()){
@@ -636,7 +639,8 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
 
 
 #' Hexagon logo and logo panel
-#'
+#' @description `hexLogo()` generates a single hexagon, and `hexPanel()`
+#' generates a panel of hex logos
 #' @param id input ID
 #' @param title title of the logo, display on top of logo or title of logo panel
 #' displayed on the left

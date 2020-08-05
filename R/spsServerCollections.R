@@ -150,8 +150,8 @@ shinyCatch <- function(expr, position = "bottom-right",
 
 
 #' check name space in server
-#' check name space and pop up warnings in shiny if package is missing
-#'
+#' @description  check name space and pop up warnings in shiny
+#' if package is missing.
 #' @param session shiny session
 #' @param cran_pkg vector of strings
 #' @param bioc_pkg vector of strings
@@ -182,9 +182,9 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
         paste0("install.packages(c('", paste0(missing_cran, collapse = "', '"), "'))")
     bioc_cmd <- if (shinyAce::is.empty(missing_bioc)) "" else
         paste0(
-        'if (!requireNamespace("BiocManager", quietly=TRUE))
+            'if (!requireNamespace("BiocManager", quietly=TRUE))
         install.packages("BiocManager")\n',
-        "BiocManager::install(c('", paste0(missing_bioc, collapse = "', '"), "'))"
+            "BiocManager::install(c('", paste0(missing_bioc, collapse = "', '"), "'))"
         )
     github_cmd <- if (shinyAce::is.empty(missing_github)) "" else
         paste0(
@@ -205,10 +205,10 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
                         color: black;
 
                         ",
-                    p(cran_cmd),
-                    p(bioc_cmd),
-                    p(github_cmd)
-                    ),
+                            p(cran_cmd),
+                            p(bioc_cmd),
+                            p(github_cmd)
+            ),
             html = TRUE,
             type = "error"
         )
@@ -256,14 +256,14 @@ dynamicFileServer <- function(input,session, id){
         roots <- c(current=getwd(), shinyFiles::getVolumes()())
         shinyFiles::shinyFileChoose(input, id, roots = roots, session = session)
         observeEvent(input[[id]],
-            file_return({
-                req(is.list(input[[id]]))
-                file_selected <- shinyFiles::parseFilePaths(roots, input[[id]])
-                updateTextInput(inputId = glue("{id}-text"),
-                                session = session,
-                                placeholder = unname(file_selected$datapath))
-                as.data.frame(file_selected)
-            })
+                     file_return({
+                         req(is.list(input[[id]]))
+                         file_selected <- shinyFiles::parseFilePaths(roots, input[[id]])
+                         updateTextInput(inputId = glue("{id}-text"),
+                                         session = session,
+                                         placeholder = unname(file_selected$datapath))
+                         as.data.frame(file_selected)
+                     })
         )
         file_return
     } else {
@@ -273,7 +273,8 @@ dynamicFileServer <- function(input,session, id){
 }
 
 #' A draggable progress panel
-#' Use `pgPaneUI` on UI side and use `pgPaneUpdate` to update it. The UI only
+#' @description  Use `pgPaneUI` on UI side and use `pgPaneUpdate` to update it.
+#' The UI only
 #' renders correctly inside `shinydashboard` or `shinydashboardPlus`.
 #' @param pane_id Progress panel main ID, use `ns` wrap it on `pgPaneUI` but not
 #' on `pgPaneUpdate` if using shiny module
@@ -341,7 +342,7 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
                 panel_id = pane_id,
                 which_pg = pg_id,
                 value = value
-        ))
+            ))
     }, blocking_level = "error")
 
 }
@@ -390,22 +391,22 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 #'     shinyApp(ui, server)
 #'}
 addData <- function(data, shared, tab_id) {
-        shinyCatch({
-            assert_that(inherits(shared, "reactivevalues"))
-            assert_that(is.character(tab_id))
-            findTabInfo(tab_id)
-            if(emptyIsFalse(shared[['data']][[tab_id]]) & spsOption('verbose'))
-                message(c(glue("found {tab_id} has already been added to "),
-                          "`shared$data_intask` list, overwrite"))
-            shared[['data']][[tab_id]] <- data
-            if(spsOption('verbose')) {
-                info <- glue("Data for namespace {tab_id} added")
-                message(info)
-                shinytoastr::toastr_info(info,
-                                         timeOut = 3000,
-                                         position = "bottom-right")
-            }
-        }, blocking_level = "error")
+    shinyCatch({
+        assert_that(inherits(shared, "reactivevalues"))
+        assert_that(is.character(tab_id))
+        findTabInfo(tab_id)
+        if(emptyIsFalse(shared[['data']][[tab_id]]) & spsOption('verbose'))
+            message(c(glue("found {tab_id} has already been added to "),
+                      "`shared$data_intask` list, overwrite"))
+        shared[['data']][[tab_id]] <- data
+        if(spsOption('verbose')) {
+            info <- glue("Data for namespace {tab_id} added")
+            message(info)
+            shinytoastr::toastr_info(info,
+                                     timeOut = 3000,
+                                     position = "bottom-right")
+        }
+    }, blocking_level = "error")
 }
 
 

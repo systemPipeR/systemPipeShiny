@@ -34,6 +34,10 @@ gallery div
 \description{
 generate gallery by only providing tab names
 }
+\details{
+require a SPS project and the config/tabs.csv file. If you want to
+use gallery outside a SPS project, use \link{gallery}
+}
 \examples{
 if(interactive()){
     spsInit()

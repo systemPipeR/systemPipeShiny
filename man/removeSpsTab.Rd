@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsNewtab.R
 \name{removeSpsTab}
 \alias{removeSpsTab}
-\title{Title}
+\title{Remove a SPS tab}
 \usage{
 removeSpsTab(
   tab_id = "none",
@@ -14,11 +14,36 @@ removeSpsTab(
 )
 }
 \arguments{
-\item{colorful}{}
+\item{tab_id}{tab ID, string, length 1, supports regular expressions, so
+be careful. If more than one tabs are matched, stop by default}
+
+\item{force}{bool, whether to ask for confirmation}
+
+\item{app_path}{app directory}
+
+\item{multiple}{bool, if matched more than one tab, trun this to \code{TRUE} can
+remove more than one tab at a time. Be careful.}
+
+\item{verbose}{bool, follows project setting, but can be overwrite.
+\code{TRUE} will give you more information}
+
+\item{colorful}{bool, whether the message will be colorful or not}
 }
 \value{
-
+remove the tab file and register info in \emph{tabs.csv}
 }
 \description{
-Title
+remove a tab R file and remove from the tabs.csv config file
+}
+\examples{
+spsInit(change_wd = FALSE, overwrite = TRUE)
+newTabData(
+    tab_id = "data_new_remove",
+    tab_displayname = "my first data tab",
+    prepro_methods = list(makePrepro(label = "do nothing",
+                                     plot_options = "plot_new")),
+    app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}")
+)
+removeSpsTab("data_new_remove", force = TRUE,
+             app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
 }

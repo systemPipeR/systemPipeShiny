@@ -236,7 +236,8 @@ resolveOptions <- function(appDir = getwd()){
 }
 
 #' Print systemPipeShiny default Options
-#' Make sure you created the app folder and has config.yaml in config folder
+#' @description  Make sure you created the app folder and has config.yaml
+#' in config folder
 #' @param appDir where is the app directory
 #'
 #' @export

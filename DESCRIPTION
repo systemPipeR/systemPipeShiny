@@ -44,6 +44,7 @@ Imports:
     shinyjqui,
     shinyjs,
     shinytoastr,
+    styler,
     tibble,
     vroom,
     yaml

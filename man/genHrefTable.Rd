@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsCoreUI.R
 \name{genHrefTable}
 \alias{genHrefTable}
-\title{generate a table of lists of hyper reference buttons by using tab config file}
+\title{generate a table that lists of hyper reference buttons by rows}
 \usage{
 genHrefTable(
   rows,
@@ -31,13 +31,16 @@ type info.}
 HTML elements
 }
 \description{
-generate a table of lists of hyper reference buttons by using tab config file
+generate a table that lists of hyper reference buttons by rows
 }
 \details{
 For \code{rows}, there are some specially reserved characters
 for type and sub types. If indicated, it will return a list of tabs matching
 the indicated tabs instead of searching individual tab names. These words
 include: core, wf, vs, data, plot.
+
+require a SPS project and the config/tabs.csv file. If you want to
+use hrefTable outside a SPS project, use \link{hrefTable}
 }
 \examples{
 if(interactive()){
