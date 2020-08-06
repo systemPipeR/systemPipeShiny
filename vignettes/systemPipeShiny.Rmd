@@ -34,9 +34,10 @@ knitr::opts_chunk$set(
     tidy.opts=list(width.cutoff=60), tidy=TRUE)
 ```
 
-```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=FALSE}
+```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=TRUE}
 suppressPackageStartupMessages({
     library(systemPipeR)
+    library(systemPipeShiny)
 })
 ```
 
@@ -141,137 +142,65 @@ sudo apt-get install libcurl4-openssl-dev
 
 ## Visualization 
 
-systemPipeShiny offers interactive data visualization to users and supports graphics in workflow reports. In systemPipeShiny's visualization tab, there are many features for data visualization of various statistical results. Users can upload different input data types, and apply various options for preprocessing those datasets. Users can then create downstream analysis plots, as per the type of uploaded data. Some available plotting options include: bar plots of differentially expressed genes, heat maps, dendrogram, principal component analysis (PCA) plots, and multidimensional scaling (MDS) plots. Depending on the nature of the plots, there are also options to adjust the plot such as normalizing the data. Additionally, systemPipeShiny provides users with plot templates and plotting functions that they can then customize according to their necessities for visualization.
+*systemPipeShiny* offers interactive data visualization to users and supports graphics in workflow reports. In systemPipeShiny's visualization tab, there are many features for data visualization of various statistical results. Users can upload different input data types, and apply various options for preprocessing those datasets. Users can then create downstream analysis plots, as per the type of uploaded data. Some available plotting options include: bar plots of differentially expressed genes, heat maps, dendrogram, principal component analysis (PCA) plots, and multidimensional scaling (MDS) plots. Depending on the nature of the plots, there are also options to adjust the plot such as normalizing the data. Additionally, systemPipeShiny provides users with plot templates and plotting functions that they can then customize according to their necessities for visualization.
 
 Table with all exported functions
 
-| Function Name | Description                                                     |   |   |
-|---------------|-----------------------------------------------------------------|---|---|
-| `run_PCA`     | Plots PCA from a count matrix                                   |   |   |
-| `run_MDS`     | Plots MDS from a count matrix                                   |   |   |
-| `run_TSNE`    | Plots t-SNE from a count matrix                                 |   |   |
-| `run_GLM`     | Plots GLM-PCA from a count matrix                               |   |   |
-| `run_HEAT`    | Plots Heatmap from a count matrix                               |   |   |
-| `run_CLUST`   | Plots a clustering dendrogram from a count matrix               |   |   |
-| `run_volcano` | Plots a Volcano Plot from an edgeR or deseq2 dataframe          |   |   |
-| `deg_edgeR`   | Plots barplot of DEGs from a count matrix, returns an edgeR DF  |   |   |
-| `deg_deseq2`  | Plots barplot of DEGs from a count matrix, returns an deseq2 DF |   |   |
+| Function Name   | Description                                                     |
+|-----------------|-----------------------------------------------------------------|
+| `exploreDSS`    | transform raw read counts using the \code{DESeq2} package       |
+| `plotExploreDSS`| Scatterplot of transformed counts from two samples              |
+| `plotPCA_sps`   | Plots PCA from a count matrix                                   |
+| `plotMDS`       | Plots MDS from a count matrix                                   |
+| `plotTSNE`      | Plots t-SNE from a count matrix                                 |
+| `plotGLM`       | Plots GLM-PCA from a count matrix                               |
+| `plotHeatMap`   | Plots Heatmap from a count matrix                               |
+| `plot_MA`       | Plots a clustering dendrogram from a count matrix               |
+| `run_volcano`   | Plots a Volcano Plot from an edgeR or deseq2 dataframe          |
+| `deg_edgeR`     | Plots barplot of DEGs from a count matrix, returns an edgeR DF  |
+| `deg_deseq2`    | Plots barplot of DEGs from a count matrix, returns an deseq2 DF |
 
+### Data transformations and visualization
 
-## Barplot
-A barplot for analysis of differentially expressed genes (DEGs) can be plotted using functions `deg_edgeR` or `deg_deseq2`. The function `deg_edgeR` uses the `edgeR` package [@Robinson2010-uk] to create an `edgeR` data frame. Alternatively, the function `deg_deseq2` uses the `DESeq2` package [@Love2014-sh] to create an `DESeq2` data frame. Using the `filterDEGs` function, it filters and plots DEG results for up and down regulated genes in a barplot. 
+To show the effect of the transformation, in the figure below we plot the first sample against the second, first simply using the `log2` function, and then using the `VST` and `rlog-transformed` values. For the log2 approach, we need to first estimate size factors to account for sequencing depth, and then specify `normalized=TRUE`. Sequencing depth correction is done automatically for the `vst` and `rlog.`
 
-```{r, eval=FALSE}
-## Create DEG dataframe
+```{r, eval=TRUE}
 targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
 targets <- read.delim(targetspath, comment="#")
-cmp <- readComp(file=targetspath, format="matrix", delim="-")
-countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countDF <- read.delim(countfile, row.names=1)
-## Create plot using `deg_edgeR`
-deg_edgeR(countDF, targets, Fold = 2, FDR = 10, cmpset = 1, cmp, plot = T)
-## Create plot using `deg_deseq2`
-deg_deseq2(countDF, targets, Fold = 2, FDR = 10, cmpset = 1, cmp, plot = T)
+cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
+countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+countMatrix <- read.delim(countMatrixPath, row.names=1)
+plotExploreDSS(countMatrix, targets, cmp = cmp[[1]], preFilter = 10, sample = c(3,4))
 ```
+
+## Barplot
+
+A barplot for analysis of differentially expressed genes (DEGs) can be plotted using functions `deg_edgeR` or `deg_deseq2`. The function `deg_edgeR` uses the `edgeR` package [@Robinson2010-uk] to create an `edgeR` data frame. Alternatively, the function `deg_deseq2` uses the `DESeq2` package [@Love2014-sh] to create an `DESeq2` data frame. Using the `filterDEGs` function, it filters and plots DEG results for up and down regulated genes in a barplot. 
+
 ## Heatmap
 
 A heatmap of the results of hierarchical clustering performed with the `hclust` function can be created with the `run_HEAT` function. The sample-wise Spearman correlation coefficients are computed before hierarchical clustering. The count data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package, or can be done without transformation. 
 
-```{r, eval=FALSE}
-## Create targets file object
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-colData <- data.frame(row.names = targets$SampleName,
-            condition = targets$Factor)
-countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countDF <- read.delim(countfile, row.names=1)
-## Create Heat map
-run_HEAT(countDF = countDF, targets = targets, colData = colData, method = "raw")
-```
 ## Dendrogram
 
 A dendrogram of the results of hierarchical clustering performed with the `hclust` function can be created with the `run_CLUST` function. The sample-wise Spearman correlation coefficients are computed, and then the results are transformed to a distance matrix before the hierarchical clustering is performed. The count data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package, or can be done without transformation. 
 
-```{r, eval=FALSE}
-## Create targets file object
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-colData <- data.frame(row.names = targets$SampleName,
-            condition = targets$Factor)
-countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countDF <- read.delim(countfile, row.names=1)
-## Create Dendrogram plot
-run_CLUST(countDF = countDF, targets = targets, colData = colData, method = "raw")
-```
-
 ## t-SNE plot
 
 A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created using the `run_TSNE` function, which uses the `Rtsne` package [@Krijthe2015] to compute t-SNE values. The function removes duplicates in the input data frame, sets a seed for reproducility, performs an initial PCA step. The function also allows for a user-set perplexity value for the computation. 
-
-```{r, eval=FALSE}
-## Create targets file object
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-colData <- data.frame(row.names = targets$SampleName,
-             condition = targets$Factor)
-countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countDF <- read.delim(countfile, row.names=1)
-## Create t-SNE plot
-run_TSNE(countDF, targets, perplexity = 5)
-```
 
 ## PCA plot
 
 A Principal Component Analysis (PCA) plot can be created using the `run_PCA` function which uses the `DESeq2` package. The input data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package, or can be done without transformation. 
 In addition, generalized principal component analysis (GLM-PCA) for dimension reduction of non-normally distributed data can be plotted with the `run_GLM` function [@Townes2019]. This option does not offer transformation or normalization of raw data.
 
-```{r, eval=FALSE}
-## Create targets file object
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-colData <- data.frame(row.names = targets$SampleName,
-            condition = targets$Factor)
-countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countDF <- read.delim(countfile, row.names=1)
-## Create PCA plot
-run_PCA(countDF = countDF, targets = targets, colData = colData, method = "raw")
-
-## Create GLM-PCA plot
-run_GLM(countDF = countDF, targets = targets, colData = colData)
-```
-
 ## MDS plot
 
 A Multidimensional Scaling (MDS) plot can be created using the `run_MDS` function.  The input data frame can be transformed with either the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package. From the input data, it computes a spearman correlation-based distance matrix and performs MDS analysis on it.
 
-```{r, eval=FALSE}
-## Create targets file object
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-colData <- data.frame(row.names = targets$SampleName,
-            condition = targets$Factor)
-countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countDF <- read.delim(countfile, row.names=1)
-## Create MDS plot
-run_MDS(countDF = countDF, targets = targets, colData = colData, method = "rlog")
-```
-
 ## Volcano plot
 
 A volcano plot of DEGs data frame can be plotted using the function `run_volcano`. Using the resulting data frame from `run_edgeR` or `run_deseq2`, the function plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for the sample comparison specified by the user.
-
-```{r, eval=FALSE}
-## Create DEG dataframe
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-cmp <- readComp(file=targetspath, format="matrix", delim="-")
-countfile <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countDF <- read.delim(countfile, row.names=1)
-edgeDF <- run_edgeR(countDF=countDF, targets=targets, cmp=cmp[[1]], independent=FALSE, mdsplot="")
-## Create Volcano plot
-run_volcano(DF = edgeDF,FDR = 10, Fold = 2, comparison = "M1-A1")
-```
-
 
 # How to use this function on the Shiny application
 
@@ -351,7 +280,7 @@ To access values in `shared`, use `$` or `[['name']]`, e.g. `shared$xxx$subxxx` 
 
 # Version Information
 
-```{r sessionInfo, eval=FALSE}
+```{r sessionInfo, eval=TRUE}
 sessionInfo()
 ```
 
