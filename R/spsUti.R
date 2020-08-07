@@ -289,6 +289,9 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
 #' msg("this is warning", "warning")
 #' try(msg("this is error", "error"))
 #' msg("this is other", "error2")
+#' spsinfo("some msg)
+#' spswarn("sps warning")
+#' try(spserror("sps error"))
 msg <- function(msg,
                 level = "INFO",
                 .other_color="white",
@@ -325,6 +328,7 @@ msg <- function(msg,
 
 #' @param verbose bool, default NULL, get from sps project options
 #' @rdname msg
+#' @export
 spsinfo <- function(msg, verbose=NULL) {
     verbose <- if(is.null(verbose)) spsOption('verbose')
                else {assert_that(is.logical(verbose)); verbose}
@@ -332,9 +336,11 @@ spsinfo <- function(msg, verbose=NULL) {
 }
 
 #' @rdname msg
+#' @export
 spswarn <- function(msg) msg(msg, "warning", warning_text = "SPS-WARNING")
 
 #' @rdname msg
+#' @export
 spserror <- function(msg) msg(msg, "error", error_text = "SPS-ERROR")
 
 

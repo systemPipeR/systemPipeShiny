@@ -57,9 +57,3 @@ package, if not specified, it follows the project option, can be be forced to
 \code{TRUE} and \code{FALSE}. \code{TRUE} will forcefully generate the msg, and \code{FALSE}
 will be no message.
 }
-\examples{
-msg("this is info")
-msg("this is warning", "warning")
-try(msg("this is error", "error"))
-msg("this is other", "error2")
-}
