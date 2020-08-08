@@ -21,7 +21,6 @@ output:
   BiocStyle::html_document:
     self_contained: true
     toc: true
-    fig_width: 20
     toc_float: true
     code_folding: show
     bootstrap_version: 4
@@ -75,7 +74,7 @@ cat("</style>")
 
 
 ```{r logo, echo=FALSE, out.width='75%', fig.align='center', fig.width=12}
-knitr::include_graphics(path = system.file(package="systemPipeShiny", "app/www/img/sps.png", mustWork=TRUE))
+knitr::include_graphics(path = system.file(package="systemPipeShiny", "app/www/img/sps.png"))
 ```
 
 
@@ -90,12 +89,12 @@ visualizations with a graphical user interface (UI).
  with more visualization options(more plot types) and to quickly deploy the app to a Shiny sever. 
  
 You can try our demo at [here](https://tgirke.shinyapps.io/systemPipeShiny/). There are 5 
-different interactive tutorials embedded on the demo that you can follow. Each tutorial covers 
-a major topic of SPS and show how you can interactive with app.
+different interactive tutorials embedded on the demo that you can follow(right upper corner). 
+Each tutorial covers a major topic of SPS and show how you can interactive with app.
 
 This vignette introduces main features and functionalities of SPS. Due to size limit, 
-a full version of users' manual will be later updated [here](https://systempipe.org/systemPipeShiny-book/) 
-which will include more screenshots, and *gif* illustrations.
+a full version of users' manual will be later updated at [SytemPipeShiny-book](https://systempipe.org/systemPipeShiny-book/) 
+which will include more small demos, screenshots, and *gif* illustrations.
 
 ## Install
 
@@ -137,7 +136,7 @@ the name is `SPS_` + `today's date` in *ISO 8601* format, e.g.
 
 By default, your working directory should be set inside that project folder automatically. 
 If you are using Rstudio, three main files will be opened for you: `global.R`, `ui.R` and `server.R`. 
-Now you can just run the app by type `shiny::runApp()` in console or click on the <img src=./img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
+Now you can just run the app by type `shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
 button on top right corner of the any these 3 files in Rstudio. 
 In your global.R, scroll down to the bottom, you should see:
 
@@ -153,11 +152,47 @@ sps_app <- sps(
 
 This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
 `c("tab1", "tab2)`. See `config/tabs.csv` in your project folder for what tabs IDs can be load and other 
-tab information. 
+tab information. Currently you can only load/unload visualization tabs, type of *vs*; core tabs(*core*) and 
+workflow tabs (*wf*) are loaded automatically. 
 
 
-## SPS structure
+# SPS structure
+## App directory structure
 
+When a SPS project is created, you would expect the directory contains: 
+<pre>
+SPS_xx/  
+├── server.R               <span class="text-success">|</span> 
+├── global.R               <span class="text-success">| Most important server, UI and global files, unless special needs, `global.R` is the only file you need to edit manually</span>   
+├── ui.R                   <span class="text-success">|</span>  
+├── deploy.R               <span class="text-info">| Deploy helper file</span>  
+├── config                 <span class="text-success">| Important app config files. Do not edit them if you don't know</span>  
+│   ├── sps.db             
+│   ├── sps_options.yaml   
+│   └── tabs.csv           
+├── data                   <span class="text-primary">| App example data files</span> 
+│   ├── xx.csv             
+├── R                      <span class="text-primary">| All SPS additional tab files and helper R function files</span> 
+│   ├── tab_xx.R            
+├── README.md              
+├── results                <span class="text-gray">| No in use for this current version, you can store some data been generated from the app</span> 
+│   └── README.md          
+└── www                    <span class="text-primary">| Internet resources</span>  
+    ├── about              <span class="text-gray">| About tab information</span> 
+    │   └── xx.md          
+    ├── css                <span class="text-info">| CSS files</span>  
+    │   └── sps.css         
+    ├── img                <span class="text-info">| App image resources</span>    
+    │   └── xx.png         
+    ├── js                 <span class="text-info">| Javascripts</span>
+    │   └── xx.js           
+    ├── loading_themes     <span class="text-info">| Loading screen files</span> 
+    │   └── xx.html         
+    └── plot_list          <span class="text-info">| Image files for plot gallery</span>  
+        └── plot_xx.jpg      
+</pre>
+
+## App UI structure
 SPS provides two core components -- workflow management and data visualization. 
 The UI is designed as a dashboard(*Fig 1*). Individual components are classified 
 into two categories of tabs (*Fig 1. a-b*).
@@ -167,7 +202,7 @@ into two categories of tabs (*Fig 1. a-b*).
 **Figure 1. SPS UI**
 </center>
 
-The app structure can be understand as following(*Fig 2*). Users first need to choose 
+The app UI structure can be understand as following(*Fig 2*). Users first need to choose 
 either the workflow or visualization part to start with. Workflow part helps users to 
 prepare data analysis workflow files in [systemPipeR](http://systempipe.org/)(SPR) format. 
 Visualization part helps users to make different types of plots, take interactive snapshot 
@@ -178,13 +213,13 @@ of plots and combine/compare different plots on the "Canvas" workbench.
 **Figure 2. SPS Structure**
 </center>
 
+# UI details
+## Workflow management 
 
-### Workflow management 
-
- Files can be prepared in this part including the metadata(targets) file, workflow 
+ Files can be prepared for a data analysis workflow including the metadata(targets) file, workflow 
  step file(Rmarkdown formatted) and a workflow config file. Each of these files are 
- prepared in a SPS tab. SPS helps users to check the formats and requirements of each 
- file. Users can click on the
+ prepared in a SPS tab. You can find them at the left side navigation bar. 
+ SPS helps users to check the formats and requirements of each file. Users can click on the
 <button type="button" class="btn btn-default">
     <i class="fa fa-paper-plane"></i>
         Add to task
@@ -201,6 +236,28 @@ command line. You can download these files by clicking
      Save
 </button>.
 
+<div id="plot_template-pg-pg-container" class="tab-pane" style="padding-left: 130px;">
+<div class="control-panel draggable ui-draggable ui-draggable-handle" style="width: 400px; height: auto; background-color: var(--light);">
+<div class="row">
+<div class="col-sm-1">
+</div>
+<div class="col-sm-9">
+<h5>
+Workflow-prepare
+</h5>
+</div>
+<div class="col-sm-2">
+<button class="btn btn-default" data-target="#pg-example" data-toggle="collapse" aria-expanded="true">
+<i class="fa fa-minus"></i>
+</button>
+</div>
+</div>
+<div id="pg-example" class="in collapse" aria-expanded="true" style="">
+<img src="img/sps_progress_bar.png" style="width:200% !important; padding:0; margin:0"></img>
+</div>
+</div>
+</div>
+
 A typical workflow tab will look like this one(*Fig3*).
 
 <center>
@@ -208,44 +265,130 @@ A typical workflow tab will look like this one(*Fig3*).
 **Figure 3. Workflow Management**
 </center>
 
-### Data Visualization
+## Data Visualization
 
-To make an interactive plot, users need to first prepare some data and this can be 
-done 
+### Tabs
+There are two types of data visualization(VS) tabs: *data tab* and *plot tab*. A data 
+tab is where you prepare plotting data, including different preprocess options. 
+Depending on the data tab and preprocess options you choose, you will be given different 
+plot tab options. 
+
+You should first going to the VS main tab by clicking *<i class="fa fa-images"></i>Visualization*
+and read the instructions there.
+
+There are two ways to make a plot:
+
+1. **Begin with a data tab**: If you know have run some data analysis workflows and have obtained results but don't know what you can plot from these results, browse the table on visualization main tab. The table is sorted by workflows as rows. Based on the data type you have, you can click on the data type in the table, you will jump to the corresponding data preparation tab and you will see what plots you can make after data preparation.
+2. **Begin with a plot tab**: If you already know what plots you want, there is a gallery on visualization main tab. You can click on the plot you want and it will jump to the plot tab directly. You will see in order to make this plot what input data need to be prepared. By choosing under the **Data Preparation**, you will go to a data tab and once you have prepared the required data, you will be guided back to this plotting tab.
+
+All VS tabs has a start-up button
+<button  type="button" class="btn btn-default">Start with this tab</button>
+which will first check for packages requirements. If you don't have the required package for 
+the tab, there will be a pop-up window telling you how to install the required packages.
+In addition to package checks, plot tabs will also check for required plotting data. 
+Depending on missing or unqualified data, you will see different error messages on the 
+bottom right corner. See [SPS logging](#dual-end-logging) in for more information. 
+If everything is good, you will still see a green message and the main tab UI will 
+show up and you can continue. 
+
+### Data tabs
+
+Once you have passed the package checks, you should see the data tab main UI. Please 
+read the instructions on the top of each tab for how to prepare your data and data 
+format requirements. All SPS data tabs comes with an example data set, and if you
+are not sure what data to prepare, you can first switch to the example data set and 
+play with it. When you are familiar with the tab, you can upload your own data set. 
+
+```{r , echo=FALSE}
+HTML('
+<div id="df_template-data_source" class="radioGroupButtons shiny-bound-input" style="padding-left: 60px;">
+  <div aria-label="..." class="btn-group btn-group-justified btn-group-container-sw" data-toggle="buttons" role="group">
+    <div class="btn-group btn-group-toggle" role="group">
+      <button class="btn radiobtn btn-default active">
+        <input type="radio" autocomplete="off" name="df_template-data_source" value="upload" checked="checked">
+        Upload
+      </button>
+    </div>
+    <div class="btn-group btn-group-toggle" role="group">
+      <button class="btn radiobtn btn-default">
+        <input type="radio" autocomplete="off" name="df_template-data_source" value="eg">
+        Example
+      </button>
+    </div>
+  </div>
+</div>    
+')
+```
+
+
+<p style="color:var(--info)">Note: Upload file selection can be different depending on the mode, see [App options](#app-options)</p>
+
+```{r , echo=FALSE}
+HTML('
+<div class="input-group" style="width: 30%; padding-left: 60px">
+  <label class="input-group-btn input-group-prepend">
+    <span class="btn btn-file btn-default">
+      Browse
+      <input id="df_template-file_upload" name="df_template-file_upload" type="file" style="display: none;">
+    </span>
+  </label>
+  <input type="text" class="form-control" placeholder="No file selected" readonly="readonly">
+</div>
+')
+```
+
+### Plot tabs
+
+
+## Snapshot and Canvas
+
 <center>
 ![systemPipeShiny](./img/sps_ui_canvas.png)
 **Figure 4. Canvas**
 </center>
 
-## Features
+# Configuration
+# Features
 
-- User friendly: SPS is easy to use for people different backgrounds. The GUI operations require no
+## User friendly
+
+SPS is easy to use for people different backgrounds. The GUI operations require no
 programming experience. Detailed design templates are provided for advanced users allowing them to add new
 features(tabs) to SPS.
-- Dual-end logging: Messages, warnings and errors from R functions are automatically captured and logged on
+
+## Dual-end logging
+
+Messages, warnings and errors from R functions are automatically captured and logged on
 both the server and client ends. The corresponding information can be displayed in a message box.
-- Progress tracking: A progress tracking panel is provided on each tab to notify users about run status.
-- App options: a robust exception handling system has been implemented (similar to Shiny options), that
+
+## Progress tracking
+
+A progress tracking panel is provided on each tab to notify users about run status.
+
+## App options
+
+a robust exception handling system has been implemented (similar to Shiny options), that
 provides error solutions to to users, e.g. invalid parameter settings.
-- Modular isolation: SPS is built on Shiny modules, which provides local scope isolation between each tab.
+    - upload options
+    
+## Modular isolation
+
+SPS is built on Shiny modules, which provides local scope isolation between each tab.
 Objects on one tab do not conflict with other tabs. They work like individual posts 
 in a forum. To enable cross-tab communication, SPS also supports global scope interactions.
-- A variety of additional shiny widgets: There are many useful HTML components that 
+## A variety of additional shiny widgets: There are many useful HTML components that 
 can be use outside out SPS. You can include these widgets in your own Shiny apps without 
 loading SPS main framework. 
-- Canvas: Under this workbench users can take snapshots of different plots, and combine or resize them. This
+
+## Canvas
+
+Under this workbench users can take snapshots of different plots, and combine or resize them. This
 feature is useful for generating complex scientific summary graphics.
 
-### systemPipeShiny: Shiny Web Interface
+### systemPipeShiny
+
+Shiny Web Interface
 Shiny application for interactive workflow management and results visualization generated by *systemPipeR*
-
-- Interactive workflow management
-  - Create metadata from new or templates; 
-  - checkers to help users validate target file (names, file existence, statistics)
-
-- Visualize workflow structure, choose steps 
-   - Interactive data visualization
-   - Plots of downstream analysis, like DEG, GO and other plots used in some specific workflows, like Venn diagram, dendrogram
 
 
 # Setting up the data

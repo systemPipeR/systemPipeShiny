@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
       </span>
     </div>
 
@@ -94,18 +94,6 @@
 </li>
 <li>
   <a href="../articles/systemPipeShiny.html">Get started</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/VisualizationFunctions.html">VZ</a>
-    </li>
-  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -160,60 +148,21 @@
       <tr>
         
         <td>
-          <p><code><a href="ViewSpsDefaults.html">ViewSpsDefaults()</a></code> </p>
-        </td>
-        <td><p>Print systemPipeShiny default Options</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="addData.html">addData()</a></code> <code><a href="addData.html">getData()</a></code> <code><a href="addData.html">addPlot()</a></code> <code><a href="addData.html">getPlot()</a></code> </p>
+          <p><code><a href="addData.html">addData()</a></code> <code><a href="addData.html">getData()</a></code> </p>
         </td>
         <td><p>Add and get data between shiny modules</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="checkNameSpace.html">checkNameSpace()</a></code> </p>
-        </td>
-        <td><p>check namespace
-Help you to check if you have certain packages and return missing package names</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="clearableTextInput.html">clearableTextInput()</a></code> </p>
         </td>
-        <td><p>Input component with a "X" button in the end to clear the entire typed text
-work the same as `Textinput`
-must be call `useSps` at header</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="deg_deseq2.html">deg_deseq2()</a></code> </p>
-        </td>
-        <td><p>Plots a Bar Plot using <code>run_DESeq2</code> to create a DESeq2 data frame of
-differentially expressed genes.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="deg_edgeR.html">deg_edgeR()</a></code> </p>
-        </td>
-        <td><p>Plots a Bar Plot using <code>run_edgeR</code> to create a edgeR data frame of
-differentially expressed genes.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="devComponents.html">devComponents()</a></code> </p>
-        </td>
-        <td><p>Create template tabs and servers</p></td>
+        <td><p>A clearable text inputInput UI</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="dynamicFile.html">dynamicFile()</a></code> </p>
         </td>
-        <td><p>dynamically generate select file input
-depending on the mode in options, render similar UI but server side works
-differently. `local` mode will not copy file, directly use a path pointer,
-`server` mode upload file and store in temp. Expect similar behavior as
-`fileInput`.</p></td>
+        <td><p>dynamically generate select file input</p></td>
       </tr><tr>
         
         <td>
@@ -223,23 +172,15 @@ differently. `local` mode will not copy file, directly use a path pointer,
       </tr><tr>
         
         <td>
-          <p><code><a href="findTabInfo.html">findTabInfo()</a></code> </p>
+          <p><code><a href="emptyIsFalse.html">emptyIsFalse()</a></code> </p>
         </td>
-        <td><p>Find tab information from tabs.csv</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="findTreeParent.html">findTreeParent()</a></code> </p>
-        </td>
-        <td><p>find parent steps of from output of jsTree</p></td>
+        <td><p>empty things and FALSE will return FALSE</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="gallery.html">gallery()</a></code> </p>
         </td>
-        <td><p>A shiny gallery component
-`texts`, `hrefs`, `images` Must have the same length
-Must be used with Bootstrap3 and sps.css file</p></td>
+        <td><p>A shiny gallery component</p></td>
       </tr><tr>
         
         <td>
@@ -251,11 +192,17 @@ Must be used with Bootstrap3 and sps.css file</p></td>
         <td>
           <p><code><a href="genHrefTable.html">genHrefTable()</a></code> </p>
         </td>
-        <td><p>generate a table of lists of hyper reference buttons by using tab config file</p></td>
+        <td><p>generate a table that lists of hyper reference buttons by rows</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="hrefTab.html">hrefTab()</a></code> <code><a href="hrefTab.html">genHrefTab()</a></code> </p>
+          <p><code><a href="hexPanel.html">hexLogo()</a></code> <code><a href="hexPanel.html">hexPanel()</a></code> </p>
+        </td>
+        <td><p>Hexagon logo and logo panel</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="hrefTab.html">genHrefTab()</a></code> <code><a href="hrefTab.html">hrefTab()</a></code> </p>
         </td>
         <td><p>Show a list of tabs in buttons</p></td>
       </tr><tr>
@@ -263,120 +210,97 @@ Must be used with Bootstrap3 and sps.css file</p></td>
         <td>
           <p><code><a href="hrefTable.html">hrefTable()</a></code> </p>
         </td>
-        <td><p>A table of lists of hyper reference buttons
-`item_titles`, `item_labels`, `item_hrefs` must have the same length
-nth item in `item_labels`, `item_hrefs` must have the same length</p></td>
+        <td><p>A table of lists of hyper reference buttons</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="loadDF.html">loadDF()</a></code> </p>
         </td>
-        <td><p>Load tibbles to server</p></td>
+        <td><p>Load tabular files as tibbles to server</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="msg.html">msg()</a></code> </p>
+          <p><code><a href="makePlotData.html">makePlotData()</a></code> </p>
         </td>
-        <td><p>SPS terminal message</p></td>
+        <td><p>Create data receive methods for plot tabs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="makePrepro.html">makePrepro()</a></code> </p>
+        </td>
+        <td><p>Create data tab preprocess methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="msg.html">msg()</a></code> <code><a href="msg.html">spsinfo()</a></code> <code><a href="msg.html">spswarn()</a></code> <code><a href="msg.html">spserror()</a></code> </p>
+        </td>
+        <td><p>SPS terminal message logging methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="newTabPlot.html">newTabPlot()</a></code> <code><a href="newTabPlot.html">newTabData()</a></code> </p>
+        </td>
+        <td><p>Create a new SPS Tab</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="pgPaneUpdate.html">pgPaneUpdate()</a></code> <code><a href="pgPaneUpdate.html">pgPaneUI()</a></code> </p>
         </td>
-        <td><p>A draggable progress panel
-Use `pgPaneUI` on UI side and use `pgPaneUpdate` to update it. The UI only
-renders correctly inside `shinydashboard` or `shinydashboardPlus`.</p></td>
+        <td><p>A draggable progress panel</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotContainer.html">plotContainer</a></code> </p>
+        </td>
+        <td><p>SPS snapshots container</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="quiet.html">quiet()</a></code> </p>
         </td>
-        <td><p>supress cat output</p></td>
+        <td><p>suppress cat print output</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="remove_ANSI.html">remove_ANSI()</a></code> </p>
+          <p><code><a href="removeSpsTab.html">removeSpsTab()</a></code> </p>
         </td>
-        <td><p>Remove ANSI color code</p></td>
+        <td><p>Remove a SPS tab</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="renderDesc.html">renderDesc()</a></code> </p>
         </td>
-        <td><p>Render tab description</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="resolveOptions.html">resolveOptions()</a></code> </p>
-        </td>
-        <td><p>Resolve SPS options
-need to use the sps_options.yaml file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="runSPS.html">runSPS()</a></code> </p>
-        </td>
-        <td><p>Start systemPipeShiny</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_CLUST.html">run_CLUST()</a></code> </p>
-        </td>
-        <td><p>Plots Hierarchical Clustering dendrogram between samples using a count
-dataframe and a targets file.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_GLM.html">run_GLM()</a></code> </p>
-        </td>
-        <td><p>Plots Generalized Principal Component Analysis performed on raw counts using a count dataframe and
-a targets file.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_HEAT.html">run_HEAT()</a></code> </p>
-        </td>
-        <td><p>Plots a hierarchical clustering heat map using a count dataframe and a
-targets file.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_MDS.html">run_MDS()</a></code> </p>
-        </td>
-        <td><p>Plots Multidimensional Scaling based on pairwise distances between samples
-using a count dataframe and a targets file.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_PCA.html">run_PCA()</a></code> </p>
-        </td>
-        <td><p>Plots Principal Component Analysis from a count dataframe and a targets file.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_TSNE.html">run_TSNE()</a></code> </p>
-        </td>
-        <td><p>Plots t-Distributed Stochastic Neighbor Embedding between samples using a
-count dataframe and a targets file.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_volcano.html">run_volcano()</a></code> </p>
-        </td>
-        <td><p>Plots  a Volcano Plot from an <code>edgeR</code> or <code>DESeq2</code> data frame.</p></td>
+        <td><p>Render some collapsible description</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="shinyCatch.html">shinyCatch()</a></code> </p>
         </td>
-        <td><p>Catch  error, warning, message text catcher</p></td>
+        <td><p>Catch  error, warning, message text</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="shinyCheckPkg.html">shinyCheckPkg()</a></code> </p>
         </td>
-        <td><p>check name space in server
-check name space and pop up warnings in shiny if package is missing</p></td>
+        <td><p>check name space in server</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sps.html">sps()</a></code> </p>
+        </td>
+        <td><p>SystemPipeShiny app start function</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsDb.html">spsDb</a></code> </p>
+        </td>
+        <td><p>SPS database functions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsEncryption.html">spsEncryption</a></code> </p>
+        </td>
+        <td><p>SPS encryption functions</p></td>
       </tr><tr>
         
         <td>
@@ -386,29 +310,27 @@ check name space and pop up warnings in shiny if package is missing</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="spsUI.html">spsUI()</a></code> </p>
+          <p><code><a href="spsInit.html">spsInit()</a></code> </p>
         </td>
-        <td><p>render the app UI
-Combine mainUI defined in ui.R and add the loading screen and more</p></td>
+        <td><p>Create a SystemPipeShiny project</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="spsValidator.html">spsValidator()</a></code> </p>
+          <p><code><a href="spsOption.html">spsOption()</a></code> </p>
         </td>
-        <td><p>Validate some inputs</p></td>
+        <td><p>Get or set SPS options</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="step2listD3.html">step2listD3()</a></code> </p>
+          <p><code><a href="spsValidate.html">spsValidate()</a></code> </p>
         </td>
-        <td><p>Create structure for networkD3 object</p></td>
+        <td><p>Validate expressions</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="step2listTree.html">step2listTree()</a></code> </p>
+          <p><code><a href="tabTitle.html">tabTitle()</a></code> </p>
         </td>
-        <td><p>Title Take steps output from subsetRmd and change to a nested list structure
-Data prepare for ShinyTree</p></td>
+        <td><p>h2 title with bootstrap info color</p></td>
       </tr><tr>
         
         <td>
@@ -418,28 +340,16 @@ Data prepare for ShinyTree</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="uiExamples.html">uiExamples()</a></code> </p>
-        </td>
-        <td><p>Example UI elements for plotting</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="useSps.html">useSps()</a></code> </p>
         </td>
         <td><p>Use SystemPipeShiny javascripts and css style
-call it in your header section</p></td>
+call it in your head section</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="wfPanel.html">wfPanel()</a></code> </p>
+          <p><code><a href="viewSpsDefaults.html">viewSpsDefaults()</a></code> </p>
         </td>
-        <td><p>Workflow progress tracker UI</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="wfProgressPanel.html">wfProgressPanel()</a></code> </p>
-        </td>
-        <td><p>Workflow Progress tracker server logic</p></td>
+        <td><p>Print systemPipeShiny default Options</p></td>
       </tr>
     </tbody>
     </table>
@@ -455,7 +365,7 @@ call it in your header section</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://www.dcassol.com/'>Daniela Cassol</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>, Le Zhang, Ponmathi Ramasamy.</p>
+  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">
