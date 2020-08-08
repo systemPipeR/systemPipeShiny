@@ -8,7 +8,7 @@
 systemPipeShiny is a framework for workflow management and data visualization. 
 This tool is under devleopment, you can install it from Github.
 
-An online demo of [SystempipeShiny](https://tgirke.shinyapps.io/systemPipeShiny/). 
+An online demo of [systempipeShiny](https://tgirke.shinyapps.io/systemPipeShiny/). 
 This application is hosted by a small server. Please do not use it for production activities. 
 Heavy tasks will crash it and disconnect you from it. 
 
@@ -61,8 +61,51 @@ This is the SPS main function. You can load/unload tabs by providing tab IDs in 
 tab information. 
 
 ### Load custom new tabs
+**Experimental**
 
-We will update the instructions to create new tabs and how to load them into the framework soon ...
+After you have created your SPS project by the `spsInit` function, you can use `newTabData` to create a data tab 
+and use `newTabPlot` to create a plot tab.
+```r
+newTabData(
+    tab_id = "data_new", 
+    tab_displayname = "my first data tab",
+    prepro_methods = list(makePrepro(label = "do nothing",
+                                     plot_options = "plot_new"))
+)
+newTabPlot(
+    tab_id = "plot_new",
+    tab_displayname = "my first plot tab",
+    plot_data = list(makePlotData(dataset_label = "Data from my new tab",
+                                  receive_datatab_ids = "data_new"))
+           )
+```
+This code should generate a new data tab called *data_new* with a label *my first data tab* (what 
+you see on the UI), and a new plot tab `plot_new`.
+
+The important arg `plot_options = "plot_new"` is saying this data tab can make a plot, and the 
+plot tab ID is "plot_new". On the plot tab similarly, `receive_datatab_ids = "data_new"` tells 
+the framework this plot tab need to receive data from data tab `data_new`. In this way, we connect 
+the data tab and the plot tab with each other. Of course, one data tab can link to multiple 
+plot tabs and a plot tab can receive data from multiple data tabs too. Just specify the 
+tab IDs by a vector `c(xx, xx)`.
+
+Tabs are not loaded at this point, you need to specify you do want to load them by adding them 
+to the app main function on the `global.R` file. Then launch the app as usually. New tab files 
+are automatically created under your R folder, registered to your `config/tabs.csv` and 
+sourced automatically.
+``` r
+sps_app <- sps(
+    vstabs = c("data_new", "plot_new"), # add new tab IDs here
+    server_expr = {
+        msg("Custom expression runs -- Hello World", "GREETING", "green")
+    }
+)
+```
+If you don't want any tab file, use `removeSpsTab("TAB_ID")` to remove a tab. It will remove the R 
+file and delete information on your `config/tabs.csv` file. 
+
+
+Functions are experimental, we will update the help files and examples soon. 
 
 ## Internal 
 

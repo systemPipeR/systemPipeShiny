@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
 Version: 0.99.0
-Date: 2020-07-22
+Date: 2020-08-06
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danielac@ucr.edu"),
@@ -26,6 +26,7 @@ Imports:
     RSQLite,
     colourpicker,
     crayon,
+    DESeq2,
     dplyr,
     markdown,
     networkD3,
@@ -44,6 +45,7 @@ Imports:
     shinyjqui,
     shinyjs,
     shinytoastr,
+    SummarizedExperiment,
     styler,
     tibble,
     vroom,
@@ -51,14 +53,11 @@ Imports:
 Suggests:
     testthat,
     Biostrings,
-    DESeq2,
     DelayedArray,
     Rtsne,
-    SummarizedExperiment,
     ape,
     glmpca,
     limma,
-    particlesjs,
     systemPipeR, 
     knitr
 VignetteBuilder: knitr
