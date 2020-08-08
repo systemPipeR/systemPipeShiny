@@ -43,14 +43,14 @@ makePrepro(
 
 \item{plot_options}{plot tab IDs: if data is preprocessed by this method,
 what kind of plots can it make, specify plot tab IDs in a vector. Note:
-unlike the \code{receive_datatab_ids} argument in \link{makePlotData} that requires
+unlike the \emph{receive_datatab_ids} argument in \link{makePlotData} that requires
 the \emph{config/tabs.csv} exists, this argument doesn't require the config file
 or the plot tab to be existing. One can use any ID(s) here. The ID checking
 is postponed when the \link{genGallery} function runs on app start. "default"
-means all possible plot tabs, the same as \code{type = 'plot'} in \link{genGallery}.}
+means all possible plot tabs, the same as \emph{type = 'plot'} in \link{genGallery}.}
 
 \item{use_string}{same as the same argument in \link{newTabPlot}, controls
-\code{vd_expr} and \code{pre_expr} in this function}
+\emph{vd_expr} and \emph{pre_expr} in this function}
 }
 \value{
 a special list that contains all info for a preprocess method
@@ -61,7 +61,7 @@ ways to preprocess the data and therefore different preprocessing methods
 will lead to different plot tab options
 }
 \details{
-for \code{vd_expr}, \code{pre_expr} a variable called \emph{data_filtered} is
+for \emph{vd_expr}, \emph{pre_expr} a variable called \emph{data_filtered} is
 accessible and is the object where data stored. One should use this
 object to do validation or preprocess. See examples.
 }

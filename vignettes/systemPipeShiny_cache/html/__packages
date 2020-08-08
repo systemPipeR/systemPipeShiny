@@ -1,0 +1,10 @@
+base
+BiocStyle
+assertthat
+glue
+magrittr
+shiny
+stringr
+ggplot2
+shinyTree
+systemPipeShiny

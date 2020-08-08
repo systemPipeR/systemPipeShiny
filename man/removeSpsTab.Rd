@@ -21,11 +21,11 @@ be careful. If more than one tabs are matched, stop by default}
 
 \item{app_path}{app directory}
 
-\item{multiple}{bool, if matched more than one tab, trun this to \code{TRUE} can
+\item{multiple}{bool, if matched more than one tab, trun this to \emph{TRUE} can
 remove more than one tab at a time. Be careful.}
 
 \item{verbose}{bool, follows project setting, but can be overwrite.
-\code{TRUE} will give you more information}
+\emph{TRUE} will give you more information}
 
 \item{colorful}{bool, whether the message will be colorful or not}
 }
