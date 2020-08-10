@@ -24,7 +24,7 @@ type of input data}
 \item{receive_datatab_ids}{a vector of tab IDs: For this kind of data input,
 which data tabs that can be used as input source(s). For example, if this
 plot tab requires a dataframe and can be produced from "data_df1" or
-"data_df2", \code{receive_datatab_ids = c("data_df1", "data_df2")}. These options
+"data_df2", \emph{receive_datatab_ids = c("data_df1", "data_df2")}. These options
 are later rendered as a drop down menu for users to choose for this where
 they have prepared the required data from.}
 
@@ -33,8 +33,8 @@ Usually it is a \link{spsValidate} object}
 
 \item{app_path}{SPS project folder}
 
-\item{use_string}{bool, if you don't want to parse \code{vd_expr}, use quoted
-string for \code{vd_expr} amd turn this to TRUE. see \link{newTabPlot}}
+\item{use_string}{bool, if you don't want to parse \emph{vd_expr}, use quoted
+string for \emph{vd_expr} amd turn this to TRUE. see \link{newTabPlot}}
 }
 \value{
 a special list storing the incoming data info
@@ -49,10 +49,10 @@ For the validation expression, the incoming data is stored in a
 reactive values object, and you can access this data object
 by \emph{mydata$dataset_id},
 e.g. the dataset_id is "raw_data", then when the time you validate this
-type of incoming data set, a variable \code{mydata$raw_data} is accessible.
+type of incoming data set, a variable \emph{mydata$raw_data} is accessible.
 
 It is recommended to create data tabs first before running this function,
-because \code{receive_datatab_ids} required data tab id exists in the \emph{tabs.csv}
+because \emph{receive_datatab_ids} required data tab id exists in the \emph{tabs.csv}
 file.
 }
 \examples{
