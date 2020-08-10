@@ -109,17 +109,22 @@ Functions are experimental, we will update the help files and examples soon.
 
 ## Internal 
 
+<details>
+<summary><b>
+Click to expand the list of internal notes.
+</b></summary>  
+
 Run to update the website (./docs/ folder)
 
 ``` r
 pkgdown::build_site()
 ```
 
-## ToDo List
+### ToDo List
  - Documentation showing how to deploy app on user shiny.io account
  - Documentation describing all the features
   - Setting up the data
   - Launching the interface
 
-
+</details>
 
