@@ -1,5 +1,5 @@
 ---
-title: '<span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny'
+title: <span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny
 author: 
   - name: Le Zhang
     affiliation: University of California Riverside 
