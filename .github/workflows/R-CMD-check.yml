@@ -70,6 +70,7 @@ jobs:
           install.packages(c("BiocManager", "ape", "knitcitations", "DOT", "rmarkdown"))
           BiocManager::install("Biostrings")
           BiocManager::install("DESeq2")
+          BiocManager::install("glue")
           BiocManager::install("DelayedArray")
           BiocManager::install("SummarizedExperiment")
           BiocManager::install("systemPipeR")
