@@ -29,6 +29,7 @@ Imports:
     DESeq2,
     dplyr,
     markdown,
+    methods,
     networkD3,
     openssl,
     plotly,

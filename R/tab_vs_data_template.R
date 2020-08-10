@@ -96,6 +96,7 @@ data_templateUI <- function(id){
 #' @importFrom shiny validate
 #' @importFrom shinyjs show hide toggleState
 #' @importFrom shinytoastr toastr_success
+#' @importFrom methods is
 #' @noRd
 data_templateServer <-function(id, shared){
     module <- function(input, output, session){
