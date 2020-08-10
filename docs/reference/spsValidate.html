@@ -100,7 +100,7 @@ dataframe or some expression" />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tgirke/systemPipeR">
+  <a href="https://github.com/systemPipeR/systemPipeShiny">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -214,10 +214,10 @@ and no final return, else <code>TRUE</code>.</p>
 }
 <span class='co'># outside shiny example</span>
 <span class='no'>mydata2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>b</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'>spsValidate</span>({(<span class='no'>mydata2</span>)}, <span class='st'>"Not empty"</span>, <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:37 Not empty passed</span><span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='fu'>spsValidate</span>(<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata2</span>),
+<span class='fu'>spsValidate</span>({(<span class='no'>mydata2</span>)}, <span class='st'>"Not empty"</span>, <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:34 Not empty passed</span><span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='fu'>spsValidate</span>(<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata2</span>),
                 <span class='st'>"is dataframe?"</span>,
                 <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
-    <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-07 20:25:37 is dataframe? failed</span><span></div></span></pre>
+    <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-10 09:35:34 is dataframe? failed</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -229,7 +229,7 @@ and no final return, else <code>TRUE</code>.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
+  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Ponmathi Ramasamy</a>, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">

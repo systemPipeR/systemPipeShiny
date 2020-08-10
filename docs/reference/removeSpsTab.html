@@ -99,7 +99,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tgirke/systemPipeR">
+  <a href="https://github.com/systemPipeR/systemPipeShiny">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -178,33 +178,33 @@ remove more than one tab at a time. Be careful.</p></td>
     <p>remove the tab file and register info in <em>tabs.csv</em></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-08-07 20:25:32 Overwrite things in /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200807</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 Now copy files</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 Create SPS database</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 Created SPS database method container</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 Creating SPS db...</span><span>
-#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-07 20:25:32 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200807/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 Key md5 094e3a0f1703bc03fd56a48bfd998e85</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 SPS project setup done!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(
+    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #BBBB00;font-weight: bold;'>[SPS-WARNING] 2020-08-10 09:35:29 Overwrite things in /home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/SPS_20200810</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 Now copy files</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 Create SPS database</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 Created SPS database method container</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 Creating SPS db...</span><span>
+#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-10 09:35:29 Db created at '/home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/SPS_20200810/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #BBBB00;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 Key md5 64c6af026e7f9d9bd77b2af6aafe5edb</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 SPS project setup done!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"data_new_remove"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first data tab"</span>,
     <span class='kw'>prepro_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='makePrepro.html'>makePrepro</a></span>(<span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"do nothing"</span>,
                                      <span class='kw'>plot_options</span> <span class='kw'>=</span> <span class='st'>"plot_new"</span>)),
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:32 Write to file SPS_20200807/R/tab_vs_data_new_remove.R</span><span>
+)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:29 Write to file SPS_20200810/R/tab_vs_data_new_remove.R</span><span>
 #&gt; Styling  1  files:
-#&gt;  SPS_20200807/R/tab_vs_data_new_remove.R ℹ 
+#&gt;  SPS_20200810/R/tab_vs_data_new_remove.R ℹ 
 #&gt; ────────────────────────────────────────
 #&gt; Status	Count	Legend 
 #&gt; ✓ 	0	File unchanged.
 #&gt; ℹ 	1	File changed.
 #&gt; x 	0	Styling threw an error.
 #&gt; ────────────────────────────────────────
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:35 Now register your new tab to config/tab.csv</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:35 New tab created!</span><span></div><div class='input'><span class='fu'>removeSpsTab</span>(<span class='st'>"data_new_remove"</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-             <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:35 Matched tab(s): data_new_remove</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:35 1 tabs removed from tabs.csv</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:35 Now remove file SPS_20200807/R/tab_vs_data_new_remove.R</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:35 Job complete</span><span></div></span></pre>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:32 Now register your new tab to config/tab.csv</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:32 New tab created!</span><span></div><div class='input'><span class='fu'>removeSpsTab</span>(<span class='st'>"data_new_remove"</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+             <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:32 Matched tab(s): data_new_remove</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:32 1 tabs removed from tabs.csv</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:32 Now remove file SPS_20200810/R/tab_vs_data_new_remove.R</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:32 Job complete</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -216,7 +216,7 @@ remove more than one tab at a time. Be careful.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
+  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Ponmathi Ramasamy</a>, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">

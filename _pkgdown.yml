@@ -1,20 +1,24 @@
 title: systemPipeShiny
-url: http://girke.bioinformatics.ucr.edu/systemPipeR/
+url: https://systempipe.org/
 
 authors:
+   Le Zhang:
+     href: 
    Daniela Cassol:
      href: https://www.dcassol.com/
+   Ponmathi Ramasamy:
+     href: http://girke.bioinformatics.ucr.edu/
    Thomas Girke:
      href: http://girke.bioinformatics.ucr.edu/
-
+     
 home:
   links:
-  - text: Download from Bioconductor
-    href: http://www.bioconductor.org/packages/release/bioc/html/systemPipeR.html
+  - text: Download from GitHub
+    href: https://github.com/systemPipeR/systemPipeShiny
   - text: Ask a question about systemPipeR
     href: https://support.bioconductor.org/
   - text: Report a bug
-    href: https://github.com/tgirke/systemPipeR/issues
+    href: https://github.com/systemPipeR/systemPipeShiny/issues
 
 template:
   params:
@@ -40,4 +44,4 @@ navbar:
         Find here help...
     github:
       icon: fa-github fa-lg
-      href: https://github.com/tgirke/systemPipeR
+      href: https://github.com/systemPipeR/systemPipeShiny

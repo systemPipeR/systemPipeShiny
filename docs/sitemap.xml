@@ -1,111 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//index.html</loc>
+    <loc>https://systempipe.org//index.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/addData.html</loc>
+    <loc>https://systempipe.org//reference/addData.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/clearableTextInput.html</loc>
+    <loc>https://systempipe.org//reference/clearableTextInput.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/dynamicFile.html</loc>
+    <loc>https://systempipe.org//reference/dynamicFile.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/dynamicFileServer.html</loc>
+    <loc>https://systempipe.org//reference/dynamicFileServer.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/emptyIsFalse.html</loc>
+    <loc>https://systempipe.org//reference/emptyIsFalse.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/gallery.html</loc>
+    <loc>https://systempipe.org//reference/exploreDSS.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/genGallery.html</loc>
+    <loc>https://systempipe.org//reference/gallery.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/genHrefTable.html</loc>
+    <loc>https://systempipe.org//reference/genGallery.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/hexPanel.html</loc>
+    <loc>https://systempipe.org//reference/genHrefTable.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/hrefTab.html</loc>
+    <loc>https://systempipe.org//reference/hexPanel.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/hrefTable.html</loc>
+    <loc>https://systempipe.org//reference/hrefTab.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/loadDF.html</loc>
+    <loc>https://systempipe.org//reference/hrefTable.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/makePlotData.html</loc>
+    <loc>https://systempipe.org//reference/loadDF.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/makePrepro.html</loc>
+    <loc>https://systempipe.org//reference/makePlotData.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/msg.html</loc>
+    <loc>https://systempipe.org//reference/makePrepro.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/newTabPlot.html</loc>
+    <loc>https://systempipe.org//reference/msg.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/pgPaneUpdate.html</loc>
+    <loc>https://systempipe.org//reference/newTabPlot.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/plotContainer.html</loc>
+    <loc>https://systempipe.org//reference/pgPaneUpdate.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/quiet.html</loc>
+    <loc>https://systempipe.org//reference/plotContainer.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/removeSpsTab.html</loc>
+    <loc>https://systempipe.org//reference/plotExploreDSS.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/renderDesc.html</loc>
+    <loc>https://systempipe.org//reference/quiet.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/shinyCatch.html</loc>
+    <loc>https://systempipe.org//reference/removeSpsTab.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/shinyCheckPkg.html</loc>
+    <loc>https://systempipe.org//reference/renderDesc.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/sps.html</loc>
+    <loc>https://systempipe.org//reference/shinyCatch.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/spsDb.html</loc>
+    <loc>https://systempipe.org//reference/shinyCheckPkg.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/spsEncryption.html</loc>
+    <loc>https://systempipe.org//reference/sps.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/spsHr.html</loc>
+    <loc>https://systempipe.org//reference/spsDb.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/spsInit.html</loc>
+    <loc>https://systempipe.org//reference/spsEncryption.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/spsOption.html</loc>
+    <loc>https://systempipe.org//reference/spsHr.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/spsValidate.html</loc>
+    <loc>https://systempipe.org//reference/spsInit.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/tabTitle.html</loc>
+    <loc>https://systempipe.org//reference/spsOption.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/textInputGroup.html</loc>
+    <loc>https://systempipe.org//reference/spsValidate.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/useSps.html</loc>
+    <loc>https://systempipe.org//reference/tabTitle.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//reference/viewSpsDefaults.html</loc>
+    <loc>https://systempipe.org//reference/textInputGroup.html</loc>
   </url>
   <url>
-    <loc>http://girke.bioinformatics.ucr.edu/systemPipeR//articles/systemPipeShiny.html</loc>
+    <loc>https://systempipe.org//reference/useSps.html</loc>
+  </url>
+  <url>
+    <loc>https://systempipe.org//reference/viewSpsDefaults.html</loc>
+  </url>
+  <url>
+    <loc>https://systempipe.org//articles/systemPipeShiny.html</loc>
   </url>
 </urlset>

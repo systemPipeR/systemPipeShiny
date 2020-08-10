@@ -101,7 +101,7 @@ will lead to different plot tab options" />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tgirke/systemPipeR">
+  <a href="https://github.com/systemPipeR/systemPipeShiny">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -209,13 +209,13 @@ accessible and is the object where data stored. One should use this
 object to do validation or preprocess. See examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:28 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-08-07 20:25:28 Overwrite things in /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200807</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:28 Now copy files</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:28 Create SPS database</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:28 Created SPS database method container</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:28 Creating SPS db...</span><span>
-#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-07 20:25:28 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200807/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:28 Key md5 4b2ea6878bf1c876abccd31d94e6334e</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-07 20:25:28 SPS project setup done!</span><span></div><div class='input'><span class='no'>prepro_log</span> <span class='kw'>&lt;-</span> <span class='fu'>makePrepro</span>(
+    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:14 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #BBBB00;font-weight: bold;'>[SPS-WARNING] 2020-08-10 09:35:14 Overwrite things in /home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/SPS_20200810</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:14 Now copy files</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:14 Create SPS database</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:14 Created SPS database method container</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:14 Creating SPS db...</span><span>
+#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-10 09:35:14 Db created at '/home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/SPS_20200810/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #BBBB00;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:14 Key md5 085ddccd5289c0087b9467d7ca44cacb</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:35:14 SPS project setup done!</span><span></div><div class='input'><span class='no'>prepro_log</span> <span class='kw'>&lt;-</span> <span class='fu'>makePrepro</span>(
     <span class='st'>"log"</span>, <span class='st'>"take log of first column"</span>,
     <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
         <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>data_filtered</span>))
@@ -253,7 +253,7 @@ object to do validation or preprocess. See examples.</p>
 <span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_test1"</span>,  <span class='st'>"test 1"</span>,
            <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>),
            <span class='kw'>prepro_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>prepro_log</span>, <span class='no'>prepro_addone</span>)
-           )</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-07 20:25:28 File SPS_20200807/R/tab_vs_data_test1.R exists.</span><span></span></div></span></pre>
+           )</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-10 09:35:14 File SPS_20200810/R/tab_vs_data_test1.R exists.</span><span></span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -265,7 +265,7 @@ object to do validation or preprocess. See examples.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
+  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Ponmathi Ramasamy</a>, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">

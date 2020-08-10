@@ -34,15 +34,13 @@ editor_options:
   chunk_output_type: console
 ---
 
-
-```{css, echo=FALSE, eval=FALSE}
+```{css, echo=FALSE, eval=TRUE}
 pre code {
 white-space: pre !important;
 overflow-x: scroll !important;
 word-break: keep-all !important;
 word-wrap: initial !important;
 }
-
 ```
 
 
@@ -120,7 +118,7 @@ Depending on the Linux distributions, command can be slightly different.
 
 Before starting with SPS, you need to create a SPS project: 
 
-```{r spsinit, eval=TRUE}
+```{r spsinit, eval=FALSE}
 sps_tmp_dir <- tempdir()
 spsInit(dir_path = sps_tmp_dir, change_wd = FALSE)
 ```
@@ -129,7 +127,7 @@ temp directory, in a real case, you **shouldn't** store you SPS project in a **t
 
 By default, you will get a folder created under your current working directory, 
 the name is `SPS_` + `today's date` in *ISO 8601* format, e.g. 
-`r glue("SPS_{format(Sys.time(), '%Y%m%d')}")`
+`r glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")`
 
 <p style="color:var(--info)">Note: all SPS date or time stamp objects use *ISO 8601* format</p>
 
@@ -424,7 +422,7 @@ Table with all exported functions
 
 | Function Name   | Description                                                     |
 |-----------------|-----------------------------------------------------------------|
-| `exploreDSS`    | transform raw read counts using the \code{DESeq2} package       |
+| `exploreDSS`    | Transform raw read counts using the \code{DESeq2} package       |
 | `plotExploreDSS`| Scatterplot of transformed counts from two samples              |
 | `plotPCA_sps`   | Plots PCA from a count matrix                                   |
 | `plotMDS`       | Plots MDS from a count matrix                                   |

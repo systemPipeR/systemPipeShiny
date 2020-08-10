@@ -55,7 +55,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/tgirke/systemPipeR">
+  <a href="https://github.com/systemPipeR/systemPipeShiny">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -102,7 +102,7 @@
       University of California Riverside<br><a class="author_email" href="mailto:#"></a><a href="mailto:tgirke@ucr.edu" class="email">tgirke@ucr.edu</a>
       </address>
                   
-            <h4 class="date">Last update: 07 August, 2020</h4>
+            <h4 class="date">Last update: 10 August, 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/systemPipeR/systemPipeShiny/blob/master/vignettes/systemPipeShiny.Rmd"><code>vignettes/systemPipeShiny.Rmd</code></a></small>
       <div class="hidden name"><code>systemPipeShiny.Rmd</code></div>
@@ -114,6 +114,14 @@
 
     
     
+<style type="text/css">
+pre code {
+white-space: pre !important;
+overflow-x: scroll !important;
+word-break: keep-all !important;
+word-wrap: initial !important;
+}
+</style>
 <style>/*Bootstrap colors*/
 :root {
   --blue: #007bff;
@@ -398,7 +406,7 @@ a.bttn-default {
     content: "\2022 ";
 }
 </style>
-<p><img src="../../../../../tmp/RtmpXJEa5H/temp_libpath24a4263d203e/systemPipeShiny/app/www/img/sps.png" width="75%" style="display: block; margin: auto;"></p>
+<p><img src="../../../../../../tmp/Rtmpi5I5KR/temp_libpath48e098fc75b/systemPipeShiny/app/www/img/sps.png" width="75%" style="display: block; margin: auto;"></p>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
@@ -429,22 +437,13 @@ a.bttn-default {
 <p>Before starting with SPS, you need to create a SPS project:</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">sps_tmp_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span>()
 <span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>(<span class="kw">dir_path</span> <span class="kw">=</span> <span class="no">sps_tmp_dir</span>, <span class="kw">change_wd</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-08-07 19:56:00 Start to create a new SPS project
-## [SPS-INFO] 2020-08-07 19:56:00 Create project under /tmp/RtmpreyDLl/SPS_20200807
-## [SPS-INFO] 2020-08-07 19:56:00 Now copy files
-## [SPS-INFO] 2020-08-07 19:56:00 Create SPS database
-## [SPS-INFO] 2020-08-07 19:56:00 Created SPS database method container
-## [SPS-INFO] 2020-08-07 19:56:00 Creating SPS db...
-## [SPS-DANGER] 2020-08-07 19:56:00 Db created at '/tmp/RtmpreyDLl/SPS_20200807/config/sps.db'. DO NOT share this file with others
-## [SPS-INFO] 2020-08-07 19:56:00 Key md5 ce4ea2aa2c6b1839293bd7890bd56bea
-## [SPS-INFO] 2020-08-07 19:56:00 SPS project setup done!</code></pre>
 <p>Here for building the vignette we are not switching to the app directory and are using a temp directory, in a real case, you <strong>shouldn’t</strong> store you SPS project in a <strong>temp directory</strong>.</p>
-<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200807</p>
+<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200810</p>
 <p style="color:var(--info)">
 Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 </p>
 <p>By default, your working directory should be set inside that project folder automatically. If you are using Rstudio, three main files will be opened for you: <code>global.R</code>, <code>ui.R</code> and <code>server.R</code>. Now you can just run the app by type <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">shiny::runApp()</a></code> in console or click on the <img src="img/app_start.png" style="display: inline; padding-left:0; width:10px; height:15px;"><code>Run App</code> button on top right corner of the any these 3 files in Rstudio. In your global.R, scroll down to the bottom, you should see:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">server_expr</span> <span class="kw">=</span> {
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">server_expr</span> <span class="kw">=</span> {
     <span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>,
         <span class="st">"green"</span>)
 })</pre></body></html></div>
@@ -736,181 +735,115 @@ Note: Upload file selection can be different depending on the mode, see <a href=
 <div id="visualization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#visualization" class="anchor"></a>Visualization</h2>
+<p><em>systemPipeShiny</em> offers interactive data visualization to users and supports graphics in workflow reports. In systemPipeShiny’s visualization tab, there are many features for data visualization of various statistical results. Users can upload different input data types, and apply various options for preprocessing those datasets. Users can then create downstream analysis plots, as per the type of uploaded data. Some available plotting options include: bar plots of differentially expressed genes, heat maps, dendrogram, principal component analysis (PCA) plots, and multidimensional scaling (MDS) plots. Depending on the nature of the plots, there are also options to adjust the plot such as normalizing the data. Additionally, systemPipeShiny provides users with plot templates and plotting functions that they can then customize according to their necessities for visualization.</p>
 <p>Table with all exported functions</p>
 <table class="table">
 <colgroup>
-<col width="17%">
-<col width="75%">
-<col width="3%">
-<col width="3%">
+<col width="20%">
+<col width="79%">
 </colgroup>
 <thead><tr class="header">
 <th>Function Name</th>
 <th>Description</th>
-<th></th>
-<th></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>run_PCA</code></td>
+<td><code>exploreDSS</code></td>
+<td>transform raw read counts using the  package</td>
+</tr>
+<tr class="even">
+<td><code>plotExploreDSS</code></td>
+<td>Scatterplot of transformed counts from two samples</td>
+</tr>
+<tr class="odd">
+<td><code>plotPCA_sps</code></td>
 <td>Plots PCA from a count matrix</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
-<td><code>run_MDS</code></td>
+<td><code>plotMDS</code></td>
 <td>Plots MDS from a count matrix</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
-<td><code>run_TSNE</code></td>
+<td><code>plotTSNE</code></td>
 <td>Plots t-SNE from a count matrix</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
-<td><code>run_GLM</code></td>
+<td><code>plotGLM</code></td>
 <td>Plots GLM-PCA from a count matrix</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
-<td><code>run_HEAT</code></td>
+<td><code>plotHeatMap</code></td>
 <td>Plots Heatmap from a count matrix</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
-<td><code>run_CLUST</code></td>
+<td><code>plot_MA</code></td>
 <td>Plots a clustering dendrogram from a count matrix</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><code>run_volcano</code></td>
 <td>Plots a Volcano Plot from an edgeR or deseq2 dataframe</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><code>deg_edgeR</code></td>
 <td>Plots barplot of DEGs from a count matrix, returns an edgeR DF</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><code>deg_deseq2</code></td>
 <td>Plots barplot of DEGs from a count matrix, returns an deseq2 DF</td>
-<td></td>
-<td></td>
 </tr>
 </tbody>
 </table>
+<div id="data-transformations-and-visualization" class="section level3">
+<h3 class="hasAnchor">
+<a href="#data-transformations-and-visualization" class="anchor"></a>Data transformations and visualization</h3>
+<p>To show the effect of the transformation, in the figure below we plot the first sample against the second, first simply using the <code>log2</code> function, and then using the <code>VST</code> and <code>rlog-transformed</code> values. For the log2 approach, we need to first estimate size factors to account for sequencing depth, and then specify <code>normalized=TRUE</code>. Sequencing depth correction is done automatically for the <code>vst</code> and <code>rlog.</code></p>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
+<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
+<span class="no">cmp</span> <span class="kw">&lt;-</span> <span class="kw pkg">systemPipeR</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/systemPipeR/man/readComp.html">readComp</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="no">targetspath</span>, <span class="kw">format</span> <span class="kw">=</span> <span class="st">"matrix"</span>,
+    <span class="kw">delim</span> <span class="kw">=</span> <span class="st">"-"</span>)</pre></body></html></div>
+<pre><code>## </code></pre>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">countMatrixPath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>,
+    <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
+<span class="no">countMatrix</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countMatrixPath</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
+<span class="fu"><a href="../reference/plotExploreDSS.html">plotExploreDSS</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]], <span class="kw">preFilter</span> <span class="kw">=</span> <span class="fl">10</span>,
+    <span class="kw">sample</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>, <span class="fl">4</span>))</pre></body></html></div>
+<p><img src="systemPipeShiny_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+</div>
 </div>
 <div id="barplot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#barplot" class="anchor"></a>Barplot</h2>
 <p>A barplot for analysis of differentially expressed genes (DEGs) can be plotted using functions <code>deg_edgeR</code> or <code>deg_deseq2</code>. The function <code>deg_edgeR</code> uses the <code>edgeR</code> package <span class="citation">(<span class="citeproc-not-found" data-reference-id="Robinson2010-uk"><strong>???</strong></span>)</span> to create an <code>edgeR</code> data frame. Alternatively, the function <code>deg_deseq2</code> uses the <code>DESeq2</code> package <span class="citation">(<span class="citeproc-not-found" data-reference-id="Love2014-sh"><strong>???</strong></span>)</span> to create an <code>DESeq2</code> data frame. Using the <code>filterDEGs</code> function, it filters and plots DEG results for up and down regulated genes in a barplot.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co">## Create DEG dataframe</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">cmp</span> <span class="kw">&lt;-</span> <span class="fu">readComp</span>(<span class="kw">file</span> <span class="kw">=</span> <span class="no">targetspath</span>, <span class="kw">format</span> <span class="kw">=</span> <span class="st">"matrix"</span>, <span class="kw">delim</span> <span class="kw">=</span> <span class="st">"-"</span>)
-<span class="no">countfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countfile</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="co">## Create plot using `deg_edgeR`</span>
-<span class="fu">deg_edgeR</span>(<span class="no">countDF</span>, <span class="no">targets</span>, <span class="kw">Fold</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">FDR</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">cmpset</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="no">cmp</span>,
-    <span class="kw">plot</span> <span class="kw">=</span> <span class="no">T</span>)
-<span class="co">## Create plot using `deg_deseq2`</span>
-<span class="fu">deg_deseq2</span>(<span class="no">countDF</span>, <span class="no">targets</span>, <span class="kw">Fold</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">FDR</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">cmpset</span> <span class="kw">=</span> <span class="fl">1</span>,
-    <span class="no">cmp</span>, <span class="kw">plot</span> <span class="kw">=</span> <span class="no">T</span>)</pre></body></html></div>
 </div>
 <div id="heatmap" class="section level2">
 <h2 class="hasAnchor">
 <a href="#heatmap" class="anchor"></a>Heatmap</h2>
 <p>A heatmap of the results of hierarchical clustering performed with the <code>hclust</code> function can be created with the <code>run_HEAT</code> function. The sample-wise Spearman correlation coefficients are computed before hierarchical clustering. The count data frame can be transformed with the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package, or can be done without transformation.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co">## Create targets file object</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">colData</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">row.names</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">SampleName</span>, <span class="kw">condition</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">Factor</span>)
-<span class="no">countfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countfile</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="co">## Create Heat map</span>
-<span class="fu">run_HEAT</span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countDF</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>, <span class="kw">colData</span> <span class="kw">=</span> <span class="no">colData</span>,
-    <span class="kw">method</span> <span class="kw">=</span> <span class="st">"raw"</span>)</pre></body></html></div>
 </div>
 <div id="dendrogram" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dendrogram" class="anchor"></a>Dendrogram</h2>
 <p>A dendrogram of the results of hierarchical clustering performed with the <code>hclust</code> function can be created with the <code>run_CLUST</code> function. The sample-wise Spearman correlation coefficients are computed, and then the results are transformed to a distance matrix before the hierarchical clustering is performed. The count data frame can be transformed with the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package, or can be done without transformation.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co">## Create targets file object</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">colData</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">row.names</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">SampleName</span>, <span class="kw">condition</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">Factor</span>)
-<span class="no">countfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countfile</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="co">## Create Dendrogram plot</span>
-<span class="fu">run_CLUST</span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countDF</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>, <span class="kw">colData</span> <span class="kw">=</span> <span class="no">colData</span>,
-    <span class="kw">method</span> <span class="kw">=</span> <span class="st">"raw"</span>)</pre></body></html></div>
 </div>
 <div id="t-sne-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#t-sne-plot" class="anchor"></a>t-SNE plot</h2>
 <p>A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created using the <code>run_TSNE</code> function, which uses the <code>Rtsne</code> package <span class="citation">(<span class="citeproc-not-found" data-reference-id="Krijthe2015"><strong>???</strong></span>)</span> to compute t-SNE values. The function removes duplicates in the input data frame, sets a seed for reproducility, performs an initial PCA step. The function also allows for a user-set perplexity value for the computation.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co">## Create targets file object</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">colData</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">row.names</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">SampleName</span>, <span class="kw">condition</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">Factor</span>)
-<span class="no">countfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countfile</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="co">## Create t-SNE plot</span>
-<span class="fu">run_TSNE</span>(<span class="no">countDF</span>, <span class="no">targets</span>, <span class="kw">perplexity</span> <span class="kw">=</span> <span class="fl">5</span>)</pre></body></html></div>
 </div>
 <div id="pca-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pca-plot" class="anchor"></a>PCA plot</h2>
 <p>A Principal Component Analysis (PCA) plot can be created using the <code>run_PCA</code> function which uses the <code>DESeq2</code> package. The input data frame can be transformed with the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package, or can be done without transformation. In addition, generalized principal component analysis (GLM-PCA) for dimension reduction of non-normally distributed data can be plotted with the <code>run_GLM</code> function <span class="citation">(<span class="citeproc-not-found" data-reference-id="Townes2019"><strong>???</strong></span>)</span>. This option does not offer transformation or normalization of raw data.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co">## Create targets file object</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">colData</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">row.names</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">SampleName</span>, <span class="kw">condition</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">Factor</span>)
-<span class="no">countfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countfile</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="co">## Create PCA plot</span>
-<span class="fu">run_PCA</span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countDF</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>, <span class="kw">colData</span> <span class="kw">=</span> <span class="no">colData</span>,
-    <span class="kw">method</span> <span class="kw">=</span> <span class="st">"raw"</span>)
-
-<span class="co">## Create GLM-PCA plot</span>
-<span class="fu">run_GLM</span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countDF</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>, <span class="kw">colData</span> <span class="kw">=</span> <span class="no">colData</span>)</pre></body></html></div>
 </div>
 <div id="mds-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mds-plot" class="anchor"></a>MDS plot</h2>
 <p>A Multidimensional Scaling (MDS) plot can be created using the <code>run_MDS</code> function. The input data frame can be transformed with either the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package. From the input data, it computes a spearman correlation-based distance matrix and performs MDS analysis on it.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co">## Create targets file object</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">colData</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">row.names</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">SampleName</span>, <span class="kw">condition</span> <span class="kw">=</span> <span class="no">targets</span>$<span class="no">Factor</span>)
-<span class="no">countfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countfile</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="co">## Create MDS plot</span>
-<span class="fu">run_MDS</span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countDF</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>, <span class="kw">colData</span> <span class="kw">=</span> <span class="no">colData</span>,
-    <span class="kw">method</span> <span class="kw">=</span> <span class="st">"rlog"</span>)</pre></body></html></div>
 </div>
 <div id="volcano-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#volcano-plot" class="anchor"></a>Volcano plot</h2>
 <p>A volcano plot of DEGs data frame can be plotted using the function <code>run_volcano</code>. Using the resulting data frame from <code>run_edgeR</code> or <code>run_deseq2</code>, the function plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for the sample comparison specified by the user.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co">## Create DEG dataframe</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">cmp</span> <span class="kw">&lt;-</span> <span class="fu">readComp</span>(<span class="kw">file</span> <span class="kw">=</span> <span class="no">targetspath</span>, <span class="kw">format</span> <span class="kw">=</span> <span class="st">"matrix"</span>, <span class="kw">delim</span> <span class="kw">=</span> <span class="st">"-"</span>)
-<span class="no">countfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countfile</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="no">edgeDF</span> <span class="kw">&lt;-</span> <span class="fu">run_edgeR</span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countDF</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]],
-    <span class="kw">independent</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">mdsplot</span> <span class="kw">=</span> <span class="st">""</span>)
-<span class="co">## Create Volcano plot</span>
-<span class="fu">run_volcano</span>(<span class="kw">DF</span> <span class="kw">=</span> <span class="no">edgeDF</span>, <span class="kw">FDR</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">Fold</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">comparison</span> <span class="kw">=</span> <span class="st">"M1-A1"</span>)</pre></body></html></div>
 </div>
 </div>
 <div id="how-to-use-this-function-on-the-shiny-application" class="section level1">
@@ -1040,7 +973,188 @@ Note: Upload file selection can be different depending on the mode, see <a href=
 <div id="version-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#version-information" class="anchor"></a>Version Information</h1>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.1 LTS
+## 
+## Matrix products: default
+## BLAS:   /usr/bin/lib/R/lib/libRblas.so
+## LAPACK: /usr/bin/lib/R/lib/libRlapack.so
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets 
+## [6] methods   base     
+## 
+## other attached packages:
+## [1] systemPipeShiny_0.99.0 shinyTree_0.2.7       
+## [3] ggplot2_3.3.2          stringr_1.4.0         
+## [5] shiny_1.5.0            magrittr_1.5          
+## [7] glue_1.4.1             assertthat_0.2.1      
+## [9] BiocStyle_2.16.0      
+## 
+## loaded via a namespace (and not attached):
+##   [1] GOstats_2.54.0             
+##   [2] backports_1.1.8            
+##   [3] BiocFileCache_1.12.0       
+##   [4] igraph_1.2.5               
+##   [5] lazyeval_0.2.2             
+##   [6] GSEABase_1.50.1            
+##   [7] shinydashboard_0.7.1       
+##   [8] splines_4.0.2              
+##   [9] BiocParallel_1.22.0        
+##  [10] GenomeInfoDb_1.24.2        
+##  [11] digest_0.6.25              
+##  [12] htmltools_0.5.0            
+##  [13] GO.db_3.11.4               
+##  [14] checkmate_2.0.0            
+##  [15] memoise_1.1.0              
+##  [16] BSgenome_1.56.0            
+##  [17] base64url_1.4              
+##  [18] limma_3.44.3               
+##  [19] shinyFiles_0.8.0           
+##  [20] Biostrings_2.56.0          
+##  [21] annotate_1.66.0            
+##  [22] matrixStats_0.56.0         
+##  [23] systemPipeR_1.23.2         
+##  [24] vroom_1.2.1                
+##  [25] askpass_1.1                
+##  [26] pkgdown_1.5.1              
+##  [27] prettyunits_1.1.1          
+##  [28] jpeg_0.1-8.1               
+##  [29] colorspace_1.4-1           
+##  [30] blob_1.2.1                 
+##  [31] rappdirs_0.3.1             
+##  [32] xfun_0.16                  
+##  [33] dplyr_1.0.0                
+##  [34] hexbin_1.28.1              
+##  [35] crayon_1.3.4               
+##  [36] RCurl_1.98-1.2             
+##  [37] jsonlite_1.7.0             
+##  [38] graph_1.66.0               
+##  [39] genefilter_1.70.0          
+##  [40] VariantAnnotation_1.34.0   
+##  [41] brew_1.0-6                 
+##  [42] survival_3.1-12            
+##  [43] gtable_0.3.0               
+##  [44] zlibbioc_1.34.0            
+##  [45] XVector_0.28.0             
+##  [46] DelayedArray_0.14.1        
+##  [47] V8_3.2.0                   
+##  [48] Rgraphviz_2.32.0           
+##  [49] BiocGenerics_0.34.0        
+##  [50] scales_1.1.1               
+##  [51] pheatmap_1.0.12            
+##  [52] edgeR_3.30.3               
+##  [53] DBI_1.1.0                  
+##  [54] miniUI_0.1.1.1             
+##  [55] Rcpp_1.0.5                 
+##  [56] viridisLite_0.3.0          
+##  [57] xtable_1.8-4               
+##  [58] progress_1.2.2             
+##  [59] bit_4.0.3                  
+##  [60] stats4_4.0.2               
+##  [61] rsvg_2.1                   
+##  [62] DT_0.14                    
+##  [63] AnnotationForge_1.30.1     
+##  [64] htmlwidgets_1.5.1          
+##  [65] shinyjqui_0.3.3            
+##  [66] httr_1.4.2                 
+##  [67] RColorBrewer_1.1-2         
+##  [68] shinyAce_0.4.1             
+##  [69] ellipsis_0.3.1             
+##  [70] farver_2.0.3               
+##  [71] pkgconfig_2.0.3            
+##  [72] shinydashboardPlus_0.7.5   
+##  [73] XML_3.99-0.5               
+##  [74] dbplyr_1.4.4               
+##  [75] locfit_1.5-9.4             
+##  [76] labeling_0.3               
+##  [77] tidyselect_1.1.0           
+##  [78] rlang_0.4.7                
+##  [79] later_1.1.0.1              
+##  [80] AnnotationDbi_1.50.3       
+##  [81] munsell_0.5.0              
+##  [82] tools_4.0.2                
+##  [83] generics_0.0.2             
+##  [84] RSQLite_2.2.0              
+##  [85] evaluate_0.14              
+##  [86] fastmap_1.0.1              
+##  [87] yaml_2.2.1                 
+##  [88] knitr_1.29                 
+##  [89] bit64_4.0.2                
+##  [90] fs_1.4.2                   
+##  [91] purrr_0.3.4                
+##  [92] RBGL_1.64.0                
+##  [93] mime_0.9                   
+##  [94] formatR_1.7                
+##  [95] rhandsontable_0.3.7        
+##  [96] biomaRt_2.44.1             
+##  [97] compiler_4.0.2             
+##  [98] rstudioapi_0.11            
+##  [99] png_0.1-7                  
+## [100] plotly_4.9.2.1             
+## [101] curl_4.3                   
+## [102] pushbar_0.1.0              
+## [103] tibble_3.0.3               
+## [104] geneplotter_1.66.0         
+## [105] stringi_1.4.6              
+## [106] GenomicFeatures_1.40.1     
+## [107] desc_1.2.0                 
+## [108] lattice_0.20-41            
+## [109] Matrix_1.2-18              
+## [110] styler_1.3.2               
+## [111] markdown_1.1               
+## [112] shinyjs_1.1                
+## [113] vctrs_0.3.2                
+## [114] pillar_1.4.6               
+## [115] lifecycle_0.2.0            
+## [116] networkD3_0.4              
+## [117] BiocManager_1.30.10        
+## [118] data.table_1.13.0          
+## [119] bitops_1.0-6               
+## [120] httpuv_1.5.4               
+## [121] rtracklayer_1.48.0         
+## [122] GenomicRanges_1.40.0       
+## [123] latticeExtra_0.6-29        
+## [124] hwriter_1.3.2              
+## [125] R6_2.4.1                   
+## [126] ShortRead_1.46.0           
+## [127] bookdown_0.20              
+## [128] promises_1.1.1             
+## [129] IRanges_2.22.2             
+## [130] codetools_0.2-16           
+## [131] colourpicker_1.0           
+## [132] MASS_7.3-51.6              
+## [133] SummarizedExperiment_1.18.2
+## [134] Category_2.54.0            
+## [135] openssl_1.4.2              
+## [136] DESeq2_1.28.1              
+## [137] rprojroot_1.3-2            
+## [138] rjson_0.2.20               
+## [139] shinyWidgets_0.5.3         
+## [140] withr_2.2.0                
+## [141] batchtools_0.9.13          
+## [142] GenomicAlignments_1.24.0   
+## [143] Rsamtools_2.4.0            
+## [144] S4Vectors_0.26.1           
+## [145] GenomeInfoDbData_1.2.3     
+## [146] parallel_4.0.2             
+## [147] hms_0.5.3                  
+## [148] grid_4.0.2                 
+## [149] tidyr_1.1.0                
+## [150] DOT_0.1                    
+## [151] rmarkdown_2.3              
+## [152] shinytoastr_2.1.1          
+## [153] Biobase_2.48.0</code></pre>
 </div>
 <div id="funding" class="section level1">
 <h1 class="hasAnchor">
@@ -1063,7 +1177,7 @@ Note: Upload file selection can be different depending on the mode, see <a href=
 
 
       <footer><div class="copyright">
-  <p>Developed by Le Zhang, <a href="https://www.dcassol.com/">Daniela Cassol</a>, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher, <a href="http://girke.bioinformatics.ucr.edu/">Thomas Girke</a>.</p>
+  <p>Developed by Le Zhang, <a href="https://www.dcassol.com/">Daniela Cassol</a>, <a href="http://girke.bioinformatics.ucr.edu/">Ponmathi Ramasamy</a>, Jianhai Zhang, Gordon Mosher, <a href="http://girke.bioinformatics.ucr.edu/">Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">

@@ -54,7 +54,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/tgirke/systemPipeR">
+  <a href="https://github.com/systemPipeR/systemPipeShiny">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -84,7 +84,7 @@
 <!-- badges: start -->
 <p><img src="https://github.com/systemPipeR/systemPipeShiny/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"><!-- badges: end --></p>
 <p>systemPipeShiny is a framework for workflow management and data visualization. This tool is under devleopment, you can install it from Github.</p>
-<p>An online demo of <a href="https://tgirke.shinyapps.io/systemPipeShiny/">SystempipeShiny</a>. This application is hosted by a small server. Please do not use it for production activities. Heavy tasks will crash it and disconnect you from it.</p>
+<p>An online demo of <a href="https://tgirke.shinyapps.io/systemPipeShiny/">systempipeShiny</a>. This application is hosted by a small server. Please do not use it for production activities. Heavy tasks will crash it and disconnect you from it.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -114,14 +114,38 @@ sudo apt-get install libssl-dev</code></pre>
 <div id="load-custom-new-tabs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-custom-new-tabs" class="anchor"></a>Load custom new tabs</h3>
-<p>We will update the instructions to create new tabs and how to load them into the framework soon …</p>
+<p><strong>Experimental</strong></p>
+<p>After you have created your SPS project by the <code>spsInit</code> function, you can use <code>newTabData</code> to create a data tab and use <code>newTabPlot</code> to create a plot tab.</p>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="reference/newTabPlot.html">newTabData</a></span>(
+    <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>,
+    <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
+    <span class="kw">prepro_methods</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="reference/makePrepro.html">makePrepro</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="st">"do nothing"</span>,
+                                     <span class="kw">plot_options</span> <span class="kw">=</span> <span class="st">"plot_new"</span>))
+)
+<span class="fu"><a href="reference/newTabPlot.html">newTabPlot</a></span>(
+    <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>,
+    <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
+    <span class="kw">plot_data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="reference/makePlotData.html">makePlotData</a></span>(<span class="kw">dataset_label</span> <span class="kw">=</span> <span class="st">"Data from my new tab"</span>,
+                                  <span class="kw">receive_datatab_ids</span> <span class="kw">=</span> <span class="st">"data_new"</span>))
+           )</pre></div>
+<p>This code should generate a new data tab called <em>data_new</em> with a label <em>my first data tab</em> (what you see on the UI), and a new plot tab <code>plot_new</code>.</p>
+<p>The important arg <code>plot_options = "plot_new"</code> is saying this data tab can make a plot, and the plot tab ID is “plot_new”. On the plot tab similarly, <code>receive_datatab_ids = "data_new"</code> tells the framework this plot tab need to receive data from data tab <code>data_new</code>. In this way, we connect the data tab and the plot tab with each other. Of course, one data tab can link to multiple plot tabs and a plot tab can receive data from multiple data tabs too. Just specify the tab IDs by a vector <code><a href="https://rdrr.io/r/base/c.html">c(xx, xx)</a></code>.</p>
+<p>Tabs are not loaded at this point, you need to specify you do want to load them by adding them to the app main function on the <code>global.R</code> file. Then launch the app as usually. New tab files are automatically created under your R folder, registered to your <code>config/tabs.csv</code> and sourced automatically.</p>
+<div class="sourceCode" id="cb6"><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/sps.html">sps</a></span>(
+    <span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data_new"</span>, <span class="st">"plot_new"</span>), <span class="co"># add new tab IDs here</span>
+    <span class="kw">server_expr</span> <span class="kw">=</span> {
+        <span class="fu"><a href="reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>, <span class="st">"green"</span>)
+    }
+)</pre></div>
+<p>If you don’t want any tab file, use <code><a href="reference/removeSpsTab.html">removeSpsTab("TAB_ID")</a></code> to remove a tab. It will remove the R file and delete information on your <code>config/tabs.csv</code> file.</p>
+<p>Functions are experimental, we will update the help files and examples soon.</p>
 </div>
 </div>
 <div id="internal" class="section level2">
 <h2 class="hasAnchor">
 <a href="#internal" class="anchor"></a>Internal</h2>
 <p>Run to update the website (./docs/ folder)</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></div>
+<div class="sourceCode" id="cb7"><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></div>
 </div>
 <div id="todo-list" class="section level2">
 <h2 class="hasAnchor">
@@ -142,11 +166,11 @@ sudo apt-get install libssl-dev</code></pre>
 <ul class="list-unstyled">
 <li>Browse source code at <br><a href="https://github.com/systemPipeR/systemPipeShiny/">https://​github.com/​systemPipeR/​systemPipeShiny/​</a>
 </li>
-<li>Download from Bioconductor at <br><a href="http://www.bioconductor.org/packages/release/bioc/html/systemPipeR.html">http://​www.bioconductor.org/​packages/​release/​bioc/​html/​systemPipeR.html</a>
+<li>Download from GitHub at <br><a href="https://github.com/systemPipeR/systemPipeShiny">https://​github.com/​systemPipeR/​systemPipeShiny</a>
 </li>
 <li>Ask a question about systemPipeR at <br><a href="https://support.bioconductor.org/">https://​support.bioconductor.org/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/tgirke/systemPipeR/issues">https://​github.com/​tgirke/​systemPipeR/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/systemPipeR/systemPipeShiny/issues">https://​github.com/​systemPipeR/​systemPipeShiny/​issues</a>
 </li>
 </ul>
 </div>
@@ -168,7 +192,8 @@ sudo apt-get install libssl-dev</code></pre>
 <li>Le Zhang <br><small class="roles"> Author </small>  </li>
 <li>
 <a href="https://www.dcassol.com/">Daniela Cassol</a> <br><small class="roles"> Author </small>  </li>
-<li>Ponmathi Ramasamy <br><small class="roles"> Author </small>  </li>
+<li>
+<a href="http://girke.bioinformatics.ucr.edu/">Ponmathi Ramasamy</a> <br><small class="roles"> Author </small>  </li>
 <li>Jianhai Zhang <br><small class="roles"> Author </small>  </li>
 <li>Gordon Mosher <br><small class="roles"> Author </small>  </li>
 <li>
@@ -181,7 +206,7 @@ sudo apt-get install libssl-dev</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Le Zhang, <a href="https://www.dcassol.com/">Daniela Cassol</a>, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher, <a href="http://girke.bioinformatics.ucr.edu/">Thomas Girke</a>.</p>
+  <p>Developed by Le Zhang, <a href="https://www.dcassol.com/">Daniela Cassol</a>, <a href="http://girke.bioinformatics.ucr.edu/">Ponmathi Ramasamy</a>, Jianhai Zhang, Gordon Mosher, <a href="http://girke.bioinformatics.ucr.edu/">Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">

@@ -3,8 +3,8 @@ pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   systemPipeShiny: systemPipeShiny.html
-last_built: 2020-08-08T03:25Z
+last_built: 2020-08-10T16:34Z
 urls:
-  reference: http://girke.bioinformatics.ucr.edu/systemPipeR//reference
-  article: http://girke.bioinformatics.ucr.edu/systemPipeR//articles
+  reference: https://systempipe.org//reference
+  article: https://systempipe.org//articles
 
