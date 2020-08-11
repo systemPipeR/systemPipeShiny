@@ -37,12 +37,6 @@
 <script src="../pkgdown.js"></script>
 
 
-<!-- docsearch -->
-<script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
-<link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
-
 
 
 <meta property="og:title" content="SPS database functions — spsDb" />
@@ -99,26 +93,20 @@ if the default db is there and gives warnings if not." />
   </a>
 </li>
 <li>
-  <a></a>
+  <a href="../articles/systemPipeShiny.html">Get started</a>
 </li>
 <li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/systemPipeR/systemPipeShiny">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/systemPipeR/systemPipeShiny/">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
-      
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
-        <div class="form-group">
-          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
-        </div>
-      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -288,17 +276,17 @@ component of the chain expression</p></dd>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='st'>"config"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'config' already exists</span></div><div class='input'><span class='no'>mydb</span> <span class='kw'>&lt;-</span> <span class='no'>spsDb</span>$<span class='fu'>new</span>()</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:51:56 Created SPS database method container</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>createDb</span>()</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:51:56 Creating SPS db...</span><span>
-#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-10 09:51:57 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #BBBB00;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:51:57 Key md5 4272f3753ad358d558a6aa5b01547275</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200810095156</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"'new1', '1'"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:51:57 Inerted 1 rows</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200810095156
-#&gt; 2          new1              1</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"'new2'"</span>, <span class='st'>"'2'"</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:51:57 Inerted 1 rows</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200810095156
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='st'>"config"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'config' already exists</span></div><div class='input'><span class='no'>mydb</span> <span class='kw'>&lt;-</span> <span class='no'>spsDb</span>$<span class='fu'>new</span>()</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 18:03:15 Created SPS database method container</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>createDb</span>()</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 18:03:15 Creating SPS db...</span><span>
+#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-10 18:03:15 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-08-10 18:03:15 Key md5 c34aa2b2a4df9272d94ebadf6a9deb02</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200810180315</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"'new1', '1'"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 18:03:15 Inerted 1 rows</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200810180315
+#&gt; 2          new1              1</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"'new2'"</span>, <span class='st'>"'2'"</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 18:03:15 Inerted 1 rows</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200810180315
 #&gt; 2          new1              1
 #&gt; 3          new2              2</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryUpdate</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>'234'</span>,
-                 <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"value"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"info = 'new1'"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:51:57 Updated 1 rows</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200810095156
+                 <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"value"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"info = 'new1'"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 18:03:15 Updated 1 rows</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200810180315
 #&gt; 2          new1            234
 #&gt; 3          new2              2</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
     <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
@@ -306,7 +294,7 @@ component of the chain expression</p></dd>
         <span class='st'>"sps_meta"</span>,
         <span class='kw'>dp_expr</span><span class='kw'>=</span><span class='st'>"filter(., info %in% c('new1', 'new2') %&gt;% select(2)"</span>)
 }
-<span class='no'>mydb</span>$<span class='fu'>queryDel</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"value = '234'"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 09:51:57 Deleted 1 rows</span><span></div></span></pre>
+<span class='no'>mydb</span>$<span class='fu'>queryDel</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"value = '234'"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-10 18:03:15 Deleted 1 rows</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -318,7 +306,7 @@ component of the chain expression</p></dd>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Le Zhang, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Ponmathi Ramasamy</a>, Jianhai Zhang, Gordon Mosher, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
+  <p>Developed by <a href='https://lezhang.me/'>Le Zhang</a>, <a href='https://www.dcassol.com/'>Daniela Cassol</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Ponmathi Ramasamy</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Jianhai Zhang</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Gordon Mosher</a>, <a href='http://girke.bioinformatics.ucr.edu/'>Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">
@@ -329,23 +317,6 @@ component of the chain expression</p></dd>
    </div>
 
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
-<script>
-  docsearch({
-    
-    
-    apiKey: '',
-    indexName: '',
-    inputSelector: 'input#search-input.form-control',
-    transformData: function(hits) {
-      return hits.map(function (hit) {
-        hit.url = updateHitURL(hit);
-        return hit;
-      });
-    }
-  });
-</script>
-
 
 
   </body>

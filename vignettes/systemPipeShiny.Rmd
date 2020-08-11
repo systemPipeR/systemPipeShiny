@@ -1,5 +1,5 @@
 ---
-title: '<span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny'
+title: <span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny
 author: 
   - name: Le Zhang
     affiliation: University of California Riverside 
@@ -70,8 +70,8 @@ cat("</style>")
 ```
 
 
-```{r logo, echo=FALSE, out.width='75%', fig.align='center', fig.width=12}
-knitr::include_graphics(path = system.file(package="systemPipeShiny", "app/www/img/sps.png"))
+```{r logo, echo=FALSE, out.width='70%', fig.align='center', fig.width=12}
+knitr::include_graphics(path = "../inst/app/www/img/sps.png")
 ```
 
 
