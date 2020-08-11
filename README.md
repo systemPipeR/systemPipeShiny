@@ -65,6 +65,7 @@ tab information.
 
 After you have created your SPS project by the `spsInit` function, you can use `newTabData` to create a data tab 
 and use `newTabPlot` to create a plot tab.
+
 ```r
 newTabData(
     tab_id = "data_new", 
