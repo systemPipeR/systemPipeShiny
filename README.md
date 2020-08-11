@@ -5,7 +5,7 @@
 ![R-CMD-check](https://github.com/systemPipeR/systemPipeShiny/workflows/R-CMD-check/badge.svg)
 <!-- badges: end -->
 
-systemPipeShiny is a framework for workflow management and data visualization. 
+`systemPipeShiny` is a framework for workflow management and data visualization. 
 This tool is under devleopment, you can install it from Github.
 
 An online demo of [systempipeShiny](https://tgirke.shinyapps.io/systemPipeShiny/). 
