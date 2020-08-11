@@ -1,7 +1,6 @@
 ---
 title: "RNA-Seq Workflow Template" 
 author: "Author: Daniela Cassol (danielac@ucr.edu) and Thomas Girke (thomas.girke@ucr.edu)"
-date: "Last update: `r format(Sys.time(), '%d %B, %Y')`" 
 output:
   BiocStyle::html_document:
     toc_float: true
