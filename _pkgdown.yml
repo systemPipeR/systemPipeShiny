@@ -16,7 +16,7 @@ authors:
      
 home:
   links:
-  - text: Download from GitHub
+  - text: Download from GitHub 
     href: https://github.com/systemPipeR/systemPipeShiny
   - text: Ask a question about systemPipeShiny
     href: https://support.bioconductor.org/

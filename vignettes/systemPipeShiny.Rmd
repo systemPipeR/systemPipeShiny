@@ -16,7 +16,7 @@ author:
   - name: Thomas Girke
     affiliation: University of California Riverside 
     email: tgirke@ucr.edu
-date: "Last update: 08/10/2020" 
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`" 
 output:
   BiocStyle::html_document:
     self_contained: true
