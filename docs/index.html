@@ -11,9 +11,7 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><!-- docsearch --><script src="docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
-<link href="docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="systemPipeShiny: An Interactive Framework for Workflow Management and Visualization">
+<script src="pkgdown.js"></script><meta property="og:title" content="systemPipeShiny: An Interactive Framework for Workflow Management and Visualization">
 <meta property="og:description" content="systemPipeShiny (SPS) extends the widely used systemPipeR (SPR) workflow environment with a versatile graphical user interface provided by a Shiny App. This allows non-R users, such as experimentalists, to run many systemPipeR’s workflow designs, control, and visualization functionalities interactively without requiring knowledge of R. Most importantly, SPS has been designed as a general purpose framework for interacting with other R packages in an intuitive manner. Like most Shiny Apps, SPS can be used on both local computers as well as centralized server-based deployments that can be accessed remotely as a public web service for using SPR’s functionalities with community and/or private data. The framework can integrate many core packages from the R/Bioconductor ecosystem. Examples of SPS’ current functionalities include: (a) interactive creation of experimental designs and metadata using an easy to use tabular editor or file uploader; (b) visualization of workflow topologies combined with auto-generation of R Markdown preview for interactively designed workflows; (d) access to a wide range of data processing routines; (e) and an extendable set of visualization functionalities. Complex visual results can be managed on a 'Canvas Workbench’ allowing users to organize and to compare plots in an efficient manner combined with a session snapshot feature to continue work at a later time. The present suite of pre-configured visualization examples include different methods to plot a count table: PCA, t-SNE and plots of other clustering methods; volcano plots, data mining plots including heatmaps, and more. The modular design of SPR makes it easy to design custom functions without any knowledge of Shiny, as well as extending the environment in the future with contributions from the community.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -46,27 +44,21 @@
   </a>
 </li>
 <li>
-  <a></a>
+  <a href="articles/systemPipeShiny.html">Get started</a>
 </li>
 <li>
-  <a href="articles/systemPipeShiny.html">Get started</a>
+  <a href="reference/index.html">Reference</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/systemPipeR/systemPipeShiny">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/systemPipeR/systemPipeShiny/">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
-<form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
-        <div class="form-group">
-          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
-      </form>
-      
-    </div>
 <!--/.nav-collapse -->
   </div>
 <!--/.container -->
@@ -170,7 +162,7 @@ sudo apt-get install libssl-dev</code></pre>
 </li>
 <li>Download from GitHub at <br><a href="https://github.com/systemPipeR/systemPipeShiny">https://​github.com/​systemPipeR/​systemPipeShiny</a>
 </li>
-<li>Ask a question about systemPipeR at <br><a href="https://support.bioconductor.org/">https://​support.bioconductor.org/​</a>
+<li>Ask a question about systemPipeShiny at <br><a href="https://support.bioconductor.org/">https://​support.bioconductor.org/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/systemPipeR/systemPipeShiny/issues">https://​github.com/​systemPipeR/​systemPipeShiny/​issues</a>
 </li>
@@ -191,13 +183,16 @@ sudo apt-get install libssl-dev</code></pre>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Le Zhang <br><small class="roles"> Author </small>  </li>
+<li>
+<a href="https://lezhang.me/">Le Zhang</a> <br><small class="roles"> Author </small>  </li>
 <li>
 <a href="https://www.dcassol.com/">Daniela Cassol</a> <br><small class="roles"> Author </small>  </li>
 <li>
 <a href="http://girke.bioinformatics.ucr.edu/">Ponmathi Ramasamy</a> <br><small class="roles"> Author </small>  </li>
-<li>Jianhai Zhang <br><small class="roles"> Author </small>  </li>
-<li>Gordon Mosher <br><small class="roles"> Author </small>  </li>
+<li>
+<a href="http://girke.bioinformatics.ucr.edu/">Jianhai Zhang</a> <br><small class="roles"> Author </small>  </li>
+<li>
+<a href="http://girke.bioinformatics.ucr.edu/">Gordon Mosher</a> <br><small class="roles"> Author </small>  </li>
 <li>
 <a href="http://girke.bioinformatics.ucr.edu/">Thomas Girke</a> <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
@@ -208,7 +203,7 @@ sudo apt-get install libssl-dev</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Le Zhang, <a href="https://www.dcassol.com/">Daniela Cassol</a>, <a href="http://girke.bioinformatics.ucr.edu/">Ponmathi Ramasamy</a>, Jianhai Zhang, Gordon Mosher, <a href="http://girke.bioinformatics.ucr.edu/">Thomas Girke</a>.</p>
+  <p>Developed by <a href="https://lezhang.me/">Le Zhang</a>, <a href="https://www.dcassol.com/">Daniela Cassol</a>, <a href="http://girke.bioinformatics.ucr.edu/">Ponmathi Ramasamy</a>, <a href="http://girke.bioinformatics.ucr.edu/">Jianhai Zhang</a>, <a href="http://girke.bioinformatics.ucr.edu/">Gordon Mosher</a>, <a href="http://girke.bioinformatics.ucr.edu/">Thomas Girke</a>.</p>
 </div>
 
 <div class="pkgdown">
@@ -219,20 +214,7 @@ sudo apt-get install libssl-dev</code></pre>
 </div>
 
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
-  docsearch({
-    
-    
-    apiKey: '',
-    indexName: '',
-    inputSelector: 'input#search-input.form-control',
-    transformData: function(hits) {
-      return hits.map(function (hit) {
-        hit.url = updateHitURL(hit);
-        return hit;
-      });
-    }
-  });
-</script>
-</body>
+
+
+  </body>
 </html>

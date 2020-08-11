@@ -3,8 +3,5 @@ pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   systemPipeShiny: systemPipeShiny.html
-last_built: 2020-08-10T23:03Z
-urls:
-  reference: https://systempipe.org//reference
-  article: https://systempipe.org//articles
+last_built: 2020-08-11T01:02Z
 
