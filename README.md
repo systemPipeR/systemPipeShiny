@@ -14,7 +14,7 @@ Heavy tasks will crash it and disconnect you from it.
 
 ## Installation
 
-You can install the released version of systemPipeShiny from Github with:
+You can install the released version of `systemPipeShiny` from Github with:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
