@@ -93,6 +93,7 @@ Tabs are not loaded at this point, you need to specify you do want to load them 
 to the app main function on the `global.R` file. Then launch the app as usually. New tab files 
 are automatically created under your R folder, registered to your `config/tabs.csv` and 
 sourced automatically.
+
 ``` r
 sps_app <- sps(
     vstabs = c("data_new", "plot_new"), # add new tab IDs here
