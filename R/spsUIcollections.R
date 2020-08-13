@@ -427,7 +427,7 @@ dynamicFile <- function(id, title = "Select your file:",
 #' @importFrom shinydashboardPlus boxPlus
 #' @importFrom shinyWidgets dropdownButton tooltipOptions
 #' @importFrom shinyWidgets  radioGroupButtons sliderTextInput
-#' @noRd
+#' @export
 # @examples
 # library(shiny)
 # eg_UI <- function(id) {
