@@ -422,7 +422,7 @@ dynamicFile <- function(id, title = "Select your file:",
 #' @description return some example UI elements can be toggled on plotting
 #' @param ns namespace function
 #'
-#' @return
+#' @return some UI
 #' @importFrom shinyAce aceEditor
 #' @importFrom shinydashboardPlus boxPlus
 #' @importFrom shinyWidgets dropdownButton tooltipOptions

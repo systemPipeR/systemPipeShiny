@@ -10,7 +10,7 @@ uiExamples(ns)
 \item{ns}{namespace function}
 }
 \value{
-
+some UI
 }
 \description{
 return some example UI elements can be toggled on plotting
