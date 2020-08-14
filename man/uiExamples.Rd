@@ -13,5 +13,14 @@ uiExamples(ns)
 some UI
 }
 \description{
-return some example UI elements can be toggled on plotting
+return some example UI elements can be toggled on plotting.
+This functions is only used as a temp solution for template tab to
+demonstrate what UI compoents
+you could use. Will be removed in later releases as we have a better tab
+organizations.
+}
+\examples{
+ui <- fluidPage(useSps(), uiExamples(NS("example")))
+server <- function(input, output, session) {}
+shinyApp(ui, server)
 }

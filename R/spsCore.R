@@ -314,7 +314,9 @@ copySPSfiles <- function(file_path,
 #' `NULL`, `NA`, `""` or length is 0, return `FALSE`?
 #' @return option value if value exists; `FALSE` if the value is empty,
 #' like `NULL`, `NA`, `""`; `NULL` if `empty_is_false = FALSE`;
-#' if `value != NULL` will set the value
+#'  see [emptyIsFalse]
+#'
+#'  If `value != NULL` will set the value, no returns.
 #' @export
 #'
 #' @examples

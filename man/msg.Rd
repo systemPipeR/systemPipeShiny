@@ -16,7 +16,7 @@ msg(
   error_text = "ERROR"
 )
 
-spsinfo(msg, verbose = NULL)
+spsinfo(msg, verbose = spsOption("verbose"))
 
 spswarn(msg)
 
@@ -38,7 +38,7 @@ Other levels ok.}
 
 \item{error_text}{error level text prefix}
 
-\item{verbose}{bool, default NULL, get from sps project options}
+\item{verbose}{bool, default get from sps project options, can be overwritten}
 }
 \value{
 see description
@@ -56,4 +56,14 @@ arg \code{verbose}. This arg works similar to all other \code{verbose} args in t
 package, if not specified, it follows the project option, can be be forced to
 \code{TRUE} and \code{FALSE}. \code{TRUE} will forcefully generate the msg, and \code{FALSE}
 will be no message.
+}
+\examples{
+msg("this is info")
+msg("this is warning", "warning")
+try(msg("this is error", "error"))
+msg("this is other", "error2")
+spsinfo("some msg")
+spswarn("sps warning")
+try(spserror("sps error"))
+
 }

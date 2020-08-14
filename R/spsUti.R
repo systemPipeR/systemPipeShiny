@@ -202,7 +202,7 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
 #' `tpye` and `tpye_sub`
 #' @noRd
 #'
-# examples
+# @examples
 # tab_ids <- c("core_about", "vs_main")
 # findTabInfo(tab_ids, tab_file = tab_file)
 findTabInfo <- function(tab_ids=NULL, type = NULL,
@@ -259,7 +259,9 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
 # LZ note: do not use spsOption function here,
 # because it is depend on this function.
 # If used, two functions depending on each other and creates infinite loop
-#' SPS terminal message logging methods
+
+
+#' @title SPS terminal message logging methods
 #' @description If SPS `use_crayon`option is `TRUE`, the message will
 #' be colorful.
 #' "INFO" level spawns `message`, "WARNING" is `warning`, "ERROR" spawns `stop`,
@@ -272,6 +274,7 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
 #' package, if not specified, it follows the project option, can be be forced to
 #' `TRUE` and `FALSE`. `TRUE` will forcefully generate the msg, and `FALSE`
 #' will be no message.
+#' @importFrom crayon blue make_style red
 #' @param msg a character string of message or a vector of character strings,
 #' each item in the vector presents one line of words
 #' @param .other_color hex color code or named colors, when levels are not in
@@ -281,17 +284,18 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
 #' @param info_text info level text prefix
 #' @param warning_text warning level text prefix
 #' @param error_text error level text prefix
-#' @importFrom crayon blue make_style red
-#' @export
 #' @return see description
+#'
 #' @examples
 #' msg("this is info")
 #' msg("this is warning", "warning")
 #' try(msg("this is error", "error"))
 #' msg("this is other", "error2")
-#' spsinfo("some msg)
+#' spsinfo("some msg")
 #' spswarn("sps warning")
 #' try(spserror("sps error"))
+#'
+#' @export
 msg <- function(msg,
                 level = "INFO",
                 .other_color="white",
@@ -326,10 +330,10 @@ msg <- function(msg,
 }
 
 
-#' @param verbose bool, default NULL, get from sps project options
+#' @param verbose bool, default get from sps project options, can be overwritten
 #' @rdname msg
 #' @export
-spsinfo <- function(msg, verbose=NULL) {
+spsinfo <- function(msg, verbose=spsOption('verbose')) {
     verbose <- if(is.null(verbose)) spsOption('verbose')
                else {assert_that(is.logical(verbose)); verbose}
     if(verbose) msg(msg, "SPS-INFO", "blue")
