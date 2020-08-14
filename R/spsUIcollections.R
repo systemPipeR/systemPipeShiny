@@ -419,7 +419,11 @@ dynamicFile <- function(id, title = "Select your file:",
 }
 
 #' Example UI elements for plotting
-#' @description return some example UI elements can be toggled on plotting
+#' @description return some example UI elements can be toggled on plotting.
+#'  This functions is only used as a temp solution for template tab to
+#'  demonstrate what UI compoents
+#'  you could use. Will be removed in later releases as we have a better tab
+#'  organizations.
 #' @param ns namespace function
 #'
 #' @return some UI
@@ -428,18 +432,10 @@ dynamicFile <- function(id, title = "Select your file:",
 #' @importFrom shinyWidgets dropdownButton tooltipOptions
 #' @importFrom shinyWidgets  radioGroupButtons sliderTextInput
 #' @export
-# @examples
-# library(shiny)
-# eg_UI <- function(id) {
-#     ns <- NS(id)
-#     tagList(
-#         useSps(),
-#         uiExamples(ns)
-#     )
-# }
-# ui <- fluidPage(eg_UI("eg"))
-# server <- function(input, output, session) {}
-# shinyApp(ui, server)
+#' @examples
+#' ui <- fluidPage(useSps(), uiExamples(NS("example")))
+#' server <- function(input, output, session) {}
+#' shinyApp(ui, server)
 uiExamples <- function(ns){
     tagList(
         h4("Some examples for plotting controls"),

@@ -18,7 +18,9 @@ option you choose to this value}
 \value{
 option value if value exists; \code{FALSE} if the value is empty,
 like \code{NULL}, \code{NA}, \code{""}; \code{NULL} if \code{empty_is_false = FALSE};
-if \code{value != NULL} will set the value
+see \link{emptyIsFalse}
+
+If \code{value != NULL} will set the value, no returns.
 }
 \description{
 Get or set SPS options
