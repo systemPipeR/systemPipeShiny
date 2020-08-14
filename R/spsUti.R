@@ -333,7 +333,7 @@ msg <- function(msg,
 #' @param verbose bool, default get from sps project options, can be overwritten
 #' @rdname msg
 #' @export
-spsinfo <- function(msg, verbose=spsOption('verbose')) {
+spsinfo <- function(msg, verbose=NULL) {
     verbose <- if(is.null(verbose)) spsOption('verbose')
                else {assert_that(is.logical(verbose)); verbose}
     if(verbose) msg(msg, "SPS-INFO", "blue")
