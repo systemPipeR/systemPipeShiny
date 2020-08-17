@@ -16,7 +16,7 @@ NULL
 #' @importFrom dplyr as_tibble filter tibble
 #' @importFrom rlang enexpr
 #' @export
-#' @return a list contains the UI and server
+#' @return a list contains the UI and  server
 #' @examples
 #' if(interactive()){
 #'     spsInit()
