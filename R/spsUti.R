@@ -379,7 +379,7 @@ timline_pg_status <- function(progress = 0){
 }
 
 #' empty things and FALSE will return FALSE
-#'
+#' @description not working on S4 class
 #' @param x expression
 #'
 #' @export
