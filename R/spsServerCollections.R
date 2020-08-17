@@ -419,7 +419,7 @@ getData <- function(tab_id, shared){
         assert_that(is.character(tab_id) & length(tab_id) < 2,
                     msg = "A character string of one tab name each time")
         tab_info <- findTabInfo(tab_id)$tab_labels
-        if(is.empty(shared[['data']][[tab_id]]))
+        if(!not_empty(shared[['data']][[tab_id]]))
             stop(glue("Data from tab `{tab_info}` is empty"))
         if(spsOption('verbose')){
             success_info <- glue("data for tab `{tab_info} found`")
