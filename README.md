@@ -27,6 +27,7 @@ If you are on Linux, you also need
 ```
 sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libv8-dev
+sudo apt-get install libxm12-dev
 sudo apt-get install libssl-dev
 ```
 
