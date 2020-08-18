@@ -16,7 +16,7 @@ msg(
   error_text = "ERROR"
 )
 
-spsinfo(msg, verbose = spsOption("verbose"))
+spsinfo(msg, verbose = NULL)
 
 spswarn(msg)
 

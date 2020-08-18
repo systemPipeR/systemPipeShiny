@@ -15,7 +15,7 @@ have access to internal server expression objects, like the reactiveValues
 object \code{shared}. You can also overwrite other values.}
 }
 \value{
-a list contains the UI and server
+a list contains the UI and  server
 }
 \description{
 SystemPipeShiny app start function
