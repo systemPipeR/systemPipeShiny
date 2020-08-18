@@ -113,9 +113,12 @@ plot_templateServer <- function(id, shared){
         observeEvent(input$render, {
             output$plot <- sps_plots$addServer(plotly::renderPlotly, tab_id, {
                 plotly::ggplotly(
-                    ggplot(mydata$df,
-                           aes(Sepal.Length, Sepal.Width)) +
-                    geom_point(ggplot2::aes(colour = Species))
+                    ggplot(mydata$data,
+                           aes_string(names(mydata$data)[1],
+                                      names(mydata$data)[2])) +
+                        geom_point(aes(
+                            color = seq_len(nrow(mydata$data))
+                        ))
                 )
             })
             shared$snap_signal <- sps_plots$notifySnap(tab_id)
