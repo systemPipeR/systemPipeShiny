@@ -57,22 +57,22 @@ spsUIuser <- function(mainUI){
                     icon = icon("angle-double-right"),
                     size = "lg"),
                 renderLoading(),
-                if(spsOption('loading_particles')) {
-                    if (!requireNamespace("particlesjs", quietly = TRUE)){
-                        msg(c("Option loading_particles is `true` but package",
-                              "particlesjs is not installed. Try",
-                              "`remotes::install_github",
-                              "('dreamRs/particlesjs')`"),
-                            "SPS-WARING", "orange")
-                        div()
-                    } else {
-                        particlesjs::particles(
-                            target_id ="loading-screen",
-                            element_id = "particles",
-                            config = "www/loading_themes/particlesjs-config.json"
-                        )
-                    }
-                }
+                # if(spsOption('loading_particles')) {
+                #     if (!requireNamespace("particlesjs", quietly = TRUE)){
+                #         msg(c("Option loading_particles is `true` but package",
+                #               "particlesjs is not installed. Try",
+                #               "`remotes::install_github",
+                #               "('dreamRs/particlesjs')`"),
+                #             "SPS-WARING", "orange")
+                #         div()
+                #     } else {
+                #         particlesjs::particles(
+                #             target_id ="loading-screen",
+                #             element_id = "particles",
+                #             config = "www/loading_themes/particlesjs-config.json"
+                #         )
+                #     }
+                # }
             )
         )}
         else

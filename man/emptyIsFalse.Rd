@@ -14,7 +14,7 @@ emptyIsFalse(x)
 \code{FALSE}, otherwise \code{TRUE}.
 }
 \description{
-empty things and FALSE will return FALSE
+not working on S4 class
 }
 \examples{
 emptyIsFalse(NULL)

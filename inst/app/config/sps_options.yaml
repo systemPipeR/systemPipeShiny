@@ -10,10 +10,10 @@ loading_theme:
     default: vhelix
     other: ["*"]
 
-
-loading_particles:
-    default: false
-    other: [true]
+# Use pure js instead unless this pkg is pushed to CRAN
+# loading_particles:
+#     default: false
+#     other: [true]
 
 use_crayon:
     default: true

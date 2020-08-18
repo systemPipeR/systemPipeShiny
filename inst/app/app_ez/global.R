@@ -23,7 +23,6 @@ library(systemPipeShiny)
 # warning_toast: toast popup message when you are under some dangerous options - TRUE, FALSE
 # loading_screen: to show loading screen? - TRUE, FALSE
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
-# loading_particles: particle effects on loading, loading_screen must be TRUE - TRUE, FALSE
 # use_crayon: Do you want colorful terminal messages? must install `crayon`- TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # dev: developer mode, you are able to add tabs - TRUE, FALSE
@@ -33,7 +32,6 @@ options(sps = list(
     warning_toast = TRUE,
     loading_screen = TRUE,
     loading_theme = "vhelix",
-    loading_particles = TRUE,
     use_crayon = TRUE,
     verbose = TRUE,
     dev = TRUE,
