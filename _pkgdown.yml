@@ -23,3 +23,53 @@ home:
   - text: Report a bug
     href: https://github.com/systemPipeR/systemPipeShiny/issues
 
+reference:
+  - title: Visualization 
+    contents:
+      - exploreDDS
+      - exploreDDSplot
+  - title: Shiny
+    contents:
+      - addData 
+      - getData
+      - clearableTextInput
+      - dynamicFile
+      - dynamicFileServer
+      - emptyIsFalse
+      - gallery
+      - genGallery
+      - genHrefTable
+      - hexLogo 
+      - hexPanel
+      - genHrefTab
+      - hrefTab
+      - hrefTable
+      - loadDF
+      - makePlotData
+      - makePrepro
+      - msg 
+      - spsinfo 
+      - spswarn 
+      - spserror
+      - newTabPlot 
+      - newTabData
+      - pgPaneUpdate 
+      - pgPaneUI
+      - plotContainer
+      - plotExploreDSS
+      - quiet
+      - removeSpsTab
+      - renderDesc
+      - shinyCatch
+      - shinyCheckPkg
+      - sps
+      - spsDb
+      - spsEncryption
+      - spsHr
+      - spsInit
+      - spsOption
+      - spsValidate
+      - tabTitle
+      - textInputGroup
+      - useSps
+      - viewSpsDefaults

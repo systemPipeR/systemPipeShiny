@@ -75,18 +75,19 @@
 </h1></div>
 <!-- badges: start -->
 <p><img src="https://github.com/systemPipeR/systemPipeShiny/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"><!-- badges: end --></p>
-<p>systemPipeShiny is a framework for workflow management and data visualization. This tool is under devleopment, you can install it from Github.</p>
+<p><code>systemPipeShiny</code> is a framework for workflow management and data visualization. This tool is under devleopment, you can install it from Github.</p>
 <p>An online demo of <a href="https://tgirke.shinyapps.io/systemPipeShiny/">systempipeShiny</a>. This application is hosted by a small server. Please do not use it for production activities. Heavy tasks will crash it and disconnect you from it.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the released version of systemPipeShiny from Github with:</p>
+<p>You can install the released version of <code>systemPipeShiny</code> from Github with:</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span><span class="kw">=</span><span class="fl">TRUE</span>))
     <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
 <span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeR/systemPipeShiny"</span>, <span class="kw">build_vignettes</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">dependencies</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></div>
 <p>If you are on Linux, you also need</p>
 <pre><code>sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libv8-dev
+sudo apt-get install libxm12-dev
 sudo apt-get install libssl-dev</code></pre>
 </div>
 <div id="setup" class="section level2">
@@ -137,8 +138,16 @@ sudo apt-get install libssl-dev</code></pre>
 <h2 class="hasAnchor">
 <a href="#internal" class="anchor"></a>Internal</h2>
 <details><p><summary><b> Click to expand the list of internal notes. </b></summary></p>
-<p>Run to update the website (./docs/ folder)</p>
+<div id="run-to-update-the-website-docs-folder" class="section level3">
+<h3 class="hasAnchor">
+<a href="#run-to-update-the-website-docs-folder" class="anchor"></a>Run to update the website (./docs/ folder)</h3>
 <div class="sourceCode" id="cb7"><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></div>
+</div>
+<div id="running-roxygen" class="section level3">
+<h3 class="hasAnchor">
+<a href="#running-roxygen" class="anchor"></a>Running roxygen</h3>
+<div class="sourceCode" id="cb8"><pre class="r"><span class="kw pkg">roxygen2</span><span class="kw ns">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span>()</pre></div>
+</div>
 <div id="todo-list" class="section level3">
 <h3 class="hasAnchor">
 <a href="#todo-list" class="anchor"></a>ToDo List</h3>

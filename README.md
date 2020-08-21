@@ -117,10 +117,16 @@ Functions are experimental, we will update the help files and examples soon.
 Click to expand the list of internal notes.
 </b></summary>  
 
-Run to update the website (./docs/ folder)
+### Run to update the website (./docs/ folder)
 
 ``` r
 pkgdown::build_site()
+```
+
+### Running roxygen
+
+```r
+roxygen2::roxygenise()
 ```
 
 ### ToDo List

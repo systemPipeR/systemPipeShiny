@@ -438,13 +438,13 @@ Table with all exported functions
 
 To show the effect of the transformation, in the figure below we plot the first sample against the second, first simply using the `log2` function, and then using the `VST` and `rlog-transformed` values. For the log2 approach, we need to first estimate size factors to account for sequencing depth, and then specify `normalized=TRUE`. Sequencing depth correction is done automatically for the `vst` and `rlog.`
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
 targets <- read.delim(targetspath, comment="#")
 cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
 countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
 countMatrix <- read.delim(countMatrixPath, row.names=1)
-plotExploreDSS(countMatrix, targets, cmp = cmp[[1]], preFilter = 10, sample = c(3,4))
+plot.exploreDDS(countMatrix, targets, cmp = cmp[[1]], preFilter = 10, sample = c(3,4))
 ```
 
 ## Barplot

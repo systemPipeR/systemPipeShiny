@@ -20,7 +20,9 @@ you could use. Will be removed in later releases as we have a better tab
 organizations.
 }
 \examples{
+if(interactive()){
 ui <- fluidPage(useSps(), uiExamples(NS("example")))
 server <- function(input, output, session) {}
 shinyApp(ui, server)
+}
 }

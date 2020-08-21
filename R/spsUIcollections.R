@@ -433,9 +433,11 @@ dynamicFile <- function(id, title = "Select your file:",
 #' @importFrom shinyWidgets  radioGroupButtons sliderTextInput
 #' @export
 #' @examples
+#' if(interactive()){
 #' ui <- fluidPage(useSps(), uiExamples(NS("example")))
 #' server <- function(input, output, session) {}
 #' shinyApp(ui, server)
+#' }
 uiExamples <- function(ns){
     tagList(
         h4("Some examples for plotting controls"),
