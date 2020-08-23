@@ -35,6 +35,7 @@ reference:
       - MDSplot 
       - PCAplot
       - tSNEplot 
+      - volcanoplot
   - title: Shiny
     contents:
       - addData 

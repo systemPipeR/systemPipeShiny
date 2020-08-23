@@ -56,14 +56,17 @@ Imports:
     GGally,
     ggtree,
     glmpca, 
-    pheatmap
+    pheatmap, 
+    ggrepel
 Suggests:
     testthat,
     Biostrings,
     DelayedArray,
     limma,
     systemPipeR, 
-    knitr
+    knitr, 
+    rmarkdown, 
+    htmltools
 VignetteBuilder: knitr
 biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
 License: Artistic-2.0
