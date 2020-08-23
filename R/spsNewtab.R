@@ -642,6 +642,7 @@ makePrepro <- function(method_id = "md1",
 #' @importFrom dplyr slice pull filter
 #' @importFrom rlang enquo
 #' @importFrom vroom vroom
+#' @importFrom utils menu
 #' @examples
 #' spsInit(change_wd = FALSE, overwrite = TRUE)
 #' newTabData(
@@ -692,7 +693,7 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         spsinfo(glue("Matched tab(s): {.}"), TRUE)
     }
     if(!force){
-        switch(menu(c("YES", "NO"), title = "Continue?"),
+        switch(utils::menu(c("YES", "NO"), title = "Continue?"),
                {},
                return(spsinfo("Abort", TRUE))
         )

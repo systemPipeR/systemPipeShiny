@@ -27,7 +27,14 @@ reference:
   - title: Visualization 
     contents:
       - exploreDDS
-      - exploreDDSplot
+      - exploreDDSplot 
+      - GLMplot
+      - hclustplot
+      - heatMaplot
+      - MAplot
+      - MDSplot 
+      - PCAplot
+      - tSNEplot 
   - title: Shiny
     contents:
       - addData 
@@ -56,7 +63,6 @@ reference:
       - pgPaneUpdate 
       - pgPaneUI
       - plotContainer
-      - plotExploreDSS
       - quiet
       - removeSpsTab
       - renderDesc

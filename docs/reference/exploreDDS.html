@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="exploreDDS — exploreDDS" />
-<meta property="og:description" content="Convenience wrapper function to transform raw read counts using the DESeq2
-package transformations methods. The input file has to contain all the
-genes, not just differentially expressed ones." />
+<meta property="og:description" content="Convenience wrapper function to transform raw read counts using the
+DESeq2::DESeq2-package() package transformations methods. The input file
+has to contain all the genes, not just differentially expressed ones." />
 
 
 
@@ -119,9 +119,9 @@ genes, not just differentially expressed ones." />
     </div>
 
     <div class="ref-description">
-    <p>Convenience wrapper function to transform raw read counts using the <code>DESeq2</code>
-package transformations methods. The input file has to contain all the
-genes, not just differentially expressed ones.</p>
+    <p>Convenience wrapper function to transform raw read counts using the
+<code><a href='https://rdrr.io/pkg/DESeq2/man/DESeq2-package.html'>DESeq2::DESeq2-package()</a></code> package transformations methods. The input file
+has to contain all the genes, not just differentially expressed ones.</p>
     </div>
 
     <pre class="usage"><span class='fu'>exploreDDS</span>(
@@ -156,7 +156,7 @@ Accepts a numeric value with the minimum of total reads to keep. Default is <cod
     </tr>
     <tr>
       <th>transformationMethod</th>
-      <td><p>a character string indicating which transformation
+      <td><p>a <code>character string</code> indicating which transformation
 method it will be used on the raw read counts. Supported methods include
 <code>rlog</code> and <code>vst</code> using the <code>DESeq2</code> package or default <code>raw</code>
 for no data transformation.</p></td>
@@ -165,24 +165,25 @@ for no data transformation.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>returns an object of class <code>DESeqTransform</code>.</p>
+    <p>returns an object of class <code><a href='https://rdrr.io/pkg/DESeq2/man/DESeqTransform.html'>DESeq2::DESeqTransform()</a></code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Note that you can use the resulting transformed values in the
+    <p>Note that the recommendation is to use the resulting transformed values in the
 <code>transformationMethod</code> argument only for visualization and clustering,
 not for differential expression analysis which needs raw counts. Users are
-strongly encouraged to consult the <code>DESeq2</code> vignette for more detailed
+strongly encouraged to consult the  <code><a href='https://rdrr.io/pkg/DESeq2/man/DESeq2-package.html'>DESeq2::DESeq2-package()</a></code> vignette for more detailed
 information on this topic and how to properly run <code>DESeq2</code> on data sets
 with more complex experimental designs.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>For more details on <code>DESeq2</code>, please consult the following
-page: http://bioconductor.org/packages/release/bioc/html/DESeq2.html
+page: <a href='http://bioconductor.org/packages/release/bioc/html/DESeq2.html'>DESeq2</a>.
 For more details on <code>targets</code> file definition, please consult the following
-page: http://www.bioconductor.org/packages/release/bioc/vignettes/systemPipeR/inst/doc/systemPipeR.html#25_structure_of_targets_file</p>
+page: <a href='http://www.bioconductor.org/packages/release/bioc/vignettes/systemPipeR/inst/doc/systemPipeR.html#25_structure_of_targets_file'>systemPipeR</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>suppressPackageStartupMessages</a></span>({<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>systemPipeR</span>)})</div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘Biostrings::pattern’ by ‘grid::pattern’ when loading ‘systemPipeR’</span></div><div class='input'><span class='co'>## Targets file</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>suppressPackageStartupMessages</a></span>({<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>systemPipeR</span>)})
+<span class='co'>## Targets file</span>
 <span class='no'>targetspath</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"targets.txt"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"systemPipeR"</span>)
 <span class='no'>targets</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.delim</a></span>(<span class='no'>targetspath</span>, <span class='kw'>comment</span><span class='kw'>=</span><span class='st'>"#"</span>)
 <span class='no'>cmp</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>systemPipeR</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/systemPipeR/man/readComp.html'>readComp</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>targetspath</span>, <span class='kw'>format</span><span class='kw'>=</span><span class='st'>"matrix"</span>, <span class='kw'>delim</span><span class='kw'>=</span><span class='st'>"-"</span>)

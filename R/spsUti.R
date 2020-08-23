@@ -89,6 +89,7 @@ findTreeParent <- function(step_names){
 #' @param start_lvl starting title level
 #'
 #' @return list
+#' @importFrom stats na.omit
 #' @noRd
 # @examples
 # t_lvl = c(1, 3, 1, 2, 2, 3)
@@ -103,7 +104,7 @@ step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
         start_lvl <- start_lvl + 1
 
         t_index <- NULL
-        while (start_lvl <= max(na.omit(t_lvl))) {
+        while (start_lvl <= max(stats::na.omit(t_lvl))) {
             t_index <- which(t_lvl == start_lvl)
             if (length(t_index) == 0) {
                 start_lvl <- start_lvl + 1

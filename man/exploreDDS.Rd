@@ -24,24 +24,24 @@ Values used for comparisons need to match those in the \code{Factor} column of t
 \item{preFilter}{allows removing rows in which there are very few reads.
 Accepts a numeric value with the minimum of total reads to keep. Default is \code{NULL}.}
 
-\item{transformationMethod}{a character string indicating which transformation
+\item{transformationMethod}{a \verb{character string} indicating which transformation
 method it will be used on the raw read counts. Supported methods include
 \code{rlog} and \code{vst} using the \code{DESeq2} package or default \code{raw}
 for no data transformation.}
 }
 \value{
-returns an object of class \code{DESeqTransform}.
+returns an object of class \code{\link[DESeq2:DESeqTransform]{DESeq2::DESeqTransform()}}.
 }
 \description{
-Convenience wrapper function to transform raw read counts using the \code{DESeq2}
-package transformations methods. The input file has to contain all the
-genes, not just differentially expressed ones.
+Convenience wrapper function to transform raw read counts using the
+\code{\link[DESeq2:DESeq2-package]{DESeq2::DESeq2-package()}} package transformations methods. The input file
+has to contain all the genes, not just differentially expressed ones.
 }
 \details{
-Note that you can use the resulting transformed values in the
+Note that the recommendation is to use the resulting transformed values in the
 \code{transformationMethod} argument only for visualization and clustering,
 not for differential expression analysis which needs raw counts. Users are
-strongly encouraged to consult the \code{DESeq2} vignette for more detailed
+strongly encouraged to consult the  \code{\link[DESeq2:DESeq2-package]{DESeq2::DESeq2-package()}} vignette for more detailed
 information on this topic and how to properly run \code{DESeq2} on data sets
 with more complex experimental designs.
 }
@@ -61,9 +61,9 @@ exploredds
 }
 \references{
 For more details on \code{DESeq2}, please consult the following
-page: http://bioconductor.org/packages/release/bioc/html/DESeq2.html
+page: \href{http://bioconductor.org/packages/release/bioc/html/DESeq2.html}{DESeq2}.
 For more details on \code{targets} file definition, please consult the following
-page: http://www.bioconductor.org/packages/release/bioc/vignettes/systemPipeR/inst/doc/systemPipeR.html#25_structure_of_targets_file
+page: \href{http://www.bioconductor.org/packages/release/bioc/vignettes/systemPipeR/inst/doc/systemPipeR.html#25_structure_of_targets_file}{systemPipeR}.
 }
 \author{
 Daniela Cassol

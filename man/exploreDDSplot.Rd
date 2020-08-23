@@ -9,7 +9,8 @@ exploreDDSplot(
   targets,
   cmp = cmp[[1]],
   preFilter = NULL,
-  sample,
+  samples,
+  scattermatrix = FALSE,
   plotly = FALSE,
   savePlot = FALSE,
   filePlot = NULL
@@ -27,16 +28,21 @@ Values used for comparisons need to match those in the \code{Factor} column of t
 \item{preFilter}{allows removing rows in which there are very few reads.
 Accepts a numeric value with the minimum of total reads to keep. Default is \code{NULL}.}
 
-\item{sample}{a character vector of two samples. Could be specified the \code{Factor}
-column name of the targets file or the position of the column in the \code{countMatrix}.}
+\item{samples}{a \verb{character vector} of two samples or \code{ALL} samples in the dataset.
+Could be specified the \code{SampleName} column name of the targets file or the
+respective numeric values. Also, if set as \code{ALL}, a correlation matrix it will be plot.}
 
-\item{plotly}{logical: when \code{FALSE} (the default), the ggplot2 plot will be returned.}
+\item{scattermatrix}{if \code{samples} set as \code{ALL}, requires to assign \code{TRUE} to build
+a correlation matrix and plot the correlogram of all the samples.}
 
-\item{savePlot}{logical: when \code{FALSE} (the default), the plot will not be saved.
+\item{plotly}{logical: when \code{FALSE} (default), the \code{ggplot2} plot will be returned.
+\code{TRUE} returns the \code{plotly} version of the plot.}
+
+\item{savePlot}{logical: when \code{FALSE} (default), the plot will not be saved.
 If \code{TRUE} the plot will be saved, and requires the \code{filePlot} argument.}
 
 \item{filePlot}{file name where the plot will be saved. For more information, please consult the
-\code{ggsave} function.}
+\code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} function.}
 }
 \value{
 returns an object of \verb{ggplot2 plot}.
@@ -54,7 +60,10 @@ cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
 countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
 countMatrix <- read.delim(countMatrixPath, row.names=1)
 ## Plot
-exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, sample=c(3,4))
-exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], sample=c("M1A", "M1B"), save = TRUE,
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c(3,4))
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], samples=c("M1A", "M1B"), save = TRUE,
              filePlot = "transf_deseq2.pdf")
+## Plot Correlogram
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c("M1A", "M1B"), scattermatrix=TRUE)
+
 }

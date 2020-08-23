@@ -50,14 +50,17 @@ Imports:
     styler,
     tibble,
     vroom,
-    yaml
+    yaml, 
+    Rtsne,
+    ape,
+    GGally,
+    ggtree,
+    glmpca, 
+    pheatmap
 Suggests:
     testthat,
     Biostrings,
     DelayedArray,
-    Rtsne,
-    ape,
-    glmpca,
     limma,
     systemPipeR, 
     knitr

@@ -380,19 +380,19 @@ when the template is created, manually change it.</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-20 17:06:10 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-08-20 17:06:10 Overwrite things in /home/dcassol/danielac@ucr.edu/testing/today/systemPipeShiny/docs/reference/SPS_20200820</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-20 17:06:10 Now copy files</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-20 17:06:10 Create SPS database</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-20 17:06:10 Created SPS database method container</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-20 17:06:10 Creating SPS db...</span><span>
-#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-20 17:06:10 Db created at '/home/dcassol/danielac@ucr.edu/testing/today/systemPipeShiny/docs/reference/SPS_20200820/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-08-20 17:06:10 Key md5 d79d5b1e4757b2c3a93c4af9afb9b823</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-20 17:06:10 SPS project setup done!</span><span></div><div class='input'><span class='fu'>newTabData</span>(
+    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-22 17:56:02 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-08-22 17:56:02 Overwrite things in /home/dcassol/danielac@ucr.edu/testing/today/systemPipeShiny/docs/reference/SPS_20200822</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-22 17:56:02 Now copy files</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-22 17:56:02 Create SPS database</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-22 17:56:02 Created SPS database method container</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-22 17:56:02 Creating SPS db...</span><span>
+#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-22 17:56:02 Db created at '/home/dcassol/danielac@ucr.edu/testing/today/systemPipeShiny/docs/reference/SPS_20200822/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-08-22 17:56:02 Key md5 e65463b7ca762dcfe308f231fb6d00b5</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-22 17:56:02 SPS project setup done!</span><span></div><div class='input'><span class='fu'>newTabData</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"data_new"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first data tab"</span>,
     <span class='kw'>prepro_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='makePrepro.html'>makePrepro</a></span>(<span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"do nothing"</span>,
                                      <span class='kw'>plot_options</span> <span class='kw'>=</span> <span class='st'>"plot_new"</span>)),
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-20 17:06:10 File SPS_20200820/R/tab_vs_data_new.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabPlot</span>(
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-22 17:56:02 File SPS_20200822/R/tab_vs_data_new.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabPlot</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"plot_new1"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first plot tab"</span>,
     <span class='kw'>plot_data</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
@@ -401,17 +401,17 @@ when the template is created, manually change it.</p></li>
                      <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>))
     ),
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-20 17:06:10 File SPS_20200820/R/tab_vs_plot_new1.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabData</span>(
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-22 17:56:02 File SPS_20200822/R/tab_vs_plot_new1.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabData</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"data_empty"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first empty data tab"</span>,
     <span class='kw'>empty</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-20 17:06:10 File SPS_20200820/R/tab_vs_data_empty.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabPlot</span>(
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-22 17:56:02 File SPS_20200822/R/tab_vs_data_empty.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabPlot</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"plot_empty"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first empty plot tab"</span>,
     <span class='kw'>empty</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-20 17:06:10 File SPS_20200820/R/tab_vs_plot_empty.R exists.</span><span></span></div></span></pre>
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-22 17:56:02 File SPS_20200822/R/tab_vs_plot_empty.R exists.</span><span></span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
