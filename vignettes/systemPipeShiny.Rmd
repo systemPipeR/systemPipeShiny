@@ -1,21 +1,6 @@
 ---
-title: <span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny
-author: 
-  - name: Le Zhang
-    affiliation: University of California Riverside 
-    email: le.zhang001@email.ucr.edu
-  - name: Daniela Cassol
-    email: danielac@ucr.edu 
-    affiliation: University of California Riverside
-  - name: Ponmathi Ramasamy
-    affiliation: University of California Riverside 
-  - name: Jianhai Zhang
-    affiliation: University of California Riverside 
-  - name: Gordon Mosher
-    affiliation: University of California Riverside 
-  - name: Thomas Girke
-    affiliation: University of California Riverside 
-    email: tgirke@ucr.edu
+title: '<span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny'
+author: "Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher and Thomas Girke"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`" 
 output:
   BiocStyle::html_document:
@@ -42,7 +27,6 @@ word-break: keep-all !important;
 word-wrap: initial !important;
 }
 ```
-
 
 ```{r style, echo = FALSE, results = 'asis', eval=TRUE}
 
@@ -414,67 +398,193 @@ Shiny application for interactive workflow management and results visualization 
 ## 
 
 
-## Visualization 
+# Visualization 
 
-*systemPipeShiny* offers interactive data visualization to users and supports graphics in workflow reports. In systemPipeShiny's visualization tab, there are many features for data visualization of various statistical results. Users can upload different input data types, and apply various options for preprocessing those datasets. Users can then create downstream analysis plots, as per the type of uploaded data. Some available plotting options include: bar plots of differentially expressed genes, heat maps, dendrogram, principal component analysis (PCA) plots, and multidimensional scaling (MDS) plots. Depending on the nature of the plots, there are also options to adjust the plot such as normalizing the data. Additionally, systemPipeShiny provides users with plot templates and plotting functions that they can then customize according to their necessities for visualization.
+*systemPipeShiny* offers interactive data visualization to users and supports graphics 
+in workflow reports. In systemPipeShiny's visualization tab, there are many features 
+for data visualization of various statistical results. Users can upload different 
+input data types, and apply various options for preprocessing those datasets. Users 
+can then create downstream analysis plots, as per the type of uploaded data. Some 
+available plotting options include: bar plots of differentially expressed genes, 
+heat maps, dendrogram, principal component analysis (PCA) plots, and multidimensional 
+scaling (MDS) plots. Depending on the nature of the plots, there are also options to 
+adjust the plot such as normalizing the data. Additionally, systemPipeShiny provides
+users with plot templates and plotting functions that they can then customize according
+to their necessities for visualization.
 
 Table with all exported functions
 
 | Function Name   | Description                                                     |
 |-----------------|-----------------------------------------------------------------|
 | `exploreDSS`    | Transform raw read counts using the \code{DESeq2} package       |
-| `plotExploreDSS`| Scatterplot of transformed counts from two samples              |
-| `plotPCA_sps`   | Plots PCA from a count matrix                                   |
-| `plotMDS`       | Plots MDS from a count matrix                                   |
-| `plotTSNE`      | Plots t-SNE from a count matrix                                 |
-| `plotGLM`       | Plots GLM-PCA from a count matrix                               |
-| `plotHeatMap`   | Plots Heatmap from a count matrix                               |
-| `plot_MA`       | Plots a clustering dendrogram from a count matrix               |
-| `run_volcano`   | Plots a Volcano Plot from an edgeR or deseq2 dataframe          |
-| `deg_edgeR`     | Plots barplot of DEGs from a count matrix, returns an edgeR DF  |
-| `deg_deseq2`    | Plots barplot of DEGs from a count matrix, returns an deseq2 DF |
+| `exploreDDSplot`| Scatterplot of transformed counts reads                         |
+| `PCAplot`       | Plots PCA from a count matrix                                   |
+| `MDSplot`       | Plots MDS from a count matrix                                   |
+| `tSNEplot`      | Plots	t-Distributed Stochastic Neighbor embedding               |
+| `GLMplot`       | Plots Dimension Reduction with GLMplot                          |
+| `heatMaplot`    | Plots Hierarchical Clustering HeatMap                           |
+| `MAplot`        | MA-Plot from base means and log fold changes                    |
+| `volcanoplot`   | Plots a Volcano Plot from an DEG analyis results                |
+| `hclustplot`    | Plots Hierarchical Clustering Dendrogram                        |
 
-### Data transformations and visualization
+## Data transformations and visualization
 
-To show the effect of the transformation, in the figure below we plot the first sample against the second, first simply using the `log2` function, and then using the `VST` and `rlog-transformed` values. For the log2 approach, we need to first estimate size factors to account for sequencing depth, and then specify `normalized=TRUE`. Sequencing depth correction is done automatically for the `vst` and `rlog.`
+To show the effect of the transformation, in the figure below we plot the first 
+sample against the second, first simply using the `log2` function, and then 
+using the `VST` and `rlog-transformed` values. For the log2 approach, we need 
+to first estimate size factors to account for sequencing depth, and then specify 
+`normalized=TRUE`. Sequencing depth correction is done automatically for the `vst` and `rlog.`
 
-```{r, eval=FALSE}
+```{r exploreDDSplot, eval=TRUE, warning=FALSE, message=FALSE}
+## Targets file
+targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+targets <- read.delim(targetspath, comment="#")
+cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
+## Count table file
+countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+countMatrix <- read.delim(countMatrixPath, row.names=1)
+## Plot
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c(3,4))
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], samples=c("M1A", "M1B"), save = TRUE,
+             filePlot = "transf_deseq2.pdf")
+## Plot Correlogram
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c("M1A", "M1B"), scattermatrix=TRUE)
+```
+
+## Dendrogram
+
+A dendrogram of the results of hierarchical clustering performed with the `hclust` 
+function can be created with the `hclustplot` function. The sample-wise Spearman 
+correlation coefficients are computed, and then the results are transformed to a 
+distance matrix before the hierarchical clustering is performed. The count data
+frame can be transformed with the `rlog` or Variance-stabilizing Transformation 
+(`vst`) methods from the `DESeq2` package, or can be done without transformation. 
+
+```{r dendrogram, eval=TRUE, warning=FALSE, message=FALSE}
+## Data transformation
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+## Plot
+hclustplot(exploredds, method = "spearman")
+hclustplot(exploredds, method = "spearman", savePlot = TRUE, filePlot = "cor.pdf")
+```
+
+## Heatmap
+
+A heatmap of the results of hierarchical clustering performed with the `hclust` 
+function can be created with the `heatMaplot` function. The sample-wise Spearman 
+correlation coefficients are computed before hierarchical clustering. The count 
+data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`)
+methods from the `DESeq2` package, or can be done without transformation. 
+
+### Samples
+
+```{r heatMaplot_samples, eval=TRUE, warning=FALSE, message=FALSE}
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+heatMaplot(exploredds, clust="samples")
+heatMaplot(exploredds, clust="samples", plotly = TRUE)
+```
+
+### Individuals genes identified in DEG analysis
+
+```{r heatMaplot_genes, eval=TRUE, warning=FALSE, message=FALSE}
+### DEG analysis with `systemPipeR`
+degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
+DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
+### Plot
+heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))))
+heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))), plotly = TRUE)
+```
+
+## PCA plot
+
+A Principal Component Analysis (PCA) plot can be created using the `PCAplot` 
+function which uses the `DESeq2` package. The input data frame can be transformed 
+with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` 
+package, or can be done without transformation. 
+
+```{r pcaplot, eval=TRUE, warning=FALSE, message=FALSE}
+## Data transformation
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+## Plot
+PCAplot(exploredds, plotly = FALSE)
+PCAplot(exploredds, plotly = TRUE)
+```
+
+In addition, generalized principal component analysis (GLM-PCA) for dimension 
+reduction of non-normally distributed data can be plotted with the `GLMplot` 
+function [@Townes2019]. This option does not offer transformation or normalization of raw data.
+
+```{r glmplot, eval=TRUE, warning=FALSE, message=FALSE}
+## Data transformation
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
+## Plot
+GLMplot(exploredds, plotly = FALSE)
+GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GML.pdf")
+```
+
+## MDS plot
+
+A Multidimensional Scaling (MDS) plot can be created using the `MDSplot` function. 
+The input data frame can be transformed with either the `rlog` or Variance-stabilizing
+Transformation (`vst`) methods from the `DESeq2` package. From the input data, 
+it computes a spearman correlation-based distance matrix and performs MDS analysis on it.
+
+```{r mdsplot, eval=TRUE, warning=FALSE, message=FALSE}
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+MDSplot(exploredds, plotly = FALSE)
+```
+
+## t-SNE plot
+
+A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created
+using the `tSNEplot` function, which uses the `Rtsne` package [@Krijthe2015] to 
+compute t-SNE values. The function removes duplicates in the input data frame, 
+sets a seed for reproducibility, performs an initial PCA step. The function also 
+allows for a user-set perplexity value for the computation. 
+
+```{r tSNEplot, eval=TRUE, warning=FALSE, message=FALSE}
 targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
 targets <- read.delim(targetspath, comment="#")
 cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
 countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
 countMatrix <- read.delim(countMatrixPath, row.names=1)
-plot.exploreDDS(countMatrix, targets, cmp = cmp[[1]], preFilter = 10, sample = c(3,4))
+set.seed(42) ## Set a seed if you want reproducible results
+tSNEplot(countMatrix, targets, perplexity = 5)
+```
+
+## MA-Plot
+
+An MA plot is an application of a Bland–Altman plot for visual representation of
+genomic data. The plot visualizes the differences between measurements taken in 
+two samples, by transforming the data onto M (log ratio) and A (mean average) scales, 
+then plotting these values.
+
+```{r MAplot, eval=TRUE, warning=FALSE, message=FALSE}
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
+MAplot(exploredds, plotly = FALSE)
+MAplot(exploredds, plotly = TRUE)
+```
+
+## Volcano plot
+
+A volcano plot of DEGs data frame can be plotted using the function `volcanoplot`. 
+Using the resulting data frame from `run_edgeR` or `run_deseq2`, the function 
+plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for 
+the sample comparison specified by the user.
+
+```{r volcanoplot, eval=TRUE, warning=FALSE, message=FALSE}
+### DEG analysis with `systemPipeR`
+degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
+DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
+## Plot
+volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 2, FDR = 10))
+volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 1, FDR = 20), genes = "ATCG00280")
 ```
 
 ## Barplot
 
 A barplot for analysis of differentially expressed genes (DEGs) can be plotted using functions `deg_edgeR` or `deg_deseq2`. The function `deg_edgeR` uses the `edgeR` package [@Robinson2010-uk] to create an `edgeR` data frame. Alternatively, the function `deg_deseq2` uses the `DESeq2` package [@Love2014-sh] to create an `DESeq2` data frame. Using the `filterDEGs` function, it filters and plots DEG results for up and down regulated genes in a barplot. 
 
-## Heatmap
-
-A heatmap of the results of hierarchical clustering performed with the `hclust` function can be created with the `run_HEAT` function. The sample-wise Spearman correlation coefficients are computed before hierarchical clustering. The count data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package, or can be done without transformation. 
-
-## Dendrogram
-
-A dendrogram of the results of hierarchical clustering performed with the `hclust` function can be created with the `run_CLUST` function. The sample-wise Spearman correlation coefficients are computed, and then the results are transformed to a distance matrix before the hierarchical clustering is performed. The count data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package, or can be done without transformation. 
-
-## t-SNE plot
-
-A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created using the `run_TSNE` function, which uses the `Rtsne` package [@Krijthe2015] to compute t-SNE values. The function removes duplicates in the input data frame, sets a seed for reproducility, performs an initial PCA step. The function also allows for a user-set perplexity value for the computation. 
-
-## PCA plot
-
-A Principal Component Analysis (PCA) plot can be created using the `run_PCA` function which uses the `DESeq2` package. The input data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package, or can be done without transformation. 
-In addition, generalized principal component analysis (GLM-PCA) for dimension reduction of non-normally distributed data can be plotted with the `run_GLM` function [@Townes2019]. This option does not offer transformation or normalization of raw data.
-
-## MDS plot
-
-A Multidimensional Scaling (MDS) plot can be created using the `run_MDS` function.  The input data frame can be transformed with either the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` package. From the input data, it computes a spearman correlation-based distance matrix and performs MDS analysis on it.
-
-## Volcano plot
-
-A volcano plot of DEGs data frame can be plotted using the function `run_volcano`. Using the resulting data frame from `run_edgeR` or `run_deseq2`, the function plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for the sample comparison specified by the user.
 
 # How to use this function on the Shiny application
 
