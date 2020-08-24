@@ -9,3 +9,5 @@ packrat/src/
 rsconnect/
 vignettes/systemPipeShiny_cache/*
 vignettes/*.html
+docs/reference/SPS20*
+docs/reference/config

@@ -1,7 +1,0 @@
-config1:
-    sub1: xx
-sub2: xx
-
-config2: [1, 2, 3]
-
-config3: "aaaaaa"
