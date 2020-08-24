@@ -39,6 +39,6 @@ countMatrix <- read.delim(countMatrixPath, row.names=1)
 ## Plot
 exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
 GLMplot(exploredds, plotly = FALSE)
-GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GML.pdf")
+GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GLM.pdf")
 
 }

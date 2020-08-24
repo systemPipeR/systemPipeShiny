@@ -519,7 +519,7 @@ function [@Townes2019]. This option does not offer transformation or normalizati
 exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
 ## Plot
 GLMplot(exploredds, plotly = FALSE)
-GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GML.pdf")
+GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GLM.pdf")
 ```
 
 ## MDS plot

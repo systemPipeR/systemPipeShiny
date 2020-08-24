@@ -429,7 +429,7 @@ PCAplot <- function(exploredds, plotly = FALSE, savePlot = FALSE, filePlot = NUL
 #' ## Plot
 #' exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
 #' GLMplot(exploredds, plotly = FALSE)
-#' GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GML.pdf")
+#' GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GLM.pdf")
 #' 
 #' @export
 #' @importFrom DESeq2 counts
@@ -653,8 +653,8 @@ MAplot <- function(exploredds, lfcShrink= FALSE, padj.cutoff = 0.05, plotly = FA
         ggplot2::geom_point(ggplot2::aes(colour = padj < padj.cutoff), size = 0.5) +
         ggplot2::scale_colour_manual(name = paste0('padj < ', padj.cutoff), 
                                      values = stats::setNames(c('red','grey'), c(TRUE, FALSE))) +
-        ggplot2::scale_x_continuous(trans = "log10", limits = c(0.1,300000)) + 
-        ggplot2::geom_smooth(colour = "red")
+        ggplot2::scale_x_continuous(trans = "log10", limits = c(0.1,300000))
+        #ggplot2::geom_smooth(colour = "red")
     ## Save plot
     if (savePlot == TRUE) {
         ggplot2::ggsave(plot = plot, filename = filePlot)
