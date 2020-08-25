@@ -34,10 +34,12 @@ options(width=60, max.print=1000)
 knitr::opts_chunk$set(
     eval=as.logical(Sys.getenv("KNITR_EVAL", "TRUE")),
     cache=as.logical(Sys.getenv("KNITR_CACHE", "TRUE")), 
-    tidy.opts=list(width.cutoff=60), tidy=TRUE)
+    tidy.opts=list(width.cutoff=60), 
+    tidy=TRUE,
+    eval = FALSE)
 ```
 
-```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=TRUE}
+```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=FALSE}
 suppressPackageStartupMessages({
     library(systemPipeShiny)
     # library(systemPipeR)
@@ -46,7 +48,7 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 
 ```
 
-```{r sps-css, results = 'asis', echo=FALSE}
+```{r sps-css, results = 'asis', echo=FALSE, eval=TRUE}
 cat("<style>")
 readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")) %>% 
 cat(sep = "\n")
@@ -54,7 +56,7 @@ cat("</style>")
 ```
 
 
-```{r logo, echo=FALSE, out.width='70%', fig.align='center', fig.width=12}
+```{r logo, echo=FALSE, out.width='70%', fig.align='center', fig.width=12, eval=TRUE}
 knitr::include_graphics(path = "../inst/app/www/img/sps.png")
 ```
 
@@ -183,11 +185,15 @@ into two categories of tabs (*Fig 1. a-b*).
 **Figure 1. SPS UI**
 </center>
 
-The app UI structure can be understand as following(*Fig 2*). Users first need to choose 
+The app UI structure can be understood as following(*Fig 2*). Users first need to choose 
 either the workflow or visualization part to start with. Workflow part helps users to 
 prepare data analysis workflow files in [systemPipeR](http://systempipe.org/)(SPR) format. 
 Visualization part helps users to make different types of plots, take interactive snapshot 
 of plots and combine/compare different plots on the "Canvas" workbench. 
+
+To start, click on the "Workflow Management" or "Visualization" on the left navigation 
+bar will direct you to the workflow or visualization main page. There will be some 
+general summary and instructions.
 
 <center>
 ![](./img/sps_structure.png)
@@ -260,7 +266,16 @@ and read the instructions there.
 There are two ways to make a plot:
 
 1. **Begin with a data tab**: If you know have run some data analysis workflows and have obtained results but don't know what you can plot from these results, browse the table on visualization main tab. The table is sorted by workflows as rows. Based on the data type you have, you can click on the data type in the table, you will jump to the corresponding data preparation tab and you will see what plots you can make after data preparation.
-2. **Begin with a plot tab**: If you already know what plots you want, there is a gallery on visualization main tab. You can click on the plot you want and it will jump to the plot tab directly. You will see in order to make this plot what input data need to be prepared. By choosing under the **Data Preparation**, you will go to a data tab and once you have prepared the required data, you will be guided back to this plotting tab.
+2. **Begin with a plot tab**: If you already know what plots you want, there is a gallery on visualization main tab. You can click on the plot you want and it will jump to the plot tab directly. On the redirected plot tab, you will see to make this plot what input data need to be prepared. By choosing under the **Data Preparation**, you will go to a data tab and once you have prepared the required data, you will be guided back to this plotting tab to make the plot.
+
+You can take a look of the VS table and VS gallery on the VS main page by clicking 
+"Visualization" on the left navigation bar (*Fig.4*).
+
+<center>
+![vs_main](./img/sps_vs_main.png)
+**Figure 4. Summary table and gallery on VS main tab**
+</center>
+
 
 All VS tabs has a start-up button
 <button  type="button" class="btn btn-default">Start with this tab</button>
@@ -276,12 +291,12 @@ show up and you can continue.
 
 Once you have passed the package checks, you should see the data tab main UI. Please 
 read the instructions on the top of each tab for how to prepare your data and data 
-format requirements. All SPS data tabs comes with an example data set, and if you
+format requirements. All SPS data tabs come with an example data set, and if you
 are not sure what data to prepare, you can first switch to the example data set and 
 play with it. When you are familiar with the tab, you can upload your own data set. 
 
-```{r , echo=FALSE}
-HTML('
+```{r , echo=FALSE, eval=TRUE}
+shiny::HTML('
 <div id="df_template-data_source" class="radioGroupButtons shiny-bound-input" style="padding-left: 60px;">
   <div aria-label="..." class="btn-group btn-group-justified btn-group-container-sw" data-toggle="buttons" role="group">
     <div class="btn-group btn-group-toggle" role="group">
@@ -304,8 +319,8 @@ HTML('
 
 <p style="color:var(--info)">Note: Upload file selection can be different depending on the mode, see [App options](#app-options)</p>
 
-```{r , echo=FALSE}
-HTML('
+```{r , echo=FALSE, eval=TRUE}
+shiny::HTML('
 <div class="input-group" style="width: 30%; padding-left: 60px">
   <label class="input-group-btn input-group-prepend">
     <span class="btn btn-file btn-default">
@@ -318,6 +333,65 @@ HTML('
 ')
 ```
 
+
+After you have used the example or uploaded the example data, the data table will 
+be displayed in the *Input Data* section. Depending on what you have uploaded and 
+the file format, you may need to change the file delimiter and the comment character. 
+They look like following:
+```{r , echo=FALSE, eval=TRUE}
+shiny::HTML('
+<div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px;">,</button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <label class="dropdown-item">Space</label>
+        <label class="dropdown-item">Tab</label>
+        <label class="dropdown-item">|</label>
+        <label class="dropdown-item">:</label>
+        <label class="dropdown-item">;</label>
+    </div>
+</div>
+<input type="text" value="#" placeholder="">
+')
+```
+
+The table will be displayed like this: 
+
+<center>
+![data_table](./img/sps_data_table.png)
+**Figure 5. Data tab input table**
+</center>
+
+You can filter data by key words or by range if the column is numeric. There are 
+some other options on the top-left corner where you can copy data to clipboard, export 
+as csv, Excel and other functions. Editing the table content is technically possible but 
+disabled over here, because one should not edit large data table by hand and workload will be 
+heavy for the sever. SPS is not designed for this purpose. Please edit the input data 
+in a professional data editing tool before upload.
+
+When you are satisfied with the input data, you can preprocess the filtered data 
+by selecting a preprocess method and hit the "Preprocess" button to start. The preprocess
+takes place in the server-side. When it is done, you will see some green messages 
+on the right-bottom corner. Otherwise, you will see orange warning boxes or red 
+error boxes telling you the details.
+
+```{r , echo=FALSE, eval=TRUE}
+shiny::HTML('
+<div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px;">Do nothing</button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <label class="dropdown-item">Method 1</label>
+        <label class="dropdown-item">Method 2</label>
+    </div>
+</div>
+<button  class="btn btn-default">
+     <i class="fa fa-paper-plane"></i>
+     Preprocess
+</button>
+')
+```
+
+
+
 ### Plot tabs
 
 
@@ -325,7 +399,7 @@ HTML('
 
 <center>
 ![systemPipeShiny](./img/sps_ui_canvas.png)
-**Figure 4. Canvas**
+**Figure 6. Canvas**
 </center>
 
 # Configuration
@@ -435,151 +509,151 @@ using the `VST` and `rlog-transformed` values. For the log2 approach, we need
 to first estimate size factors to account for sequencing depth, and then specify 
 `normalized=TRUE`. Sequencing depth correction is done automatically for the `vst` and `rlog.`
 
-```{r exploreDDSplot, eval=TRUE, warning=FALSE, message=FALSE}
-## Targets file
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
-## Count table file
-countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countMatrix <- read.delim(countMatrixPath, row.names=1)
-## Plot
-exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c(3,4))
-exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], samples=c("M1A", "M1B"), save = TRUE,
-             filePlot = "transf_deseq2.pdf")
-## Plot Correlogram
-exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c("M1A", "M1B"), scattermatrix=TRUE)
-```
-
-## Dendrogram
-
-A dendrogram of the results of hierarchical clustering performed with the `hclust` 
-function can be created with the `hclustplot` function. The sample-wise Spearman 
-correlation coefficients are computed, and then the results are transformed to a 
-distance matrix before the hierarchical clustering is performed. The count data
-frame can be transformed with the `rlog` or Variance-stabilizing Transformation 
-(`vst`) methods from the `DESeq2` package, or can be done without transformation. 
-
-```{r dendrogram, eval=TRUE, warning=FALSE, message=FALSE}
-## Data transformation
-exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-## Plot
-hclustplot(exploredds, method = "spearman")
-hclustplot(exploredds, method = "spearman", savePlot = TRUE, filePlot = "cor.pdf")
-```
-
-## Heatmap
-
-A heatmap of the results of hierarchical clustering performed with the `hclust` 
-function can be created with the `heatMaplot` function. The sample-wise Spearman 
-correlation coefficients are computed before hierarchical clustering. The count 
-data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`)
-methods from the `DESeq2` package, or can be done without transformation. 
-
-### Samples
-
-```{r heatMaplot_samples, eval=TRUE, warning=FALSE, message=FALSE}
-exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-heatMaplot(exploredds, clust="samples")
-heatMaplot(exploredds, clust="samples", plotly = TRUE)
-```
-
-### Individuals genes identified in DEG analysis
-
-```{r heatMaplot_genes, eval=TRUE, warning=FALSE, message=FALSE}
-### DEG analysis with `systemPipeR`
-degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
-DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
-### Plot
-heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))))
-heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))), plotly = TRUE)
-```
-
-## PCA plot
-
-A Principal Component Analysis (PCA) plot can be created using the `PCAplot` 
-function which uses the `DESeq2` package. The input data frame can be transformed 
-with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` 
-package, or can be done without transformation. 
-
-```{r pcaplot, eval=TRUE, warning=FALSE, message=FALSE}
-## Data transformation
-exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-## Plot
-PCAplot(exploredds, plotly = FALSE)
-PCAplot(exploredds, plotly = TRUE)
-```
-
-In addition, generalized principal component analysis (GLM-PCA) for dimension 
-reduction of non-normally distributed data can be plotted with the `GLMplot` 
-function [@Townes2019]. This option does not offer transformation or normalization of raw data.
-
-```{r glmplot, eval=TRUE, warning=FALSE, message=FALSE}
-## Data transformation
-exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
-## Plot
-GLMplot(exploredds, plotly = FALSE)
-GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GLM.pdf")
-```
-
-## MDS plot
-
-A Multidimensional Scaling (MDS) plot can be created using the `MDSplot` function. 
-The input data frame can be transformed with either the `rlog` or Variance-stabilizing
-Transformation (`vst`) methods from the `DESeq2` package. From the input data, 
-it computes a spearman correlation-based distance matrix and performs MDS analysis on it.
-
-```{r mdsplot, eval=TRUE, warning=FALSE, message=FALSE}
-exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-MDSplot(exploredds, plotly = FALSE)
-```
-
-## t-SNE plot
-
-A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created
-using the `tSNEplot` function, which uses the `Rtsne` package [@Krijthe2015] to 
-compute t-SNE values. The function removes duplicates in the input data frame, 
-sets a seed for reproducibility, performs an initial PCA step. The function also 
-allows for a user-set perplexity value for the computation. 
-
-```{r tSNEplot, eval=TRUE, warning=FALSE, message=FALSE}
-targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-targets <- read.delim(targetspath, comment="#")
-cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
-countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-countMatrix <- read.delim(countMatrixPath, row.names=1)
-set.seed(42) ## Set a seed if you want reproducible results
-tSNEplot(countMatrix, targets, perplexity = 5)
-```
-
-## MA-Plot
-
-An MA plot is an application of a Bland–Altman plot for visual representation of
-genomic data. The plot visualizes the differences between measurements taken in 
-two samples, by transforming the data onto M (log ratio) and A (mean average) scales, 
-then plotting these values.
-
-```{r MAplot, eval=TRUE, warning=FALSE, message=FALSE}
-exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
-MAplot(exploredds, plotly = FALSE)
-MAplot(exploredds, plotly = TRUE)
-```
-
-## Volcano plot
-
-A volcano plot of DEGs data frame can be plotted using the function `volcanoplot`. 
-Using the resulting data frame from `run_edgeR` or `run_deseq2`, the function 
-plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for 
-the sample comparison specified by the user.
-
-```{r volcanoplot, eval=TRUE, warning=FALSE, message=FALSE}
-### DEG analysis with `systemPipeR`
-degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
-DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
-## Plot
-volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 2, FDR = 10))
-volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 1, FDR = 20), genes = "ATCG00280")
-```
+.```{r exploreDDSplot, eval=TRUE, warning=FALSE, message=FALSE}
+.## Targets file
+.targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+.targets <- read.delim(targetspath, comment="#")
+.cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
+.## Count table file
+.countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+.countMatrix <- read.delim(countMatrixPath, row.names=1)
+.## Plot
+.exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c(3,4))
+.exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], samples=c("M1A", "M1B"), save = TRUE,
+.             filePlot = "transf_deseq2.pdf")
+.## Plot Correlogram
+.exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c("M1A", "M1B"), scattermatrix=TRUE)
+.```
+.
+.## Dendrogram
+.
+.A dendrogram of the results of hierarchical clustering performed with the `hclust` 
+.function can be created with the `hclustplot` function. The sample-wise Spearman 
+.correlation coefficients are computed, and then the results are transformed to a 
+.distance matrix before the hierarchical clustering is performed. The count data
+.frame can be transformed with the `rlog` or Variance-stabilizing Transformation 
+.(`vst`) methods from the `DESeq2` package, or can be done without transformation. 
+.
+.```{r dendrogram, eval=TRUE, warning=FALSE, message=FALSE}
+.## Data transformation
+.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+.## Plot
+.hclustplot(exploredds, method = "spearman")
+.hclustplot(exploredds, method = "spearman", savePlot = TRUE, filePlot = "cor.pdf")
+.```
+.
+.## Heatmap
+.
+.A heatmap of the results of hierarchical clustering performed with the `hclust` 
+.function can be created with the `heatMaplot` function. The sample-wise Spearman 
+.correlation coefficients are computed before hierarchical clustering. The count 
+.data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`)
+.methods from the `DESeq2` package, or can be done without transformation. 
+.
+.### Samples
+.
+.```{r heatMaplot_samples, eval=TRUE, warning=FALSE, message=FALSE}
+.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+.heatMaplot(exploredds, clust="samples")
+.heatMaplot(exploredds, clust="samples", plotly = TRUE)
+.```
+.
+.### Individuals genes identified in DEG analysis
+.
+.```{r heatMaplot_genes, eval=TRUE, warning=FALSE, message=FALSE}
+.### DEG analysis with `systemPipeR`
+.degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
+.DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
+.### Plot
+.heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))))
+.heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))), plotly = TRUE)
+.```
+.
+.## PCA plot
+.
+.A Principal Component Analysis (PCA) plot can be created using the `PCAplot` 
+.function which uses the `DESeq2` package. The input data frame can be transformed 
+.with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` 
+.package, or can be done without transformation. 
+.
+.```{r pcaplot, eval=TRUE, warning=FALSE, message=FALSE}
+.## Data transformation
+.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+.## Plot
+.PCAplot(exploredds, plotly = FALSE)
+.PCAplot(exploredds, plotly = TRUE)
+.```
+.
+.In addition, generalized principal component analysis (GLM-PCA) for dimension 
+.reduction of non-normally distributed data can be plotted with the `GLMplot` 
+.function [@Townes2019]. This option does not offer transformation or normalization of raw data.
+.
+.```{r glmplot, eval=TRUE, warning=FALSE, message=FALSE}
+.## Data transformation
+.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
+.## Plot
+.GLMplot(exploredds, plotly = FALSE)
+.GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GLM.pdf")
+.```
+.
+.## MDS plot
+.
+.A Multidimensional Scaling (MDS) plot can be created using the `MDSplot` function. 
+.The input data frame can be transformed with either the `rlog` or Variance-stabilizing
+.Transformation (`vst`) methods from the `DESeq2` package. From the input data, 
+.it computes a spearman correlation-based distance matrix and performs MDS analysis on it.
+.
+.```{r mdsplot, eval=TRUE, warning=FALSE, message=FALSE}
+.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+.MDSplot(exploredds, plotly = FALSE)
+.```
+.
+.## t-SNE plot
+.
+.A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created
+.using the `tSNEplot` function, which uses the `Rtsne` package [@Krijthe2015] to 
+.compute t-SNE values. The function removes duplicates in the input data frame, 
+.sets a seed for reproducibility, performs an initial PCA step. The function also 
+.allows for a user-set perplexity value for the computation. 
+.
+.```{r tSNEplot, eval=TRUE, warning=FALSE, message=FALSE}
+.targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+.targets <- read.delim(targetspath, comment="#")
+.cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
+.countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+.countMatrix <- read.delim(countMatrixPath, row.names=1)
+.set.seed(42) ## Set a seed if you want reproducible results
+.tSNEplot(countMatrix, targets, perplexity = 5)
+.```
+.
+.## MA-Plot
+.
+.An MA plot is an application of a Bland–Altman plot for visual representation of
+.genomic data. The plot visualizes the differences between measurements taken in 
+.two samples, by transforming the data onto M (log ratio) and A (mean average) scales, 
+.then plotting these values.
+.
+.```{r MAplot, eval=TRUE, warning=FALSE, message=FALSE}
+.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
+.MAplot(exploredds, plotly = FALSE)
+.MAplot(exploredds, plotly = TRUE)
+.```
+.
+.## Volcano plot
+.
+.A volcano plot of DEGs data frame can be plotted using the function `volcanoplot`. 
+.Using the resulting data frame from `run_edgeR` or `run_deseq2`, the function 
+.plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for 
+.the sample comparison specified by the user.
+.
+.```{r volcanoplot, eval=TRUE, warning=FALSE, message=FALSE}
+.### DEG analysis with `systemPipeR`
+.degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
+.DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
+.## Plot
+.volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 2, FDR = 10))
+.volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 1, FDR = 20), genes = "ATCG00280")
+.```
 
 ## Barplot
 
