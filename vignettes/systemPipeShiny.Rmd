@@ -37,6 +37,7 @@ knitr::opts_chunk$set(
     tidy.opts=list(width.cutoff=60), 
     tidy=TRUE,
     eval = FALSE)
+shiny::tagList(rmarkdown::html_dependency_font_awesome())
 ```
 
 ```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=FALSE}
@@ -44,7 +45,6 @@ suppressPackageStartupMessages({
     library(systemPipeShiny)
     # library(systemPipeR)
 })
-htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 
 ```
 
@@ -180,8 +180,8 @@ SPS provides two core components -- workflow management and data visualization.
 The UI is designed as a dashboard(*Fig 1*). Individual components are classified 
 into two categories of tabs (*Fig 1. a-b*).
 
-<center>
-![](./img/sps_ui_main.jpg)
+<center id="sps_ui">
+![sps_ui](./img/sps_ui_main.jpg)
 **Figure 1. SPS UI**
 </center>
 
@@ -195,12 +195,12 @@ To start, click on the "Workflow Management" or "Visualization" on the left navi
 bar will direct you to the workflow or visualization main page. There will be some 
 general summary and instructions.
 
-<center>
-![](./img/sps_structure.png)
+<center id="sps_structure">
+![SPS_structure](./img/sps_structure.png)
 **Figure 2. SPS Structure**
 </center>
 
-# UI details
+# UI details(for users)
 ## Workflow management 
 
  Files can be prepared for a data analysis workflow including the metadata(targets) file, workflow 
@@ -271,7 +271,7 @@ There are two ways to make a plot:
 You can take a look of the VS table and VS gallery on the VS main page by clicking 
 "Visualization" on the left navigation bar (*Fig.4*).
 
-<center>
+<center id="vs_main">
 ![vs_main](./img/sps_vs_main.png)
 **Figure 4. Summary table and gallery on VS main tab**
 </center>
@@ -390,16 +390,98 @@ shiny::HTML('
 ')
 ```
 
+Once the preprocess is done, different plot options will show up as a gallery that 
+is similar to the one on the VS main tab([*Fig.4*](#vs_main)), but is only limited to a few possible plots. 
 
+What kinds of preprocess methods, how many possible plotting options available are purely depend on 
+the tab developers. Read instructions on the top of each tab will give you better glues 
+of what is possible on the tab. 
 
 ### Plot tabs
 
+When you have prepared data from a data tab and jump to a plotting tab. Again, read the instructions(Description) on the top first. 
+
+There will be a "Data preparation" section right below the "Description" section(*Fig. 6*).
+Most plots only require one type of data input. If that is the case, select which tab your 
+data in coming from by the dropdown menu under "*select which tab(s) your data is coming from:*". 
+Even if a plot tab only has one type data input, but you need to clarify where the data is coming from,
+because different data tabs can prepare the same kind of input data. See [Figure 2](#sps_structure) 
+for details of relationship between data and plot tabs.
+
+Some plot tabs require more than one type of data input. For example, experimental 
+data and sample information(metadata), just like *Figure 6*. In this case, you need to 
+go to different data tab(s) and prepare other set(s) of data like usual. The "data 
+preparation" should clearly state how many data sets you need to have and where 
+you can prepare them.
+
+If you are not sure if you have the required data set(s), click on the 
+<button type="button" class="btn btn-default">
+        Start/Reload
+</button> 
+button and SPS will check/validate required data for you. If everything is okay, 
+there will be a green message on the right-bottom corner and you should see some 
+plotting control elements appear on the "Plotting" section. These are plot control 
+UIs. They control how the plot is generated, such as what the plot title is, where the 
+legend location is, what colors to use for samples, and more. These part is defined 
+by the tab developer, so they should give you instructions in "Description" section. 
+
+<center>
+![plot_data_prep](./img/sps_plot_data_prep.png)
+**Figure 6. Plot Data Preparation**
+</center>
+
+Click on the 
+<button type="button" class="btn btn-default">
+    <i class="fa fa-paper-plane"></i>
+        Render/Snapshot plot
+</button> 
+button the **first** time will generate the plot and you can tweaking different plot 
+control options to change your plot looking. You can drag the plot 
+by <img src=img/resize_icon.png style="display: inline; padding-left:0; width:10px; height:10px;"> on
+the bottom-right corner of the plot to 
+resize your plot to unlimited height and maximum your screen width. 
+
+- You can then right click to save the plot as an image if the plot is rendered by 
+[ggplot](https://ggplot2.tidyverse.org/) or some base R plots. 
+- Most SPS example/built-in plots are rendered by [Plotly](https://plotly.com/r/) 
+and they are interative plots, so you cannot right-click. 
+Instead, there is the <i class="fa fa-camera"></i> icon 
+on plot you click to download the screenshot. 
+
+Both methods take the screenshot of 
+your plot "what you see is what you get", meaning the height and width will be the same as 
+what you see on SPS when you download the screenshot. Of course, you can use some other 
+third-party screenshot tools as well. 
+
+Click on the 
+<button type="button" class="btn btn-default">
+    <i class="fa fa-paper-plane"></i>
+        Render/Snapshot plot
+</button> 
+button the **second** time and on will take a "snapshot" of current plot. You should see 
+the message on bottom-right to info you that a snapshot of current plot has been sent 
+to snapshot. 
 
 ## Snapshot and Canvas
 
+Snapshot and Canvas are part of SPS VS functionality and are designed for users to 
+ - combine different kinds of plots from different plot tabs.
+ - compare the same plot at different state(under different plot options)
+ 
+### Snapshot
+
+When a snapshot is taken from a plot tab, it records the plot states and control options 
+and can later be displayed on the Canvas. For example, there is a plotting option to 
+choose 5 samples on the plot and then you take a snapshot1. When this snapshot1 is displayed 
+on the Canvas, there will be 
+It is similar to a screenshot of a plot, but this "screenshot" is still interactive if 
+the plot is rendered by an interactive plotting library, like a plotly plot. 
+
+### Canvas
+
 <center>
 ![systemPipeShiny](./img/sps_ui_canvas.png)
-**Figure 6. Canvas**
+**Figure 7. Canvas**
 </center>
 
 # Configuration
