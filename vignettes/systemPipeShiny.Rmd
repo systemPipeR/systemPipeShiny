@@ -465,23 +465,46 @@ to snapshot.
 ## Snapshot and Canvas
 
 Snapshot and Canvas are part of SPS VS functionality and are designed for users to 
- - combine different kinds of plots from different plot tabs.
- - compare the same plot at different state(under different plot options)
+
+- combine different kinds of plots from different plot tabs.
+- compare the same plot at different state(under different plot options)
  
 ### Snapshot
 
 When a snapshot is taken from a plot tab, it records the plot states and control options 
-and can later be displayed on the Canvas. For example, there is a plotting option to 
-choose 5 samples on the plot and then you take a snapshot1. When this snapshot1 is displayed 
-on the Canvas, there will be 
+and can later be displayed on the Canvas. One example will be: there is a plotting option to 
+choose how many samples on the plot and then you choose 5 and take a snapshot1. When this snapshot1 is displayed 
+on the Canvas, there will be 5 samples. Later, you change the sample to 10 and take snapshot2. At this point, 
+snapshot1 and snapshot2 will both be displayed on Canvas and one plot has 5 samples one has 10. These two plots on 
+the Canvas are now independent from each other and both independent to the original plot on the plot tab. Whatever
+the additional change you make on the plot tab, these two snapshots will not be affected.
+
 It is similar to a screenshot of a plot, but this "screenshot" is still interactive if 
 the plot is rendered by an interactive plotting library, like a plotly plot. 
+
+#### Manage snapshots
+
+Snapshots can be managed by clicking *(Snapshots <i class="fa fa-camera"></i>)* on the 
+very top banner of SPS app. There will be dropdown tab displayed(*Fig.7*).
+
+- On top section:
+    - Left: your current snapshots 
+    - Right: you can drag a snapshot to right side and click the destroy to permanently delete unwanted snapshots.
+- Bottom section: You can download current snapshots in a compressed file and later upload it back to SPS. In this way, you can keep your snapshots and resume in a later time. 
+
+<p style="color:var(--info)">Note: Downloaded snapshots are encrypted for app security reasons. Each SPS project has its own encryption key, so you cannot upload snapshots to a different SPS project. You need to contact the project owner to decrypt the snapshot file, use another project's key to encrypt it and then it can work in another project. See developer section for more details.</p>
+
+
+<center>
+![sps_snapshot](./img/sps_snapshot.png)
+**Figure 7. Snapshot management**
+</center>
 
 ### Canvas
 
 <center>
 ![systemPipeShiny](./img/sps_ui_canvas.png)
-**Figure 7. Canvas**
+**Figure 8. Canvas**
 </center>
 
 # Configuration
