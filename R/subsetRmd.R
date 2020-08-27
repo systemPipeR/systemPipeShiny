@@ -2,7 +2,7 @@
 # depending on SPR, so copy this
 # function over
 
-subsetRmd <- function(p, input_steps=NULL,
+.subsetRmd <- function(p, input_steps=NULL,
                       exclude_steps=NULL,
                       p_out=NULL,
                       save_rmd=TRUE){
