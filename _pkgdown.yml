@@ -13,10 +13,10 @@ authors:
      href: https://github.com/gdmosher
    Thomas Girke:
      href: http://girke.bioinformatics.ucr.edu/
-     
+
 home:
   links:
-  - text: Download from GitHub 
+  - text: Download from GitHub
     href: https://github.com/systemPipeR/systemPipeShiny
   - text: Ask a question about systemPipeShiny
     href: https://support.bioconductor.org/
@@ -24,21 +24,27 @@ home:
     href: https://github.com/systemPipeR/systemPipeShiny/issues
 
 reference:
-  - title: Visualization 
+  - title: Visualization
     contents:
       - exploreDDS
-      - exploreDDSplot 
+      - exploreDDSplot
       - GLMplot
       - hclustplot
       - heatMaplot
       - MAplot
-      - MDSplot 
+      - MDSplot
       - PCAplot
-      - tSNEplot 
+      - tSNEplot
       - volcanoplot
-  - title: Shiny
+  - title: Framework
     contents:
-      - addData 
+      - title: Core
+        contents:
+          - sps
+          - spsInit
+  - title: Utility
+    contents:
+      - addData
       - getData
       - clearableTextInput
       - dynamicFile
@@ -47,7 +53,7 @@ reference:
       - gallery
       - genGallery
       - genHrefTable
-      - hexLogo 
+      - hexLogo
       - hexPanel
       - genHrefTab
       - hrefTab
@@ -55,13 +61,13 @@ reference:
       - loadDF
       - makePlotData
       - makePrepro
-      - msg 
-      - spsinfo 
-      - spswarn 
+      - msg
+      - spsinfo
+      - spswarn
       - spserror
-      - newTabPlot 
+      - newTabPlot
       - newTabData
-      - pgPaneUpdate 
+      - pgPaneUpdate
       - pgPaneUI
       - plotContainer
       - quiet
@@ -69,11 +75,9 @@ reference:
       - renderDesc
       - shinyCatch
       - shinyCheckPkg
-      - sps
       - spsDb
       - spsEncryption
       - spsHr
-      - spsInit
       - spsOption
       - spsValidate
       - tabTitle
