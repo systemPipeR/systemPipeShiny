@@ -24,7 +24,41 @@ home:
     href: https://github.com/systemPipeR/systemPipeShiny/issues
 
 reference:
-  - title: Visualization
+  - title: 1. SPS framework functions
+  - subtitle: SPS core
+    contents:
+      - sps
+      - spsInit
+  - subtitle: SPS config
+    contents:
+      - spsOption
+      - viewSpsDefaults
+  - subtitle: SPS tab manipulation
+    contents:
+      - newTabPlot
+      - newTabData
+      - removeSpsTab
+      - makePlotData
+      - makePrepro
+  - subtitle: SPS class
+    contents:
+      - spsDb
+      - spsEncryption
+      - plotContainer
+  - subtitle: SPS server side utility
+    contents:
+      - addData
+      - getData
+      - spsValidate
+  - subtitle: SPS HTML components and server functions
+    contents:
+      - dynamicFile
+      - dynamicFileServer
+      - genGallery
+      - genHrefTable
+      - genHrefTab
+      - spsHr
+  - title: 2. Visualization
     contents:
       - exploreDDS
       - exploreDDSplot
@@ -36,51 +70,31 @@ reference:
       - PCAplot
       - tSNEplot
       - volcanoplot
-  - title: Framework
+  - title: 3. General R utility
     contents:
-      - title: Core
-        contents:
-          - sps
-          - spsInit
-  - title: Utility
-    contents:
-      - addData
-      - getData
-      - clearableTextInput
-      - dynamicFile
-      - dynamicFileServer
       - emptyIsFalse
-      - gallery
-      - genGallery
-      - genHrefTable
-      - hexLogo
-      - hexPanel
-      - genHrefTab
-      - hrefTab
-      - hrefTable
-      - loadDF
-      - makePlotData
-      - makePrepro
       - msg
       - spsinfo
       - spswarn
       - spserror
-      - newTabPlot
-      - newTabData
-      - pgPaneUpdate
-      - pgPaneUI
-      - plotContainer
       - quiet
-      - removeSpsTab
-      - renderDesc
+  - title: 4. General Shiny server utility
+    contents:
+      - loadDF
       - shinyCatch
       - shinyCheckPkg
-      - spsDb
-      - spsEncryption
-      - spsHr
-      - spsOption
-      - spsValidate
-      - tabTitle
-      - textInputGroup
+  - title: 5. General HTML components and their server functions
+    contents:
       - useSps
-      - viewSpsDefaults
+      - clearableTextInput
+      - textInputGroup
+      - tabTitle
+      - gallery
+      - hexLogo
+      - hexPanel
+      - hrefTab
+      - hrefTable
+      - pgPaneUpdate
+      - pgPaneUI
+      - renderDesc
+

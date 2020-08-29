@@ -37,7 +37,7 @@ knitr::opts_chunk$set(
     tidy.opts=list(width.cutoff=60), 
     tidy=TRUE,
     eval = FALSE)
-shiny::tagList(rmarkdown::html_dependency_font_awesome())
+# shiny::tagList(rmarkdown::html_dependency_font_awesome())
 ```
 
 ```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=FALSE}
@@ -104,9 +104,10 @@ Depending on the Linux distributions, command can be slightly different.
 
 Before starting with SPS, you need to create a SPS project: 
 
-```{r spsinit, eval=FALSE}
+```{r spsinit, eval=TRUE}
 sps_tmp_dir <- tempdir()
 spsInit(dir_path = sps_tmp_dir, change_wd = FALSE)
+sps_dir <- file.path(sps_tmp_dir, glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
 ```
 Here for building the vignette we are not switching to the app directory and are using a 
 temp directory, in a real case, you **shouldn't** store you SPS project in a **temp directory**.
@@ -223,27 +224,7 @@ command line. You can download these files by clicking
      Save
 </button>.
 
-<div id="plot_template-pg-pg-container" class="tab-pane" style="padding-left: 130px;">
-<div class="control-panel draggable ui-draggable ui-draggable-handle" style="width: 400px; height: auto; background-color: var(--light);">
-<div class="row">
-<div class="col-sm-1">
-</div>
-<div class="col-sm-9">
-<h5>
-Workflow-prepare
-</h5>
-</div>
-<div class="col-sm-2">
-<button class="btn btn-default" data-target="#pg-example" data-toggle="collapse" aria-expanded="true">
-<i class="fa fa-minus"></i>
-</button>
-</div>
-</div>
-<div id="pg-example" class="in collapse" aria-expanded="true" style="">
-<img src="img/sps_progress_bar.png" style="width:200% !important; padding:0; margin:0"></img>
-</div>
-</div>
-</div>
+To see how your file preparation status, you can also open up the [progress tracker](#progress-tracking).
 
 A typical workflow tab will look like this one(*Fig3*).
 
@@ -480,7 +461,8 @@ the Canvas are now independent from each other and both independent to the origi
 the additional change you make on the plot tab, these two snapshots will not be affected.
 
 It is similar to a screenshot of a plot, but this "screenshot" is still interactive if 
-the plot is rendered by an interactive plotting library, like a plotly plot. 
+the plot is rendered by an interactive plotting library, like a plotly plot, or at least 
+can be a resizable vector image if it is rendered by base or ggplot2. 
 
 #### Manage snapshots
 
@@ -492,7 +474,7 @@ very top banner of SPS app. There will be dropdown tab displayed(*Fig.7*).
     - Right: you can drag a snapshot to right side and click the destroy to permanently delete unwanted snapshots.
 - Bottom section: You can download current snapshots in a compressed file and later upload it back to SPS. In this way, you can keep your snapshots and resume in a later time. 
 
-<p style="color:var(--info)">Note: Downloaded snapshots are encrypted for app security reasons. Each SPS project has its own encryption key, so you cannot upload snapshots to a different SPS project. You need to contact the project owner to decrypt the snapshot file, use another project's key to encrypt it and then it can work in another project. See developer section for more details.</p>
+<p style="color:var(--info)">Note: Downloaded snapshots are encrypted for app security reasons. Each SPS project has its own encryption key, so you cannot upload snapshot files to a different SPS project. You need to contact the project owner to decrypt the snapshot file, use another project's key to encrypt it and then it can work in another project. See developer section for more details.</p>
 
 
 <center>
@@ -502,34 +484,122 @@ very top banner of SPS app. There will be dropdown tab displayed(*Fig.7*).
 
 ### Canvas
 
+Canvas is a playground or a workbench where you can view all saved snapshots. 
+Then you can resize, drag plots around to make a big figure. Figure 8 illustrates: 
+compare plot snapshots from the same plot tab but with different sample size or groups. 
+
+- Resize: Every plot on Canvas has a <img src=img/resize_icon.png style="display: inline; padding-left:0; width:10px; height:10px;"> icon on the bottom-right corner of the plot. Left-click and drag it to the size you want.
+- Reposition: When you mouse hovers on any plot snapshot, the blue title will appear, drag on the title will move the entire snapshot.
+- Exclude snapshots:
+    - Hover on any plot snapshot, when title appears, click on the "X" icon will temporarily remove the snapshot from current Canvas, but when you click on <button type="button" class="btn btn-default">Refresh Canvas</button>, it will come back.
+    - Drag snapshots from "Current Snashots" box to "Snapshots excluded" box will prevent them to render on Canvas even when you refresh the Canvas. This still will not delete a snapshot. only [Manage snapshots](#manage-snapshots) tab can delete a snapshot. 
+- Adding text: adding additional text like a figure title etc. will be supported in the upcoming release.
+
 <center>
 ![systemPipeShiny](./img/sps_ui_canvas.png)
 **Figure 8. Canvas**
 </center>
 
-# Configuration
-# Features
+# Important features
 
-## User friendly
+## Configuration
 
-SPS is easy to use for people different backgrounds. The GUI operations require no
-programming experience. Detailed design templates are provided for advanced users allowing them to add new
-features(tabs) to SPS.
+### App options
+
+App options in SPS are controlled by "SPS options". These options can change 
+app appearance, debugging level, server server behaviors, *etc*. The valid options can 
+be found and change on the `global.R` file. They are similar to *Shiny* options, 
+but unlike *shiny* options are single values, SPS options are passed using the `Option(sps = list(...))` 
+function in `global.R` as a group. To view all options and their default, valid
+values('*' means any value is okay):
+
+```{r , eval=TRUE}
+viewSpsDefaults(appDir = sps_dir)
+```
+
+To view a single option value, use `spsOption(opt = "option_name")`, to overwrite a single 
+option, use `spsOption(opt = "option_name", value = new_value)`.
+
+<p style="color:var(--info)">Note:Don't worry if you set some invalid values, on app start, `sps()` will check all SPS
+options, ignore unknown values and set invalid values back to default. You will see warning 
+messages on console to tell you specifically what's wrong with options.</p>
+
+| Option          | Description                       | Default | Other     |
+|-----------------|-----------------------------------|---------|-----------|
+| mode            | running mode                      | "local" | "server"  |
+| warning_toast   | show security warnings?           | TRUE    | FALSE     |
+| loading_screen  | show loading screen?              | TRUE    | FALSE     |
+| loading_theme   | loading screen theme              | "vhelix"| any string|
+| use_crayon      | colorful console message?         | TRUE    | FALSE     |
+| verbose         |more details for SPS functions?    | TRUE    | FALSE     |
+| dev             |developer mode? add 2 template tabs| TRUE    | FALSE     |
+| admin_url       |admin_page query url               | "admin" | any string|
+
+some details:
+
+- mode: this option will change how the upload files are selected.
+    - local: You can choose file from server side, and it is a direct link, no file will be copied to server. Most often used when you are on you own computer. <span style="color:var(--info)">It is still choosing files from the server side, because you are using your own computer as a Shiny server.</span>
+    - server: Choose files from the client side, and upload as a temp file to the server.
+    - If you are on you own computer, there is no difference, but `local` mode can avoid copy your files to temp. <span style="color:var(--info)">If you are deploying the app to cloud, please **use server mode**</span>
+- warning_toast: A toast pop-up message when you are under some dangerous options when app starts.
+- loading_theme: `loading_screen` must be `TRUE`. Only one theme for now, we will add more in future.
+- use_crayon: Give you more information on debugging.
+- admin_url: the admin page url , will be added in an upcoming version, a preview can be seen by adding "/?admin" to the end of app url, e.g. "[https://tgirke.shinyapps.io/systemPipeShiny/?admin](https://tgirke.shinyapps.io/systemPipeShiny/?admin)".
+
+### Tab configurations
+
+Tabs are registered(defined) by the *tabs.csv* file under SPS project *config* folder. It contains information for all 
+the tabs. Do not modify it if you don't plan to build new tabs. See developer section for how 
+to operate this file. 
+
+To control what tabs to appear(load/unload) on SPS, pass the tab IDs of tabs you want to see to 
+`vstabs =` argument on `sps()`
+
+```{r , eval=FALSE}
+sps_app <- sps(vstabs = c("ID1", "ID2", ...))
+```
+
+*tabs.csv* has all the tab IDs. Under current version of SPS, you can only load/unload 
+tabs in the "vs" type. Tabs under "core" and "wf" types are unable to change.
+
+## Progress tracking
+
+A progress tracking panel is provided on each tab to notify users about run status. Tabs under workflow management 
+shares the same progress panel and each VS tab has its own individual progress tracker.
+
+The tracker is located on the top-right corner and by default it is collapsed. You can often it up by clicking 
+the "-" icon. If you think this tracker is blocking your sight, you can drag it to anywhere you like. 
+
+<div id="plot_template-pg-pg-container" class="tab-pane" style="padding-left: 130px;">
+<div class="control-panel draggable ui-draggable ui-draggable-handle" style="width: 400px; height: auto; background-color: var(--light);">
+<div class="row">
+<div class="col-sm-1">
+</div>
+<div class="col-sm-9">
+<h5>
+Workflow-prepare
+</h5>
+</div>
+<div class="col-sm-2">
+<button class="btn btn-default" data-target="#pg-example" data-toggle="collapse" aria-expanded="true">
+<i class="fa fa-minus"></i>
+</button>
+</div>
+</div>
+<div id="pg-example" class="in collapse" aria-expanded="true" style="">
+<img src="img/sps_progress_bar.png" style="width:200% !important; padding:0; margin:0"></img>
+</div>
+</div>
+</div>
 
 ## Dual-end logging
 
 Messages, warnings and errors from R functions are automatically captured and logged on
-both the server and client ends. The corresponding information can be displayed in a message box.
+both the server and client ends. The corresponding information can be displayed in a message box
+on bottom-right on SPS UI, see [Figure 1.f](#sps_ui). The same message will be logged to console 
+as well.
 
-## Progress tracking
 
-A progress tracking panel is provided on each tab to notify users about run status.
-
-## App options
-
-a robust exception handling system has been implemented (similar to Shiny options), that
-provides error solutions to to users, e.g. invalid parameter settings.
-    - upload options
     
 ## Modular isolation
 
@@ -540,27 +610,8 @@ in a forum. To enable cross-tab communication, SPS also supports global scope in
 can be use outside out SPS. You can include these widgets in your own Shiny apps without 
 loading SPS main framework. 
 
-## Canvas
-
-Under this workbench users can take snapshots of different plots, and combine or resize them. This
-feature is useful for generating complex scientific summary graphics.
-
-### systemPipeShiny
-
-Shiny Web Interface
-Shiny application for interactive workflow management and results visualization generated by *systemPipeR*
 
 
-# Setting up the data
-
-# Launching the application
-
-# Description of the user interface
-## dashboard
-## layout 
-## each tab
-## Workflow Management system
-# Description of *systemPipeShiny* functionality
 # SPS configurations
 ## the config folder
 ## SPS options
