@@ -67,7 +67,7 @@ knitr::include_graphics(path = "../inst/app/www/img/sps.png")
 is a [Shiny](https://shiny.rstudio.com/)-based R/Bioconductor package that  has two main purposes: 
 
  1. To help non-programmers like wet lab researchers on data analysis workflow management and downstream data 
-visualizations with a graphical user interface (UI). 
+visualizations with a graphical user interface(GUI). 
  2. An user friendly framework for both beginners and advanced developers to fast extend 
  with more visualization options(more plot types) and to quickly deploy the app to a Shiny sever. 
  
@@ -78,6 +78,15 @@ Each tutorial covers a major topic of SPS and show how you can interactive with 
 This vignette introduces main features and functionalities of SPS. Due to size limit, 
 a full version of users' manual will be later updated at [SytemPipeShiny-book](https://systempipe.org/systemPipeShiny-book/) 
 which will include more small demos, screenshots, and *gif* illustrations.
+
+## Motivation
+
+SPS is originally designed as a GUI extension for the R workflow environment tool systemPipeR(SPR)
+to help users prepare a workflow and understand the workflow structure in an interactive way. 
+Later, SPS is enriched with other utilities, like the visualization part. Therefore, we decide to 
+move SPS as a stand-alone package. 
+
+# Quick start
 
 ## Install
 
@@ -96,11 +105,11 @@ sudo apt-get install libv8-dev
 sudo apt-get install libssl-dev
 sudo apt-get install libcurl4-openssl-dev
 ```
-*libcurl4-openssl-dev* may not be required for Ubuntu >= 18.04.
+*libcurl4-openssl-dev* may not be required for Ubuntu > 18.04.
 
 Depending on the Linux distributions, command can be slightly different. 
 
-## Quick start
+## Start the app
 
 Before starting with SPS, you need to create a SPS project: 
 
@@ -111,6 +120,12 @@ sps_dir <- file.path(sps_tmp_dir, glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
 ```
 Here for building the vignette we are not switching to the app directory and are using a 
 temp directory, in a real case, you **shouldn't** store you SPS project in a **temp directory**.
+Just use the following instead:
+
+```{r , eval=FALSE}
+spsInit()
+```
+
 
 By default, you will get a folder created under your current working directory, 
 the name is `SPS_` + `today's date` in *ISO 8601* format, e.g. 
@@ -119,7 +134,8 @@ the name is `SPS_` + `today's date` in *ISO 8601* format, e.g.
 <p style="color:var(--info)">Note: all SPS date or time stamp objects use *ISO 8601* format</p>
 
 By default, your working directory should be set inside that project folder automatically. 
-If you are using Rstudio, three main files will be opened for you: `global.R`, `ui.R` and `server.R`. 
+If you are using Rstudio,  `global.R` file will be opened for you. This is the only
+file that you need to make custom change if there is any. 
 Now you can just run the app by type `shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
 button on top right corner of the any these 3 files in Rstudio. 
 In your global.R, scroll down to the bottom, you should see:
@@ -137,7 +153,8 @@ sps_app <- sps(
 This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
 `c("tab1", "tab2)`. See `config/tabs.csv` in your project folder for what tabs IDs can be load and other 
 tab information. Currently you can only load/unload visualization tabs, type of *vs*; core tabs(*core*) and 
-workflow tabs (*wf*) are loaded automatically. 
+workflow tabs (*wf*) are loaded automatically. You can run additional server code by passing it to
+`server_expr` argument. If the expression is multiple-lined, use `{}` to wrap them. 
 
 
 # SPS structure
@@ -151,9 +168,9 @@ SPS_xx/
 ├── ui.R                   <span class="text-success">|</span>  
 ├── deploy.R               <span class="text-info">| Deploy helper file</span>  
 ├── config                 <span class="text-success">| Important app config files. Do not edit them if you don't know</span>  
-│   ├── sps.db             
-│   ├── sps_options.yaml   
-│   └── tabs.csv           
+│   ├── sps.db             <span class="text-gray">| SPS database</span> 
+│   ├── sps_options.yaml   <span class="text-gray">| SPS default option list</span> 
+│   └── tabs.csv           <span class="text-gray">| SPS tab information</span> 
 ├── data                   <span class="text-primary">| App example data files</span> 
 │   ├── xx.csv             
 ├── R                      <span class="text-primary">| All SPS additional tab files and helper R function files</span> 
@@ -204,8 +221,9 @@ general summary and instructions.
 # UI details(for users)
 ## Workflow management 
 
- Files can be prepared for a data analysis workflow including the metadata(targets) file, workflow 
- step file(Rmarkdown formatted) and a workflow config file. Each of these files are 
+ Workflow management helps you to prepare a data analysis workflow files in SPR format or can be used in other similar 
+ compatible workflow environments. Files include the metadata(targets) file, workflow 
+ step file(Rmarkdown format) and a workflow config file. Each of these files are 
  prepared in a SPS tab. You can find them at the left side navigation bar. 
  SPS helps users to check the formats and requirements of each file. Users can click on the
 <button type="button" class="btn btn-default">
@@ -213,12 +231,12 @@ general summary and instructions.
         Add to task
 </button> 
 button on the page to check for problems. If everything is correct, a 
-pop-up messge will show to users or if anything is wrong, a detailed window will 
+pop-up message will show to users or if anything is wrong, a detailed window will 
 pop up to indicate errors. 
 
-In the upcomming version of SPS, users can directly run a workflow on the app, but for 
+In the upcoming version of SPS, users can directly run a workflow on the app, but for 
 now users need to download these files and copy them to a SPR project and run from 
-command line. You can download these files by clicking 
+command line or R. You can download these files by clicking 
 <button  class="btn btn-default">
      <i class="fa fa-download"></i>
      Save
@@ -226,12 +244,56 @@ command line. You can download these files by clicking
 
 To see how your file preparation status, you can also open up the [progress tracker](#progress-tracking).
 
-A typical workflow tab will look like this one(*Fig3*).
+### Targets file
+
+In SPR environment, the metadata file is also called the *targets file*. The *Targets* 
+tab in SPS will help you to prepare this file(*Fig3. A*). The targets file has 2 
+parts: header and data. Header should start with `#` and you can edit it or add new 
+lines in the editing box. Data is loaded as table, and you can also edit, right-click 
+to add/remove records. If you are on *[local mode](#app-options)*, the left-side panel will also 
+show targets statistics and can check the file existence of your selected column. 
 
 <center>
-![systemPipeShiny](./img/sps_ui_targets.png)
-**Figure 3. Workflow Management**
+![wf_targets](./img/sps_ui_targets.png)
+**Figure 3. A. Workflow Management - Targets File**
 </center>
+
+### Workflow file
+
+A workflow file is a file that defines workflow steps. In SPR, this is provided as 
+a R markdown file, so you need to prepare a file with `.Rmd` extension or download 
+one template from SPR. Once your have uploaded or used the example, you can see the 
+workflow steps in a tree-like structure(*Fig3. B*). The step levels in SPR are defined by
+the hash tag `#` level in Rmd, the same way as the tile level in a markdown file. 
+For example, text and code under a single `#` title means this is a top level step, 
+text and code under `##` title is a secondary sub step ...
+
+To choose the steps you want to run, check them inside the "Choose the steps you want"
+section. If there are some substeps under a major step, you can click the triangle button 
+<img src=img/sub_step_icon.png style="display: inline; padding-left:0; width:10px; height:10px;"> to
+expand and choose substeps. 
+
+If at least one step is checked, the 4 buttons in "Choose the steps you want" will be enabled.
+
+- <button  class="btn btn-default"><i class="fa fa-download"></i>Save New Rmd</button> Save your chosen steps and download as a new workflow file.
+- <button  class="btn btn-default"><i class="fa fa-redo-alt"></i>Plot steps</button> A workflow diagram show the order of execution of steps you choose.
+- <button  class="btn btn-default"><i class="fa fa-redo-alt"></i>Report preview</button> The preview of what the workflow R markdown file look like when it is rendered, but no code is executed. 
+- <button  class="btn btn-default"><i class="fa fa-paper-plane"></i>Add to task</button> Add to a workflow task, will be useful in future. 
+
+
+<p style="color:var(--info)">Note: Skip(uncheck) some steps may cause the workflow fail to run, read more [SPR instructions](https://systempipe.org/docs/systemPipeR/)</p>
+
+<center>
+![wf_wf](./img/sps_wf_wf.png)
+**Figure 3. B. Workflow Management - Workflow File**
+</center>
+
+### Configuration File
+
+SPR uses a *yaml* file to control some workflow configurations. It is automatically been 
+generated when you create a SPR project and normally you don't need to change anything. 
+Here the config tab just provides a place you can edit the config file and download it 
+back to a SPR project.
 
 ## Data Visualization
 
@@ -568,7 +630,8 @@ A progress tracking panel is provided on each tab to notify users about run stat
 shares the same progress panel and each VS tab has its own individual progress tracker.
 
 The tracker is located on the top-right corner and by default it is collapsed. You can often it up by clicking 
-the "-" icon. If you think this tracker is blocking your sight, you can drag it to anywhere you like. 
+the "-" icon. If you think this tracker is blocking your sight, you can drag it to anywhere you like. The example 
+looks like below(draggable in the real app):
 
 <div id="plot_template-pg-pg-container" class="tab-pane" style="padding-left: 130px;">
 <div class="control-panel draggable ui-draggable ui-draggable-handle" style="width: 400px; height: auto; background-color: var(--light);">
@@ -599,8 +662,6 @@ both the server and client ends. The corresponding information can be displayed 
 on bottom-right on SPS UI, see [Figure 1.f](#sps_ui). The same message will be logged to console 
 as well.
 
-
-    
 ## Modular isolation
 
 SPS is built on Shiny modules, which provides local scope isolation between each tab.
