@@ -93,7 +93,7 @@ wf_wfServer <- function(id, shared){
 
         rmd <- reactive({
             if (!is.null(rmd_file_path())) {
-                quiet(subsetRmd(p = rmd_file_path()))
+                quiet(.subsetRmd(p = rmd_file_path()))
             } else {
                 NULL
             }
@@ -161,7 +161,7 @@ wf_wfServer <- function(id, shared){
             if (length(rmd_tree_selected()) > 0) rmd_tree_df$selected <- TRUE
             output$wf_plot_ui <- renderUI({
                 tags$div(style = 'overflow:auto; height: 500px',
-                         HTML(plotWF(df_wf = rmd_tree_df,
+                         HTML(.plotWF(df_wf = rmd_tree_df,
                                      plot_style = "linear",
                                      out_type = "shiny"))
                 )
@@ -178,7 +178,7 @@ wf_wfServer <- function(id, shared){
                 "NewWF.Rmd"
             },
             content <- function(file){
-                subsetRmd(p = rmd_file_path(),
+                .subsetRmd(p = rmd_file_path(),
                           p_out = file,
                           input_steps = paste(rmd_tree_selected(),
                                               collapse = ","),
@@ -190,7 +190,7 @@ wf_wfServer <- function(id, shared){
         observeEvent(c(input$wf_render_md, input$to_task_rmd),
                      ignoreInit = TRUE, {
             rmd_file_new(tempfile(pattern = "wf", fileext = ".Rmd"))
-            quiet(subsetRmd(p = rmd_file_path(),
+            quiet(.subsetRmd(p = rmd_file_path(),
                             p_out = rmd_file_new(),
                             input_steps = paste(rmd_tree_selected(),
                                                 collapse = ","),

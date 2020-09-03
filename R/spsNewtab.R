@@ -942,8 +942,8 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         spserror("comma ',' detected in display name, not allowed")
     }
     stopifnot(is.character(desc))
-    stopifnot(is.list(prepro_methods))
-    stopifnot(is.list(plot_data))
+    stopifnot(inherits(prepro_methods, "list"))
+    stopifnot(inherits(plot_data, "list"))
     spsinfo("checking tab ID in tabs.csv")
     err <- try(findTabInfo(glue("{type_sub}_{tab_id}"),
                            tab_file = file.path(app_path, "config", "tabs.csv"),

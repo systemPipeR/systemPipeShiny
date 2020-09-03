@@ -16,7 +16,7 @@
 #' @importFrom DOT dot
 #' @importFrom rsvg rsvg_svg rsvg_png
 #' @noRd
-plotWF <- function(df_wf, plot_style="detect", out_type='html',
+.plotWF <- function(df_wf, plot_style="detect", out_type='html',
                    out_path='default', height=NULL, width=NULL){
     # pre checks
     assert_that(out_type %in% c('html', 'png', 'svg', 'shiny'),
@@ -218,7 +218,7 @@ plotWF <- function(df_wf, plot_style="detect", out_type='html',
 # df_wf = df_wf[1:17,]
 # df_wf$link_to[8] = "3, 2.5"
 # df_wf$selected = TRUE
-# plotWF(df_wf, plot_style = "linear")
+# .plotWF(df_wf, plot_style = "linear")
 
 
 

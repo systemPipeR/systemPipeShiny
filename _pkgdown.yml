@@ -13,10 +13,10 @@ authors:
      href: https://github.com/gdmosher
    Thomas Girke:
      href: http://girke.bioinformatics.ucr.edu/
-     
+
 home:
   links:
-  - text: Download from GitHub 
+  - text: Download from GitHub
     href: https://github.com/systemPipeR/systemPipeShiny
   - text: Ask a question about systemPipeShiny
     href: https://support.bioconductor.org/
@@ -24,59 +24,77 @@ home:
     href: https://github.com/systemPipeR/systemPipeShiny/issues
 
 reference:
-  - title: Visualization 
+  - title: 1. SPS framework functions
+  - subtitle: SPS core
+    contents:
+      - sps
+      - spsInit
+  - subtitle: SPS config
+    contents:
+      - spsOption
+      - viewSpsDefaults
+  - subtitle: SPS tab manipulation
+    contents:
+      - newTabPlot
+      - newTabData
+      - removeSpsTab
+      - makePlotData
+      - makePrepro
+  - subtitle: SPS class
+    contents:
+      - spsDb
+      - spsEncryption
+      - plotContainer
+  - subtitle: SPS server side utility
+    contents:
+      - addData
+      - getData
+      - spsValidate
+  - subtitle: SPS HTML components and server functions
+    contents:
+      - dynamicFile
+      - dynamicFileServer
+      - genGallery
+      - genHrefTable
+      - genHrefTab
+      - spsHr
+  - title: 2. Visualization
     contents:
       - exploreDDS
-      - exploreDDSplot 
+      - exploreDDSplot
       - GLMplot
       - hclustplot
       - heatMaplot
       - MAplot
-      - MDSplot 
+      - MDSplot
       - PCAplot
-      - tSNEplot 
+      - tSNEplot
       - volcanoplot
-  - title: Shiny
+  - title: 3. General R utility
     contents:
-      - addData 
-      - getData
-      - clearableTextInput
-      - dynamicFile
-      - dynamicFileServer
       - emptyIsFalse
-      - gallery
-      - genGallery
-      - genHrefTable
-      - hexLogo 
-      - hexPanel
-      - genHrefTab
-      - hrefTab
-      - hrefTable
-      - loadDF
-      - makePlotData
-      - makePrepro
-      - msg 
-      - spsinfo 
-      - spswarn 
+      - msg
+      - spsinfo
+      - spswarn
       - spserror
-      - newTabPlot 
-      - newTabData
-      - pgPaneUpdate 
-      - pgPaneUI
-      - plotContainer
       - quiet
-      - removeSpsTab
-      - renderDesc
+  - title: 4. General Shiny server utility
+    contents:
+      - loadDF
       - shinyCatch
       - shinyCheckPkg
-      - sps
-      - spsDb
-      - spsEncryption
-      - spsHr
-      - spsInit
-      - spsOption
-      - spsValidate
-      - tabTitle
-      - textInputGroup
+  - title: 5. General HTML components and their server functions
+    contents:
       - useSps
-      - viewSpsDefaults
+      - clearableTextInput
+      - textInputGroup
+      - tabTitle
+      - gallery
+      - hexLogo
+      - hexPanel
+      - hrefTab
+      - hrefTable
+      - pgPaneUpdate
+      - pgPaneUI
+      - renderDesc
+

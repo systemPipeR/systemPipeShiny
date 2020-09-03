@@ -25,7 +25,7 @@ library(systemPipeShiny)
 # loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
 # use_crayon: Do you want colorful terminal messages? must install `crayon`- TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
-# dev: developer mode, you are able to add tabs - TRUE, FALSE
+# dev: developer mode, add 2 template tabs - TRUE, FALSE
 # admin_url: admin_page query url - admin
 options(sps = list(
     mode = "local",
