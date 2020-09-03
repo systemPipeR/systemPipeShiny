@@ -197,13 +197,13 @@ accessible and is the object where data stored. One should use this
 object to do validation or preprocess. See examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-23 17:43:47 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-08-23 17:43:47 Overwrite things in /home/dcassol/danielac@ucr.edu/testing/today/systemPipeShiny/docs/reference/SPS_20200823</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-23 17:43:47 Now copy files</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-23 17:43:47 Create SPS database</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-23 17:43:47 Created SPS database method container</span><span>
-#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-08-23 17:43:47 Creating SPS db...</span><span>
-#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-08-23 17:43:47 Db created at '/home/dcassol/danielac@ucr.edu/testing/today/systemPipeShiny/docs/reference/SPS_20200823/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-08-23 17:43:47 Key md5 e7294090775fb8ddc373cb12659780f7</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-08-23 17:43:47 SPS project setup done!</span><span></div><div class='input'><span class='no'>prepro_log</span> <span class='kw'>&lt;-</span> <span class='fu'>makePrepro</span>(
+    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 Start to create a new SPS project</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-09-03 00:48:02 Overwrite things in /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200903</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 Now copy files</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 Create SPS database</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 Created SPS database method container</span><span>
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 Creating SPS db...</span><span>
+#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-03 00:48:02 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200903/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 Key md5 3576424f2936c57c89d5c0db3e04dab4</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 SPS project setup done!</span><span></div><div class='input'><span class='no'>prepro_log</span> <span class='kw'>&lt;-</span> <span class='fu'>makePrepro</span>(
     <span class='st'>"log"</span>, <span class='st'>"take log of first column"</span>,
     <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
         <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>data_filtered</span>))
@@ -241,7 +241,17 @@ object to do validation or preprocess. See examples.</p>
 <span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_test1"</span>,  <span class='st'>"test 1"</span>,
            <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>),
            <span class='kw'>prepro_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>prepro_log</span>, <span class='no'>prepro_addone</span>)
-           )</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-08-23 17:43:47 File SPS_20200823/R/tab_vs_data_test1.R exists.</span><span></span></div></span></pre>
+           )</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:02 Write to file SPS_20200903/R/tab_vs_data_test1.R</span><span>
+#&gt; Styling  1  files:
+#&gt;  SPS_20200903/R/tab_vs_data_test1.R ℹ 
+#&gt; ────────────────────────────────────────
+#&gt; Status	Count	Legend 
+#&gt; ✓ 	0	File unchanged.
+#&gt; ℹ 	1	File changed.
+#&gt; x 	0	Styling threw an error.
+#&gt; ────────────────────────────────────────
+#&gt; </span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:05 Now register your new tab to config/tab.csv</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-03 00:48:05 New tab created!</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

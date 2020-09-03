@@ -37,13 +37,12 @@ knitr::opts_chunk$set(
     tidy.opts=list(width.cutoff=60), 
     tidy=TRUE,
     eval = FALSE)
-# shiny::tagList(rmarkdown::html_dependency_font_awesome())
+shiny::tagList(rmarkdown::html_dependency_font_awesome())
 ```
 
 ```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=FALSE}
 suppressPackageStartupMessages({
     library(systemPipeShiny)
-    # library(systemPipeR)
 })
 
 ```
@@ -468,7 +467,7 @@ UIs. They control how the plot is generated, such as what the plot title is, whe
 legend location is, what colors to use for samples, and more. These part is defined 
 by the tab developer, so they should give you instructions in "Description" section. 
 
-<center>
+<center id="plot_data_prep">
 ![plot_data_prep](./img/sps_plot_data_prep.png)
 **Figure 6. Plot Data Preparation**
 </center>
@@ -536,7 +535,7 @@ very top banner of SPS app. There will be dropdown tab displayed(*Fig.7*).
     - Right: you can drag a snapshot to right side and click the destroy to permanently delete unwanted snapshots.
 - Bottom section: You can download current snapshots in a compressed file and later upload it back to SPS. In this way, you can keep your snapshots and resume in a later time. 
 
-<p style="color:var(--info)">Note: Downloaded snapshots are encrypted for app security reasons. Each SPS project has its own encryption key, so you cannot upload snapshot files to a different SPS project. You need to contact the project owner to decrypt the snapshot file, use another project's key to encrypt it and then it can work in another project. See developer section for more details.</p>
+<p style="color:var(--info)">Note: Downloaded snapshots are encrypted for app security reasons. Each SPS project has its own encryption key, so you cannot upload snapshot files to a different SPS project. You need to contact the project owner to decrypt the snapshot file, use another project's key to encrypt it and then it can work in another project. See [developer section](#extend-spsfor-developers) for more details.</p>
 
 
 <center>
@@ -611,7 +610,7 @@ some details:
 ### Tab configurations
 
 Tabs are registered(defined) by the *tabs.csv* file under SPS project *config* folder. It contains information for all 
-the tabs. Do not modify it if you don't plan to build new tabs. See developer section for how 
+the tabs. Do not modify it if you don't plan to build new tabs. See [developer section](#extend-spsfor-developers) for how 
 to operate this file. 
 
 To control what tabs to appear(load/unload) on SPS, pass the tab IDs of tabs you want to see to 
@@ -664,30 +663,408 @@ as well.
 
 ## Modular isolation
 
-SPS is built on Shiny modules, which provides local scope isolation between each tab.
+SPS is built on [Shiny modules](https://shiny.rstudio.com/articles/modules.html), 
+which provides local scope isolation between each tab.
 Objects on one tab do not conflict with other tabs. They work like individual posts 
-in a forum. To enable cross-tab communication, SPS also supports global scope interactions.
-## A variety of additional shiny widgets: There are many useful HTML components that 
+in a forum. SPS also supports global/between-tab scope interactions. Read more in 
+[developer section](#extend-spsfor-developers).
+
+## A variety of additional shiny widgets 
+
+There are many useful HTML components that 
 can be use outside out SPS. You can include these widgets in your own Shiny apps without 
 loading SPS main framework. 
 
+# Extend SPS(for developers) 
+
+As a framework, SPS allows users to add/remove/customize individual tabs. At current 
+version, you can only modify tabs in VS part(data tabs, plot tabs). 
+Use `newTabData` to add a new data tab and `newTabPlot` for a plot tab. These functions 
+will help you to create the tab file to the *R* folder in your SPS project **and** 
+register tab information by adding records to *config/tabs.csv*.
+Most arguments are self-explanatory or can be 
+easily understood by reading the the help file. Here are some important points: 
+
+- `tab_id` must start with "data_" for a data tab and "plot_" for a plot tab.
+- Augments with `xx_func` or `xx_expr` use [non-standard evaluation](http://adv-r.had.co.nz/Computing-on-the-language.html), please do not add quotes. If you want to use quotes, set `use_string = TRUE`
+- For expressions in SPS or Shiny, if you are expect to return an object, directly write the return object to the last line of the expression, instead of using `return(xxx)`. Expressions are not functions, you shouldn't use `return`.
+
+```{r eval=FALSE}
+# use
+{
+    a <- 1 + 1
+    a
+}
+# not 
+{
+    a <- 1 + 1
+    return(a)
+}
+```
 
 
-# SPS configurations
-## the config folder
-## SPS options
-## SPS tab
-## SPS database
-# For developers
-## Tab control
-### Tab classification
-### New data tab
-### New plot tab
-### Load new tab to the framework
-### Remove a tab
-### a Empty tab for advanced devleopers
-## 
+## New data tab
 
+```{r, eval=FALSE}
+newTabData(
+    app_path = sps_dir,
+    tab_id = "data_new", 
+    tab_displayname = "my first data tab",
+    prepro_methods = list(makePrepro(label = "do nothing",
+                                     plot_options = "plot_new"))
+)
+```
+
+### Add preprocess methods
+
+The `prepro_methods` argument controls how many different methods a data tab have 
+to preprocess the incoming data to meet the requirements of different plot tabs. 
+`prepro_methods` expect a list of `makePrepro` results. Each `makePrepro` result
+is one preprocess option. When the tab runs, it will look like this(if I have 3 methods),
+for example:
+
+```{r, eval=TRUE}
+pms <- list(
+    makePrepro(method_id = "nothing", 
+               label = "Do nothing", 
+               vd_expr = spsValidate({if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")}), 
+               pre_expr = {data_filtered},
+               plot_options = "plot_new"),
+    makePrepro(method_id = "md1", 
+               label = "Method 1", 
+               vd_expr = spsValidate({
+                   if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
+                   if(!nrow(data_filtered) < 1) stop("Data must have at least 1 row")
+               }, pass_msg = "method 1 validation pass"), 
+               pre_expr = {
+                   if(is.numeric(data_filtered[, 1])) data_filtered[1, 1] = 1
+                   data_filtered
+               },
+               plot_options = "plot_new"),
+    makePrepro(method_id = "md2", 
+               label = "Method 2", 
+               vd_expr = spsValidate({
+                   if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
+                   if(!ncol(data_filtered) < 2) stop("Data must have at least 2 columns")
+               }, pass_msg = "method 2 validation pass"), 
+               pre_expr = {
+                   if(is.numeric(data_filtered[, 2])) data_filtered[2, 1] = 1
+                   data_filtered
+               },
+               plot_options = "plot_new")
+)
+```
+
+<p style="color:var(--info)">Note: An object called `data_filtered` is created for you which contains the user filtered data table. You can directly use it in your expression like above.</p>
+
+```{r , eval=TRUE}
+newTabData(
+    app_path = sps_dir,
+    tab_id = "data_new", 
+    tab_displayname = "my first data tab",
+    prepro_methods = pms
+)
+```
+
+On UI side, when you run SPS, your options will be displayed like this:
+
+```{r , echo=FALSE, eval=TRUE}
+shiny::HTML('
+<div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px;">Do nothing</button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <label class="dropdown-item">Method 1</label>
+        <label class="dropdown-item">Method 2</label>
+    </div>
+</div>
+<button  class="btn btn-default">
+     <i class="fa fa-paper-plane"></i>
+     Preprocess
+</button>
+')
+```
+
+
+## New plot tab
+
+```{r, eval=FALSE}
+newTabPlot(
+    app_path = sps_dir,
+    tab_id = "plot_new",
+    tab_displayname = "my first plot tab",
+    plot_data = list(makePlotData(dataset_label = "Data from my new tab",
+                                  receive_datatab_ids = "data_new",
+                                  app_path = sps_dir))
+)
+```
+
+### Add plot data
+
+The `plot_data`  argument in `newTabPlot` is very similar to `prepro_methods` in 
+`newTabData`. It controls how many different unique data sets a plot tab requires and 
+where(which data tabs) these data sets can come from. 
+`plot_data` expect a list of `makePlotData` results. Each `makePlotData` result
+specify one unique input data set and source data tab options. For example, we want to 
+have a plot tab that needs 2 unique data set, one for metadata, one for some numeric 
+data, we can do:
+
+```{r, eval=TRUE}
+# We don't have the metadata tab, need to create one first.
+newTabData(tab_id = "data_meta", tab_displayname = "Meta Data", app_path = sps_dir)
+# now we can use `makePlotData` method for metadata
+pd <- list(
+    makePlotData(
+        dataset_id = "meta",
+        receive_datatab_ids = "data_meta",
+        dataset_label = "Meta data",
+        vd_expr = spsValidate({
+            if (is.data.frame(mydata$meta)) TRUE
+            else stop("Metadata needs to be a dataframe or tibble") 
+        }),
+        app_path = sps_dir
+    ),
+    makePlotData(
+        dataset_id = "data",
+        receive_datatab_ids = "data_new",
+        dataset_label = "Meta data",
+        vd_expr = spsValidate({
+            if (is.data.frame(mydata$data)) TRUE
+            else stop("Data needs to be a dataframe or tibble") 
+        }),
+        app_path = sps_dir
+    )
+)
+```
+
+<p style="color:var(--info)">Note: An object named `mydata$ + dataset_id` is created for you which contains the received data. You can directly use it in your expression like above.</p>
+
+```{r, eval=TRUE}
+newTabPlot(
+    app_path = sps_dir,
+    tab_id = "plot_new",
+    tab_displayname = "my first plot tab",
+    plot_data = pd
+)
+```
+
+You can specify more than one tab IDs in `receive_datatab_ids` argument, meaning 
+this type of input data can be prepared by more than one data type, `receive_datatab_ids = c("data_df1", "data_df2")`.
+
+The rendered UI will look similar to [Fig.6](#plot_data_prep) or you can check 
+the online [demo](https://tgirke.shinyapps.io/systemPipeShiny/).
+
+### an empty tab file
+
+If you don't like the structure of SPS template tabs or want to load data other than a 
+regular tabular data, like a *rds* file contains a `S4` object(you can only load 
+tabular data files with default templates). You can create your own 
+tab structure, and it is totally supported in SPS. In `newTabData` or `newTabPlot`, change 
+`empty = TRUE` and specify `tab_id`, `display_name` and `author`. Leave all other arguments 
+as defaults. 
+
+```{r , eval=FALSE}
+newTabData(tab_id = "data_empty", tab_displayname = "an empty one", author = "me", empty = TRUE)
+```
+
+It will create an empty tab file with empty UI and server function. You can write 
+any legit shiny code inside. Again, SPS is built on [Shiny modules](#modular-isolation),
+so each tab is like a small sandbox and variables, objects do not conflict with other tabs. 
+
+## Run new tabs
+
+There is one more final step before new tabs can be displayed on SPS. You need to 
+specify you want to add these custom new tabs in `sps()` function:
+
+```{r , eval=FALSE}
+sps_app <- sps(
+    vstabs = c("data_new", "data_meta", "plot_new"), # add new tab IDs here
+    server_expr = {
+        msg("Custom expression runs -- Hello World", "GREETING", "green")
+    }
+)
+```
+
+
+## Remove a tab
+
+Use `removeSpsTab(tab_id = "tabID")` to remove a tab. You can check *config/tabs.csv* to 
+see what are the tabs and tab IDs you have. `tab_id` only allows one character string but allows 
+regular expression match. By default, if it matches more than one ID, functions aborts,
+unless you change `multiple = TRUE`. The function will ask for your confirmation if 
+any match is found, and you can directly proceed without confirmation by `force = TRUE`, 
+if you want to do it in a programmatic way or use it in a loop. Once the function 
+runs, it will remove both records in *config/tabs.csv* and tab files in *R* folder.
+
+```{r , eval=TRUE}
+# for example, to remove the new tab we just created
+removeSpsTab("data_new", force = TRUE, app_path = sps_dir)
+```
+
+There are 3 main types of tabs in current version of SPS: *core*, *wf* and *vs*. 
+*core* tabs are SPS framework essential tabs, *wf* tabs are  Workflow Management 
+components, and you are only allowed to modify *vs* tabs.
+
+## Naming
+
+1. tabs:
+    - All store in `R` folder;
+    - All should be named as `tab_xx.R`. If 
+    this tab is a sub tab, name it `tab_type_id.R`, e.g. a tab for 
+    visualization new data type will be `tab_vs_data_xxx.R`, a new plot tab will be 
+    `tab_vs_plot_xxx.R`.
+    
+2. functions:
+    - In each *tab* file, there should be one `UI` function and one `server` 
+    function and give both functions and name space the same ID as the file name: 
+    e.g. a file named `tab_vs_data_sub1.R`, UI function will be `data_sub1UI`, server will be 
+    `data_sub1Server`.
+
+## Cross-tab communication by `shared`
+
+"Shared" is first defined in the top level server as a shiny `ReactiveValues` object to hold data that can
+be passed around tabs(modules). This is very important if you want to transfer like a 
+dataframe from data tabs to plot tabs. 
+
+To access values in `shared`, use `$` or `[['name']]`, e.g. `shared$xxx$subxxx` or `shared[['xxx']][['subxxx']]`.
+
+### objects stored in `shared`
+
+If you are modifying the shared object, please do not change/overwrite following:
+
+- wf_flags: bool values to indicate required files status for the workflow
+    - targets_ready, wf_ready, wf_conf_ready: target file, workflow Rmd file, config yaml file
+    
+- targets: targets file
+    - df: dataframe, which will be used to display from top push bar
+    - file: string, the temp path of edited targets. When `add to task` is clicked and 
+    check passed, this file will be write to temp with **target header**
+    
+- wf: workflow file
+    - df, file: same as targets
+    
+- config: configuration yaml file
+    - file: same as targets
+    
+- snap_signal: snapshot creation signal, tells snapshot tab a new snapshot is created
+
+- data: plot snapshot data, including UI and server data.
+
+- canvas: some internal data storage to communicate with snapshot tab. 
+
+## Other useful developer features
+
+### Logging and error handling
+
+#### Simple logging
+The simplest logging is done by `msg` function. It prints out a message on console in 
+*[Level] + time + message* format. By default, if you only provide 
+the message, it uses `message` function; if you specify the level to be "warning" or 
+"error", it will use R base `warning` and `error` function; other levels uses `cat` method.
+Therefore, you can use `msg` to generate warnings or stop a function.
+```{r ,eval=TRUE, warning=TRUE}
+msg("message")
+msg("a warning", level = "warning")
+try(msg("an error", level = "error"))
+```
+
+If you set the SPS option `use_crayon = TRUE`, your message will be colorful.
+
+<p style="color: blue">[INFO] `r Sys.time()` message level</p>
+<p style="color: orange">[WARNING] `r Sys.time()` warning level</p>
+<p style="color: red">[ERROR] `r Sys.time()` error level</p>
+
+`spsinfo`, `spswarn`, and `spserror` are similar to `msg` but with *[SPS-]* prefix.
+
+#### Duel-end logging and error handling
+
+If you want to catch exceptions and display them to your users, SPS provides `shinyCatch` for 
+such purpose. Exceptions can by any *message*, *warning* or *error*. `shinyCatch` is good for:
+
+1. Catch any exceptions, log on server side console and displayed as a toast message on bottom-right corner on client UI. 
+2. Prevent shiny app to crash because of errors.
+3. Catch exceptions but continue other code.
+
+For example, if you have some Shiny expression and don't want the Shiny session to 
+crash because of errors, you can wrap your expression inside `shinyCatch`(use `shiny = TURE` for a real Shiny app). Once the exception happens, you can block the rest of your code from being executed in a function or 
+in the higher level expression. 
+
+```{r , eval=TRUE}
+# You should not see the message
+try({
+    shinyCatch(stop("error"), shiny = FALSE, blocking_level = "error")
+    cat("Blocked\n")
+})
+```
+
+Or you catch the exception but still allow other code to be executed. 
+
+```{r , eval=TRUE}
+# You should see the message
+try({
+    shinyCatch(stop("error"), shiny = FALSE)
+    cat("Not blocked\n")
+})
+```
+
+### SPS classes
+
+SPS classes are similar to other Shiny classes, which are R6 classes.
+
+#### SPS snapshots container
+
+To save the snapshots UI and server logic, SPS uses `plotContainer` class to store 
+the information. It should be saved in global environment `sps_plots <- plotContainer$new()`.
+By default, it is created in the *global.R* file and you don't need to change anything. 
+
+Adding the plot snapshot UI and server is usually operated on the plot tabs by 
+`plotContainer$addUI()` and `plotContainer$addServer()` functions. You can see 
+the example usage by running the example on help `?plotContainer` or check the usage 
+in a new plot tab by `newTabPlot()`.
+
+#### spsDb and SpsEncrytion
+
+You may have noticed there is a *sps.db* file in *config* folder. This file is a 
+SQLite database which on current version stores some a table of meta information of 
+your SPS project, like project creation date, and a table of binary data which includes 
+the encryption key of snapshots. 
+
+`SpsEncrytion` inherits all methods from `spsDb`, so if there is any need to modify the 
+database, you can just use `SpsEncrytion`. By default, it needs to be save in global environment
+`sps_enc <- spsEncryption$new()`. This is written for you in the *global.R* file.
+
+- `spsDb` allows you to create database, query/modify/delete/add records.
+- `SpsEncrytion` enables you to view/change the encryption key, and encrypt/decrypt any file you desire.
+
+All downloaded SPS snapshot files are encrypted by `SpsEncrytion`. It uses *RSA256* key pair, so each 
+SPS project will have its own key pair, which means uploading snapshot file from one project 
+to another is not possible. If you want to have a snapshot running in another SPS project, 
+use `spsEncryption$decrypt()` to decrypt the snapshot file and contact the owner of 
+the other SPS project. Ask them to use their key to encrypt the file `spsEncryption$encrypt()` and 
+the snapshot file can be uploaded as usual to that SPS app. 
+
+<p style="color:var(--info)">Note: Encrypting the snapshot file is because the snapshot file contains server code which can be modified easily by any one and running arbitrary code uploaded by users can be dangerous.</p>
+
+### Change SPS options
+
+You can customize the default SPS options and alternative valid options by editing 
+*config/sps_options.yaml*. Please follow this format:
+
+```{r , eval=FALSE}
+new_option
+    default: xx
+    other: [xx, xx]
+```
+
+<strong>`*`</strong> character in "other" field tell SPS option parser that any value is allowed. 
+
+### Useful shiny compoents and functions
+
+We have made most functions in SPS very generic. In case you see some great SPS 
+components and want to use them in other Shiny apps other than under 
+the SPS framework, check the SPS help index `help(package = systemPipeShiny)` or 
+see the function classification on our [website](https://systempipe.org/systemPipeShiny/reference/index.html).
+Functions in "SPS framework functions" should only be used inside SPS project. Functions in 
+all other categories can be used in other Shiny apps.
 
 # Visualization 
 
@@ -726,232 +1103,165 @@ using the `VST` and `rlog-transformed` values. For the log2 approach, we need
 to first estimate size factors to account for sequencing depth, and then specify 
 `normalized=TRUE`. Sequencing depth correction is done automatically for the `vst` and `rlog.`
 
-.```{r exploreDDSplot, eval=TRUE, warning=FALSE, message=FALSE}
-.## Targets file
-.targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-.targets <- read.delim(targetspath, comment="#")
-.cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
-.## Count table file
-.countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-.countMatrix <- read.delim(countMatrixPath, row.names=1)
-.## Plot
-.exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c(3,4))
-.exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], samples=c("M1A", "M1B"), save = TRUE,
-.             filePlot = "transf_deseq2.pdf")
-.## Plot Correlogram
-.exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c("M1A", "M1B"), scattermatrix=TRUE)
-.```
-.
-.## Dendrogram
-.
-.A dendrogram of the results of hierarchical clustering performed with the `hclust` 
-.function can be created with the `hclustplot` function. The sample-wise Spearman 
-.correlation coefficients are computed, and then the results are transformed to a 
-.distance matrix before the hierarchical clustering is performed. The count data
-.frame can be transformed with the `rlog` or Variance-stabilizing Transformation 
-.(`vst`) methods from the `DESeq2` package, or can be done without transformation. 
-.
-.```{r dendrogram, eval=TRUE, warning=FALSE, message=FALSE}
-.## Data transformation
-.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-.## Plot
-.hclustplot(exploredds, method = "spearman")
-.hclustplot(exploredds, method = "spearman", savePlot = TRUE, filePlot = "cor.pdf")
-.```
-.
-.## Heatmap
-.
-.A heatmap of the results of hierarchical clustering performed with the `hclust` 
-.function can be created with the `heatMaplot` function. The sample-wise Spearman 
-.correlation coefficients are computed before hierarchical clustering. The count 
-.data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`)
-.methods from the `DESeq2` package, or can be done without transformation. 
-.
-.### Samples
-.
-.```{r heatMaplot_samples, eval=TRUE, warning=FALSE, message=FALSE}
-.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-.heatMaplot(exploredds, clust="samples")
-.heatMaplot(exploredds, clust="samples", plotly = TRUE)
-.```
-.
-.### Individuals genes identified in DEG analysis
-.
-.```{r heatMaplot_genes, eval=TRUE, warning=FALSE, message=FALSE}
-.### DEG analysis with `systemPipeR`
-.degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
-.DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
-.### Plot
-.heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))))
-.heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))), plotly = TRUE)
-.```
-.
-.## PCA plot
-.
-.A Principal Component Analysis (PCA) plot can be created using the `PCAplot` 
-.function which uses the `DESeq2` package. The input data frame can be transformed 
-.with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` 
-.package, or can be done without transformation. 
-.
-.```{r pcaplot, eval=TRUE, warning=FALSE, message=FALSE}
-.## Data transformation
-.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-.## Plot
-.PCAplot(exploredds, plotly = FALSE)
-.PCAplot(exploredds, plotly = TRUE)
-.```
-.
-.In addition, generalized principal component analysis (GLM-PCA) for dimension 
-.reduction of non-normally distributed data can be plotted with the `GLMplot` 
-.function [@Townes2019]. This option does not offer transformation or normalization of raw data.
-.
-.```{r glmplot, eval=TRUE, warning=FALSE, message=FALSE}
-.## Data transformation
-.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
-.## Plot
-.GLMplot(exploredds, plotly = FALSE)
-.GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GLM.pdf")
-.```
-.
-.## MDS plot
-.
-.A Multidimensional Scaling (MDS) plot can be created using the `MDSplot` function. 
-.The input data frame can be transformed with either the `rlog` or Variance-stabilizing
-.Transformation (`vst`) methods from the `DESeq2` package. From the input data, 
-.it computes a spearman correlation-based distance matrix and performs MDS analysis on it.
-.
-.```{r mdsplot, eval=TRUE, warning=FALSE, message=FALSE}
-.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
-.MDSplot(exploredds, plotly = FALSE)
-.```
-.
-.## t-SNE plot
-.
-.A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created
-.using the `tSNEplot` function, which uses the `Rtsne` package [@Krijthe2015] to 
-.compute t-SNE values. The function removes duplicates in the input data frame, 
-.sets a seed for reproducibility, performs an initial PCA step. The function also 
-.allows for a user-set perplexity value for the computation. 
-.
-.```{r tSNEplot, eval=TRUE, warning=FALSE, message=FALSE}
-.targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
-.targets <- read.delim(targetspath, comment="#")
-.cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
-.countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
-.countMatrix <- read.delim(countMatrixPath, row.names=1)
-.set.seed(42) ## Set a seed if you want reproducible results
-.tSNEplot(countMatrix, targets, perplexity = 5)
-.```
-.
-.## MA-Plot
-.
-.An MA plot is an application of a Bland–Altman plot for visual representation of
-.genomic data. The plot visualizes the differences between measurements taken in 
-.two samples, by transforming the data onto M (log ratio) and A (mean average) scales, 
-.then plotting these values.
-.
-.```{r MAplot, eval=TRUE, warning=FALSE, message=FALSE}
-.exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
-.MAplot(exploredds, plotly = FALSE)
-.MAplot(exploredds, plotly = TRUE)
-.```
-.
-.## Volcano plot
-.
-.A volcano plot of DEGs data frame can be plotted using the function `volcanoplot`. 
-.Using the resulting data frame from `run_edgeR` or `run_deseq2`, the function 
-.plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for 
-.the sample comparison specified by the user.
-.
-.```{r volcanoplot, eval=TRUE, warning=FALSE, message=FALSE}
-.### DEG analysis with `systemPipeR`
-.degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
-.DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
-.## Plot
-.volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 2, FDR = 10))
-.volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 1, FDR = 20), genes = "ATCG00280")
-.```
+```{r exploreDDSplot, eval=TRUE, warning=FALSE, message=FALSE}
+## Targets file
+targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+targets <- read.delim(targetspath, comment="#")
+cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
+## Count table file
+countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+countMatrix <- read.delim(countMatrixPath, row.names=1)
+## Plot
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c(3,4))
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], samples=c("M1A", "M1B"), save = TRUE,
+             filePlot = "transf_deseq2.pdf")
+## Plot Correlogram
+exploreDDSplot(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, samples=c("M1A", "M1B"), scattermatrix=TRUE)
+```
+
+## Dendrogram
+
+A dendrogram of the results of hierarchical clustering performed with the `hclust` 
+function can be created with the `hclustplot` function. The sample-wise Spearman 
+correlation coefficients are computed, and then the results are transformed to a 
+distance matrix before the hierarchical clustering is performed. The count data
+frame can be transformed with the `rlog` or Variance-stabilizing Transformation 
+(`vst`) methods from the `DESeq2` package, or can be done without transformation. 
+
+```{r dendrogram, eval=TRUE, warning=FALSE, message=FALSE}
+## Data transformation
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+## Plot
+hclustplot(exploredds, method = "spearman")
+hclustplot(exploredds, method = "spearman", savePlot = TRUE, filePlot = "cor.pdf")
+```
+
+## Heatmap
+
+A heatmap of the results of hierarchical clustering performed with the `hclust` 
+function can be created with the `heatMaplot` function. The sample-wise Spearman 
+correlation coefficients are computed before hierarchical clustering. The count 
+data frame can be transformed with the `rlog` or Variance-stabilizing Transformation (`vst`)
+methods from the `DESeq2` package, or can be done without transformation. 
+
+### Samples
+
+```{r heatMaplot_samples, eval=TRUE, warning=FALSE, message=FALSE}
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+heatMaplot(exploredds, clust="samples")
+heatMaplot(exploredds, clust="samples", plotly = TRUE)
+```
+
+### Individuals genes identified in DEG analysis
+
+```{r heatMaplot_genes, eval=TRUE, warning=FALSE, message=FALSE}
+### DEG analysis with `systemPipeR`
+degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
+DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
+### Plot
+heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))))
+heatMaplot(exploredds, clust="ind", DEGlist = unique(as.character(unlist(DEG_list[[1]]))), plotly = TRUE)
+```
+
+## PCA plot
+
+A Principal Component Analysis (PCA) plot can be created using the `PCAplot` 
+function which uses the `DESeq2` package. The input data frame can be transformed 
+with the `rlog` or Variance-stabilizing Transformation (`vst`) methods from the `DESeq2` 
+package, or can be done without transformation. 
+
+```{r pcaplot, eval=TRUE, warning=FALSE, message=FALSE}
+## Data transformation
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+## Plot
+PCAplot(exploredds, plotly = FALSE)
+PCAplot(exploredds, plotly = TRUE)
+```
+
+In addition, generalized principal component analysis (GLM-PCA) for dimension 
+reduction of non-normally distributed data can be plotted with the `GLMplot` 
+function [@Townes2019]. This option does not offer transformation or normalization of raw data.
+
+```{r glmplot, eval=TRUE, warning=FALSE, message=FALSE}
+## Data transformation
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
+## Plot
+GLMplot(exploredds, plotly = FALSE)
+GLMplot(exploredds, plotly = FALSE, savePlot = TRUE, filePlot = "GLM.pdf")
+```
+
+## MDS plot
+
+A Multidimensional Scaling (MDS) plot can be created using the `MDSplot` function. 
+The input data frame can be transformed with either the `rlog` or Variance-stabilizing
+Transformation (`vst`) methods from the `DESeq2` package. From the input data, 
+it computes a spearman correlation-based distance matrix and performs MDS analysis on it.
+
+```{r mdsplot, eval=TRUE, warning=FALSE, message=FALSE}
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="rlog")
+MDSplot(exploredds, plotly = FALSE)
+```
+
+## t-SNE plot
+
+A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created
+using the `tSNEplot` function, which uses the `Rtsne` package [@Krijthe2015] to 
+compute t-SNE values. The function removes duplicates in the input data frame, 
+sets a seed for reproducibility, performs an initial PCA step. The function also 
+allows for a user-set perplexity value for the computation. 
+
+```{r tSNEplot, eval=TRUE, warning=FALSE, message=FALSE}
+targetspath <- system.file("extdata", "targets.txt", package="systemPipeR")
+targets <- read.delim(targetspath, comment="#")
+cmp <- systemPipeR::readComp(file=targetspath, format="matrix", delim="-")
+countMatrixPath <- system.file("extdata", "countDFeByg.xls", package="systemPipeR")
+countMatrix <- read.delim(countMatrixPath, row.names=1)
+set.seed(42) ## Set a seed if you want reproducible results
+tSNEplot(countMatrix, targets, perplexity = 5)
+```
+
+## MA-Plot
+
+An MA plot is an application of a Bland–Altman plot for visual representation of
+genomic data. The plot visualizes the differences between measurements taken in 
+two samples, by transforming the data onto M (log ratio) and A (mean average) scales, 
+then plotting these values.
+
+```{r MAplot, eval=TRUE, warning=FALSE, message=FALSE}
+exploredds <- exploreDDS(countMatrix, targets, cmp=cmp[[1]], preFilter=NULL, transformationMethod="raw")
+MAplot(exploredds, plotly = FALSE)
+MAplot(exploredds, plotly = TRUE)
+```
+
+## Volcano plot
+
+A volcano plot of DEGs data frame can be plotted using the function `volcanoplot`. 
+Using the resulting data frame from `run_edgeR` or `run_deseq2`, the function 
+plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for 
+the sample comparison specified by the user.
+
+```{r volcanoplot, eval=TRUE, warning=FALSE, message=FALSE}
+### DEG analysis with `systemPipeR`
+degseqDF <- systemPipeR::run_DESeq2(countDF = countMatrix, targets = targets, cmp = cmp[[1]], independent = FALSE)
+DEG_list <- systemPipeR::filterDEGs(degDF = degseqDF, filter = c(Fold = 2, FDR = 10))
+## Plot
+volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 2, FDR = 10))
+volcanoplot(degseqDF, comparison = "M12-A12", filter = c(Fold = 1, FDR = 20), genes = "ATCG00280")
+```
 
 ## Barplot
 
 A barplot for analysis of differentially expressed genes (DEGs) can be plotted using functions `deg_edgeR` or `deg_deseq2`. The function `deg_edgeR` uses the `edgeR` package [@Robinson2010-uk] to create an `edgeR` data frame. Alternatively, the function `deg_deseq2` uses the `DESeq2` package [@Love2014-sh] to create an `DESeq2` data frame. Using the `filterDEGs` function, it filters and plots DEG results for up and down regulated genes in a barplot. 
 
 
-# How to use this function on the Shiny application
-
-# How to custom the Visualization Tab
-
-# For developers
-  
-## Coventions for this app
-
-### 1. App structure
-1. Directories:
-    1. config: config files
-    2. data: example datasets 
-    3. results: not in use for now but users can store data generated from the app
-    3. R: all functions, tabs. This folder will be automatically sourced
-    4. www: html web resources, will be treated as root of frontend resources
-    
-Each folder has a README.md. You can know more information by reading that file. 
-
-### 2. Important files    
-1. Three big files in the main directory:
-    - **global.R**: all sourcing, load library, global variables.
-    - **server.R**: top level server function, automatically generated by `sps()`.
-    - **ui.R**: top level UI, automatically generated by `sps()`.
-
-All you need is to change code in `global`
-
-### 3. Naming
-1. tabs:
-    - All store in `R` folder;
-    - All should be named as `tab_xx.R`; if a submodule contains submodule. If 
-    this tab is a sub tab, name it `tab_type_id.R`, e.g. a tab for 
-    visualization new data type will be `tab_vs_data_xxx.R`, a new plot tab will be 
-    `tab_vs_plot_xxx.R`.
-    - All tab info should also be updated in `tabs.csv` as the tab metadata.
-        - visualization data tabs should hava tab name as `data_xx`, plot tab 
-        should be `plot_xx`
-    
-2. functions:
-    - in each *tab* file, there should be one `UI` function and one `server` 
-    function and give both functions and name space the same ID as the file name: 
-    e.g. a file named `tab_sub1.R`, UI function will be `sub1UI`, server will be 
-    `sub1Server` and in top level UI and server call them `sub1UI("sub1", ...)`, 
-    `callModule(tab1Server, "tab1", ...)`.
-
-## 4. Standard for visualization
-1. Plots
-    - In princple, datasets should be plotting ready (no need to preprocess data). 
-    - For some plots that are very specific to some workflows, simple preprocess is okay.
-    - Always use a button to update (re-plot) the graph, realtime rendering can be expensive. 
-
-## 5. Objects saved in `shared`
-
-"Shared" is first defined in the top level server as a shiny `ReactiveValues` object to hold data that can
-be passed around tabs(modules). This is very important if you want to transfer like a 
-dataframe from df tabs to plotting tabs. 
-
-To access values in `shared`, use `$` or `[['name']]`, e.g. `shared$xxx$subxxx` or `shared[['xxx']][['subxxx']]`.
-
-### default stored objects
-
-- wf_flags: bool values to indicate required files status for the workflow
-    - targets_ready, wf_ready, wf_conf_ready: target file, workflow Rmd file, config yaml file
-    
-- targets: targets file
-    - df: dataframe, which will be used to display from top push bar
-    - file: string, the temp path of edited targets. When `add to task` is clicked and 
-    check passed, this file will be write to temp with **target header**
-    
-- count: count table
-    - df, file: same as targets
-    
-- config: configuration yaml file
-    - file: same as targets
-
 # How to deploy the application
+
+There is a *deploy.R* file in the SPS project root and you can use it to deploy the 
+app to [shinyapps.io](https://www.shinyapps.io/). You can use this file to set up 
+your account and deploy the app. SPS is a deploy-ready framework. If you set up your 
+account correctly, you can deploy it as soon as the project is created. It 
+is recommended to create -> test/run -> deploy a Shiny app from Rstudio and follows 
+[this instruction](https://shiny.rstudio.com/articles/shinyapps.html).
 
 # Version Information
 
