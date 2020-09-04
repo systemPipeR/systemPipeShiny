@@ -160,7 +160,7 @@ quiet <- function(x) {
 #' @description  Help you to check if you have certain packages and
 #' return missing package names
 #' @param packages vector of strings
-#' @param quietly bool, give you error on fail?
+#' @param quietly bool, give you warning on fail?
 #' @param from  string, where this package is from like, "CRAN", "GitHub", only
 #' for output message display purpose
 #' @importFrom shinyAce is.empty
@@ -177,7 +177,7 @@ checkNameSpace <- function(packages, quietly = FALSE, from = "") {
         if (!eval(parse(text = "requireNamespace(pkg, quietly = TRUE)"))) pkg
     }) %>% unlist()
     if (!quietly & not_empty(missing_pkgs)) {
-        msg(glue("These packages are missing from",
+        spswarn(glue("These packages are missing from",
                  "{from}: {glue_collapse(missing_pkgs, sep = ',')}"))
         }
     return(missing_pkgs)

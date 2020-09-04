@@ -49,8 +49,7 @@ suppressPackageStartupMessages({
 
 ```{r sps-css, results = 'asis', echo=FALSE, eval=TRUE}
 cat("<style>")
-readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")) %>% 
-cat(sep = "\n")
+cat(readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")),sep = "\n")
 cat("</style>")
 ```
 

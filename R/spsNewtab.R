@@ -705,8 +705,7 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
             glue_collapse(., sep = ", ") %>%{
                 spserror(glue("Core and workflow tabs are not allowed to remove,
                              match: {.}"))}
-        }
-        }
+        }}
     spsinfo("Saving back to tabs.csv", verbose)
     tabs_left <- dplyr::slice(tab_info, -matched_rows)
     c(header, names(tab_info) %>% glue_collapse(sep = ","),
@@ -856,10 +855,12 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
 # register a tab to config file
 .tabRegister <- function(tab_id, display_name = "tab_title", app_path = ".",
                          type="vs", type_sub = "", image = "",
-                         displayed = 1){
+                         displayed = 1,
+                         tab_file_name = glue("tab_vs_{tab_id}.R")){
     tab_path <- file.path(app_path, "config", "tabs.csv")
     write_info <- glue_collapse(c(tab_id, display_name, type,
-                                  type_sub, image, displayed), sep = ",")
+                                  type_sub, image, displayed,
+                                  tab_file_name), sep = ",")
     write(write_info, tab_path, append = TRUE)
     return(TRUE)
 }

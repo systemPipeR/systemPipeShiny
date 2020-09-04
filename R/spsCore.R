@@ -149,6 +149,7 @@ spsInit <- function(dir_path=getwd(),
 checkSps <- function(appDir = getwd()) {
     resolveOptions(appDir)
     checkTabs(appDir)
+    return(TRUE)
 }
 
 #' @importFrom yaml yaml.load_file
@@ -257,12 +258,20 @@ viewSpsDefaults <- function(appDir = getwd()){
 #' @param appDir App dir
 #' @noRd
 checkTabs <- function(appDir){
-    spsinfo("Now check the tab info in tab.csv ")
-    tab_info <- if (exists("tab_info")) {
-        tab_info
-    } else {
-        suppressMessages(vroom::vroom(glue("{appDir}/config/tabs.csv"),
-                                      comment = "#", na = character()))
+    spsinfo("Now check the tab info in tabs.csv ")
+    tab_info <-suppressMessages(
+        vroom::vroom(
+            file.path(appDir, "config", "tabs.csv"),
+            comment = "#",
+            altrep = FALSE,
+            na = character())
+    )
+    cols <- c("tab_id", "display_label","type",
+              "type_sub", "image", "tab_file_name")
+    col_check <- cols %in% names(tab_info)
+    if(!all(col_check)){
+        spserror(glue('Following column(s) missing
+                      {glue_collapse(cols[!col_check], ", ")}'))
     }
     ta_dup <- tab_info$tab_id[base::duplicated(tab_info$tab_id)] %>% unique()
     if(length(ta_dup) > 0){
@@ -279,6 +288,7 @@ checkTabs <- function(appDir){
                   "these tabs' gallery."))
     }
     spsinfo("tab.csv info check pass")
+    return(tab_info)
 }
 
 # internal function for `sps` to copy files
