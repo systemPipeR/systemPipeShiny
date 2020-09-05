@@ -141,22 +141,22 @@ spsInit <- function(dir_path=getwd(),
 
 #' Pre start SPS checks
 #'
-#' @param appDir where is the app directory root location, default current
+#' @param app_path where is the app directory root location, default current
 #' working folder
 #' @noRd
 # @examples
 # checkSps()
-checkSps <- function(appDir = getwd()) {
-    resolveOptions(appDir)
-    checkTabs(appDir)
+checkSps <- function(app_path = getwd()) {
+    resolveOptions(app_path)
+    checkTabs(app_path)
     return(TRUE)
 }
 
 #' @importFrom yaml yaml.load_file
 #' @noRd
-verifyConfig <- function(appDir) {
+verifyConfig <- function(app_path) {
     sps_options <-
-        yaml::yaml.load_file(glue("{appDir}/config/sps_options.yaml"))
+        yaml::yaml.load_file(glue("{app_path}/config/sps_options.yaml"))
     # can't use vapply, mix types of returns
     sps_defaults <- sapply(names(sps_options),
                            function(x) sps_options[[x]][['default']],
@@ -176,7 +176,7 @@ verifyConfig <- function(appDir) {
 
 #' Resolve SPS options
 #' need to use the sps_options.yaml file
-#' @param appDir default current working folder
+#' @param app_path default current working folder
 #' @noRd
 # @examples
 # spsInit()
@@ -184,10 +184,10 @@ verifyConfig <- function(appDir) {
 #                    place = "here", time = c("now", "then"),
 #                    loading_screen = FALSE))
 # resolveOptions()
-resolveOptions <- function(appDir = getwd()){
+resolveOptions <- function(app_path = getwd()){
     ops <- options()$sps
-    ops$appDir <- NULL
-    verified_ops <- verifyConfig(appDir)
+    ops$app_path <- NULL
+    verified_ops <- verifyConfig(app_path)
     sps_options <- verified_ops[[1]]
     sps_defaults <- verified_ops[[2]]
 
@@ -230,8 +230,8 @@ resolveOptions <- function(appDir = getwd()){
     for (x in names(ops)){
         sps_defaults[[x]] <- ops[[x]]
     }
-    # add hidden appdir
-    sps_defaults[['appDir']] <- appDir
+    # add hidden app_path
+    sps_defaults[['app_path']] <- app_path
     # replace global env
     options(sps = sps_defaults)
 }
@@ -239,7 +239,7 @@ resolveOptions <- function(appDir = getwd()){
 #' Print systemPipeShiny default Options
 #' @description  Make sure you created the app folder and has config.yaml
 #' in config folder
-#' @param appDir where is the app directory
+#' @param app_path where is the app directory
 #'
 #' @export
 #' @return cat to console the default options
@@ -248,26 +248,27 @@ resolveOptions <- function(appDir = getwd()){
 #'     spsInit()
 #'     viewSpsDefaults()
 #' }
-viewSpsDefaults <- function(appDir = getwd()){
-    sps_defaults <- verifyConfig(appDir)[[1]]
+viewSpsDefaults <- function(app_path = getwd()){
+    sps_defaults <- verifyConfig(app_path)[[1]]
     cat(glue("{names(sps_defaults)}: {sps_defaults}\n\n"))
 }
 
 #' Check sps tab file on start
 #' @importFrom vroom vroom
-#' @param appDir App dir
+#' @param app_path App dir
 #' @noRd
-checkTabs <- function(appDir){
+checkTabs <- function(app_path){
     spsinfo("Now check the tab info in tabs.csv ")
     tab_info <-suppressMessages(
         vroom::vroom(
-            file.path(appDir, "config", "tabs.csv"),
+            file.path(app_path, "config", "tabs.csv"),
             comment = "#",
             altrep = FALSE,
             na = character())
     )
     cols <- c("tab_id", "display_label","type",
-              "type_sub", "image", "tab_file_name")
+              "type_sub", "image", "tab_file_name",
+              "plugin")
     col_check <- cols %in% names(tab_info)
     if(!all(col_check)){
         spserror(glue('Following column(s) missing

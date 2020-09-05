@@ -856,11 +856,12 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
 .tabRegister <- function(tab_id, display_name = "tab_title", app_path = ".",
                          type="vs", type_sub = "", image = "",
                          displayed = 1,
-                         tab_file_name = glue("tab_vs_{tab_id}.R")){
+                         tab_file_name = glue("tab_vs_{tab_id}.R"),
+                         plugin = ""){
     tab_path <- file.path(app_path, "config", "tabs.csv")
     write_info <- glue_collapse(c(tab_id, display_name, type,
                                   type_sub, image, displayed,
-                                  tab_file_name), sep = ",")
+                                  tab_file_name, plugin), sep = ",")
     write(write_info, tab_path, append = TRUE)
     return(TRUE)
 }

@@ -574,7 +574,7 @@ function in `global.R` as a group. To view all options and their default, valid
 values('*' means any value is okay):
 
 ```{r , eval=TRUE}
-viewSpsDefaults(appDir = sps_dir)
+viewSpsDefaults(app_path = sps_dir)
 ```
 
 To view a single option value, use `spsOption(opt = "option_name")`, to overwrite a single 
