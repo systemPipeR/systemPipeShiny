@@ -5,16 +5,13 @@ spsLoadPlugin <- function(
     app_path = getwd(),
     verbose = FALSE,
     third_party = FALSE,
-    confirm = TRUE,
     overwrite = FALSE
 ){
     old_opt <- getOption('sps')
     spsOption("use_crayon", TRUE)
     spsOption("verbose", verbose)
     spsinfo("Check plugin name")
-    if(!.validatePluginName(plugin, third_party)){
-        return(cat())
-    }
+    if(!.validatePluginName(plugin, third_party)) return(cat())
     if(!third_party) .checkPluginInstall()
     spsinfo("Load tabs.csv from your SPS project")
     tab_info <- .checkTabFile(app_path)
@@ -24,7 +21,9 @@ spsLoadPlugin <- function(
     if(!emptyIsFalse(app_path)) spserror("Can't get plugin path")
     spsinfo("Load tabs.csv from plugin")
     tab_info_plugin <- .checkTabFile(plugin_path, check_write = FALSE)
-    .resolvePluginStructure
+    files <- .resolvePluginStructure(app_path, plugin_path)
+    if(!.resolveFileOverlap(files, overwrite)) spserror("Abort")
+    .checkTabContent(tab_info_plugin)
     options(sps = old_opt)
 }
 
@@ -46,6 +45,7 @@ spsRemovePlugin <- function(
         spserror(glue("Plugin `{plugin}` is not installed"))
     }
 }
+
 .validatePluginName <- function(plugin, third_party){
     if(length(plugin) > 1) spserror("Only one name at a time")
     if(third_party){
@@ -96,8 +96,91 @@ spsRemovePlugin <- function(
     return(suppressWarnings(checkTabs(app_path)))
 }
 
+
+.checkTabContent <- function(plugin_path){
+    vs_tabs <- dplyr::filter(tab_info_plugin, type_sub %in% c("data", "plot"))
+    if(nrow(vs_tabs) < 1) {spsinfo("No tab added"); return(TRUE)}
+    tab_ids <- vs_tabs$tab_id; tab_files <- vs_tabs$tab_file_name
+    tab_ids = c(tab_ids, "asasas"); tab_files = c(tab_files, "asasas")
+    spsinfo("Checking plugin tab IDs")
+    if(!all(bad_id <- str_detect(tab_ids, "^(data|plot)_"))){
+        spserror(c("Invalid tab ID ",
+                   glue_collapse(tab_ids[!bad_id], sep = " ")))
+    }
+    spsinfo("Checking plugin individual tabs")
+    tab_ids = tab_ids[-1:-2]
+    tab_files = tab_files[-1:-2]
+    for(i in seq_along(tab_files)[-1:-2]){
+        if(!str_detect(tab_files[i], glue("^tab_vs_{tab_ids[i]}\\.R$"))) {
+            spswarn(c("tab ",
+                      tab_files[i],
+                      " recommended file name is ",
+                      glue("tab_vs_{tab_ids[i]}.R")))
+        }
+        spsinfo(c("Checking content of ", tab_files[i]))
+        tab_file <- file.path(plugin_path, "R", tab_files[i])
+        if(!file.exists(tab_file)) {
+            spserror(c("Plugin tab ", tab_ids[i], ": ", tab_file, " not exist"))
+        }
+        tab_content <- readLines(tab_file)
+        .findUIandServer(tab_content, "UI", tab_ids[i], tab_file)
+        .findUIandServer(tab_content, "Server", tab_ids[i], tab_file)
+
+    }
+}
+
+
+.findUIandServer <- function(tab_content, ui_or_server, tab_id, tab_file){
+    search_res <- str_detect(
+        tab_content,
+        glue("^@{tab_id}@@{ui_or_server}@[ ]{0,}(<-|=)[ ]{0,}function",
+             .open = "@{",
+             .close = "}@")
+    )
+    if(sum(search_res) < 1){
+        spserror(c(glue("Cannot find {ui_or_server} function for "),
+                   tab_id,
+                   " in file ",
+                   tab_file,
+                   " It should start with:", "\n",
+                   glue("'{tab_id}{ui_or_server} <- function' or \n"),
+                   glue("'{tab_id}{ui_or_server} = function'\n")
+        ))
+    } else if(sum(search_res) > 1){
+        spswarn(glue("Find duplicated {ui_or_server} function in {tab_file}:"))
+        cat(glue(
+            "Line @{which(search_res)}@: @{tab_content[search_res]}@",
+            .open = "@{", .close = "}@"
+        ), sep = "\n")
+    }
+}
+
+
+
+
+.listPluginFiles <- function(path = getwd(), include_tab_config = FALSE){
+    exclude_files <- if(!include_tab_config) "" else c("", "config/tabs.csv")
+    list.files(path, full.names = FALSE, include.dirs = TRUE,
+               all.files = TRUE, recursive = TRUE, no.. = TRUE) %>%
+        {.[!. %in% exclude_files]}
+}
+
+.cat_dir <- function(split_files, start = ".", space = "") {
+    nodes <- split_files[[start]]
+    color_text <- names(nodes)
+    for(dir in seq_along(nodes)) {
+        if(dir == length(nodes)) {
+            cat(space, "L-- ", color_text[dir], "\n", sep = "")
+            .cat_dir(split_files, nodes[dir], glue("{space}    "))
+        } else {
+            cat(space, "+-- ", color_text[dir], "\n", sep = "")
+            .cat_dir(split_files, nodes[dir], glue("{space}|   "))
+        }
+    }
+}
+
 .resolvePluginStructure <- function(app_path, plugin_path){
-    app_files <- .listPluginFiles(app_path)
+    app_files <- .listPluginFiles(app_path, TRUE)
     plugin_files <- .listPluginFiles(plugin_path)
     all_files <- unique(app_files, plugin_files)
 
@@ -126,31 +209,23 @@ spsRemovePlugin <- function(
         crayon::make_style("orange")$bold("-- **Overlapping files"), " ",
         crayon::blue$bold("Directory"), "\n", sep = ""
     )
+    return(list(
+        old_files = old_files,
+        new_files = new_files,
+        overlap_files = overlap_files,
+        dirs = dirs
+    ))
 }
 
-.resolvePluginStructure(".", ".")
+files = .resolvePluginStructure(".", ".")
 
-.listPluginFiles <- function(path = getwd()){
-    list.files(path, full.names = FALSE, include.dirs = TRUE,
-               all.files = TRUE, recursive = TRUE, no.. = TRUE) %>%
-        {.[. != ""]}
-}
-
-.cat_dir <- function(split_files, start = ".", space = "") {
-    nodes <- split_files[[start]]
-    color_text <- names(nodes)
-    for(dir in seq_along(nodes)) {
-        if(dir == length(nodes)) {
-            cat(space, "L-- ", color_text[dir], "\n", sep = "")
-            .cat_dir(split_files, nodes[dir], glue("{space}    "))
-        } else {
-            cat(space, "+-- ", color_text[dir], "\n", sep = "")
-            .cat_dir(split_files, nodes[dir], glue("{space}|   "))
-        }
+.resolveFileOverlap <- function(files, overwrite){
+    file_overlap <- files$overlap_files[!files$overlap_files %in% files$dirs]
+    if(length(file_overlap) > 0 & !overwrite){
+        spswarn("Overlapping files detected and `overwrite` is false")
+        return(FALSE)
     }
 }
-
-
 
 
 

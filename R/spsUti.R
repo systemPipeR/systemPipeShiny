@@ -337,7 +337,7 @@ msg <- function(msg,
 spsinfo <- function(msg, verbose=NULL) {
     verbose <- if(is.null(verbose)) spsOption('verbose')
                else {assert_that(is.logical(verbose)); verbose}
-    if(verbose) msg(msg, "SPS-INFO", "blue")
+    if(verbose) msg(msg, "info", info_text =  "SPS-INFO")
 }
 
 #' @rdname msg
