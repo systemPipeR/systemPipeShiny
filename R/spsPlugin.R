@@ -5,10 +5,11 @@ spsLoadPlugin <- function(
     app_path = getwd(),
     verbose = FALSE,
     third_party = FALSE,
-    overwrite = FALSE
+    overwrite = FALSE,
+    colorful = TRUE
 ){
     old_opt <- getOption('sps')
-    spsOption("use_crayon", TRUE)
+    spsOption("use_crayon", colorful)
     spsOption("verbose", verbose)
     spsinfo("Check plugin name")
     if(!.validatePluginName(plugin, third_party)) return(cat())
@@ -21,21 +22,29 @@ spsLoadPlugin <- function(
     if(!emptyIsFalse(app_path)) spserror("Can't get plugin path")
     spsinfo("Load tabs.csv from plugin")
     tab_info_plugin <- .checkTabFile(plugin_path, check_write = FALSE)
+    if(!.checkConflictTabs(tab_info, tab_info_plugin)) spserror("Abort")
     files <- .resolvePluginStructure(app_path, plugin_path)
     if(!.resolveFileOverlap(files, overwrite)) spserror("Abort")
     .checkTabContent(tab_info_plugin)
+    spsinfo("Initial checks pass, now copy files")
+    .copyPluginFiles(files, app_path, plugin_path, tab_info, tab_info_plugin)
+    options(sps = old_opt)
+    msg(gue("Plugin {plugin} added!"), "SPS-INFO", "green")
+}
+
+
+spsRemovePlugin <- function(
+    plugin,
+    app_path = getwd(),
+){
+    old_opt <- getOption('sps')
+    spsOption("use_crayon", TRUE)
+    spsOption("verbose", verbose)
+    if(!is.character(plugin) & length(plugin) != 1){
+        spserror("Plugin name must be a length 1 character string")
+    }
     options(sps = old_opt)
 }
-
-spsLoadPlugin("base", verbose = TRUE)
-
-Windows
-spsRemovePlugin <- function(
-
-){
-
-}
-
 
 
 .checkPluginInstall <- function(plugin){
@@ -96,6 +105,81 @@ spsRemovePlugin <- function(
     return(suppressWarnings(checkTabs(app_path)))
 }
 
+.listPluginFiles <- function(path = getwd(), exclude_tab_config = FALSE){
+    exclude_files <- if(!exclude_tab_config) "" else c("", "config/tabs.csv")
+    list.files(path, full.names = FALSE, include.dirs = TRUE,
+               all.files = TRUE, recursive = TRUE, no.. = TRUE) %>%
+        {.[!. %in% exclude_files]}
+}
+
+.cat_dir <- function(split_files, start = ".", space = "") {
+    nodes <- split_files[[start]]
+    color_text <- names(nodes)
+    for(dir in seq_along(nodes)) {
+        if(dir == length(nodes)) {
+            cat(space, "L-- ", color_text[dir], "\n", sep = "")
+            .cat_dir(split_files, nodes[dir], glue("{space}    "))
+        } else {
+            cat(space, "+-- ", color_text[dir], "\n", sep = "")
+            .cat_dir(split_files, nodes[dir], glue("{space}|   "))
+        }
+    }
+}
+
+.resolvePluginStructure <- function(app_path, plugin_path){
+    app_files <- .listPluginFiles(app_path)
+    plugin_files <- .listPluginFiles(plugin_path, TRUE)
+    all_files <- unique(app_files, plugin_files)
+
+    old_files <- setdiff(app_files, plugin_files)
+    new_files <- setdiff(plugin_files, app_files)
+    overlap_files <- all_files[!all_files %in% c(old_files, new_files)]
+    names(old_files) <- basename(old_files)
+    names(new_files) <- if(emptyIsFalse(new_files)){
+        crayon::green$bold(paste0("*", basename(new_files)))
+    } else {character(0)}
+    names(overlap_files) <- if(emptyIsFalse(overlap_files)){
+        crayon::make_style("orange")$bold(paste0("**", basename(overlap_files)))
+    } else(character(0))
+
+    all_files <- c(old_files, new_files, overlap_files)
+    dirs <- unique(dirname(all_files)) %>% {.[. != "."]}
+    color_text <- names(all_files)
+    for(dir in dirs){
+        color_text[all_files == dir]<- crayon::blue$bold(basename(dir))
+    }
+    names(all_files) <- color_text
+    split_files <- split(all_files, dirname(all_files))
+
+    cat(crayon::blue$bold(basename("New directory will be:")), "\n")
+    .cat_dir(split_files)
+    cat("-- Old files ",
+        crayon::green$bold("-- *New files"), "\n",
+        crayon::make_style("orange")$bold("-- **Overlapping files"), " ",
+        crayon::blue$bold("Directory"), "\n", sep = ""
+    )
+    return(list(
+        old_files = old_files,
+        new_files = new_files,
+        overlap_files = overlap_files,
+        dirs = dirs
+    ))
+}
+
+files = .resolvePluginStructure("SPS_20200909", "test")
+
+.resolveFileOverlap <- function(files, overwrite){
+    file_overlap <- files$overlap_files[!files$overlap_files %in% files$dirs]
+    if(length(file_overlap) > 0 & !overwrite){
+        spswarn("Overlapping files detected and `overwrite` option is false")
+        FALSE
+    } else {
+        spswarn("Overlapping files detected and will be overwritten")
+        TRUE
+    }
+}
+
+
 
 .checkTabContent <- function(plugin_path){
     vs_tabs <- dplyr::filter(tab_info_plugin, type_sub %in% c("data", "plot"))
@@ -107,7 +191,7 @@ spsRemovePlugin <- function(
         spserror(c("Invalid tab ID ",
                    glue_collapse(tab_ids[!bad_id], sep = " ")))
     }
-    spsinfo("Checking plugin individual tabs")
+    spsinfo("Checking plugin individual tab files")
     tab_ids = tab_ids[-1:-2]
     tab_files = tab_files[-1:-2]
     for(i in seq_along(tab_files)[-1:-2]){
@@ -155,77 +239,52 @@ spsRemovePlugin <- function(
     }
 }
 
-
-
-
-.listPluginFiles <- function(path = getwd(), include_tab_config = FALSE){
-    exclude_files <- if(!include_tab_config) "" else c("", "config/tabs.csv")
-    list.files(path, full.names = FALSE, include.dirs = TRUE,
-               all.files = TRUE, recursive = TRUE, no.. = TRUE) %>%
-        {.[!. %in% exclude_files]}
+.checkConflictTabs <- function(tab_info, tab_info_plugin){
+    conflict <- intersect(tab_info$tab_id, tab_info_plugin$tab_id)
+    if(length(conflict) > 0){
+        spswarn(c("Tab ID(s) '",
+                  glue_collapse(conflict, ", "),
+                  "' have conflict"))
+        FALSE
+    } else TRUE
 }
 
-.cat_dir <- function(split_files, start = ".", space = "") {
-    nodes <- split_files[[start]]
-    color_text <- names(nodes)
-    for(dir in seq_along(nodes)) {
-        if(dir == length(nodes)) {
-            cat(space, "L-- ", color_text[dir], "\n", sep = "")
-            .cat_dir(split_files, nodes[dir], glue("{space}    "))
-        } else {
-            cat(space, "+-- ", color_text[dir], "\n", sep = "")
-            .cat_dir(split_files, nodes[dir], glue("{space}|   "))
-        }
+.copyPluginFiles <- function(files, app_path, plugin_path,
+                             tab_info, tab_info_plugin){
+    copy_files <- c(files$new_files, files$overlap_files) %>% {
+        .[!. %in% files$dirs]
     }
-}
-
-.resolvePluginStructure <- function(app_path, plugin_path){
-    app_files <- .listPluginFiles(app_path, TRUE)
-    plugin_files <- .listPluginFiles(plugin_path)
-    all_files <- unique(app_files, plugin_files)
-
-    old_files <- setdiff(app_files, plugin_files)
-    new_files <- setdiff(plugin_files, app_files)
-    overlap_files <- all_files[!all_files %in% c(old_files, new_files)]
-    names(old_files) <- basename(old_files)
-    names(new_files) <- if(emptyIsFalse(new_files)){
-        crayon::green$bold(paste0("*", basename(new_files)))
-    } else {character(0)}
-    names(overlap_files) <- if(emptyIsFalse(overlap_files)){
-        crayon::make_style("orange")$bold(paste0("**", basename(overlap_files)))
-    } else(character(0))
-
-    all_files <- c(old_files, new_files, overlap_files)
-    dirs <- unique(dirname(all_files)) %>% {.[. != "."]}
-    color_text <- names(all_files)
-    color_text[all_files %in% dirs] <- crayon::blue$bold(basename(dirs))
-    names(all_files) <-color_text
-    split_files <- split(all_files, dirname(all_files))
-
-    cat(crayon::blue$bold(basename("New directory will be:")), "\n")
-    .cat_dir(split_files)
-    cat("-- Old files ",
-        crayon::green$bold("-- *New files"), "\n",
-        crayon::make_style("orange")$bold("-- **Overlapping files"), " ",
-        crayon::blue$bold("Directory"), "\n", sep = ""
-    )
-    return(list(
-        old_files = old_files,
-        new_files = new_files,
-        overlap_files = overlap_files,
-        dirs = dirs
-    ))
-}
-
-files = .resolvePluginStructure(".", ".")
-
-.resolveFileOverlap <- function(files, overwrite){
-    file_overlap <- files$overlap_files[!files$overlap_files %in% files$dirs]
-    if(length(file_overlap) > 0 & !overwrite){
-        spswarn("Overlapping files detected and `overwrite` is false")
-        return(FALSE)
+    spsinfo("create required directories")
+    dir_result <- lapply(file.path(app_path, files$dirs),
+                         dir.create,
+                         recursive = TRUE,
+                         showWarnings = FALSE) %>%
+        unlist()
+    lapply(files$dirs[!dir_result], function(x) {
+        spsinfo(glue("Directory {x} exists, skip"))
+    })
+    copy_res <- file.copy(file.path(plugin_path, copy_files),
+                          file.path(app_path, copy_files),
+                          overwrite = TRUE)
+    if(!all(copy_res)){
+        lapply(file.path(app_path, copy_files), function(x){
+            spswarn(glue("Cannot copy file to {x}"))
+            spsinfo(c("Maybe this file(s) exists but ",
+                      "you have no permission to modify"), TRUE)
+            spserror("Abort")
+        })
     }
+    spsinfo("Now rewrite 'config/tabs.csv'")
+    tab_info_new <- tab_info %>% dplyr::add_row(tab_info_plugin)
+    header <- readLines(file.path(app_path, "config", "tabs.csv")) %>%
+        {.[str_which(., "^#")]}
+    c(header, names(tab_info_new) %>% glue_collapse(sep = ","),
+      apply(tab_info_new, 1, paste, collapse = ",")) %>%
+        writeLines(file.path(app_path, "config", "tabs.csv"))
 }
+
+
+
 
 
 

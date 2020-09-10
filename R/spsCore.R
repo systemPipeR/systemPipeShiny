@@ -108,17 +108,17 @@ spsInit <- function(dir_path=getwd(),
     }
 
     spsinfo("Now copy files", TRUE)
-    copySPSfiles("app/www/", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/config", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/R", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/data", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/results", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/README.md", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/www/", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/config", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/R", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/data", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/results", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/README.md", project_dir, FALSE, overwrite, verbose)
     copySPSfiles("app/deploy.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/global.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, overwrite, verbose)
+    copySPSfiles("app/app_ez/global.R", project_dir, FALSE, overwrite, verbose)
+    copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, overwrite, verbose)
+    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, overwrite, verbose)
 
     spsinfo("Create SPS database", TRUE)
     suppressWarnings(
@@ -254,7 +254,7 @@ viewSpsDefaults <- function(app_path = getwd()){
 }
 
 #' Check sps tab file on start
-#' @importFrom vroom vroom
+#' @importFrom vroom vroom cols col_character
 #' @param app_path App dir
 #' @noRd
 checkTabs <- function(app_path){
@@ -264,6 +264,8 @@ checkTabs <- function(app_path){
             file.path(app_path, "config", "tabs.csv"),
             comment = "#",
             altrep = FALSE,
+            delim = ",",
+            col_types= vroom::cols(image = vroom::col_character()),
             na = character())
     )
     cols <- c("tab_id", "display_label","type",
