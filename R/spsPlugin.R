@@ -89,8 +89,7 @@ spsLoadPlugin <- function(
     verbose = FALSE,
     third_party = FALSE,
     overwrite = FALSE,
-    colorful = TRUE
-){
+    colorful = TRUE){
     old_opt <- getOption('sps')
     on.exit(options(sps = old_opt))
     spsOption("use_crayon", colorful)
@@ -368,8 +367,7 @@ spsRemovePlugin <- function(
     app_path = getwd(),
     force = FALSE,
     verbose = FALSE,
-    colorful = TRUE
-){
+    colorful = TRUE){
     old_opt <- getOption('sps')
     spsOption("use_crayon", colorful)
     spsOption("verbose", verbose)
