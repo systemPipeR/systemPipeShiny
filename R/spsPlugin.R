@@ -112,6 +112,12 @@ spsLoadPlugin <- function(
     spsinfo("Initial checks pass, now copy files")
     .copyPluginFiles(files, app_path, plugin_path, tab_info, tab_info_plugin)
     msg(glue("Plugin {plugin} added!"), "SPS-SUCCESS", "green")
+    more_info <- c(glue("Remember to load `library({plugin})` when you start "),
+                   "SPS. Additional R functions maybe bundled with this plugin")
+    if(!third_party) {spsinfo(more_info, TRUE)} else {
+        spsinfo(glue("If this third-party plugin is an R package "), TRUE)
+        spsinfo(more_info, TRUE)
+    }
 }
 
 

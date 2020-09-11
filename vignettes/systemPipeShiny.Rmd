@@ -113,8 +113,8 @@ Before starting with SPS, you need to create a SPS project:
 
 ```{r spsinit, eval=TRUE}
 sps_tmp_dir <- tempdir()
-spsInit(dir_path = sps_tmp_dir, change_wd = FALSE)
-sps_dir <- file.path(sps_tmp_dir, glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+spsInit(dir_path = sps_tmp_dir, change_wd = FALSE, project_name = "SPSProject")
+sps_dir <- file.path(sps_tmp_dir, "SPSProject")
 ```
 Here for building the vignette we are not switching to the app directory and are using a 
 temp directory, in a real case, you **shouldn't** store you SPS project in a **temp directory**.
