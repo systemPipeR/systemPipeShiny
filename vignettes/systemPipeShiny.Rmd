@@ -40,7 +40,7 @@ knitr::opts_chunk$set(
 shiny::tagList(rmarkdown::html_dependency_font_awesome())
 ```
 
-```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=FALSE}
+```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=TRUE}
 suppressPackageStartupMessages({
     library(systemPipeShiny)
 })
@@ -49,8 +49,7 @@ suppressPackageStartupMessages({
 
 ```{r sps-css, results = 'asis', echo=FALSE, eval=TRUE}
 cat("<style>")
-readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")) %>% 
-cat(sep = "\n")
+cat(readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")),sep = "\n")
 cat("</style>")
 ```
 
@@ -575,7 +574,7 @@ function in `global.R` as a group. To view all options and their default, valid
 values('*' means any value is okay):
 
 ```{r , eval=TRUE}
-viewSpsDefaults(appDir = sps_dir)
+viewSpsDefaults(app_path = sps_dir)
 ```
 
 To view a single option value, use `spsOption(opt = "option_name")`, to overwrite a single 

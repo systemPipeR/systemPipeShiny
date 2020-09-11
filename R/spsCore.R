@@ -108,17 +108,17 @@ spsInit <- function(dir_path=getwd(),
     }
 
     spsinfo("Now copy files", TRUE)
-    copySPSfiles("app/www/", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/config", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/R", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/data", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/results", project_dir, TRUE, FALSE, verbose)
-    copySPSfiles("app/README.md", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/www/", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/config", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/R", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/data", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/results", project_dir, TRUE, overwrite, verbose)
+    copySPSfiles("app/README.md", project_dir, FALSE, overwrite, verbose)
     copySPSfiles("app/deploy.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/global.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, FALSE, verbose)
-    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, FALSE, verbose)
+    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, overwrite, verbose)
+    copySPSfiles("app/app_ez/global.R", project_dir, FALSE, overwrite, verbose)
+    copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, overwrite, verbose)
+    copySPSfiles("app/app_ez/server.R", project_dir, FALSE, overwrite, verbose)
 
     spsinfo("Create SPS database", TRUE)
     suppressWarnings(
@@ -130,8 +130,6 @@ spsInit <- function(dir_path=getwd(),
         spsinfo(glue("Change working directory to {project_dir}"))
         setwd(project_dir)
         if(rstudioapi::isAvailable() & open_files){
-            # rstudioapi::navigateToFile("server.R")
-            # rstudioapi::navigateToFile("ui.R")
             rstudioapi::navigateToFile("global.R")
         }
     }
@@ -141,21 +139,22 @@ spsInit <- function(dir_path=getwd(),
 
 #' Pre start SPS checks
 #'
-#' @param appDir where is the app directory root location, default current
+#' @param app_path where is the app directory root location, default current
 #' working folder
 #' @noRd
 # @examples
 # checkSps()
-checkSps <- function(appDir = getwd()) {
-    resolveOptions(appDir)
-    checkTabs(appDir)
+checkSps <- function(app_path = getwd()) {
+    resolveOptions(app_path)
+    checkTabs(app_path)
+    return(TRUE)
 }
 
 #' @importFrom yaml yaml.load_file
 #' @noRd
-verifyConfig <- function(appDir) {
+verifyConfig <- function(app_path) {
     sps_options <-
-        yaml::yaml.load_file(glue("{appDir}/config/sps_options.yaml"))
+        yaml::yaml.load_file(glue("{app_path}/config/sps_options.yaml"))
     # can't use vapply, mix types of returns
     sps_defaults <- sapply(names(sps_options),
                            function(x) sps_options[[x]][['default']],
@@ -175,7 +174,7 @@ verifyConfig <- function(appDir) {
 
 #' Resolve SPS options
 #' need to use the sps_options.yaml file
-#' @param appDir default current working folder
+#' @param app_path default current working folder
 #' @noRd
 # @examples
 # spsInit()
@@ -183,10 +182,10 @@ verifyConfig <- function(appDir) {
 #                    place = "here", time = c("now", "then"),
 #                    loading_screen = FALSE))
 # resolveOptions()
-resolveOptions <- function(appDir = getwd()){
+resolveOptions <- function(app_path = getwd()){
     ops <- options()$sps
-    ops$appDir <- NULL
-    verified_ops <- verifyConfig(appDir)
+    ops$app_path <- NULL
+    verified_ops <- verifyConfig(app_path)
     sps_options <- verified_ops[[1]]
     sps_defaults <- verified_ops[[2]]
 
@@ -229,8 +228,8 @@ resolveOptions <- function(appDir = getwd()){
     for (x in names(ops)){
         sps_defaults[[x]] <- ops[[x]]
     }
-    # add hidden appdir
-    sps_defaults[['appDir']] <- appDir
+    # add hidden app_path
+    sps_defaults[['app_path']] <- app_path
     # replace global env
     options(sps = sps_defaults)
 }
@@ -238,7 +237,7 @@ resolveOptions <- function(appDir = getwd()){
 #' Print systemPipeShiny default Options
 #' @description  Make sure you created the app folder and has config.yaml
 #' in config folder
-#' @param appDir where is the app directory
+#' @param app_path where is the app directory
 #'
 #' @export
 #' @return cat to console the default options
@@ -247,22 +246,33 @@ resolveOptions <- function(appDir = getwd()){
 #'     spsInit()
 #'     viewSpsDefaults()
 #' }
-viewSpsDefaults <- function(appDir = getwd()){
-    sps_defaults <- verifyConfig(appDir)[[1]]
+viewSpsDefaults <- function(app_path = getwd()){
+    sps_defaults <- verifyConfig(app_path)[[1]]
     cat(glue("{names(sps_defaults)}: {sps_defaults}\n\n"))
 }
 
 #' Check sps tab file on start
-#' @importFrom vroom vroom
-#' @param appDir App dir
+#' @importFrom vroom vroom cols col_character
+#' @param app_path App dir
 #' @noRd
-checkTabs <- function(appDir){
-    spsinfo("Now check the tab info in tab.csv ")
-    tab_info <- if (exists("tab_info")) {
-        tab_info
-    } else {
-        suppressMessages(vroom::vroom(glue("{appDir}/config/tabs.csv"),
-                                      comment = "#", na = character()))
+checkTabs <- function(app_path){
+    spsinfo("Now check the tab info in tabs.csv ")
+    tab_info <-suppressMessages(
+        vroom::vroom(
+            file.path(app_path, "config", "tabs.csv"),
+            comment = "#",
+            altrep = FALSE,
+            delim = ",",
+            col_types= vroom::cols(image = vroom::col_character()),
+            na = character())
+    )
+    cols <- c("tab_id", "display_label","type",
+              "type_sub", "image", "tab_file_name",
+              "plugin")
+    col_check <- cols %in% names(tab_info)
+    if(!all(col_check)){
+        spserror(glue('Following column(s) missing
+                      {glue_collapse(cols[!col_check], ", ")}'))
     }
     ta_dup <- tab_info$tab_id[base::duplicated(tab_info$tab_id)] %>% unique()
     if(length(ta_dup) > 0){
@@ -279,6 +289,7 @@ checkTabs <- function(appDir){
                   "these tabs' gallery."))
     }
     spsinfo("tab.csv info check pass")
+    return(tab_info)
 }
 
 # internal function for `sps` to copy files

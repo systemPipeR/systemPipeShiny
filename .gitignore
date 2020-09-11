@@ -12,3 +12,5 @@ vignettes/*.html
 vignettes/*.pdf
 docs/reference/SPS_20*
 docs/reference/config
+docs/reference/test*
+SPS_20*

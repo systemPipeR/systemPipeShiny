@@ -156,7 +156,7 @@ shinyCatch <- function(expr, position = "bottom-right",
 #' @param cran_pkg vector of strings
 #' @param bioc_pkg vector of strings
 #' @param github vector of strings, github package must specify user name, c("user1/pkg1", "user2/pkg2")
-#' @param quietly bool, should progress and error messages be suppressed?
+#' @param quietly bool, should warning messages be suppressed?
 #' @importFrom shinyAce is.empty
 #' @importFrom shinytoastr toastr_success
 #' @importFrom shinyWidgets sendSweetAlert

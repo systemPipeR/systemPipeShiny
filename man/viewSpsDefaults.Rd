@@ -4,10 +4,10 @@
 \alias{viewSpsDefaults}
 \title{Print systemPipeShiny default Options}
 \usage{
-viewSpsDefaults(appDir = getwd())
+viewSpsDefaults(app_path = getwd())
 }
 \arguments{
-\item{appDir}{where is the app directory}
+\item{app_path}{where is the app directory}
 }
 \value{
 cat to console the default options

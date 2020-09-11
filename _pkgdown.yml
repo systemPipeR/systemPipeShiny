@@ -29,6 +29,11 @@ reference:
     contents:
       - sps
       - spsInit
+  - subtitle: SPS plugin operation
+    contents:
+      - spsLoadPlugin
+      - spsRemovePlugin
+      - spsNewPlugin
   - subtitle: SPS config
     contents:
       - spsOption
@@ -97,4 +102,5 @@ reference:
       - pgPaneUpdate
       - pgPaneUI
       - renderDesc
+      - uiExamples
 
