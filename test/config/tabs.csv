@@ -1,8 +1,0 @@
-# List of SPS tabs,,,,,,,
-# Editing by hand is not recommended ,,,,,,,
-# image paths use ‘www’ folder as root,,,,,,,
-tab_id,display_label,type,type_sub,image,displayed,tab_file_name,plugin
-data_a,Data Tab Title,vs,data,,1,tab_vs_data_a.R,test
-data_b,Data Tab Title,vs,data,,1,tab_vs_data_b.R,test
-plot_a,Plot Tab Title,vs,plot,,1,tab_vs_plot_a.R,test
-plot_b,Plot Tab Title,vs,plot,,1,tab_vs_plot_b.R,test

@@ -21,7 +21,7 @@ shinyCheckPkg(
 
 \item{github}{vector of strings, github package must specify user name, c("user1/pkg1", "user2/pkg2")}
 
-\item{quietly}{bool, should progress and error messages be suppressed?}
+\item{quietly}{bool, should warning messages be suppressed?}
 }
 \value{
 TRUE if pass, sweet alert massage and FALSE if fail

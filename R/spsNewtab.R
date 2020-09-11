@@ -69,6 +69,8 @@
 #' @param app_path string, app directory, default is current directory
 #' @param out_folder_path string, which directory to write the new tab file,
 #' default is the *R* folder a SPS project
+#' @param plugin character string, if you are building a tab for a plugin, you
+#' can specify the plugin name here.
 #' @param author character string, or a vector of strings. authors of the tab
 #' @param empty bool, for **advanced developers**, if you don't want to
 #' use SPS default tab UI and server structure, you can use turn this to *TRUE*.
@@ -196,6 +198,7 @@ newTabPlot <- function(tab_id = "plot_id1",
                        out_folder_path = file.path(app_path, "R"),
                        plot_control_ui = tagList(h3("Some plotting options")),
                        author = "",
+                       plugin = "",
                        empty = FALSE,
                        preview = FALSE,
                        use_string = FALSE,
@@ -286,10 +289,10 @@ newTabPlot <- function(tab_id = "plot_id1",
     .reformatTab(reformat, out_p)
     # register tab
     .registerTabWrapper(type_sub = "plot", img, tab_id, tab_displayname,
-                        app_path, out_p, open_file)
+                        app_path, out_p, open_file, plugin = plugin)
     # reset verbose to whatever before the function runs
     spsOption('verbose', verbose_old)
-    msg("New tab created!", "SPS-INFO", "green")
+    msg("New tab created!", "SPS-SUCCESS", "green")
     spsOption('use_crayon', colorful_old)
     return(invisible())
 }
@@ -324,6 +327,7 @@ newTabData <- function(tab_id = "data_id1",
                        app_path = getwd(),
                        out_folder_path = file.path(app_path, "R"),
                        eg_path = file.path(app_path, "data", "iris.csv"),
+                       plugin = "",
                        author = "",
                        empty = FALSE,
                        preview = FALSE,
@@ -401,11 +405,11 @@ newTabData <- function(tab_id = "data_id1",
     .reformatTab(reformat, out_p)
     # register tab
     .registerTabWrapper(type_sub = "data", img = "", tab_id, tab_displayname,
-                        app_path, out_p, open_file)
+                        app_path, out_p, open_file, plugin = plugin)
     # reset verbose to whatever before the function runs
     # reset verbose to whatever before the function runs
     spsOption('verbose', verbose_old)
-    msg("New tab created!", "SPS-INFO", "green")
+    msg("New tab created!", "SPS-SUCCESS", "green")
     spsOption('use_crayon', colorful_old)
     return(invisible())
 }
@@ -713,13 +717,14 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         writeLines(tab_file_path)
     spsinfo(glue("{length(matched_rows)} tabs removed from tabs.csv"), TRUE)
     spsinfo("Now remove tab R files", verbose)
-    remove_files <- .makeFileNames(dplyr::slice(tab_info, matched_rows))
-    remove_paths <- file.path(app_path, "R", remove_files)
+    remove_paths <- dplyr::slice(tab_info, matched_rows) %>%
+        dplyr::pull(tab_file_name) %>%
+        file.path(app_path, "R", .)
     for(i in remove_paths){
         spsinfo(glue("Now remove file {i}"), TRUE)
         shinyCatch(file.remove(i), shiny = FALSE)
     }
-    msg("Job complete", "SPS-INFO", "green")
+    msg("Removal complete", "SPS-SUCCESS", "green")
     return(invisible())
 }
 
@@ -787,23 +792,6 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
      pt_data
 }
 
-#' @importFrom dplyr pull
-#' @noRd
-.makeFileNames <- function(removing_df){
-    mapply(function(id, subtype){
-        if(subtype == "data"){
-            glue("tab_vs_{id}.R")
-        } else if(subtype == "plot"){
-            glue("tab_vs_{id}.R")
-        } else {
-            spserror(glue("tab ID {id} subtype is '{subtype}' not ",
-                          "data or plot, can't remove"))
-        }
-    },
-    subtype = dplyr::pull(removing_df, type_sub),
-    id = dplyr::pull(removing_df, tab_id),
-    SIMPLIFY = TRUE)
-}
 
 # collect all info from `makePrepro` lists
 .collectPrepro <- function(prepro_methods){
@@ -870,12 +858,12 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
 #' @noRd
 .registerTabWrapper <- function(type_sub = "plot", img = "", tab_id,
                                 tab_displayname, app_path, out_p,
-                                open_file){
+                                open_file, plugin){
     spsinfo("Now register your new tab to config/tab.csv", TRUE)
     register_result <- shinyCatch(
         .tabRegister(tab_id, tab_displayname, app_path,
                      type = "vs", type_sub = type_sub, image = img,
-                     displayed = 1),
+                     displayed = 1, plugin = plugin),
         shiny = FALSE
     )
     if(is.null(register_result)){

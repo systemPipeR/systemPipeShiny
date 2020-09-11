@@ -40,7 +40,7 @@ knitr::opts_chunk$set(
 shiny::tagList(rmarkdown::html_dependency_font_awesome())
 ```
 
-```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=FALSE}
+```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=TRUE}
 suppressPackageStartupMessages({
     library(systemPipeShiny)
 })

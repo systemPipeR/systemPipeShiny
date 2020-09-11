@@ -130,8 +130,6 @@ spsInit <- function(dir_path=getwd(),
         spsinfo(glue("Change working directory to {project_dir}"))
         setwd(project_dir)
         if(rstudioapi::isAvailable() & open_files){
-            # rstudioapi::navigateToFile("server.R")
-            # rstudioapi::navigateToFile("ui.R")
             rstudioapi::navigateToFile("global.R")
         }
     }

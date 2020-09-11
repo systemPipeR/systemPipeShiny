@@ -20,6 +20,7 @@ newTabPlot(
   out_folder_path = file.path(app_path, "R"),
   plot_control_ui = tagList(h3("Some plotting options")),
   author = "",
+  plugin = "",
   empty = FALSE,
   preview = FALSE,
   use_string = FALSE,
@@ -40,6 +41,7 @@ newTabData(
   app_path = getwd(),
   out_folder_path = file.path(app_path, "R"),
   eg_path = file.path(app_path, "data", "iris.csv"),
+  plugin = "",
   author = "",
   empty = FALSE,
   preview = FALSE,
@@ -121,6 +123,9 @@ switches, text input etc. If more than one components, put them in a
 \link[shiny:reexports]{shiny::tagList}}
 
 \item{author}{character string, or a vector of strings. authors of the tab}
+
+\item{plugin}{character string, if you are building a tab for a plugin, you
+can specify the plugin name here.}
 
 \item{empty}{bool, for \strong{advanced developers}, if you don't want to
 use SPS default tab UI and server structure, you can use turn this to \emph{TRUE}.
