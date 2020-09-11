@@ -69,7 +69,7 @@
 #' spsLoadPlugin(plugin = "testPlugin",
 #'               app_path = "testProject",
 #'               third_party = TRUE,
-#'               overwrite = F)
+#'               overwrite = FALSE)
 #' # check if the plugin is added
 #' # You should see `tab_vs_data_a.R` and `tab_vs_plot_a.R`
 #' list.files(file.path("testProject", "R"))
