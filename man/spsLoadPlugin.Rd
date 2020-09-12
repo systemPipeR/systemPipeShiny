@@ -11,7 +11,7 @@ spsLoadPlugin(
   app_path = getwd(),
   verbose = FALSE,
   third_party = FALSE,
-  overwrite = FALSE,
+  overwrite = 0,
   colorful = TRUE
 )
 
@@ -35,8 +35,8 @@ spsNewPlugin(path, readme = TRUE, verbose = FALSE, colorful = TRUE)
 
 \item{third_party}{bool, is this an official plugin?}
 
-\item{overwrite}{bool, if there are file conflicts, overwrite current
-existing files in \code{app_path}?}
+\item{overwrite}{one of 0, 1 or 2, if there are file conflicts, how to
+handle conflict files, see details.}
 
 \item{colorful}{bool, colorful message?}
 
@@ -73,6 +73,14 @@ will not be removed.
 }
 }
 
+\subsection{overwrite mode}{
+\itemize{
+\item 0, if there is any conflict, abort
+\item 1, overwrite all overlapping files
+\item 2, ignore conflict files, only copy new files
+}
+}
+
 \subsection{Building a plugin}{
 \itemize{
 \item When adding new tabs to a plugin, it will be better to set working
@@ -82,6 +90,10 @@ directory to \emph{PLUGIN_ROOT/inst/app}. Tab files should go into
 will also be copied to users' project.
 \item Tab files will be checked and two functions in the tab file are expected:
 \code{tabIDUI} and \code{tabIDServer}. Other files will not be checked for content.
+\item For a plugin to work, \emph{PLUGIN_ROOT/inst/app/config/tabs.csv} is required,
+and tab files listed in this \emph{tabs.csv} are also required to be put inside
+\emph{PLUGIN_ROOT/inst/app/R}. \emph{PLUGIN_ROOT/inst/app/welcome.txt} is optional. If
+this file exists, content will be \code{cat} to console when plugin is loaded.
 }
 }
 }
@@ -114,7 +126,7 @@ newTabPlot("plot_a",
 spsLoadPlugin(plugin = "testPlugin",
               app_path = "testProject",
               third_party = TRUE,
-              overwrite = F)
+              overwrite = 1)
 # check if the plugin is added
 # You should see `tab_vs_data_a.R` and `tab_vs_plot_a.R`
 list.files(file.path("testProject", "R"))

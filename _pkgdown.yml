@@ -34,7 +34,7 @@ reference:
       - spsLoadPlugin
       - spsRemovePlugin
       - spsNewPlugin
-  - subtitle: SPS config
+  - subtitle: SPS options
     contents:
       - spsOption
       - viewSpsDefaults
@@ -45,6 +45,7 @@ reference:
       - removeSpsTab
       - makePlotData
       - makePrepro
+      - spsTabInfo
   - subtitle: SPS class
     contents:
       - spsDb
@@ -63,19 +64,7 @@ reference:
       - genHrefTable
       - genHrefTab
       - spsHr
-  - title: 2. Visualization
-    contents:
-      - exploreDDS
-      - exploreDDSplot
-      - GLMplot
-      - hclustplot
-      - heatMaplot
-      - MAplot
-      - MDSplot
-      - PCAplot
-      - tSNEplot
-      - volcanoplot
-  - title: 3. General R utility
+  - title: 2. General R utility
     contents:
       - emptyIsFalse
       - msg
@@ -83,12 +72,12 @@ reference:
       - spswarn
       - spserror
       - quiet
-  - title: 4. General Shiny server utility
+  - title: 3. General Shiny server utility
     contents:
       - loadDF
       - shinyCatch
       - shinyCheckPkg
-  - title: 5. General HTML components and their server functions
+  - title: 4. General HTML components and their server functions
     contents:
       - useSps
       - clearableTextInput

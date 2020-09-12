@@ -1,6 +1,6 @@
 # List of SPS tabs,,,,,,,
 # Editing by hand is not recommended ,,,,,,,
-# image paths use 'www' folder as root,,,,,,,
+# image paths use `www` folder as root,,,,,,,
 tab_id,display_label,type,type_sub,image,displayed,tab_file_name,plugin
 core_about,About this App,core,,,1,tab_core_about.R,core
 core_canvas,Plot Canvas,core,,,1,tab_core_canvas.R,core
@@ -15,15 +15,3 @@ wf_wf,Workflow Steps,wf,,,1,tab_wf_wf.R,core
 vs_main,Visualization Main Page,vs,,,1,tab_vs_main.R,core
 data_template,Template Data Tab,vs,data,,1,tab_vs_data_template.R,core
 plot_template,Template Plot Tab,vs,plot,plot_list/plot_point.png,1,tab_vs_plot_template.R,core
-data_targets,Metadata ,vs,data,,1,tab_vs_data_targets.R,spsBio
-data_count,Count Table,vs,data,,1,tab_vs_data_count.R,spsBio
-plot_pca,PCA Plot,vs,plot,,1,tab_vs_plot_pca.R,spsBio
-plot_box,Box Plot,vs,plot,,1,tab_vs_plot_box.R,spsBio
-plot_tsne,t-SNE,vs,plot,,1,tab_vs_plot_tsne.R,spsBio
-plot_mds,MDS,vs,plot,,1,tab_vs_plot_mds.R,spsBio
-plot_glm,GLM-PCA,vs,plot,,1,tab_vs_plot_glm.R,spsBio
-plot_heat,heat map,vs,plot,,1,tab_vs_plot_heat.R,spsBio
-plot_clust,H-Clust,vs,plot,,1,tab_vs_plot_clust.R,spsBio
-plot_volcano,Volcano,vs,plot,,1,tab_vs_plot_volcano.R,spsBio
-data_degcount,DEG Count data,vs,data,,1,tab_vs_data_degcount.R,spsBio
-data_edgeR,EdgeR data,vs,data,,1,tab_vs_data_edgeR.R,spsBio
