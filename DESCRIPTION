@@ -50,19 +50,9 @@ Imports:
     styler,
     tibble,
     vroom (>= 1.3.1),
-    yaml, 
-    Rtsne,
-    ape,
-    GGally,
-    ggtree,
-    glmpca, 
-    pheatmap, 
-    ggrepel
+    yaml
 Suggests:
     testthat,
-    Biostrings,
-    DelayedArray,
-    limma,
     systemPipeR, 
     knitr, 
     rmarkdown, 

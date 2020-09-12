@@ -7,16 +7,22 @@ NULL
 
 
 #' SystemPipeShiny app start function
-#' @param vstabs your custom visualization tabs you want to display
-#'
+#' @param vstabs custom visualization tab IDs you want to display, in a character
+#' vector.
+#' @param plugin If you have loaded some SPS plugins, you can specify here as a
+#' character vector, and it will load all plugin tabs to SPS. If you only want
+#' certain tabs from a plugin, specify in `vstabs` argument.
 #' @param server_expr additional top level sever expression you want
 #' to run. This will run after the default server expressions. It means you can
 #' have access to internal server expression objects, like the reactiveValues
 #' object `shared`. You can also overwrite other values.
+#' @details You must set the project root as working directory for this
+#' function to find required files.
 #' @importFrom dplyr as_tibble filter tibble
 #' @importFrom rlang enexpr
 #' @export
 #' @return a list contains the UI and  server
+#'
 #' @examples
 #' if(interactive()){
 #'     spsInit()
@@ -27,8 +33,9 @@ NULL
 #'         }
 #'     )
 #' }
-sps <- function(vstabs, server_expr=NULL){
+sps <- function(vstabs = "", plugin = "", server_expr=NULL){
     assert_that(is.character(vstabs))
+    assert_that(is.character(plugin))
     if(any(duplicated(vstabs)))
         spserror(glue("You input duplicated tab IDs: ",
                       "{vstabs[duplicated(vstabs)]}"))
@@ -38,10 +45,13 @@ sps <- function(vstabs, server_expr=NULL){
         invisible()
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
     attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = FALSE)
-    checkSps()
-    if(length(vstabs) >= 1 & sum(nchar(vstabs)) > 0){
+    tab_info <- checkSps(app_path)
+    plugin_tabs <- tab_info$tab_id[tab_info$plugin %in% plugin]
+    if(!length(plugin_tabs) & plugin[1] != "") spswarn("No plugin matched, skip")
+    if((length(vstabs) >= 1 & sum(nchar(vstabs))) > 0 | (length(plugin_tabs))){
         spsinfo("Now check input tabs")
         spsinfo("Find tab info ...")
+        vstabs <- c(vstabs, plugin_tabs) %>% unique() %>% {.[!. %in% c("", " ")]}
         tabs <- findTabInfo(vstabs) %>% dplyr::as_tibble()
         if(sum(not_in_vs <- tabs$tpye != 'vs') > 0)
             spserror(glue("Tab '{glue_collapse(vstabs[not_in_vs], ', ')}'",
@@ -147,7 +157,6 @@ spsInit <- function(dir_path=getwd(),
 checkSps <- function(app_path = getwd()) {
     resolveOptions(app_path)
     checkTabs(app_path)
-    return(TRUE)
 }
 
 #' @importFrom yaml yaml.load_file
@@ -255,9 +264,9 @@ viewSpsDefaults <- function(app_path = getwd()){
 #' @importFrom vroom vroom cols col_character
 #' @param app_path App dir
 #' @noRd
-checkTabs <- function(app_path){
+checkTabs <- function(app_path, warn_img = TRUE){
     spsinfo("Now check the tab info in tabs.csv ")
-    tab_info <-suppressMessages(
+    tab_info <- tryCatch(suppressMessages(
         vroom::vroom(
             file.path(app_path, "config", "tabs.csv"),
             comment = "#",
@@ -265,7 +274,12 @@ checkTabs <- function(app_path){
             delim = ",",
             col_types= vroom::cols(image = vroom::col_character()),
             na = character())
-    )
+        ),
+        error = function(e){
+            spserror(c(e$message, "\n",
+                       "Cannot read ",
+                       file.path(app_path, "config", "tabs.csv")))
+        })
     cols <- c("tab_id", "display_label","type",
               "type_sub", "image", "tab_file_name",
               "plugin")
@@ -281,7 +295,7 @@ checkTabs <- function(app_path){
     }
     no_img <- tab_info$tab_id[tab_info$type_sub == "plot" &
                               tab_info$image == ""]
-    if(length(no_img) > 0){
+    if(length(no_img) > 0 & warn_img){
         spswarn(glue("These plot tabs has no image path:
                   '{paste(no_img, collapse = ', ')}'
                   It is recommended to add an image. It will be used",
@@ -347,4 +361,46 @@ spsOption <- function(opt, value = NULL, empty_is_false = TRUE){
         }
         else get_value
     }
+}
+
+
+#' View SPS project 'config/tabs.csv' information
+#'
+#' @param return_type one of 'print', 'data', 'colnames', or a specified column
+#' name
+#' @param n_print how many lines of tab info you want to print out
+#' @param app_path SPS project root
+#' @details
+#' - 'print' will print out the entire *tabs.csv*, you can
+#' specify `n_print` for how many lines you want to print;
+#' - 'data' will return the tab info tibble
+#' - 'colnames' will return all column names of tab info file
+#' - A column name will extract the specified column out and return as a vector
+#' @return return depends on `return_type`
+#' @export
+#'
+#' @examples
+#' spsInit(project_name = "SPS_tabinfo", overwrite = TRUE,
+#'         change_wd = FALSE, open_files = FALSE)
+#' # all lines
+#' spsTabInfo("print", app_path = "SPS_tabinfo")
+#' # 5 lines
+#' spsTabInfo("print", app_path = "SPS_tabinfo", n_print = 5L)
+#' spsTabInfo("data", app_path = "SPS_tabinfo")
+#' spsTabInfo("colnames", app_path = "SPS_tabinfo")
+#' spsTabInfo("tab_id", app_path = "SPS_tabinfo")
+spsTabInfo <- function(return_type = "print", n_print = 40, app_path = getwd()){
+    assert_that(is.numeric(n_print))
+    assert_that(is.character(return_type))
+    tab_info <- checkTabs(app_path, warn_img = FALSE)
+    switch(
+        return_type,
+        "print" = print(tab_info, n = n_print),
+        "data" = tab_info,
+        "colnames" = colnames(tab_info),
+        {
+            if(return_type %in% colnames(tab_info)) {tab_info[[return_type]]}
+            else spswarn(c("Cannot find column ", return_type))
+        }
+           )
 }

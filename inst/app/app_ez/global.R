@@ -1,11 +1,12 @@
-# use shiny::runApp() in console or click right top button in Rstudio to start app,
-# but do not write this code in script, type it in console
+## use shiny::runApp() in console or click right top button
+## '>Run App' in Rstudio to start app,
+## but do not write this code in script, type it in console
 
 time_start <- Sys.time()
 library(systemPipeShiny)
 
 
-# suggested to install, no need to library them:
+## suggested to install, no need to library them:
 # to unlock some tabs, visualizations and more
 # BiocManager::install("dreamRs/particlesjs") # particlesjs for loading theme
 # BiocManager::install("systemPipeR")
@@ -18,7 +19,7 @@ library(systemPipeShiny)
 # BiocManager::install("limma")
 # BiocManager::install("Rtsne")
 
-# SPS options
+## SPS options
 # mode: running mode - local, server
 # warning_toast: toast popup message when you are under some dangerous options - TRUE, FALSE
 # loading_screen: to show loading screen? - TRUE, FALSE
@@ -40,11 +41,11 @@ options(sps = list(
 ))
 
 
-# other useful shiny options
-# max upload size, 30Mb here
+## other useful shiny options
+## max upload size, 30Mb here
 options(shiny.maxRequestSize = 30*1e6)
 
-# for debugging
+## for debugging
 # options(shiny.reactlog = TRUE)
 # options(shiny.trace = TRUE)
 # options(shiny.fullstacktrace = TRUE)
@@ -52,9 +53,9 @@ options(shiny.maxRequestSize = 30*1e6)
 # options(shiny.autoreload.r = TRUE)
 # options(shiny.autoreload = FALSE) # takes some computer power, you may consider turn it off
 
-# load tab info
+## load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-# use `sps_enc$createDb()` to create a new database if there is no db
+## use `sps_enc$createDb()` to create a new database if there is no db
 ## to save plot snap shots
 sps_plots <- plotContainer$new()
 ## for database and encryption functions

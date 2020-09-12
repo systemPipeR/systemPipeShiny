@@ -4,10 +4,15 @@
 \alias{sps}
 \title{SystemPipeShiny app start function}
 \usage{
-sps(vstabs, server_expr = NULL)
+sps(vstabs = "", plugin = "", server_expr = NULL)
 }
 \arguments{
-\item{vstabs}{your custom visualization tabs you want to display}
+\item{vstabs}{custom visualization tab IDs you want to display, in a character
+vector.}
+
+\item{plugin}{If you have loaded some SPS plugins, you can specify here as a
+character vector, and it will load all plugin tabs to SPS. If you only want
+certain tabs from a plugin, specify in \code{vstabs} argument.}
 
 \item{server_expr}{additional top level sever expression you want
 to run. This will run after the default server expressions. It means you can
@@ -19,6 +24,10 @@ a list contains the UI and  server
 }
 \description{
 SystemPipeShiny app start function
+}
+\details{
+You must set the project root as working directory for this
+function to find required files.
 }
 \examples{
 if(interactive()){

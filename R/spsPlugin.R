@@ -9,13 +9,13 @@
 #' @param app_path the SPS project you want to load plugin to
 #' @param verbose bool, show more information?
 #' @param third_party bool, is this an official plugin?
-#' @param overwrite bool, if there are file conflicts, overwrite current
-#' existing files in `app_path`?
+#' @param overwrite one of 0, 1 or 2, if there are file conflicts, how to
+#' handle conflict files, see details.
 #' @param colorful bool, colorful message?
 #'
 #' @return No return
 #' @details
-#' ### General
+#' #### General
 #'
 #' - Make sure there is a 'config/tabs.csv' file in your SPS project when you
 #' load the plugin.
@@ -29,7 +29,14 @@
 #' entries on *config/tabs.csv* are removed. Other files come from the plugin
 #' will not be removed.
 #'
-#' ### Building a plugin
+#' #### overwrite mode
+#'
+#' - 0, if there is any conflict, abort
+#' - 1, overwrite all overlapping files
+#' - 2, ignore conflict files, only copy new files
+#'
+#' #### Building a plugin
+#'
 #' - When adding new tabs to a plugin, it will be better to set working
 #' directory to *PLUGIN_ROOT/inst/app*. Tab files should go into
 #' *PLUGIN_ROOT/inst/app/R*.
@@ -37,6 +44,10 @@
 #' will also be copied to users' project.
 #' - Tab files will be checked and two functions in the tab file are expected:
 #' `tabIDUI` and `tabIDServer`. Other files will not be checked for content.
+#' - For a plugin to work, *PLUGIN_ROOT/inst/app/config/tabs.csv* is required,
+#' and tab files listed in this *tabs.csv* are also required to be put inside
+#' *PLUGIN_ROOT/inst/app/R*. *PLUGIN_ROOT/inst/app/welcome.txt* is optional. If
+#' this file exists, content will be `cat` to console when plugin is loaded.
 #'
 #' @export
 #'
@@ -69,7 +80,7 @@
 #' spsLoadPlugin(plugin = "testPlugin",
 #'               app_path = "testProject",
 #'               third_party = TRUE,
-#'               overwrite = FALSE)
+#'               overwrite = 1)
 #' # check if the plugin is added
 #' # You should see `tab_vs_data_a.R` and `tab_vs_plot_a.R`
 #' list.files(file.path("testProject", "R"))
@@ -88,7 +99,7 @@ spsLoadPlugin <- function(
     app_path = getwd(),
     verbose = FALSE,
     third_party = FALSE,
-    overwrite = FALSE,
+    overwrite = 0,
     colorful = TRUE){
     old_opt <- getOption('sps')
     on.exit(options(sps = old_opt))
@@ -96,7 +107,8 @@ spsLoadPlugin <- function(
     spsOption("verbose", verbose)
     spsinfo("Check plugin name")
     if(!.validatePluginName(plugin, third_party)) return(cat())
-    if(!third_party) .checkPluginInstall()
+    if(!third_party) .checkPluginInstall(plugin)
+    if(!overwrite %in% 0:2) spserror("overwrite can only be 0, 1, 2")
     spsinfo("Load tabs.csv from your SPS project")
     tab_info <- .checkTabFile(app_path)
     plugin_path <- if(!third_party) {
@@ -107,11 +119,14 @@ spsLoadPlugin <- function(
     tab_info_plugin <- .checkTabFile(plugin_path, check_write = FALSE)
     if(!.checkConflictTabs(tab_info, tab_info_plugin)) spserror("Abort")
     files <- .resolvePluginStructure(app_path, plugin_path)
-    if(!.resolveFileOverlap(files, overwrite)) spserror("Abort")
-    .checkTabContent(tab_info_plugin)
+    copy_files <- .resolveFileOverlap(files, overwrite)
+    .checkTabContent(tab_info_plugin, plugin_path)
     spsinfo("Initial checks pass, now copy files")
-    .copyPluginFiles(files, app_path, plugin_path, tab_info, tab_info_plugin)
+    .copyPluginFiles(copy_files, files$dirs, app_path, plugin_path,
+                     tab_info, tab_info_plugin)
     msg(glue("Plugin {plugin} added!"), "SPS-SUCCESS", "green")
+    welcome_file <- file.path(plugin_path, "..", "welcome.txt")
+    if(file.exists(welcome_file)) readLines(welcome_file) %>% cat(sep = "\n")
     more_info <- c(glue("Remember to load `library({plugin})` when you start "),
                    "SPS. Additional R functions maybe bundled with this plugin")
     if(!third_party) {spsinfo(more_info, TRUE)} else {
@@ -178,7 +193,7 @@ spsLoadPlugin <- function(
         spserror(glue('Expect the tabs.csv file at: {tab_file}'))
     }
     spsinfo("Check tabs.csv content")
-    return(suppressWarnings(checkTabs(project_path)))
+    return(checkTabs(project_path, warn_img = FALSE))
 }
 
 .listPluginFiles <- function(path = getwd(), exclude_tab_config = FALSE){
@@ -247,19 +262,26 @@ spsLoadPlugin <- function(
 
 .resolveFileOverlap <- function(files, overwrite){
     file_overlap <- files$overlap_files[!files$overlap_files %in% files$dirs]
-    if(length(file_overlap) > 0 & !overwrite){
-        spswarn("Overlapping files detected and `overwrite` option is false")
-        FALSE
-    } else if(length(file_overlap) > 0 & overwrite){
-        spswarn("Overlapping files detected and will be overwritten")
-        TRUE
-    } else TRUE
+    if(length(file_overlap)){
+        if(!overwrite){
+            spswarn("Overlapping files detected and `overwrite` option is false")
+            spserror("Abort")
+        } else if(overwrite == 1){
+            spswarn("Overlapping files detected and will be overwritten")
+            c(files$new_files, files$overlap_files) %>%
+                unique() %>%
+                {.[!. %in% files$dirs]}
+        } else if(overwrite == 2){
+            spswarn("Overlapping files detected and will be ignored")
+            files$new_files %>% {.[!. %in% files$dirs]}
+        }
+    } else files$new_files %>% {.[!. %in% files$dirs]}
 }
 
 
 #' @importFrom dplyr filter
 #' @noRd
-.checkTabContent <- function(tab_info_plugin){
+.checkTabContent <- function(tab_info_plugin, plugin_path){
     vs_tabs <- dplyr::filter(tab_info_plugin, type_sub %in% c("data", "plot"))
     if(nrow(vs_tabs) < 1) {spsinfo("No tab added"); return(TRUE)}
     tab_ids <- vs_tabs$tab_id; tab_files <- vs_tabs$tab_file_name
@@ -328,18 +350,15 @@ spsLoadPlugin <- function(
 
 #' @importFrom dplyr add_row
 #' @noRd
-.copyPluginFiles <- function(files, app_path, plugin_path,
+.copyPluginFiles <- function(copy_files, dirs, app_path, plugin_path,
                              tab_info, tab_info_plugin){
-    copy_files <- c(files$new_files, files$overlap_files) %>% {
-        .[!. %in% files$dirs]
-    }
     spsinfo("create required directories")
-    dir_result <- lapply(file.path(app_path, files$dirs),
+    dir_result <- lapply(file.path(app_path, dirs),
                          dir.create,
                          recursive = TRUE,
                          showWarnings = FALSE) %>%
         unlist()
-    lapply(files$dirs[!dir_result], function(x) {
+    lapply(dirs[!dir_result], function(x) {
         spsinfo(glue("Directory {x} exists, skip"))
     })
     copy_res <- file.copy(file.path(plugin_path, copy_files),
@@ -454,6 +473,9 @@ spsNewPlugin <- function(path, readme = TRUE, verbose = FALSE, colorful = TRUE){
     spsinfo("Write tab file")
     writeLines(c(tab_head, col_names),
                file.path(dirs[3], "tabs.csv"))
+    spsinfo("Write welcome.txt")
+    writeLines("Some message you want to show to users when plugin loads",
+               file.path(path, "inst", "welcome.txt"))
     if(readme){
         spsinfo("write read me")
         writeLines(
