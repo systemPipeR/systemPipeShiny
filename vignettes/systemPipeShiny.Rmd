@@ -154,6 +154,34 @@ tab information. Currently you can only load/unload visualization tabs, type of 
 workflow tabs (*wf*) are loaded automatically. You can run additional server code by passing it to
 `server_expr` argument. If the expression is multiple-lined, use `{}` to wrap them. 
 
+## SPS plugins
+
+On default start, current SPS contains the workflow tabs and one example data tab, and 
+one example plot tab for visualization. We have created many more plots options and 
+they are distributed as "SPS plugins". A SPS plugin is a special formed R package. 
+You need to install the plugin like you do with normal R packages by `install.packages`, 
+`BiocManager::install` or `remotes::install_github()`. The plugins(packages) come with 
+SPS tabs, data, and other helper functions. Using `spsLoadPlugin()` function, you 
+are able to load them into SPS framework. 
+
+Using `spsLoadPlugin()` without any argument will list all available plugins and 
+instructions to install them. 
+
+```{r , eval=TRUE}
+spsLoadPlugin()
+```
+
+To load a specific plugin:
+
+```{r , eval=FALSE}
+spsLoadPlugin(plugin = "PLUGIN_NAME", app_path = "PATH_OF_SPS")
+```
+
+At this stage, there is only one plugin, the *spsBio*: plots for biological data 
+visualization. There will be more plugins in the near future. 
+
+For developers, read [Build a Plugin](#build-a-plugin) section for building your 
+own SPS plugins. 
 
 # SPS structure
 ## App directory structure
@@ -902,6 +930,46 @@ removeSpsTab("data_new", force = TRUE, app_path = sps_dir)
 There are 3 main types of tabs in current version of SPS: *core*, *wf* and *vs*. 
 *core* tabs are SPS framework essential tabs, *wf* tabs are  Workflow Management 
 components, and you are only allowed to modify *vs* tabs.
+
+## Build a Plugin
+
+To build a new plugin, use `spsNewPlugin()`. 
+
+```{r}
+spsNewPlugin(path = "PATH_OF_PLUGIN")
+```
+
+This will create a new directory with all plugin required files. 
+
+<pre>
+Plugin_root/  
+├── R                      Normal R functions you want to export as a package
+├── inst                     
+  ├── welcome.txt          Message/instructions that will show when users load the plugin(optional)
+  └── app
+    ├── R                  All plugin tab files and app helper functions
+    └── config
+      └── tabs.csv         Required tab registration metadata information. 
+</pre>
+
+Only the *Plygin_root/inst/app/config/tabs.csv*. So one can easily move a SPS project 
+to a SPS plugin by copying all files into *Plygin_root/inst/app/*.
+
+If your plugin provides some SPS tabs, you can use `newTabData(plugin = "PLUGIN_NAME", ...)` 
+or `newTabPlot(plugin = "PLUGIN_NAME", ...)`  
+to create them and tab meta information will automatically added to *tabs.csv*, so you don't 
+need to manually edit it. The text in `plugin` column of *tabs.csv* should be the same as your 
+plugin name. 
+
+In additional to tab files, all other files in *Plygin_root/inst/app/* will also be copied to 
+users' SPS project. 
+
+At this point, this is just a very basic structure of a SPS plugin. To make it more publishable 
+like a normal R package, it is recommended to use `usethis::create_package("PLUGIN_ROOT_PATH")` and
+other functions come with `usethis`to add additional files like *man*, *vignettes* that 
+are required by a formal R package. Please contact us if you want to have your plugin to 
+be "officially", otherwise, you can use `spsLoadPlugin(..., third_party = TRUE)` to load 
+your personal plugins.
 
 ## Naming
 

@@ -176,8 +176,8 @@ spsLoadPlugin <- function(
 
     style("spsBio", "Biological plots")
     cat('BiocManager::install("systemPipeR/spsBio")\n')
-    style("spsDS", "A variety of plots for general data analysis")
-    cat('remotes::install_github("systemPipeR/spsDS")\n')
+    # style("spsDS", "A variety of plots for general data analysis")
+    # cat('remotes::install_github("systemPipeR/spsDS")\n')
 }
 
 .checkTabFile <- function(project_path, check_write = TRUE){
