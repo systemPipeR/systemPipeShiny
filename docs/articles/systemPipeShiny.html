@@ -70,16 +70,14 @@
 
       </header><script src="systemPipeShiny_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="systemPipeShiny_files/font-awesome-5.1.0/css/all.css" rel="stylesheet">
 <link href="systemPipeShiny_files/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet">
-<script src="systemPipeShiny_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="systemPipeShiny_files/plotly-binding-4.9.2.1/plotly.js"></script><script src="systemPipeShiny_files/typedarray-0.1/typedarray.min.js"></script><script src="systemPipeShiny_files/jquery-1.11.3/jquery.min.js"></script><link href="systemPipeShiny_files/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet">
-<script src="systemPipeShiny_files/crosstalk-1.1.0.1/js/crosstalk.min.js"></script><link href="systemPipeShiny_files/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet">
-<script src="systemPipeShiny_files/plotly-main-1.52.2/plotly-latest.min.js"></script><div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>
 <span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny</h1>
                         <h4 class="author">Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher and Thomas Girke</h4>
             
-            <h4 class="date">Last update: 11 September, 2020</h4>
+            <h4 class="date">Last update: 14 September, 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/systemPipeR/systemPipeShiny/blob/master/vignettes/systemPipeShiny.Rmd"><code>vignettes/systemPipeShiny.Rmd</code></a></small>
       <div class="hidden name"><code>systemPipeShiny.Rmd</code></div>
@@ -419,20 +417,20 @@ a.bttn-default {
 <a href="#start-the-app" class="anchor"></a>Start the app</h2>
 <p>Before starting with SPS, you need to create a SPS project:</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">sps_tmp_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span>()
-<span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>(<span class="kw">dir_path</span> <span class="kw">=</span> <span class="no">sps_tmp_dir</span>, <span class="kw">change_wd</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:41 Start to create a new SPS project</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:41 Create project under /tmp/RtmprlKnjp/SPS_20200911</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:41 Now copy files</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:41 Create SPS database</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:41 Created SPS database method container</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:41 Creating SPS db...</code></pre>
-<pre><code>## [SPS-DANGER] 2020-09-11 01:08:41 Db created at '/tmp/RtmprlKnjp/SPS_20200911/config/sps.db'. DO NOT share this file with others
-## [SPS-INFO] 2020-09-11 01:08:41 Key md5 0e5468b894bdc1e40585a745fa261afe
-## [SPS-INFO] 2020-09-11 01:08:41 SPS project setup done!</code></pre>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">sps_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">sps_tmp_dir</span>, <span class="fu">glue</span>(<span class="st">"SPS_{format(Sys.time(), '%Y%m%d')}"</span>))</pre></body></html></div>
+<span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>(<span class="kw">dir_path</span> <span class="kw">=</span> <span class="no">sps_tmp_dir</span>, <span class="kw">change_wd</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">project_name</span> <span class="kw">=</span> <span class="st">"SPSProject"</span>)</pre></body></html></div>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Start to create a new SPS project</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Create project under /tmp/RtmpvbK8Em/SPSProject</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Now copy files</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Create SPS database</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Created SPS database method container</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Creating SPS db...</code></pre>
+<pre><code>## [SPS-DANGER] 2020-09-14 12:06:03 Db created at '/tmp/RtmpvbK8Em/SPSProject/config/sps.db'. DO NOT share this file with others
+## [SPS-INFO] 2020-09-14 12:06:03 Key md5 741b2b29043c13cf1aa5e1fa01aa06f9
+## [SPS-INFO] 2020-09-14 12:06:03 SPS project setup done!</code></pre>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">sps_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">sps_tmp_dir</span>, <span class="st">"SPSProject"</span>)</pre></body></html></div>
 <p>Here for building the vignette we are not switching to the app directory and are using a temp directory, in a real case, you <strong>shouldn’t</strong> store you SPS project in a <strong>temp directory</strong>. Just use the following instead:</p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>()</pre></body></html></div>
-<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200911</p>
+<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200914</p>
 <p style="color:var(--info)">
 Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 </p>
@@ -442,6 +440,22 @@ Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
         <span class="st">"green"</span>)
 })</pre></body></html></div>
 <p>This is the SPS main function. You can load/unload tabs by providing tab IDs in <code>vstabs</code> argument, like <code>c("tab1", "tab2)</code>. See <code>config/tabs.csv</code> in your project folder for what tabs IDs can be load and other tab information. Currently you can only load/unload visualization tabs, type of <em>vs</em>; core tabs(<em>core</em>) and workflow tabs (<em>wf</em>) are loaded automatically. You can run additional server code by passing it to <code>server_expr</code> argument. If the expression is multiple-lined, use <code>{}</code> to wrap them.</p>
+</div>
+<div id="sps-plugins" class="section level2">
+<h2 class="hasAnchor">
+<a href="#sps-plugins" class="anchor"></a>SPS plugins</h2>
+<p>On default start, current SPS contains the workflow tabs and one example data tab, and one example plot tab for visualization. We have created many more plots options and they are distributed as “SPS plugins”. A SPS plugin is a special formed R package. You need to install the plugin like you do with normal R packages by <code>install.packages</code>, <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> or <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The plugins(packages) come with SPS tabs, data, and other helper functions. Using <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin()</a></code> function, you are able to load them into SPS framework.</p>
+<p>Using <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin()</a></code> without any argument will list all available plugins and instructions to install them.</p>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsLoadPlugin</a></span>()</pre></body></html></div>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:03 Current SPS has following plugins</code></pre>
+<pre><code>## spsBio               Biological plots
+## BiocManager::install("systemPipeR/spsBio")
+## spsDS                A variety of plots for general data analysis
+## remotes::install_github("systemPipeR/spsDS")</code></pre>
+<p>To load a specific plugin:</p>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsLoadPlugin</a></span>(<span class="kw">plugin</span> <span class="kw">=</span> <span class="st">"PLUGIN_NAME"</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="st">"PATH_OF_SPS"</span>)</pre></body></html></div>
+<p>At this stage, there is only one plugin, the <em>spsBio</em>: plots for biological data visualization. There will be more plugins in the near future.</p>
+<p>For developers, read <a href="#build-a-plugin">Build a Plugin</a> section for building your own SPS plugins.</p>
 </div>
 </div>
 <div id="sps-structure" class="section level1">
@@ -729,7 +743,7 @@ Note: Downloaded snapshots are encrypted for app security reasons. Each SPS proj
 <h3 class="hasAnchor">
 <a href="#app-options" class="anchor"></a>App options</h3>
 <p>App options in SPS are controlled by “SPS options”. These options can change app appearance, debugging level, server server behaviors, <em>etc</em>. The valid options can be found and change on the <code>global.R</code> file. They are similar to <em>Shiny</em> options, but unlike <em>shiny</em> options are single values, SPS options are passed using the <code>Option(sps = list(...))</code> function in <code>global.R</code> as a group. To view all options and their default, valid values(’*’ means any value is okay):</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/viewSpsDefaults.html">viewSpsDefaults</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="../reference/viewSpsDefaults.html">viewSpsDefaults</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
 <pre><code>## mode: list(default = "local", other = "server")
 ##  loading_screen: list(default = TRUE, other = FALSE)
 ##  loading_theme: list(default = "vhelix", other = "*")
@@ -823,7 +837,7 @@ Note:Don’t worry if you set some invalid values, on app start, <code><a href="
 <a href="#tab-configurations" class="anchor"></a>Tab configurations</h3>
 <p>Tabs are registered(defined) by the <em>tabs.csv</em> file under SPS project <em>config</em> folder. It contains information for all the tabs. Do not modify it if you don’t plan to build new tabs. See <a href="#extend-spsfor-developers">developer section</a> for how to operate this file.</p>
 <p>To control what tabs to appear(load/unload) on SPS, pass the tab IDs of tabs you want to see to <code>vstabs =</code> argument on <code><a href="../reference/sps.html">sps()</a></code></p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"ID1"</span>, <span class="st">"ID2"</span>, <span class="no">...</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"ID1"</span>, <span class="st">"ID2"</span>, <span class="no">...</span>))</pre></body></html></div>
 <p><em>tabs.csv</em> has all the tab IDs. Under current version of SPS, you can only load/unload tabs in the “vs” type. Tabs under “core” and “wf” types are unable to change.</p>
 </div>
 </div>
@@ -882,7 +896,7 @@ Workflow-prepare
 </li>
 <li>For expressions in SPS or Shiny, if you are expect to return an object, directly write the return object to the last line of the expression, instead of using <code><a href="https://rdrr.io/r/base/function.html">return(xxx)</a></code>. Expressions are not functions, you shouldn’t use <code>return</code>.</li>
 </ul>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co"># use</span>
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co"># use</span>
 {
     <span class="no">a</span> <span class="kw">&lt;-</span> <span class="fl">1</span> + <span class="fl">1</span>
     <span class="no">a</span>
@@ -895,13 +909,13 @@ Workflow-prepare
 <div id="new-data-tab" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-data-tab" class="anchor"></a>New data tab</h2>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
     <span class="kw">prepro_methods</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePrepro.html">makePrepro</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="st">"do nothing"</span>, <span class="kw">plot_options</span> <span class="kw">=</span> <span class="st">"plot_new"</span>)))</pre></body></html></div>
 <div id="add-preprocess-methods" class="section level3">
 <h3 class="hasAnchor">
 <a href="#add-preprocess-methods" class="anchor"></a>Add preprocess methods</h3>
 <p>The <code>prepro_methods</code> argument controls how many different methods a data tab have to preprocess the incoming data to meet the requirements of different plot tabs. <code>prepro_methods</code> expect a list of <code>makePrepro</code> results. Each <code>makePrepro</code> result is one preprocess option. When the tab runs, it will look like this(if I have 3 methods), for example:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">pms</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePrepro.html">makePrepro</a></span>(<span class="kw">method_id</span> <span class="kw">=</span> <span class="st">"nothing"</span>, <span class="kw">label</span> <span class="kw">=</span> <span class="st">"Do nothing"</span>,
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">pms</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePrepro.html">makePrepro</a></span>(<span class="kw">method_id</span> <span class="kw">=</span> <span class="st">"nothing"</span>, <span class="kw">label</span> <span class="kw">=</span> <span class="st">"Do nothing"</span>,
     <span class="kw">vd_expr</span> <span class="kw">=</span> <span class="fu"><a href="../reference/spsValidate.html">spsValidate</a></span>({
         <span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">is.data.frame</a></span>(<span class="no">data_filtered</span>)) <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"Incoming data is not a dataframe"</span>)
     }), <span class="kw">pre_expr</span> <span class="kw">=</span> {
@@ -926,19 +940,19 @@ Workflow-prepare
 <p style="color:var(--info)">
 Note: An object called <code>data_filtered</code> is created for you which contains the user filtered data table. You can directly use it in your expression like above.
 </p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
     <span class="kw">prepro_methods</span> <span class="kw">=</span> <span class="no">pms</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:42 Write to file /tmp/RtmprlKnjp/SPS_20200911/R/tab_vs_data_new.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:03 Write to file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_new.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmprlKnjp/SPS_20200911/R/tab_vs_data_new.R ℹ 
-## ────────────────────────────────────────────────
+##  /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_new.R ℹ 
+## ──────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
-## ────────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:45 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-11 01:08:45 New tab created!</code></pre>
+## ──────────────────────────────────────────────</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:07 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:07 New tab created!</code></pre>
 <p>On UI side, when you run SPS, your options will be displayed like this:</p>
 
 <div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
@@ -958,28 +972,28 @@ Note: An object called <code>data_filtered</code> is created for you which conta
 <div id="new-plot-tab" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-plot-tab" class="anchor"></a>New plot tab</h2>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabPlot</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
+<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabPlot</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
     <span class="kw">plot_data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePlotData.html">makePlotData</a></span>(<span class="kw">dataset_label</span> <span class="kw">=</span> <span class="st">"Data from my new tab"</span>,
         <span class="kw">receive_datatab_ids</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)))</pre></body></html></div>
 <div id="add-plot-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#add-plot-data" class="anchor"></a>Add plot data</h3>
 <p>The <code>plot_data</code> argument in <code>newTabPlot</code> is very similar to <code>prepro_methods</code> in <code>newTabData</code>. It controls how many different unique data sets a plot tab requires and where(which data tabs) these data sets can come from. <code>plot_data</code> expect a list of <code>makePlotData</code> results. Each <code>makePlotData</code> result specify one unique input data set and source data tab options. For example, we want to have a plot tab that needs 2 unique data set, one for metadata, one for some numeric data, we can do:</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="co"># We don't have the metadata tab, need to create one first.</span>
+<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="co"># We don't have the metadata tab, need to create one first.</span>
 <span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_meta"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"Meta Data"</span>,
     <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:45 Write to file /tmp/RtmprlKnjp/SPS_20200911/R/tab_vs_data_meta.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:07 Write to file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_meta.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmprlKnjp/SPS_20200911/R/tab_vs_data_meta.R ℹ 
-## ─────────────────────────────────────────────────
+##  /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_meta.R ℹ 
+## ───────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
-## ─────────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:48 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-11 01:08:48 New tab created!</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="co"># now we can use `makePlotData` method for metadata</span>
+## ───────────────────────────────────────────────</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:11 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:11 New tab created!</code></pre>
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># now we can use `makePlotData` method for metadata</span>
 <span class="no">pd</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePlotData.html">makePlotData</a></span>(<span class="kw">dataset_id</span> <span class="kw">=</span> <span class="st">"meta"</span>, <span class="kw">receive_datatab_ids</span> <span class="kw">=</span> <span class="st">"data_meta"</span>,
     <span class="kw">dataset_label</span> <span class="kw">=</span> <span class="st">"Meta data"</span>, <span class="kw">vd_expr</span> <span class="kw">=</span> <span class="fu"><a href="../reference/spsValidate.html">spsValidate</a></span>({
         <span class="kw">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">is.data.frame</a></span>(<span class="no">mydata</span>$<span class="no">meta</span>)) <span class="fl">TRUE</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"Metadata needs to be a dataframe or tibble"</span>)
@@ -991,19 +1005,19 @@ Note: An object called <code>data_filtered</code> is created for you which conta
 <p style="color:var(--info)">
 Note: An object named <code>mydata$ + dataset_id</code> is created for you which contains the received data. You can directly use it in your expression like above.
 </p>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabPlot</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabPlot</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
     <span class="kw">plot_data</span> <span class="kw">=</span> <span class="no">pd</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:48 Write to file /tmp/RtmprlKnjp/SPS_20200911/R/tab_vs_plot_new.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:11 Write to file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_plot_new.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmprlKnjp/SPS_20200911/R/tab_vs_plot_new.R ℹ 
-## ────────────────────────────────────────────────
+##  /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_plot_new.R ℹ 
+## ──────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
-## ────────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:51 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-11 01:08:51 New tab created!</code></pre>
+## ──────────────────────────────────────────────</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:14 New tab created!</code></pre>
 <p>You can specify more than one tab IDs in <code>receive_datatab_ids</code> argument, meaning this type of input data can be prepared by more than one data type, <code>receive_datatab_ids = c("data_df1", "data_df2")</code>.</p>
 <p>The rendered UI will look similar to <a href="#plot_data_prep">Fig.6</a> or you can check the online <a href="https://tgirke.shinyapps.io/systemPipeShiny/">demo</a>.</p>
 </div>
@@ -1011,7 +1025,7 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <h3 class="hasAnchor">
 <a href="#an-empty-tab-file" class="anchor"></a>an empty tab file</h3>
 <p>If you don’t like the structure of SPS template tabs or want to load data other than a regular tabular data, like a <em>rds</em> file contains a <code>S4</code> object(you can only load tabular data files with default templates). You can create your own tab structure, and it is totally supported in SPS. In <code>newTabData</code> or <code>newTabPlot</code>, change <code>empty = TRUE</code> and specify <code>tab_id</code>, <code>display_name</code> and <code>author</code>. Leave all other arguments as defaults.</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_empty"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"an empty one"</span>,
+<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_empty"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"an empty one"</span>,
     <span class="kw">author</span> <span class="kw">=</span> <span class="st">"me"</span>, <span class="kw">empty</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p>It will create an empty tab file with empty UI and server function. You can write any legit shiny code inside. Again, SPS is built on <a href="#modular-isolation">Shiny modules</a>, so each tab is like a small sandbox and variables, objects do not conflict with other tabs.</p>
 </div>
@@ -1020,7 +1034,7 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <h2 class="hasAnchor">
 <a href="#run-new-tabs" class="anchor"></a>Run new tabs</h2>
 <p>There is one more final step before new tabs can be displayed on SPS. You need to specify you want to add these custom new tabs in <code><a href="../reference/sps.html">sps()</a></code> function:</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(
+<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(
     <span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data_new"</span>, <span class="st">"data_meta"</span>, <span class="st">"plot_new"</span>), <span class="co"># add new tab IDs here</span>
     <span class="kw">server_expr</span> <span class="kw">=</span> {
         <span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>, <span class="st">"green"</span>)
@@ -1031,13 +1045,35 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <h2 class="hasAnchor">
 <a href="#remove-a-tab" class="anchor"></a>Remove a tab</h2>
 <p>Use <code><a href="../reference/removeSpsTab.html">removeSpsTab(tab_id = "tabID")</a></code> to remove a tab. You can check <em>config/tabs.csv</em> to see what are the tabs and tab IDs you have. <code>tab_id</code> only allows one character string but allows regular expression match. By default, if it matches more than one ID, functions aborts, unless you change <code>multiple = TRUE</code>. The function will ask for your confirmation if any match is found, and you can directly proceed without confirmation by <code>force = TRUE</code>, if you want to do it in a programmatic way or use it in a loop. Once the function runs, it will remove both records in <em>config/tabs.csv</em> and tab files in <em>R</em> folder.</p>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="co"># for example, to remove the new tab we just created</span>
+<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># for example, to remove the new tab we just created</span>
 <span class="fu"><a href="../reference/removeSpsTab.html">removeSpsTab</a></span>(<span class="st">"data_new"</span>, <span class="kw">force</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:51 Matched tab(s): data_new</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:51 1 tabs removed from tabs.csv</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-11 01:08:51 Now remove file /tmp/RtmprlKnjp/SPS_20200911/R/tab_vs_data_new.R</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-11 01:08:51 Removal complete</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 Matched tab(s): data_new</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 1 tabs removed from tabs.csv</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 Now remove file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_new.R</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:14 Removal complete</code></pre>
 <p>There are 3 main types of tabs in current version of SPS: <em>core</em>, <em>wf</em> and <em>vs</em>. <em>core</em> tabs are SPS framework essential tabs, <em>wf</em> tabs are Workflow Management components, and you are only allowed to modify <em>vs</em> tabs.</p>
+</div>
+<div id="build-a-plugin" class="section level2">
+<h2 class="hasAnchor">
+<a href="#build-a-plugin" class="anchor"></a>Build a Plugin</h2>
+<p>To build a new plugin, use <code><a href="../reference/spsLoadPlugin.html">spsNewPlugin()</a></code>.</p>
+<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsNewPlugin</a></span>(<span class="kw">path</span> <span class="kw">=</span> <span class="st">"PATH_OF_PLUGIN"</span>)</pre></body></html></div>
+<p>This will create a new directory with all plugin required files.</p>
+<pre>
+Plugin_root/  
+├── R                      Normal R functions you want to export as a package
+├── inst                     
+  ├── welcome.txt          Message/instructions that will show when users load the plugin(optional)
+  └── app
+    ├── R                  All plugin tab files and app helper functions
+    └── config
+      └── tabs.csv         Required tab registration metadata information. 
+</pre>
+<p>Only the <em>Plygin_root/inst/app/config/tabs.csv</em>. So one can easily move a SPS project to a SPS plugin by copying all files into <em>Plygin_root/inst/app/</em>.</p>
+<p>If your plugin provides some SPS tabs, you can use <code><a href="../reference/newTabPlot.html">newTabData(plugin = "PLUGIN_NAME", ...)</a></code> or <code><a href="../reference/newTabPlot.html">newTabPlot(plugin = "PLUGIN_NAME", ...)</a></code><br>
+to create them and tab meta information will automatically added to <em>tabs.csv</em>, so you don’t need to manually edit it. The text in <code>plugin</code> column of <em>tabs.csv</em> should be the same as your plugin name.</p>
+<p>In additional to tab files, all other files in <em>Plygin_root/inst/app/</em> will also be copied to users’ SPS project.</p>
+<p>At this point, this is just a very basic structure of a SPS plugin. To make it more publishable like a normal R package, it is recommended to use <code><a href="https://usethis.r-lib.org/reference/create_package.html">usethis::create_package("PLUGIN_ROOT_PATH")</a></code> and other functions come with <code>usethis</code>to add additional files like <em>man</em>, <em>vignettes</em> that are required by a formal R package. Please contact us if you want to have your plugin to be “officially”, otherwise, you can use <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin(..., third_party = TRUE)</a></code> to load your personal plugins.</p>
 </div>
 <div id="naming" class="section level2">
 <h2 class="hasAnchor">
@@ -1110,22 +1146,22 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <h4 class="hasAnchor">
 <a href="#simple-logging" class="anchor"></a>Simple logging</h4>
 <p>The simplest logging is done by <code>msg</code> function. It prints out a message on console in <em>[Level] + time + message</em> format. By default, if you only provide the message, it uses <code>message</code> function; if you specify the level to be “warning” or “error”, it will use R base <code>warning</code> and <code>error</code> function; other levels uses <code>cat</code> method. Therefore, you can use <code>msg</code> to generate warnings or stop a function.</p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"message"</span>)</pre></body></html></div>
-<pre><code>## [INFO] 2020-09-11 01:08:51 message</code></pre>
-<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"a warning"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"warning"</span>)</pre></body></html></div>
-<pre><code>## Warning: [WARNING] 2020-09-11 01:08:51 a warning</code></pre>
-<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>(<span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"an error"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"error"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"message"</span>)</pre></body></html></div>
+<pre><code>## [INFO] 2020-09-14 12:06:14 message</code></pre>
+<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"a warning"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"warning"</span>)</pre></body></html></div>
+<pre><code>## Warning: [WARNING] 2020-09-14 12:06:14 a warning</code></pre>
+<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>(<span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"an error"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"error"</span>))</pre></body></html></div>
 <pre><code>## Error : 
-[ERROR] 2020-09-11 01:08:51 an error</code></pre>
+[ERROR] 2020-09-14 12:06:14 an error</code></pre>
 <p>If you set the SPS option <code>use_crayon = TRUE</code>, your message will be colorful.</p>
 <p style="color: blue">
-[INFO] 2020-09-11 01:19:03 message level
+[INFO] 2020-09-14 12:06:14 message level
 </p>
 <p style="color: orange">
-[WARNING] 2020-09-11 01:19:03 warning level
+[WARNING] 2020-09-14 12:06:14 warning level
 </p>
 <p style="color: red">
-[ERROR] 2020-09-11 01:19:03 error level
+[ERROR] 2020-09-14 12:06:14 error level
 </p>
 <p><code>spsinfo</code>, <code>spswarn</code>, and <code>spserror</code> are similar to <code>msg</code> but with <em>[SPS-]</em> prefix.</p>
 </div>
@@ -1139,20 +1175,20 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <li>Catch exceptions but continue other code.</li>
 </ol>
 <p>For example, if you have some Shiny expression and don’t want the Shiny session to crash because of errors, you can wrap your expression inside <code>shinyCatch</code>(use <code>shiny = TURE</code> for a real Shiny app). Once the exception happens, you can block the rest of your code from being executed in a function or in the higher level expression.</p>
-<div class="sourceCode" id="cb50"><html><body><pre class="r"><span class="co"># You should not see the message</span>
+<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="co"># You should not see the message</span>
 <span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>({
     <span class="fu"><a href="../reference/shinyCatch.html">shinyCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"error"</span>), <span class="kw">shiny</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">blocking_level</span> <span class="kw">=</span> <span class="st">"error"</span>)
     <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Blocked\n"</span>)
 })</pre></body></html></div>
-<pre><code>## [SPS-ERROR] 2020-09-11 01:08:51 error
+<pre><code>## [SPS-ERROR] 2020-09-14 12:06:14 error
 ## Error : </code></pre>
 <p>Or you catch the exception but still allow other code to be executed.</p>
-<div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="co"># You should see the message</span>
+<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="co"># You should see the message</span>
 <span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>({
     <span class="fu"><a href="../reference/shinyCatch.html">shinyCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"error"</span>), <span class="kw">shiny</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
     <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Not blocked\n"</span>)
 })</pre></body></html></div>
-<pre><code>## [SPS-ERROR] 2020-09-11 01:08:51 error
+<pre><code>## [SPS-ERROR] 2020-09-14 12:06:14 error
 ## Not blocked</code></pre>
 </div>
 </div>
@@ -1187,7 +1223,7 @@ Note: Encrypting the snapshot file is because the snapshot file contains server 
 <h3 class="hasAnchor">
 <a href="#change-sps-options" class="anchor"></a>Change SPS options</h3>
 <p>You can customize the default SPS options and alternative valid options by editing <em>config/sps_options.yaml</em>. Please follow this format:</p>
-<div class="sourceCode" id="cb54"><html><body><pre class="r">new_option
+<div class="sourceCode" id="cb59"><html><body><pre class="r">new_option
     default: xx
     other: [xx, xx]</pre></body></html></div>
 <p><strong><code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code></strong> character in “other” field tell SPS option parser that any value is allowed.</p>
@@ -1199,215 +1235,6 @@ Note: Encrypting the snapshot file is because the snapshot file contains server 
 </div>
 </div>
 </div>
-<div id="visualization" class="section level1">
-<h1 class="hasAnchor">
-<a href="#visualization" class="anchor"></a>Visualization</h1>
-<p><em>systemPipeShiny</em> offers interactive data visualization to users and supports graphics in workflow reports. In systemPipeShiny’s visualization tab, there are many features for data visualization of various statistical results. Users can upload different input data types, and apply various options for preprocessing those datasets. Users can then create downstream analysis plots, as per the type of uploaded data. Some available plotting options include: bar plots of differentially expressed genes, heat maps, dendrogram, principal component analysis (PCA) plots, and multidimensional scaling (MDS) plots. Depending on the nature of the plots, there are also options to adjust the plot such as normalizing the data. Additionally, systemPipeShiny provides users with plot templates and plotting functions that they can then customize according to their necessities for visualization.</p>
-<p>Table with all exported functions</p>
-<table class="table">
-<thead><tr class="header">
-<th>Function Name</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>exploreDSS</code></td>
-<td>Transform raw read counts using the  package</td>
-</tr>
-<tr class="even">
-<td><code>exploreDDSplot</code></td>
-<td>Scatterplot of transformed counts reads</td>
-</tr>
-<tr class="odd">
-<td><code>PCAplot</code></td>
-<td>Plots PCA from a count matrix</td>
-</tr>
-<tr class="even">
-<td><code>MDSplot</code></td>
-<td>Plots MDS from a count matrix</td>
-</tr>
-<tr class="odd">
-<td><code>tSNEplot</code></td>
-<td>Plots t-Distributed Stochastic Neighbor embedding</td>
-</tr>
-<tr class="even">
-<td><code>GLMplot</code></td>
-<td>Plots Dimension Reduction with GLMplot</td>
-</tr>
-<tr class="odd">
-<td><code>heatMaplot</code></td>
-<td>Plots Hierarchical Clustering HeatMap</td>
-</tr>
-<tr class="even">
-<td><code>MAplot</code></td>
-<td>MA-Plot from base means and log fold changes</td>
-</tr>
-<tr class="odd">
-<td><code>volcanoplot</code></td>
-<td>Plots a Volcano Plot from an DEG analyis results</td>
-</tr>
-<tr class="even">
-<td><code>hclustplot</code></td>
-<td>Plots Hierarchical Clustering Dendrogram</td>
-</tr>
-</tbody>
-</table>
-<div id="data-transformations-and-visualization" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-transformations-and-visualization" class="anchor"></a>Data transformations and visualization</h2>
-<p>To show the effect of the transformation, in the figure below we plot the first sample against the second, first simply using the <code>log2</code> function, and then using the <code>VST</code> and <code>rlog-transformed</code> values. For the log2 approach, we need to first estimate size factors to account for sequencing depth, and then specify <code>normalized=TRUE</code>. Sequencing depth correction is done automatically for the <code>vst</code> and <code>rlog.</code></p>
-<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="co">## Targets file</span>
-<span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">cmp</span> <span class="kw">&lt;-</span> <span class="kw pkg">systemPipeR</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/systemPipeR/man/readComp.html">readComp</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="no">targetspath</span>, <span class="kw">format</span> <span class="kw">=</span> <span class="st">"matrix"</span>,
-    <span class="kw">delim</span> <span class="kw">=</span> <span class="st">"-"</span>)
-<span class="co">## Count table file</span>
-<span class="no">countMatrixPath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>,
-    <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countMatrix</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countMatrixPath</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="co">## Plot</span>
-<span class="fu"><a href="../reference/exploreDDSplot.html">exploreDDSplot</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]], <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>,
-    <span class="kw">samples</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>, <span class="fl">4</span>))</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/exploreDDSplot-1.png" width="700"></p>
-<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="fu"><a href="../reference/exploreDDSplot.html">exploreDDSplot</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]], <span class="kw">samples</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"M1A"</span>,
-    <span class="st">"M1B"</span>), <span class="kw">save</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">filePlot</span> <span class="kw">=</span> <span class="st">"transf_deseq2.pdf"</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/exploreDDSplot-2.png" width="700"></p>
-<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="co">## Plot Correlogram</span>
-<span class="fu"><a href="../reference/exploreDDSplot.html">exploreDDSplot</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]], <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>,
-    <span class="kw">samples</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"M1A"</span>, <span class="st">"M1B"</span>), <span class="kw">scattermatrix</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/exploreDDSplot-3.png" width="700"></p>
-</div>
-<div id="dendrogram" class="section level2">
-<h2 class="hasAnchor">
-<a href="#dendrogram" class="anchor"></a>Dendrogram</h2>
-<p>A dendrogram of the results of hierarchical clustering performed with the <code>hclust</code> function can be created with the <code>hclustplot</code> function. The sample-wise Spearman correlation coefficients are computed, and then the results are transformed to a distance matrix before the hierarchical clustering is performed. The count data frame can be transformed with the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package, or can be done without transformation.</p>
-<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="co">## Data transformation</span>
-<span class="no">exploredds</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/exploreDDS.html">exploreDDS</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]],
-    <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">transformationMethod</span> <span class="kw">=</span> <span class="st">"rlog"</span>)
-<span class="co">## Plot</span>
-<span class="fu"><a href="../reference/hclustplot.html">hclustplot</a></span>(<span class="no">exploredds</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"spearman"</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/dendrogram-1.png" width="700"></p>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="fu"><a href="../reference/hclustplot.html">hclustplot</a></span>(<span class="no">exploredds</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"spearman"</span>, <span class="kw">savePlot</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-    <span class="kw">filePlot</span> <span class="kw">=</span> <span class="st">"cor.pdf"</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/dendrogram-2.png" width="700"></p>
-</div>
-<div id="heatmap" class="section level2">
-<h2 class="hasAnchor">
-<a href="#heatmap" class="anchor"></a>Heatmap</h2>
-<p>A heatmap of the results of hierarchical clustering performed with the <code>hclust</code> function can be created with the <code>heatMaplot</code> function. The sample-wise Spearman correlation coefficients are computed before hierarchical clustering. The count data frame can be transformed with the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package, or can be done without transformation.</p>
-<div id="samples" class="section level3">
-<h3 class="hasAnchor">
-<a href="#samples" class="anchor"></a>Samples</h3>
-<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="no">exploredds</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/exploreDDS.html">exploreDDS</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]],
-    <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">transformationMethod</span> <span class="kw">=</span> <span class="st">"rlog"</span>)
-<span class="fu"><a href="../reference/heatMaplot.html">heatMaplot</a></span>(<span class="no">exploredds</span>, <span class="kw">clust</span> <span class="kw">=</span> <span class="st">"samples"</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/heatMaplot_samples-1.png" width="700"></p>
-<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="fu"><a href="../reference/heatMaplot.html">heatMaplot</a></span>(<span class="no">exploredds</span>, <span class="kw">clust</span> <span class="kw">=</span> <span class="st">"samples"</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<div id="htmlwidget-b48994dd4a081d1d2374" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b48994dd4a081d1d2374">{"x":{"visdat":{"7dae5ba87f1f":["function () ","plotlyVisDat"]},"cur_data":"7dae5ba87f1f","attrs":{"7dae5ba87f1f":{"x":["M1A","M1B","A1A","A1B","V1A","V1B","M6A","M6B","A6A","A6B","V6A","V6B","M12A","M12B","A12A","A12B","V12A","V12B"],"y":["M1A","M1B","A1A","A1B","V1A","V1B","M6A","M6B","A6A","A6B","V6A","V6B","M12A","M12B","A12A","A12B","V12A","V12B"],"z":[[0,7.04650716301561,5.70678310405773,8.20976445672656,5.82667776225817,7.3279781790244,8.39986657356741,8.16733063204216,9.5863720017357,7.68841587215866,10.1640441508758,10.7676019921495,10.0039632569807,11.32498784981,9.81467501211749,7.7447323007849,9.45716343166998,7.95378561107352],[7.04650716301561,0,6.66154862259464,4.25865887783482,6.67960023884925,6.26668680998726,9.91630309634836,9.25451827523274,10.9564120825427,9.93575571094715,11.099388064366,10.6754670535994,9.90683653800532,10.9561298226477,10.7399675586854,9.18116169782984,9.77109863659916,9.40323019102985],[5.70678310405773,6.66154862259464,0,7.98994675562315,4.94593038167374,5.72836463615867,8.11235158724082,7.65256178153187,8.15065142907596,8.76007256265634,8.3098850728208,8.91309701678264,8.66629724080143,9.82426010379447,8.30870129249906,8.54268071001663,8.35323474316893,7.70897398227056],[8.20976445672656,4.25865887783482,7.98994675562315,0,6.99532785790822,6.43469620310431,10.4096764476555,9.51652950962971,11.1939050957908,10.4627147426448,11.1689702900908,10.546647320753,10.5708484745604,11.5547562063224,11.6160197603857,9.88406363111818,10.7020155017471,10.4675703563444],[5.82667776225817,6.67960023884925,4.94593038167374,6.99532785790822,0,4.8575131388009,8.4628875284287,8.03193150585829,8.726172089783,8.73161790330148,8.27286514155668,8.88152783442812,9.62675093908278,10.8109068917939,9.50867890759955,8.56129430593497,9.21166728284743,8.48571139105285],[7.3279781790244,6.26668680998726,5.72836463615867,6.43469620310431,4.8575131388009,0,10.0516318441459,8.92833694901716,9.88801350128225,10.1968579735558,9.80606329541739,9.47694677716335,10.2032985748695,10.9502439173503,10.7118343889731,10.2485736407499,9.95124988126943,9.64556969015279],[8.39986657356741,9.91630309634836,8.11235158724082,10.4096764476555,8.4628875284287,10.0516318441459,0,4.32289188181975,5.45401419571658,6.66929785847856,5.82333805363523,6.89960979808065,6.60846441830891,7.49378480640747,6.09490379797154,6.92856692552637,6.73658240504652,6.0408463148317],[8.16733063204216,9.25451827523274,7.65256178153187,9.51652950962971,8.03193150585829,8.92833694901716,4.32289188181975,0,5.86548263173595,6.92170483627565,6.43771467140553,5.936553276735,6.66918890392232,7.10201521498402,6.87338305585791,7.70858313971615,6.93977726065821,6.12205683109543],[9.5863720017357,10.9564120825427,8.15065142907596,11.1939050957908,8.726172089783,9.88801350128225,5.45401419571658,5.86548263173595,0,8.10337075683392,4.02970654063498,6.37598537189006,6.96355226928131,7.79890861008177,5.50539366529937,8.64913887544161,6.82883422186718,6.22801929982398],[7.68841587215866,9.93575571094715,8.76007256265634,10.4627147426448,8.73161790330148,10.1968579735558,6.66929785847856,6.92170483627565,8.10337075683392,0,9.22853479532282,10.1030591897721,9.35527845594351,11.0912154866989,8.92785474831707,6.32121021712702,9.14034499886721,7.20502415178335],[10.1640441508758,11.099388064366,8.3098850728208,11.1689702900908,8.27286514155668,9.80606329541739,5.82333805363523,6.43771467140553,4.02970654063498,9.22853479532282,0,5.40796455622462,7.23562402229215,8.05893271349358,5.8300094741389,8.94623155465763,6.52802367477242,6.94139936721834],[10.7676019921495,10.6754670535994,8.91309701678264,10.546647320753,8.88152783442812,9.47694677716335,6.89960979808065,5.936553276735,6.37598537189006,10.1030591897721,5.40796455622462,0,7.1430960277339,6.1610771391521,7.49111811137349,10.0381028337193,7.56298264238768,7.68916986877059],[10.0039632569807,9.90683653800532,8.66629724080143,10.5708484745604,9.62675093908278,10.2032985748695,6.60846441830891,6.66918890392232,6.96355226928131,9.35527845594351,7.23562402229215,7.1430960277339,0,5.69259437645614,5.58694500597764,8.50447659713418,5.53119139458227,6.33933832045536],[11.32498784981,10.9561298226477,9.82426010379447,11.5547562063224,10.8109068917939,10.9502439173503,7.49378480640747,7.10201521498402,7.79890861008177,11.0912154866989,8.05893271349358,6.1610771391521,5.69259437645614,0,6.42494730487993,10.5078546330517,7.19994521380774,7.82561653509728],[9.81467501211749,10.7399675586854,8.30870129249906,11.6160197603857,9.50867890759955,10.7118343889731,6.09490379797154,6.87338305585791,5.50539366529937,8.92785474831707,5.8300094741389,7.49111811137349,5.58694500597764,6.42494730487993,0,8.18110233128942,5.25899641633562,5.72577800197227],[7.7447323007849,9.18116169782984,8.54268071001663,9.88406363111818,8.56129430593497,10.2485736407499,6.92856692552637,7.70858313971615,8.64913887544161,6.32121021712702,8.94623155465763,10.0381028337193,8.50447659713418,10.5078546330517,8.18110233128942,0,7.99272460895716,6.58008064549414],[9.45716343166998,9.77109863659916,8.35323474316893,10.7020155017471,9.21166728284743,9.95124988126943,6.73658240504652,6.93977726065821,6.82883422186718,9.14034499886721,6.52802367477242,7.56298264238768,5.53119139458227,7.19994521380774,5.25899641633562,7.99272460895716,0,5.56397338345294],[7.95378561107352,9.40323019102985,7.70897398227056,10.4675703563444,8.48571139105285,9.64556969015279,6.0408463148317,6.12205683109543,6.22801929982398,7.20502415178335,6.94139936721834,7.68916986877059,6.33933832045536,7.82561653509728,5.72577800197227,6.58008064549414,5.56397338345294,0]],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"heatmap"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":[]},"yaxis":{"domain":[0,1],"automargin":true,"title":[]},"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"x":["M1A","M1B","A1A","A1B","V1A","V1B","M6A","M6B","A6A","A6B","V6A","V6B","M12A","M12B","A12A","A12B","V12A","V12B"],"y":["M1A","M1B","A1A","A1B","V1A","V1B","M6A","M6B","A6A","A6B","V6A","V6B","M12A","M12B","A12A","A12B","V12A","V12B"],"z":[[0,7.04650716301561,5.70678310405773,8.20976445672656,5.82667776225817,7.3279781790244,8.39986657356741,8.16733063204216,9.5863720017357,7.68841587215866,10.1640441508758,10.7676019921495,10.0039632569807,11.32498784981,9.81467501211749,7.7447323007849,9.45716343166998,7.95378561107352],[7.04650716301561,0,6.66154862259464,4.25865887783482,6.67960023884925,6.26668680998726,9.91630309634836,9.25451827523274,10.9564120825427,9.93575571094715,11.099388064366,10.6754670535994,9.90683653800532,10.9561298226477,10.7399675586854,9.18116169782984,9.77109863659916,9.40323019102985],[5.70678310405773,6.66154862259464,0,7.98994675562315,4.94593038167374,5.72836463615867,8.11235158724082,7.65256178153187,8.15065142907596,8.76007256265634,8.3098850728208,8.91309701678264,8.66629724080143,9.82426010379447,8.30870129249906,8.54268071001663,8.35323474316893,7.70897398227056],[8.20976445672656,4.25865887783482,7.98994675562315,0,6.99532785790822,6.43469620310431,10.4096764476555,9.51652950962971,11.1939050957908,10.4627147426448,11.1689702900908,10.546647320753,10.5708484745604,11.5547562063224,11.6160197603857,9.88406363111818,10.7020155017471,10.4675703563444],[5.82667776225817,6.67960023884925,4.94593038167374,6.99532785790822,0,4.8575131388009,8.4628875284287,8.03193150585829,8.726172089783,8.73161790330148,8.27286514155668,8.88152783442812,9.62675093908278,10.8109068917939,9.50867890759955,8.56129430593497,9.21166728284743,8.48571139105285],[7.3279781790244,6.26668680998726,5.72836463615867,6.43469620310431,4.8575131388009,0,10.0516318441459,8.92833694901716,9.88801350128225,10.1968579735558,9.80606329541739,9.47694677716335,10.2032985748695,10.9502439173503,10.7118343889731,10.2485736407499,9.95124988126943,9.64556969015279],[8.39986657356741,9.91630309634836,8.11235158724082,10.4096764476555,8.4628875284287,10.0516318441459,0,4.32289188181975,5.45401419571658,6.66929785847856,5.82333805363523,6.89960979808065,6.60846441830891,7.49378480640747,6.09490379797154,6.92856692552637,6.73658240504652,6.0408463148317],[8.16733063204216,9.25451827523274,7.65256178153187,9.51652950962971,8.03193150585829,8.92833694901716,4.32289188181975,0,5.86548263173595,6.92170483627565,6.43771467140553,5.936553276735,6.66918890392232,7.10201521498402,6.87338305585791,7.70858313971615,6.93977726065821,6.12205683109543],[9.5863720017357,10.9564120825427,8.15065142907596,11.1939050957908,8.726172089783,9.88801350128225,5.45401419571658,5.86548263173595,0,8.10337075683392,4.02970654063498,6.37598537189006,6.96355226928131,7.79890861008177,5.50539366529937,8.64913887544161,6.82883422186718,6.22801929982398],[7.68841587215866,9.93575571094715,8.76007256265634,10.4627147426448,8.73161790330148,10.1968579735558,6.66929785847856,6.92170483627565,8.10337075683392,0,9.22853479532282,10.1030591897721,9.35527845594351,11.0912154866989,8.92785474831707,6.32121021712702,9.14034499886721,7.20502415178335],[10.1640441508758,11.099388064366,8.3098850728208,11.1689702900908,8.27286514155668,9.80606329541739,5.82333805363523,6.43771467140553,4.02970654063498,9.22853479532282,0,5.40796455622462,7.23562402229215,8.05893271349358,5.8300094741389,8.94623155465763,6.52802367477242,6.94139936721834],[10.7676019921495,10.6754670535994,8.91309701678264,10.546647320753,8.88152783442812,9.47694677716335,6.89960979808065,5.936553276735,6.37598537189006,10.1030591897721,5.40796455622462,0,7.1430960277339,6.1610771391521,7.49111811137349,10.0381028337193,7.56298264238768,7.68916986877059],[10.0039632569807,9.90683653800532,8.66629724080143,10.5708484745604,9.62675093908278,10.2032985748695,6.60846441830891,6.66918890392232,6.96355226928131,9.35527845594351,7.23562402229215,7.1430960277339,0,5.69259437645614,5.58694500597764,8.50447659713418,5.53119139458227,6.33933832045536],[11.32498784981,10.9561298226477,9.82426010379447,11.5547562063224,10.8109068917939,10.9502439173503,7.49378480640747,7.10201521498402,7.79890861008177,11.0912154866989,8.05893271349358,6.1610771391521,5.69259437645614,0,6.42494730487993,10.5078546330517,7.19994521380774,7.82561653509728],[9.81467501211749,10.7399675586854,8.30870129249906,11.6160197603857,9.50867890759955,10.7118343889731,6.09490379797154,6.87338305585791,5.50539366529937,8.92785474831707,5.8300094741389,7.49111811137349,5.58694500597764,6.42494730487993,0,8.18110233128942,5.25899641633562,5.72577800197227],[7.7447323007849,9.18116169782984,8.54268071001663,9.88406363111818,8.56129430593497,10.2485736407499,6.92856692552637,7.70858313971615,8.64913887544161,6.32121021712702,8.94623155465763,10.0381028337193,8.50447659713418,10.5078546330517,8.18110233128942,0,7.99272460895716,6.58008064549414],[9.45716343166998,9.77109863659916,8.35323474316893,10.7020155017471,9.21166728284743,9.95124988126943,6.73658240504652,6.93977726065821,6.82883422186718,9.14034499886721,6.52802367477242,7.56298264238768,5.53119139458227,7.19994521380774,5.25899641633562,7.99272460895716,0,5.56397338345294],[7.95378561107352,9.40323019102985,7.70897398227056,10.4675703563444,8.48571139105285,9.64556969015279,6.0408463148317,6.12205683109543,6.22801929982398,7.20502415178335,6.94139936721834,7.68916986877059,6.33933832045536,7.82561653509728,5.72577800197227,6.58008064549414,5.56397338345294,0]],"type":"heatmap","xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-</div>
-<div id="individuals-genes-identified-in-deg-analysis" class="section level3">
-<h3 class="hasAnchor">
-<a href="#individuals-genes-identified-in-deg-analysis" class="anchor"></a>Individuals genes identified in DEG analysis</h3>
-<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="co">### DEG analysis with `systemPipeR`</span>
-<span class="no">degseqDF</span> <span class="kw">&lt;-</span> <span class="kw pkg">systemPipeR</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/systemPipeR/man/run_DESeq2.html">run_DESeq2</a></span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countMatrix</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>,
-    <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]], <span class="kw">independent</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="no">DEG_list</span> <span class="kw">&lt;-</span> <span class="kw pkg">systemPipeR</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/systemPipeR/man/filterDEGs.html">filterDEGs</a></span>(<span class="kw">degDF</span> <span class="kw">=</span> <span class="no">degseqDF</span>, <span class="kw">filter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">Fold</span> <span class="kw">=</span> <span class="fl">2</span>,
-    <span class="kw">FDR</span> <span class="kw">=</span> <span class="fl">10</span>))</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/heatMaplot_genes-1.png" width="700"></p>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="co">### Plot</span>
-<span class="fu"><a href="../reference/heatMaplot.html">heatMaplot</a></span>(<span class="no">exploredds</span>, <span class="kw">clust</span> <span class="kw">=</span> <span class="st">"ind"</span>, <span class="kw">DEGlist</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="no">DEG_list</span><span class="kw">[[</span><span class="fl">1</span>]]))))</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/heatMaplot_genes-2.png" width="700"></p>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="fu"><a href="../reference/heatMaplot.html">heatMaplot</a></span>(<span class="no">exploredds</span>, <span class="kw">clust</span> <span class="kw">=</span> <span class="st">"ind"</span>, <span class="kw">DEGlist</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="no">DEG_list</span><span class="kw">[[</span><span class="fl">1</span>]]))),
-    <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<div id="htmlwidget-5908cff1f3408f16c175" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5908cff1f3408f16c175">{"x":{"visdat":{"7dae26a37950":["function () ","plotlyVisDat"]},"cur_data":"7dae26a37950","attrs":{"7dae26a37950":{"x":["M1A","M1B","A1A","A1B","V1A","V1B","M6A","M6B","A6A","A6B","V6A","V6B","M12A","M12B","A12A","A12B","V12A","V12B"],"y":["AT1G01060","AT1G01010","AT1G01020","AT2G01021","ATCG00020","ATCG00120","ATCG00140","ATCG00270","ATCG00280","ATCG00340","ATCG00350","ATCG00490","AT1G01050","AT1G01080","AT1G01090","AT3G01060","AT5G01020","ATCG00190","ATCG00330","AT1G01030","AT4G00040","AT5G01100"],"z":[[5.09819022927088,6.23793424992211,5.02028240707856,4.52626667337264,3.23900785786523,3.91201170085225,3.66670008100354,3.03379898131987,2.5586122916163,3.11656992980942,2.36187413534679,2.66496868549199,5.76025166801208,6.18966125718754,6.2784024404848,5.67257672594471,5.79543480581473,5.43523659007875],[6.71887518310355,6.90230278265324,7.0511093770271,6.45893489542579,7.52093671243596,6.81512148942636,6.39109812945787,6.10541526504236,7.29294508267898,7.30761100559437,7.47216058912928,7.25881456000159,6.82472004282039,6.58125171691947,7.13077545157098,7.4660266039616,7.90351090892826,7.56766260044694],[5.30048825385592,5.42936130830072,5.47586256839821,5.61656623158031,5.7791134952679,5.35091015131998,5.05279917083648,5.1106798790166,4.8418166694852,4.76316084579578,5.75213191281152,5.76088106211396,5.31870629789212,5.42147327374532,5.25693357558418,5.67938293777464,5.69769766942499,5.69667626322071],[13.0975281006648,11.251420961856,12.371790047658,10.9137259813832,11.4515680752082,10.5389321335273,13.806483488194,13.5052826839335,13.1624464832821,14.5446492595831,12.6292826405985,11.1887836547901,12.5830311171694,11.5898346399424,13.2741706698785,13.1130153038288,13.3108623521349,13.5486393043442],[11.2229135656052,9.82810216644743,9.63161753569142,8.90716466533158,10.3208678857191,9.5072256583529,11.0429840698499,10.4172649111086,10.3407026758353,11.6664670702528,9.86346247045438,8.50087235246705,10.2790299550644,8.90324306106801,10.2627211233777,11.9048872016911,10.6314925939509,10.890806064245],[6.29163306121382,6.4329745772788,6.1633638614509,6.22559936558641,6.38187701922946,6.68559877927808,5.93198372330457,5.80937043152056,5.70438810295982,6.90391496160795,5.48333717692446,5.33594144132826,5.70191521973026,5.83519767708112,5.5182456512587,6.67929404857209,5.49786831765907,6.13334555247201],[5.49643232617744,4.53441181889588,5.10998861851366,4.35698557908941,4.69580667223818,4.22036062288463,5.59349606671699,4.56123733903576,4.69854768557365,5.99402324412774,4.44196414725259,3.65863595686761,3.76805964424135,4.13047041104194,5.1505270616168,5.12405528056001,3.98844561064579,5.46892880198119],[7.13069907769599,6.92230739748068,6.67079656739082,6.46925734695951,6.28704185047139,6.71085544773719,6.58219509097382,6.27252545932486,6.1396936506971,7.48866920830906,6.0560528520435,5.45748267408471,6.47920785178503,5.68904431597555,5.97931770443534,7.24227860552414,6.23919449572321,6.47428429062679],[8.53792565227265,8.20907089606266,7.65559009720506,7.97711930414019,7.84370770697379,7.53165081900704,8.06971643203015,7.83370573287878,7.39708377944172,8.65113355468376,7.19520329989156,6.747871176732,7.15246396436341,7.01629542420629,7.39675213756151,9.14249148666817,7.41308974511274,8.15253869745055],[7.73008328089192,7.50374311887335,7.23778756852286,7.64733158731014,7.45043752425092,7.68824278653549,7.49914930423611,7.4694299055572,6.71788807638768,8.24495149935844,6.64328990674883,6.5048646289655,7.00447536255454,6.56204780914433,6.84088027010275,8.4093030814687,6.95250690387086,7.63395216626747],[8.05715290365638,7.71291835260121,7.156548898678,7.68421793320099,7.66306050612013,7.63183321657769,7.51610369006712,7.62623607755825,7.22938033456032,8.478234173498,6.71471652371953,6.69084468693797,7.46314658536787,6.70927319565522,7.09437866750974,8.65091242203329,7.26784604868047,7.69073016109941],[10.1169645476908,9.0328482942686,9.11686539479922,8.77284883868313,9.19686343795107,9.12229276919168,9.6963372083754,9.57599733821178,9.12895050529288,10.8680031936216,8.61689785630133,8.23755708313439,8.85741065812369,8.31866582674622,9.00907398410368,10.5434221992067,9.23069157684238,9.74532907057214],[6.87713350958209,6.42346664746475,6.53546408696503,6.55984352188274,6.60182122593447,7.18693255804276,7.46847485953003,7.64903389964556,7.30419359102669,7.2006324029378,7.34965397688062,7.87592429524449,8.04732002997016,8.35371901560758,7.61047865226367,7.32219120173952,7.91689303024715,8.08279987833002],[7.31241605718103,7.40679403493272,7.01692772354396,7.48256427231717,7.35064427287852,7.73118109023213,7.31678636275206,7.78616141751878,6.74760881963456,7.29426621587605,6.89103778882516,7.63895594523473,7.64354032958318,8.12095775795451,6.71560250364184,6.6954965794629,6.90185268808205,6.88418943207991],[9.075059738074,8.95259166370546,9.02235657884719,9.10940035511956,8.72095292980314,9.50397383530862,9.09508077136121,9.23972585959769,8.68030393930918,9.04399185438574,8.80996726357762,9.30741545568539,9.3536510555608,9.66009221226106,8.5292953797763,8.74503644296152,9.03862062535077,9.00846809341477],[7.90739218028467,7.87854066495158,7.85227818899729,7.56883758397271,6.7561985873487,7.0000134783001,4.73739986993069,6.15144511517559,4.80030667318985,4.41305179459878,4.50350727733855,4.85981452204021,6.39488988826867,6.510862710668,5.65874245599693,5.06291138146323,6.11666979239597,5.7062048479018],[7.41986834242472,7.14781523515404,7.2712010656536,6.9735947248806,7.0632665474985,7.78211452772015,7.92065853724851,8.02840567170823,8.09990152807405,7.6781856715489,8.10425593746533,8.33276301011934,8.94476103761168,8.82504733124106,8.09619829341607,8.13245212824077,8.36835540763432,8.32292557996392],[5.56116516885276,5.68496871345322,4.95418263296039,5.94714498920961,5.4785042666447,5.91438473355351,4.83480503388939,4.78244041959722,4.37304913782255,4.3442409365948,4.28158981207317,4.78845866310437,4.71928705745655,4.87223009788443,3.96639629163454,3.59597272857871,3.94743473489988,4.98092389701587],[5.88544324650837,5.31101723575575,5.05178318058667,5.47452607378916,4.82370816149794,4.7298044788281,4.85158055533035,4.29635512782615,4.70789628790063,5.56089388738582,4.35352129315965,3.99960899901239,3.05265404663238,4.24112489788318,4.31800164719002,5.90587140627361,4.16357979811389,4.72028835669237],[5.76145450748331,5.38711278747094,5.43803735559394,4.79350450589955,5.56329715342559,5.82367901233882,4.38129283008928,4.45282732787997,4.03552305374828,4.76836092825852,4.81576457774359,5.64783537868212,4.94747968963387,4.4823392232932,4.30074806532161,4.95110738637434,6.10445056957542,6.65659127512219],[6.85375341837398,6.66943665193195,7.05886097644612,6.41594742819962,6.77291076308919,7.08214802977301,7.3075559113899,7.16476298783101,7.55232408790336,7.41466872762068,7.6093812149579,7.47237506189467,8.01574695880427,8.08877588307225,7.62305078891306,7.00113818587637,7.2349703691814,7.085592911029],[7.8747645363376,8.46602859082036,8.533234468156,8.529065175293,8.48669280853493,9.32677081492405,6.13762573137991,7.10683660050681,7.63808123564346,7.35994384363439,7.54412867565434,6.46495624249908,6.11525886770283,6.27211679014334,6.86306874107594,6.97706711765007,7.62595189302362,7.13469054889273]],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"heatmap"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":[]},"yaxis":{"domain":[0,1],"automargin":true,"title":[]},"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"x":["M1A","M1B","A1A","A1B","V1A","V1B","M6A","M6B","A6A","A6B","V6A","V6B","M12A","M12B","A12A","A12B","V12A","V12B"],"y":["AT1G01060","AT1G01010","AT1G01020","AT2G01021","ATCG00020","ATCG00120","ATCG00140","ATCG00270","ATCG00280","ATCG00340","ATCG00350","ATCG00490","AT1G01050","AT1G01080","AT1G01090","AT3G01060","AT5G01020","ATCG00190","ATCG00330","AT1G01030","AT4G00040","AT5G01100"],"z":[[5.09819022927088,6.23793424992211,5.02028240707856,4.52626667337264,3.23900785786523,3.91201170085225,3.66670008100354,3.03379898131987,2.5586122916163,3.11656992980942,2.36187413534679,2.66496868549199,5.76025166801208,6.18966125718754,6.2784024404848,5.67257672594471,5.79543480581473,5.43523659007875],[6.71887518310355,6.90230278265324,7.0511093770271,6.45893489542579,7.52093671243596,6.81512148942636,6.39109812945787,6.10541526504236,7.29294508267898,7.30761100559437,7.47216058912928,7.25881456000159,6.82472004282039,6.58125171691947,7.13077545157098,7.4660266039616,7.90351090892826,7.56766260044694],[5.30048825385592,5.42936130830072,5.47586256839821,5.61656623158031,5.7791134952679,5.35091015131998,5.05279917083648,5.1106798790166,4.8418166694852,4.76316084579578,5.75213191281152,5.76088106211396,5.31870629789212,5.42147327374532,5.25693357558418,5.67938293777464,5.69769766942499,5.69667626322071],[13.0975281006648,11.251420961856,12.371790047658,10.9137259813832,11.4515680752082,10.5389321335273,13.806483488194,13.5052826839335,13.1624464832821,14.5446492595831,12.6292826405985,11.1887836547901,12.5830311171694,11.5898346399424,13.2741706698785,13.1130153038288,13.3108623521349,13.5486393043442],[11.2229135656052,9.82810216644743,9.63161753569142,8.90716466533158,10.3208678857191,9.5072256583529,11.0429840698499,10.4172649111086,10.3407026758353,11.6664670702528,9.86346247045438,8.50087235246705,10.2790299550644,8.90324306106801,10.2627211233777,11.9048872016911,10.6314925939509,10.890806064245],[6.29163306121382,6.4329745772788,6.1633638614509,6.22559936558641,6.38187701922946,6.68559877927808,5.93198372330457,5.80937043152056,5.70438810295982,6.90391496160795,5.48333717692446,5.33594144132826,5.70191521973026,5.83519767708112,5.5182456512587,6.67929404857209,5.49786831765907,6.13334555247201],[5.49643232617744,4.53441181889588,5.10998861851366,4.35698557908941,4.69580667223818,4.22036062288463,5.59349606671699,4.56123733903576,4.69854768557365,5.99402324412774,4.44196414725259,3.65863595686761,3.76805964424135,4.13047041104194,5.1505270616168,5.12405528056001,3.98844561064579,5.46892880198119],[7.13069907769599,6.92230739748068,6.67079656739082,6.46925734695951,6.28704185047139,6.71085544773719,6.58219509097382,6.27252545932486,6.1396936506971,7.48866920830906,6.0560528520435,5.45748267408471,6.47920785178503,5.68904431597555,5.97931770443534,7.24227860552414,6.23919449572321,6.47428429062679],[8.53792565227265,8.20907089606266,7.65559009720506,7.97711930414019,7.84370770697379,7.53165081900704,8.06971643203015,7.83370573287878,7.39708377944172,8.65113355468376,7.19520329989156,6.747871176732,7.15246396436341,7.01629542420629,7.39675213756151,9.14249148666817,7.41308974511274,8.15253869745055],[7.73008328089192,7.50374311887335,7.23778756852286,7.64733158731014,7.45043752425092,7.68824278653549,7.49914930423611,7.4694299055572,6.71788807638768,8.24495149935844,6.64328990674883,6.5048646289655,7.00447536255454,6.56204780914433,6.84088027010275,8.4093030814687,6.95250690387086,7.63395216626747],[8.05715290365638,7.71291835260121,7.156548898678,7.68421793320099,7.66306050612013,7.63183321657769,7.51610369006712,7.62623607755825,7.22938033456032,8.478234173498,6.71471652371953,6.69084468693797,7.46314658536787,6.70927319565522,7.09437866750974,8.65091242203329,7.26784604868047,7.69073016109941],[10.1169645476908,9.0328482942686,9.11686539479922,8.77284883868313,9.19686343795107,9.12229276919168,9.6963372083754,9.57599733821178,9.12895050529288,10.8680031936216,8.61689785630133,8.23755708313439,8.85741065812369,8.31866582674622,9.00907398410368,10.5434221992067,9.23069157684238,9.74532907057214],[6.87713350958209,6.42346664746475,6.53546408696503,6.55984352188274,6.60182122593447,7.18693255804276,7.46847485953003,7.64903389964556,7.30419359102669,7.2006324029378,7.34965397688062,7.87592429524449,8.04732002997016,8.35371901560758,7.61047865226367,7.32219120173952,7.91689303024715,8.08279987833002],[7.31241605718103,7.40679403493272,7.01692772354396,7.48256427231717,7.35064427287852,7.73118109023213,7.31678636275206,7.78616141751878,6.74760881963456,7.29426621587605,6.89103778882516,7.63895594523473,7.64354032958318,8.12095775795451,6.71560250364184,6.6954965794629,6.90185268808205,6.88418943207991],[9.075059738074,8.95259166370546,9.02235657884719,9.10940035511956,8.72095292980314,9.50397383530862,9.09508077136121,9.23972585959769,8.68030393930918,9.04399185438574,8.80996726357762,9.30741545568539,9.3536510555608,9.66009221226106,8.5292953797763,8.74503644296152,9.03862062535077,9.00846809341477],[7.90739218028467,7.87854066495158,7.85227818899729,7.56883758397271,6.7561985873487,7.0000134783001,4.73739986993069,6.15144511517559,4.80030667318985,4.41305179459878,4.50350727733855,4.85981452204021,6.39488988826867,6.510862710668,5.65874245599693,5.06291138146323,6.11666979239597,5.7062048479018],[7.41986834242472,7.14781523515404,7.2712010656536,6.9735947248806,7.0632665474985,7.78211452772015,7.92065853724851,8.02840567170823,8.09990152807405,7.6781856715489,8.10425593746533,8.33276301011934,8.94476103761168,8.82504733124106,8.09619829341607,8.13245212824077,8.36835540763432,8.32292557996392],[5.56116516885276,5.68496871345322,4.95418263296039,5.94714498920961,5.4785042666447,5.91438473355351,4.83480503388939,4.78244041959722,4.37304913782255,4.3442409365948,4.28158981207317,4.78845866310437,4.71928705745655,4.87223009788443,3.96639629163454,3.59597272857871,3.94743473489988,4.98092389701587],[5.88544324650837,5.31101723575575,5.05178318058667,5.47452607378916,4.82370816149794,4.7298044788281,4.85158055533035,4.29635512782615,4.70789628790063,5.56089388738582,4.35352129315965,3.99960899901239,3.05265404663238,4.24112489788318,4.31800164719002,5.90587140627361,4.16357979811389,4.72028835669237],[5.76145450748331,5.38711278747094,5.43803735559394,4.79350450589955,5.56329715342559,5.82367901233882,4.38129283008928,4.45282732787997,4.03552305374828,4.76836092825852,4.81576457774359,5.64783537868212,4.94747968963387,4.4823392232932,4.30074806532161,4.95110738637434,6.10445056957542,6.65659127512219],[6.85375341837398,6.66943665193195,7.05886097644612,6.41594742819962,6.77291076308919,7.08214802977301,7.3075559113899,7.16476298783101,7.55232408790336,7.41466872762068,7.6093812149579,7.47237506189467,8.01574695880427,8.08877588307225,7.62305078891306,7.00113818587637,7.2349703691814,7.085592911029],[7.8747645363376,8.46602859082036,8.533234468156,8.529065175293,8.48669280853493,9.32677081492405,6.13762573137991,7.10683660050681,7.63808123564346,7.35994384363439,7.54412867565434,6.46495624249908,6.11525886770283,6.27211679014334,6.86306874107594,6.97706711765007,7.62595189302362,7.13469054889273]],"type":"heatmap","xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<div id="pca-plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pca-plot" class="anchor"></a>PCA plot</h2>
-<p>A Principal Component Analysis (PCA) plot can be created using the <code>PCAplot</code> function which uses the <code>DESeq2</code> package. The input data frame can be transformed with the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package, or can be done without transformation.</p>
-<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="co">## Data transformation</span>
-<span class="no">exploredds</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/exploreDDS.html">exploreDDS</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]],
-    <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">transformationMethod</span> <span class="kw">=</span> <span class="st">"rlog"</span>)
-<span class="co">## Plot</span>
-<span class="fu"><a href="../reference/PCAplot.html">PCAplot</a></span>(<span class="no">exploredds</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/pcaplot-1.png" width="700"></p>
-<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="fu"><a href="../reference/PCAplot.html">PCAplot</a></span>(<span class="no">exploredds</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<div id="htmlwidget-61d46ab7327207cc66b5" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-61d46ab7327207cc66b5">{"x":{"data":[{"x":[-3.03168381476885,-6.03412691707514],"y":[-0.535073099413192,-2.09717509072249],"text":["colour: A1<br />PC1: -3.0316838<br />PC2: -0.5350731","colour: A1<br />PC1: -6.0341269<br />PC2: -2.0971751"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"A1","legendgroup":"A1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[3.88869312311426,-0.38375614167808],"y":[0.0701335027868783,4.53821439195817],"text":["colour: A12<br />PC1:  3.8886931<br />PC2:  0.0701335","colour: A12<br />PC1: -0.3837561<br />PC2:  4.5382144"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(211,146,0,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(211,146,0,1)"}},"hoveron":"points","name":"A12","legendgroup":"A12","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[3.28184331604164,-0.416809087724183],"y":[0.185372641000547,5.30010399483779],"text":["colour: A6<br />PC1:  3.2818433<br />PC2:  0.1853726","colour: A6<br />PC1: -0.4168091<br />PC2:  5.3001040"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(147,170,0,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(147,170,0,1)"}},"hoveron":"points","name":"A6","legendgroup":"A6","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-4.23478929449673,-5.72288504075974],"y":[2.46441944072603,-1.3362445127839],"text":["colour: M1<br />PC1: -4.2347893<br />PC2:  2.4644194","colour: M1<br />PC1: -5.7228850<br />PC2: -1.3362445"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,186,56,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,186,56,1)"}},"hoveron":"points","name":"M1","legendgroup":"M1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[3.08219911545693,4.0916538760623],"y":[-1.26931397709069,-3.52388688937858],"text":["colour: M12<br />PC1:  3.0821991<br />PC2: -1.2693140","colour: M12<br />PC1:  4.0916539<br />PC2: -3.5238869"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,193,159,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,193,159,1)"}},"hoveron":"points","name":"M12","legendgroup":"M12","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2.40175386965522,1.53523865252027],"y":[1.67449958551854,0.392038639964055],"text":["colour: M6<br />PC1:  2.4017539<br />PC2:  1.6744996","colour: M6<br />PC1:  1.5352387<br />PC2:  0.3920386"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,185,227,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,185,227,1)"}},"hoveron":"points","name":"M6","legendgroup":"M6","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-4.10114199086997,-5.133975141619],"y":[-0.524772724724377,-2.59419479868824],"text":["colour: V1<br />PC1: -4.1011420<br />PC2: -0.5247727","colour: V1<br />PC1: -5.1339751<br />PC2: -2.5941948"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(97,156,255,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(97,156,255,1)"}},"hoveron":"points","name":"V1","legendgroup":"V1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2.70779870992001,1.85669227563915],"y":[-0.325101355885942,1.77346995606566],"text":["colour: V12<br />PC1:  2.7077987<br />PC2: -0.3251014","colour: V12<br />PC1:  1.8566923<br />PC2:  1.7734700"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(219,114,251,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(219,114,251,1)"}},"hoveron":"points","name":"V12","legendgroup":"V12","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[3.29098889669914,2.92230559388278],"y":[-0.928463576912154,-3.2640261272581],"text":["colour: V6<br />PC1:  3.2909889<br />PC2: -0.9284636","colour: V6<br />PC1:  2.9223056<br />PC2: -3.2640261"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,97,195,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,97,195,1)"}},"hoveron":"points","name":"V6","legendgroup":"V6","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":45.3588829941669,"r":7.30593607305936,"b":41.7789743183678,"l":37.2602739726027},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Principal Component Analysis (PCA)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-6.54041595673201,4.59794291571917],"tickmode":"array","ticktext":["-6","-4","-2","0","2","4"],"tickvals":[-6,-4,-2,0,2,4],"categoryorder":"array","categoryarray":["-6","-4","-2","0","2","4"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"PC1: 39% variance","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"scaleanchor":"y","scaleratio":1,"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.96508643358939,5.74130353904861],"tickmode":"array","ticktext":["-2","0","2","4"],"tickvals":[-2,0,2,4],"categoryorder":"array","categoryarray":["-2","0","2","4"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"PC2: 17% variance","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"scaleanchor":"x","scaleratio":1,"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96395248281826},"annotations":[{"text":"colour","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"7dae77241351":{"colour":{},"x":{},"y":{},"type":"scatter"}},"cur_data":"7dae77241351","visdat":{"7dae77241351":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script><p>In addition, generalized principal component analysis (GLM-PCA) for dimension reduction of non-normally distributed data can be plotted with the <code>GLMplot</code> function <span class="citation">(<span class="citeproc-not-found" data-reference-id="Townes2019"><strong>???</strong></span>)</span>. This option does not offer transformation or normalization of raw data.</p>
-<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="co">## Data transformation</span>
-<span class="no">exploredds</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/exploreDDS.html">exploreDDS</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]],
-    <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">transformationMethod</span> <span class="kw">=</span> <span class="st">"raw"</span>)
-<span class="co">## Plot</span>
-<span class="fu"><a href="../reference/GLMplot.html">GLMplot</a></span>(<span class="no">exploredds</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/glmplot-1.png" width="700"></p>
-<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="fu"><a href="../reference/GLMplot.html">GLMplot</a></span>(<span class="no">exploredds</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">savePlot</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">filePlot</span> <span class="kw">=</span> <span class="st">"GLM.pdf"</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/glmplot-2.png" width="700"></p>
-</div>
-<div id="mds-plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#mds-plot" class="anchor"></a>MDS plot</h2>
-<p>A Multidimensional Scaling (MDS) plot can be created using the <code>MDSplot</code> function. The input data frame can be transformed with either the <code>rlog</code> or Variance-stabilizing Transformation (<code>vst</code>) methods from the <code>DESeq2</code> package. From the input data, it computes a spearman correlation-based distance matrix and performs MDS analysis on it.</p>
-<div class="sourceCode" id="cb69"><html><body><pre class="r"><span class="no">exploredds</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/exploreDDS.html">exploreDDS</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]],
-    <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">transformationMethod</span> <span class="kw">=</span> <span class="st">"rlog"</span>)
-<span class="fu"><a href="../reference/MDSplot.html">MDSplot</a></span>(<span class="no">exploredds</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/mdsplot-1.png" width="700"></p>
-</div>
-<div id="t-sne-plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#t-sne-plot" class="anchor"></a>t-SNE plot</h2>
-<p>A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created using the <code>tSNEplot</code> function, which uses the <code>Rtsne</code> package <span class="citation">(<span class="citeproc-not-found" data-reference-id="Krijthe2015"><strong>???</strong></span>)</span> to compute t-SNE values. The function removes duplicates in the input data frame, sets a seed for reproducibility, performs an initial PCA step. The function also allows for a user-set perplexity value for the computation.</p>
-<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="no">targetspath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"targets.txt"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">targets</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">targetspath</span>, <span class="kw">comment</span> <span class="kw">=</span> <span class="st">"#"</span>)
-<span class="no">cmp</span> <span class="kw">&lt;-</span> <span class="kw pkg">systemPipeR</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/systemPipeR/man/readComp.html">readComp</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="no">targetspath</span>, <span class="kw">format</span> <span class="kw">=</span> <span class="st">"matrix"</span>,
-    <span class="kw">delim</span> <span class="kw">=</span> <span class="st">"-"</span>)
-<span class="no">countMatrixPath</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"countDFeByg.xls"</span>,
-    <span class="kw">package</span> <span class="kw">=</span> <span class="st">"systemPipeR"</span>)
-<span class="no">countMatrix</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="no">countMatrixPath</span>, <span class="kw">row.names</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">42</span>)  <span class="co">## Set a seed if you want reproducible results</span>
-<span class="fu"><a href="../reference/tSNEplot.html">tSNEplot</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">perplexity</span> <span class="kw">=</span> <span class="fl">5</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/tSNEplot-1.png" width="700"></p>
-</div>
-<div id="ma-plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#ma-plot" class="anchor"></a>MA-Plot</h2>
-<p>An MA plot is an application of a Bland–Altman plot for visual representation of genomic data. The plot visualizes the differences between measurements taken in two samples, by transforming the data onto M (log ratio) and A (mean average) scales, then plotting these values.</p>
-<div class="sourceCode" id="cb71"><html><body><pre class="r"><span class="no">exploredds</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/exploreDDS.html">exploreDDS</a></span>(<span class="no">countMatrix</span>, <span class="no">targets</span>, <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]],
-    <span class="kw">preFilter</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">transformationMethod</span> <span class="kw">=</span> <span class="st">"raw"</span>)
-<span class="fu"><a href="../reference/MAplot.html">MAplot</a></span>(<span class="no">exploredds</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
-<pre><code>## [1] "removing NA from the results"</code></pre>
-<p><img src="systemPipeShiny_files/figure-html/MAplot-1.png" width="700"></p>
-<div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="fu"><a href="../reference/MAplot.html">MAplot</a></span>(<span class="no">exploredds</span>, <span class="kw">plotly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<pre><code>## [1] "removing NA from the results"</code></pre>
-<div id="htmlwidget-dba13352e4cbb59752c3" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-dba13352e4cbb59752c3">{"x":{"data":[{"x":[2.16212591534029,1.64479413030375,1.646103526471,2.49872975402528,0.716320098657365,null,2.22303946179926,2.74071736704292,0.757228717710884,null,1.831234526229,3.98151725999998,0.387272981690982,null,-0.902310431156276,null,null,1.85575015645007,0.0351102631874632,1.63524850732666,null,2.22748184911485,1.91238736662481,3.04350485351303,1.28722345990781,1.9581724748836,1.92084677700875,1.88465940745689,null,1.06854704438988,2.10201309887513,2.05902857784521,2.2074183464334,-0.550581074301356,null,1.65884709731297,null,null,0.793169614715614,1.09236478326337,2.61196212433974,1.18326594030159,1.78465976407404,0.295441831410722,null,-0.773210670604316,0.950921641212663,null,1.64752768506171,0.857006465877151,-0.438850630545274,null,null,null,2.01049042830692,3.23154543521491,0.831554094030737,-0.86033172047684,1.10139337459563,1.86160020079255,1.51440909721055,1.15315421170453,0.42268906290065,1.54299602567584,0.703793390203585,1.9989102794199,2.41714144418825,0.826973621001231,1.52898116549207,2.26273395551734,2.31819801551127,0.284649871792256,0.688456790628308,1.27039431317947,0.78393379286955,2.89891517809533,0.664262995280478,0.459306966022929,-0.0629516065383677,1.82846466599855,1.43245903991003,null,0.51433727172436,0.976312238983181,0.953716916076228,1.20352635088852,0.913112825705198,0.0201983085118408,0.213444574188675,0.299666286722349,-0.319185789644365,1.2580907213803,0.755551598876171,1.42593950351063,-0.0228991225292762],"y":[0.852658072574455,0.305451480887736,0.236814576224978,0.546791596550802,2.42855834312707,0.99,0.079991080701523,0.0298944981804222,-0.309645001986973,0.99,0.932535924273534,0.400594226235338,-1.15444705343139,0.99,1.46639878770613,0.99,0.99,0.472305427701711,-2.46964045688732,-1.00662311912622,0.99,-0.0453399404764787,0.865927637554801,0.0288737195418398,0.666136982334299,0.106538490611197,0.0984769609907393,-0.524561756099494,0.99,-0.076320444908151,0.360483829073564,1.50138504202895,0.316354817449433,2.08987886894326,0.99,-0.561361994948084,0.99,0.99,-0.787873625920217,-0.259693832712662,0.673059800278766,0.599405977240816,-0.346076317599142,-1.81092328240712,0.00587454238106535,0.00582339043226615,0.444228851562898,0.00589293155813713,0.557731423779062,0.142908507109961,-2.12842584996064,0.99,0.99,0.99,0.581166692230064,0.0985404735688028,-2.18367931216374,-2.46972822374981,-1.57387037562683,-1.22314118677926,-1.11806417426098,-2.00274705947531,-1.29080923200104,-1.49229659302163,-1.82485450178953,-1.20840331549843,-1.28613712553977,-2.00082924301848,-1.72205557672952,-1.36589288960892,-1.17469483491394,-2.43302936261233,-2.36790592513112,-2.309600612579,-2.00905774962083,-0.810048846073137,-2.54245067541205,0.257311297441519,-0.544109567768857,0.380657253460184,0.690745232688535,0.99,0.815141903492716,-0.448529444420503,-0.948680801137021,-1.24881515920637,-0.342668183662564,-1.83106392217175,3.383104669847,0.0952781518063433,0.00586174945742934,-0.0155679700573356,0.441488508611234,-0.0947931111608755,-0.136021307598256],"text":["padj < padj.cutoff: FALSE<br />baseMean: 1.452533e+02<br />log2FoldChange:  0.852658073","padj < padj.cutoff: FALSE<br />baseMean: 4.413612e+01<br />log2FoldChange:  0.305451481","padj < padj.cutoff: FALSE<br />baseMean: 4.426939e+01<br />log2FoldChange:  0.236814576","padj < padj.cutoff: FALSE<br />baseMean: 3.153042e+02<br />log2FoldChange:  0.546791597","padj < padj.cutoff: FALSE<br />baseMean: 5.203794e+00<br />log2FoldChange:  2.428558343","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 1.671242e+02<br />log2FoldChange:  0.079991081","padj < padj.cutoff: FALSE<br />baseMean: 5.504494e+02<br />log2FoldChange:  0.029894498","padj < padj.cutoff: FALSE<br />baseMean: 5.717797e+00<br />log2FoldChange: -0.309645002","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 6.780075e+01<br />log2FoldChange:  0.932535924","padj < padj.cutoff: FALSE<br />baseMean: 9.583348e+03<br />log2FoldChange:  0.400594226","padj < padj.cutoff: FALSE<br />baseMean: 2.439344e+00<br />log2FoldChange: -1.154447053","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 1.252246e-01<br />log2FoldChange:  1.466398788","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 7.173815e+01<br />log2FoldChange:  0.472305428","padj < padj.cutoff: FALSE<br />baseMean: 1.084202e+00<br />log2FoldChange: -2.469640457","padj < padj.cutoff: FALSE<br />baseMean: 4.317661e+01<br />log2FoldChange: -1.006623119","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 1.688425e+02<br />log2FoldChange: -0.045339940","padj < padj.cutoff: FALSE<br />baseMean: 8.173110e+01<br />log2FoldChange:  0.865927638","padj < padj.cutoff: FALSE<br />baseMean: 1.105363e+03<br />log2FoldChange:  0.028873720","padj < padj.cutoff: FALSE<br />baseMean: 1.937419e+01<br />log2FoldChange:  0.666136982","padj < padj.cutoff: FALSE<br />baseMean: 9.081811e+01<br />log2FoldChange:  0.106538491","padj < padj.cutoff: FALSE<br />baseMean: 8.333871e+01<br />log2FoldChange:  0.098476961","padj < padj.cutoff: FALSE<br />baseMean: 7.667599e+01<br />log2FoldChange: -0.524561756","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 1.170973e+01<br />log2FoldChange: -0.076320445","padj < padj.cutoff: FALSE<br />baseMean: 1.264774e+02<br />log2FoldChange:  0.360483829","padj < padj.cutoff: FALSE<br />baseMean: 1.145588e+02<br />log2FoldChange:  1.501385042","padj < padj.cutoff: FALSE<br />baseMean: 1.612198e+02<br />log2FoldChange:  0.316354817","padj < padj.cutoff: FALSE<br />baseMean: 2.814615e-01<br />log2FoldChange:  2.089878869","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 4.558764e+01<br />log2FoldChange: -0.561361995","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 6.211116e+00<br />log2FoldChange: -0.787873626","padj < padj.cutoff: FALSE<br />baseMean: 1.236986e+01<br />log2FoldChange: -0.259693833","padj < padj.cutoff: FALSE<br />baseMean: 4.092250e+02<br />log2FoldChange:  0.673059800","padj < padj.cutoff: FALSE<br />baseMean: 1.524986e+01<br />log2FoldChange:  0.599405977","padj < padj.cutoff: FALSE<br />baseMean: 6.090596e+01<br />log2FoldChange: -0.346076318","padj < padj.cutoff: FALSE<br />baseMean: 1.974430e+00<br />log2FoldChange: -1.810923282","padj < padj.cutoff: FALSE<br />baseMean: 5.049730e-02<br />log2FoldChange:  0.005874542","padj < padj.cutoff: FALSE<br />baseMean: 1.685735e-01<br />log2FoldChange:  0.005823390","padj < padj.cutoff: FALSE<br />baseMean: 8.931443e+00<br />log2FoldChange:  0.444228852","padj < padj.cutoff: FALSE<br />baseMean: 2.524865e-02<br />log2FoldChange:  0.005892932","padj < padj.cutoff: FALSE<br />baseMean: 4.441480e+01<br />log2FoldChange:  0.557731424","padj < padj.cutoff: FALSE<br />baseMean: 7.194597e+00<br />log2FoldChange:  0.142908507","padj < padj.cutoff: FALSE<br />baseMean: 3.640402e-01<br />log2FoldChange: -2.128425850","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 1.024449e+02<br />log2FoldChange:  0.581166692","padj < padj.cutoff: FALSE<br />baseMean: 1.704298e+03<br />log2FoldChange:  0.098540474","padj < padj.cutoff: FALSE<br />baseMean: 6.785066e+00<br />log2FoldChange: -2.183679312","padj < padj.cutoff: FALSE<br />baseMean: 1.379330e-01<br />log2FoldChange: -2.469728224","padj < padj.cutoff: FALSE<br />baseMean: 1.262971e+01<br />log2FoldChange: -1.573870376","padj < padj.cutoff: FALSE<br />baseMean: 7.271101e+01<br />log2FoldChange: -1.223141187","padj < padj.cutoff: FALSE<br />baseMean: 3.268956e+01<br />log2FoldChange: -1.118064174","padj < padj.cutoff: FALSE<br />baseMean: 1.422834e+01<br />log2FoldChange: -2.002747059","padj < padj.cutoff: FALSE<br />baseMean: 2.646605e+00<br />log2FoldChange: -1.290809232","padj < padj.cutoff: FALSE<br />baseMean: 3.491371e+01<br />log2FoldChange: -1.492296593","padj < padj.cutoff: FALSE<br />baseMean: 5.055841e+00<br />log2FoldChange: -1.824854502","padj < padj.cutoff: FALSE<br />baseMean: 9.974940e+01<br />log2FoldChange: -1.208403315","padj < padj.cutoff: FALSE<br />baseMean: 2.613012e+02<br />log2FoldChange: -1.286137126","padj < padj.cutoff: FALSE<br />baseMean: 6.713881e+00<br />log2FoldChange: -2.000829243","padj < padj.cutoff: FALSE<br />baseMean: 3.380502e+01<br />log2FoldChange: -1.722055577","padj < padj.cutoff: FALSE<br />baseMean: 1.831192e+02<br />log2FoldChange: -1.365892890","padj < padj.cutoff: FALSE<br />baseMean: 2.080645e+02<br />log2FoldChange: -1.174694835","padj < padj.cutoff: FALSE<br />baseMean: 1.925972e+00<br />log2FoldChange: -2.433029363","padj < padj.cutoff: FALSE<br />baseMean: 4.880415e+00<br />log2FoldChange: -2.367905925","padj < padj.cutoff: FALSE<br />baseMean: 1.863779e+01<br />log2FoldChange: -2.309600613","padj < padj.cutoff: FALSE<br />baseMean: 6.080423e+00<br />log2FoldChange: -2.009057750","padj < padj.cutoff: FALSE<br />baseMean: 7.923466e+02<br />log2FoldChange: -0.810048846","padj < padj.cutoff: FALSE<br />baseMean: 4.615970e+00<br />log2FoldChange: -2.542450675","padj < padj.cutoff: FALSE<br />baseMean: 2.879433e+00<br />log2FoldChange:  0.257311297","padj < padj.cutoff: FALSE<br />baseMean: 8.650643e-01<br />log2FoldChange: -0.544109568","padj < padj.cutoff: FALSE<br />baseMean: 6.736971e+01<br />log2FoldChange:  0.380657253","padj < padj.cutoff: FALSE<br />baseMean: 2.706818e+01<br />log2FoldChange:  0.690745233","padj < padj.cutoff: FALSE<br />baseMean: 0.000000e+00<br />log2FoldChange:  0.990000000","padj < padj.cutoff: FALSE<br />baseMean: 3.268416e+00<br />log2FoldChange:  0.815141903","padj < padj.cutoff: FALSE<br />baseMean: 9.469177e+00<br />log2FoldChange: -0.448529444","padj < padj.cutoff: FALSE<br />baseMean: 8.989115e+00<br />log2FoldChange: -0.948680801","padj < padj.cutoff: FALSE<br />baseMean: 1.597814e+01<br />log2FoldChange: -1.248815159","padj < padj.cutoff: FALSE<br />baseMean: 8.186774e+00<br />log2FoldChange: -0.342668184","padj < padj.cutoff: FALSE<br />baseMean: 1.047607e+00<br />log2FoldChange: -1.831063922","padj < padj.cutoff: FALSE<br />baseMean: 1.634725e+00<br />log2FoldChange:  3.383104670","padj < padj.cutoff: FALSE<br />baseMean: 1.993730e+00<br />log2FoldChange:  0.095278152","padj < padj.cutoff: FALSE<br />baseMean: 4.795283e-01<br />log2FoldChange:  0.005861749","padj < padj.cutoff: FALSE<br />baseMean: 1.811719e+01<br />log2FoldChange: -0.015567970","padj < padj.cutoff: FALSE<br />baseMean: 5.695759e+00<br />log2FoldChange:  0.441488509","padj < padj.cutoff: FALSE<br />baseMean: 2.666487e+01<br />log2FoldChange: -0.094793111","padj < padj.cutoff: FALSE<br />baseMean: 9.486388e-01<br />log2FoldChange: -0.136021308"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(190,190,190,1)","opacity":1,"size":1.88976377952756,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(190,190,190,1)"}},"hoveron":"points","name":"FALSE","legendgroup":"FALSE","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2.27572091574395,1.64936012255658,2.80954104696459,2.15998528286034,2.08883245354043,2.13734383809763,1.73571176420744,2.21876916897466,1.8856412590489,2.70529140716439,2.4429260554544,1.54291823673432,2.41029354577832,0.885656088744702,1.4925479470542,0.98438578145667,1.14104202795014,0.882524747672567,1.53600492682187,1.80190472138473,2.39299914578043],"y":[1.67856732836056,-5.01396604795414,1.82911484883008,-1.15425316293353,-4.60543415199562,1.34077311566236,1.2721345375712,1.14058216565363,1.48877186382535,1.68478627553255,1.66207574024131,-4.05460488451675,-1.99632399289031,-3.497696344229,-2.48646137295938,-2.62168236160263,-2.2254895207413,-3.44610869634122,-3.21098455943453,-2.53776984772621,-2.01518269007435],"text":["padj < padj.cutoff:  TRUE<br />baseMean: 1.886778e+02<br />log2FoldChange:  1.678567328","padj < padj.cutoff:  TRUE<br />baseMean: 4.460259e+01<br />log2FoldChange: -5.013966048","padj < padj.cutoff:  TRUE<br />baseMean: 6.449723e+02<br />log2FoldChange:  1.829114849","padj < padj.cutoff:  TRUE<br />baseMean: 1.445391e+02<br />log2FoldChange: -1.154253163","padj < padj.cutoff:  TRUE<br />baseMean: 1.226966e+02<br />log2FoldChange: -4.605434152","padj < padj.cutoff:  TRUE<br />baseMean: 1.371968e+02<br />log2FoldChange:  1.340773116","padj < padj.cutoff:  TRUE<br />baseMean: 5.441414e+01<br />log2FoldChange:  1.272134538","padj < padj.cutoff:  TRUE<br />baseMean: 1.654890e+02<br />log2FoldChange:  1.140582166","padj < padj.cutoff:  TRUE<br />baseMean: 7.684954e+01<br />log2FoldChange:  1.488771864","padj < padj.cutoff:  TRUE<br />baseMean: 5.073310e+02<br />log2FoldChange:  1.684786276","padj < padj.cutoff:  TRUE<br />baseMean: 2.772848e+02<br />log2FoldChange:  1.662075740","padj < padj.cutoff:  TRUE<br />baseMean: 3.490746e+01<br />log2FoldChange: -4.054604885","padj < padj.cutoff:  TRUE<br />baseMean: 2.572134e+02<br />log2FoldChange: -1.996323993","padj < padj.cutoff:  TRUE<br />baseMean: 7.685216e+00<br />log2FoldChange: -3.497696344","padj < padj.cutoff:  TRUE<br />baseMean: 3.108479e+01<br />log2FoldChange: -2.486461373","padj < padj.cutoff:  TRUE<br />baseMean: 9.646856e+00<br />log2FoldChange: -2.621682362","padj < padj.cutoff:  TRUE<br />baseMean: 1.383700e+01<br />log2FoldChange: -2.225489521","padj < padj.cutoff:  TRUE<br />baseMean: 7.630004e+00<br />log2FoldChange: -3.446108696","padj < padj.cutoff:  TRUE<br />baseMean: 3.435618e+01<br />log2FoldChange: -3.210984559","padj < padj.cutoff:  TRUE<br />baseMean: 6.337307e+01<br />log2FoldChange: -2.537769848","padj < padj.cutoff:  TRUE<br />baseMean: 2.471719e+02<br />log2FoldChange: -2.015182690"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,0,0,1)","opacity":1,"size":1.88976377952756,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,0,0,1)"}},"hoveron":"points","name":"TRUE","legendgroup":"TRUE","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":27.8246364188244,"r":7.30593607305936,"b":41.7789743183678,"l":37.2602739726027},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.32385606273598,5.80097731745565],"tickmode":"array","ticktext":["1","100","10000"],"tickvals":[0,2,4],"categoryorder":"array","categoryarray":["1","100","10000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"baseMean","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-5.43381958384419,3.80295820573705],"tickmode":"array","ticktext":["-4","-2","0","2"],"tickvals":[-4,-2,0,2],"categoryorder":"array","categoryarray":["-4","-2","0","2"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"log2FoldChange","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96395248281826},"annotations":[{"text":"padj < 0.05","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"7dae762181a3":{"colour":{},"x":{},"y":{},"type":"scatter"}},"cur_data":"7dae762181a3","visdat":{"7dae762181a3":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-</div>
-<div id="volcano-plot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#volcano-plot" class="anchor"></a>Volcano plot</h2>
-<p>A volcano plot of DEGs data frame can be plotted using the function <code>volcanoplot</code>. Using the resulting data frame from <code>run_edgeR</code> or <code>run_deseq2</code>, the function plots a volcano plot using False Discovery Rate and Log Fold Change thresholds for the sample comparison specified by the user.</p>
-<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="co">### DEG analysis with `systemPipeR`</span>
-<span class="no">degseqDF</span> <span class="kw">&lt;-</span> <span class="kw pkg">systemPipeR</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/systemPipeR/man/run_DESeq2.html">run_DESeq2</a></span>(<span class="kw">countDF</span> <span class="kw">=</span> <span class="no">countMatrix</span>, <span class="kw">targets</span> <span class="kw">=</span> <span class="no">targets</span>,
-    <span class="kw">cmp</span> <span class="kw">=</span> <span class="no">cmp</span><span class="kw">[[</span><span class="fl">1</span>]], <span class="kw">independent</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="no">DEG_list</span> <span class="kw">&lt;-</span> <span class="kw pkg">systemPipeR</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/systemPipeR/man/filterDEGs.html">filterDEGs</a></span>(<span class="kw">degDF</span> <span class="kw">=</span> <span class="no">degseqDF</span>, <span class="kw">filter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">Fold</span> <span class="kw">=</span> <span class="fl">2</span>,
-    <span class="kw">FDR</span> <span class="kw">=</span> <span class="fl">10</span>))</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/volcanoplot-1.png" width="700"></p>
-<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co">## Plot</span>
-<span class="fu"><a href="../reference/volcanoplot.html">volcanoplot</a></span>(<span class="no">degseqDF</span>, <span class="kw">comparison</span> <span class="kw">=</span> <span class="st">"M12-A12"</span>, <span class="kw">filter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">Fold</span> <span class="kw">=</span> <span class="fl">2</span>,
-    <span class="kw">FDR</span> <span class="kw">=</span> <span class="fl">10</span>))</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/volcanoplot-2.png" width="700"></p>
-<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="fu"><a href="../reference/volcanoplot.html">volcanoplot</a></span>(<span class="no">degseqDF</span>, <span class="kw">comparison</span> <span class="kw">=</span> <span class="st">"M12-A12"</span>, <span class="kw">filter</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">Fold</span> <span class="kw">=</span> <span class="fl">1</span>,
-    <span class="kw">FDR</span> <span class="kw">=</span> <span class="fl">20</span>), <span class="kw">genes</span> <span class="kw">=</span> <span class="st">"ATCG00280"</span>)</pre></body></html></div>
-<p><img src="systemPipeShiny_files/figure-html/volcanoplot-3.png" width="700"></p>
-</div>
-<div id="barplot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#barplot" class="anchor"></a>Barplot</h2>
-<p>A barplot for analysis of differentially expressed genes (DEGs) can be plotted using functions <code>deg_edgeR</code> or <code>deg_deseq2</code>. The function <code>deg_edgeR</code> uses the <code>edgeR</code> package <span class="citation">(<span class="citeproc-not-found" data-reference-id="Robinson2010-uk"><strong>???</strong></span>)</span> to create an <code>edgeR</code> data frame. Alternatively, the function <code>deg_deseq2</code> uses the <code>DESeq2</code> package <span class="citation">(<span class="citeproc-not-found" data-reference-id="Love2014-sh"><strong>???</strong></span>)</span> to create an <code>DESeq2</code> data frame. Using the <code>filterDEGs</code> function, it filters and plots DEG results for up and down regulated genes in a barplot.</p>
-</div>
-</div>
 <div id="how-to-deploy-the-application" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to-deploy-the-application" class="anchor"></a>How to deploy the application</h1>
@@ -1416,7 +1243,7 @@ Note: Encrypting the snapshot file is because the snapshot file contains server 
 <div id="version-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#version-information" class="anchor"></a>Version Information</h1>
-<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Ubuntu 18.04.5 LTS
@@ -1445,185 +1272,145 @@ Note: Encrypting the snapshot file is because the snapshot file contains server 
 ## [9] BiocStyle_2.16.0      
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] shinydashboard_0.7.1       
-##   [2] R.utils_2.9.2              
-##   [3] tidyselect_1.1.0           
-##   [4] RSQLite_2.2.0              
-##   [5] AnnotationDbi_1.50.1       
-##   [6] htmlwidgets_1.5.1          
-##   [7] grid_4.0.2                 
-##   [8] BiocParallel_1.22.0        
-##   [9] Rtsne_0.15                 
-##  [10] pushbar_0.1.0              
-##  [11] base64url_1.4              
-##  [12] munsell_0.5.0              
-##  [13] codetools_0.2-16           
-##  [14] DT_0.14                    
-##  [15] systemPipeR_1.22.0         
-##  [16] miniUI_0.1.1.1             
-##  [17] shinytoastr_2.1.1          
-##  [18] withr_2.2.0                
-##  [19] colorspace_1.4-1           
-##  [20] Biobase_2.48.0             
-##  [21] Category_2.54.0            
-##  [22] knitr_1.29                 
-##  [23] rstudioapi_0.11            
-##  [24] stats4_4.0.2               
-##  [25] shinyWidgets_0.5.3         
-##  [26] labeling_0.3               
-##  [27] GenomeInfoDbData_1.2.3     
-##  [28] hwriter_1.3.2              
-##  [29] farver_2.0.3               
-##  [30] bit64_0.9-7.1              
-##  [31] pheatmap_1.0.12            
-##  [32] rprojroot_1.3-2            
-##  [33] batchtools_0.9.13          
-##  [34] vctrs_0.3.2                
-##  [35] treeio_1.12.0              
-##  [36] generics_0.0.2             
-##  [37] xfun_0.15                  
-##  [38] BiocFileCache_1.12.0       
-##  [39] R6_2.4.1                   
-##  [40] markdown_1.1               
-##  [41] GenomeInfoDb_1.24.2        
-##  [42] locfit_1.5-9.4             
-##  [43] rsvg_2.1                   
-##  [44] bootstraplib_0.1.0.9000    
-##  [45] bitops_1.0-6               
-##  [46] reshape_0.8.8              
-##  [47] shinyAce_0.4.1             
-##  [48] DelayedArray_0.14.1        
-##  [49] promises_1.1.1             
-##  [50] networkD3_0.4              
-##  [51] scales_1.1.1               
-##  [52] vroom_1.3.0.9000           
-##  [53] debugme_1.1.0              
-##  [54] gtable_0.3.0               
-##  [55] rlang_0.4.7                
-##  [56] genefilter_1.70.0          
-##  [57] splines_4.0.2              
-##  [58] rtracklayer_1.48.0         
-##  [59] lazyeval_0.2.2             
-##  [60] shinyjqui_0.3.3            
-##  [61] hexbin_1.28.1              
-##  [62] brew_1.0-6                 
-##  [63] checkmate_2.0.0            
-##  [64] BiocManager_1.30.10        
-##  [65] yaml_2.2.1                 
-##  [66] crosstalk_1.1.0.1          
-##  [67] GenomicFeatures_1.40.1     
-##  [68] backports_1.1.8            
-##  [69] httpuv_1.5.4               
-##  [70] RBGL_1.64.0                
-##  [71] tools_4.0.2                
-##  [72] bookdown_0.20              
-##  [73] ellipsis_0.3.1             
-##  [74] jquerylib_0.1.2            
-##  [75] RColorBrewer_1.1-2         
-##  [76] BiocGenerics_0.34.0        
-##  [77] Rcpp_1.0.5                 
-##  [78] plyr_1.8.6                 
-##  [79] progress_1.2.2             
-##  [80] zlibbioc_1.34.0            
-##  [81] purrr_0.3.4                
-##  [82] RCurl_1.98-1.2             
-##  [83] prettyunits_1.1.1          
-##  [84] openssl_1.4.2              
-##  [85] S4Vectors_0.26.1           
-##  [86] SummarizedExperiment_1.18.2
-##  [87] ggrepel_0.8.2              
-##  [88] fs_1.4.2                   
-##  [89] data.table_1.12.8          
-##  [90] colourpicker_1.0           
-##  [91] R.cache_0.14.0             
-##  [92] matrixStats_0.56.0         
-##  [93] hms_0.5.3                  
-##  [94] patchwork_1.0.1            
-##  [95] shinyjs_1.1                
-##  [96] mime_0.9                   
-##  [97] evaluate_0.14              
-##  [98] xtable_1.8-4               
-##  [99] XML_3.99-0.4               
-## [100] jpeg_0.1-8.1               
-## [101] IRanges_2.22.2             
-## [102] compiler_4.0.2             
-## [103] biomaRt_2.44.1             
-## [104] tibble_3.0.3               
-## [105] V8_3.2.0                   
-## [106] crayon_1.3.4               
-## [107] R.oo_1.23.0                
-## [108] htmltools_0.5.0            
-## [109] GOstats_2.54.0             
-## [110] later_1.1.0.1              
-## [111] tidyr_1.1.0                
-## [112] geneplotter_1.66.0         
-## [113] aplot_0.0.5                
-## [114] DBI_1.1.0                  
-## [115] formatR_1.7                
-## [116] dbplyr_1.4.4               
-## [117] MASS_7.3-51.6              
-## [118] rappdirs_0.3.1             
-## [119] ShortRead_1.46.0           
-## [120] Matrix_1.2-18              
-## [121] cli_2.0.2                  
-## [122] glmpca_0.2.0               
-## [123] R.methodsS3_1.8.0          
-## [124] parallel_4.0.2             
-## [125] igraph_1.2.5               
-## [126] GenomicRanges_1.40.0       
-## [127] pkgconfig_2.0.3            
-## [128] pkgdown_1.5.1              
-## [129] rvcheck_0.1.8              
-## [130] GenomicAlignments_1.24.0   
-## [131] plotly_4.9.2.1             
-## [132] ggtree_2.2.4               
-## [133] annotate_1.66.0            
-## [134] XVector_0.28.0             
-## [135] AnnotationForge_1.30.1     
-## [136] VariantAnnotation_1.34.0   
-## [137] digest_0.6.25              
-## [138] graph_1.66.0               
-## [139] Biostrings_2.56.0          
-## [140] rmarkdown_2.4.0            
-## [141] tidytree_0.3.3             
-## [142] edgeR_3.30.3               
-## [143] GSEABase_1.50.1            
-## [144] curl_4.3                   
-## [145] Rsamtools_2.4.0            
-## [146] rjson_0.2.20               
-## [147] lifecycle_0.2.0            
-## [148] nlme_3.1-148               
-## [149] jsonlite_1.7.0             
-## [150] BSgenome_1.56.0            
-## [151] desc_1.2.0                 
-## [152] viridisLite_0.3.0          
-## [153] askpass_1.1                
-## [154] limma_3.44.3               
-## [155] fansi_0.4.1                
-## [156] pillar_1.4.6               
-## [157] lattice_0.20-41            
-## [158] GGally_2.0.0               
-## [159] shinyFiles_0.8.0           
-## [160] fastmap_1.0.1              
-## [161] httr_1.4.2                 
-## [162] survival_3.2-3             
-## [163] GO.db_3.11.4               
-## [164] png_0.1-7                  
-## [165] rhandsontable_0.3.7        
-## [166] bit_1.1-15.2               
-## [167] Rgraphviz_2.32.0           
-## [168] stringi_1.4.6              
-## [169] sass_0.2.0                 
-## [170] rematch2_2.1.2             
-## [171] blob_1.2.1                 
-## [172] DESeq2_1.28.1              
-## [173] latticeExtra_0.6-29        
-## [174] shinydashboardPlus_0.7.5   
-## [175] memoise_1.1.0              
-## [176] DOT_0.1                    
-## [177] styler_1.3.2               
-## [178] dplyr_1.0.0                
-## [179] ape_5.4</code></pre>
+##   [1] backports_1.1.8            
+##   [2] plyr_1.8.6                 
+##   [3] igraph_1.2.5               
+##   [4] lazyeval_0.2.2             
+##   [5] shinydashboard_0.7.1       
+##   [6] splines_4.0.2              
+##   [7] BiocParallel_1.22.0        
+##   [8] GenomeInfoDb_1.24.2        
+##   [9] digest_0.6.25              
+##  [10] htmltools_0.5.0            
+##  [11] fansi_0.4.1                
+##  [12] memoise_1.1.0              
+##  [13] shinyFiles_0.8.0           
+##  [14] annotate_1.66.0            
+##  [15] matrixStats_0.56.0         
+##  [16] R.utils_2.9.2              
+##  [17] vroom_1.3.1                
+##  [18] askpass_1.1                
+##  [19] pkgdown_1.5.1              
+##  [20] colorspace_1.4-1           
+##  [21] blob_1.2.1                 
+##  [22] ggrepel_0.8.2              
+##  [23] xfun_0.15                  
+##  [24] dplyr_1.0.0                
+##  [25] crayon_1.3.4               
+##  [26] RCurl_1.98-1.2             
+##  [27] jsonlite_1.7.0             
+##  [28] bootstraplib_0.1.0.9000    
+##  [29] genefilter_1.70.0          
+##  [30] survival_3.2-3             
+##  [31] ape_5.4                    
+##  [32] gtable_0.3.0               
+##  [33] zlibbioc_1.34.0            
+##  [34] XVector_0.28.0             
+##  [35] DelayedArray_0.14.1        
+##  [36] V8_3.2.0                   
+##  [37] R.cache_0.14.0             
+##  [38] BiocGenerics_0.34.0        
+##  [39] scales_1.1.1               
+##  [40] pheatmap_1.0.12            
+##  [41] DBI_1.1.0                  
+##  [42] GGally_2.0.0               
+##  [43] miniUI_0.1.1.1             
+##  [44] Rcpp_1.0.5                 
+##  [45] viridisLite_0.3.0          
+##  [46] xtable_1.8-4               
+##  [47] tidytree_0.3.3             
+##  [48] bit_1.1-15.2               
+##  [49] stats4_4.0.2               
+##  [50] rsvg_2.1                   
+##  [51] DT_0.14                    
+##  [52] htmlwidgets_1.5.1          
+##  [53] shinyjqui_0.3.3            
+##  [54] httr_1.4.2                 
+##  [55] RColorBrewer_1.1-2         
+##  [56] shinyAce_0.4.1             
+##  [57] ellipsis_0.3.1             
+##  [58] R.methodsS3_1.8.0          
+##  [59] pkgconfig_2.0.3            
+##  [60] shinydashboardPlus_0.7.5   
+##  [61] reshape_0.8.8              
+##  [62] XML_3.99-0.4               
+##  [63] sass_0.2.0                 
+##  [64] locfit_1.5-9.4             
+##  [65] tidyselect_1.1.0           
+##  [66] rlang_0.4.7                
+##  [67] later_1.1.0.1              
+##  [68] AnnotationDbi_1.50.1       
+##  [69] munsell_0.5.0              
+##  [70] tools_4.0.2                
+##  [71] cli_2.0.2                  
+##  [72] generics_0.0.2             
+##  [73] RSQLite_2.2.0              
+##  [74] evaluate_0.14              
+##  [75] fastmap_1.0.1              
+##  [76] yaml_2.2.1                 
+##  [77] rematch2_2.1.2             
+##  [78] ggtree_2.2.4               
+##  [79] knitr_1.29                 
+##  [80] bit64_0.9-7.1              
+##  [81] fs_1.4.2                   
+##  [82] purrr_0.3.4                
+##  [83] nlme_3.1-148               
+##  [84] mime_0.9                   
+##  [85] formatR_1.7                
+##  [86] R.oo_1.23.0                
+##  [87] rhandsontable_0.3.7        
+##  [88] aplot_0.0.5                
+##  [89] compiler_4.0.2             
+##  [90] rstudioapi_0.11            
+##  [91] plotly_4.9.2.1             
+##  [92] curl_4.3                   
+##  [93] pushbar_0.1.0              
+##  [94] treeio_1.12.0              
+##  [95] tibble_3.0.3               
+##  [96] geneplotter_1.66.0         
+##  [97] stringi_1.4.6              
+##  [98] desc_1.2.0                 
+##  [99] lattice_0.20-41            
+## [100] Matrix_1.2-18              
+## [101] glmpca_0.2.0               
+## [102] styler_1.3.2               
+## [103] markdown_1.1               
+## [104] shinyjs_1.1                
+## [105] vctrs_0.3.2                
+## [106] pillar_1.4.6               
+## [107] lifecycle_0.2.0            
+## [108] networkD3_0.4              
+## [109] BiocManager_1.30.10        
+## [110] jquerylib_0.1.2            
+## [111] data.table_1.12.8          
+## [112] bitops_1.0-6               
+## [113] httpuv_1.5.4               
+## [114] patchwork_1.0.1            
+## [115] GenomicRanges_1.40.0       
+## [116] R6_2.4.1                   
+## [117] bookdown_0.20              
+## [118] promises_1.1.1             
+## [119] IRanges_2.22.2             
+## [120] codetools_0.2-16           
+## [121] colourpicker_1.0           
+## [122] MASS_7.3-51.6              
+## [123] SummarizedExperiment_1.18.2
+## [124] openssl_1.4.2              
+## [125] DESeq2_1.28.1              
+## [126] rprojroot_1.3-2            
+## [127] shinyWidgets_0.5.3         
+## [128] withr_2.2.0                
+## [129] S4Vectors_0.26.1           
+## [130] GenomeInfoDbData_1.2.3     
+## [131] parallel_4.0.2             
+## [132] grid_4.0.2                 
+## [133] tidyr_1.1.0                
+## [134] DOT_0.1                    
+## [135] rmarkdown_2.4.0            
+## [136] rvcheck_0.1.8              
+## [137] shinytoastr_2.1.1          
+## [138] Rtsne_0.15                 
+## [139] Biobase_2.48.0</code></pre>
 </div>
 <div id="funding" class="section level1">
 <h1 class="hasAnchor">
