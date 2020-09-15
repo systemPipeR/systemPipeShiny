@@ -19,7 +19,7 @@ server <- function(input, output, session) {
     wf_runServer("wf_run", shared)
     # VS tabs
     vs_mainServer("vs_main", shared)
-    devComponents("server", shared = shared) # for templates
+    egComponents("server", shared = shared) # for templates
     ## data
     data_targetsServer("data_targets", shared)
     data_countServer("data_count", shared)

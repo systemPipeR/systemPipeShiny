@@ -42,7 +42,7 @@ use gallery outside a SPS project, use \link{gallery}
 if(interactive()){
     spsInit()
     ui <- fluidPage(
-        genGallery(c("plot_template")),
+        genGallery(c("plot_example")),
         genGallery(type = "plot")
     )
     server <- function(input, output, session) {

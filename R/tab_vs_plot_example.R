@@ -3,7 +3,7 @@
 #' @importFrom plotly plotlyOutput
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom shinyWidgets pickerInput
-plot_templateUI <- function(id){
+plot_exampleUI <- function(id){
     ns <- NS(id)
     desc <- "
     #### Some Description of this kind of plot
@@ -18,7 +18,6 @@ plot_templateUI <- function(id){
     ```
     "
     tagList(
-        # in case you need more than one data input, uncomment lines below
         pgPaneUI(ns("pg"),
                  titles = c("Package Requirements",
                             # "Input Metadata" = "meta",
@@ -41,20 +40,20 @@ plot_templateUI <- function(id){
         fluidRow(
             column(6,
                    genHrefTab(
-                       c("data_targets"),
+                       c("data_example"),
                        title = "You need to meta data from these tabs:")),
             column(6,
                    genHrefTab(
-                       c("data_template"),
+                       c("data_example"),
                        title = "You need to tabular data from these tabs:"))
         ),
         h5("Once you have prepared the data,
            select which tab(s) your data is coming from:"),
         column(6, shinyWidgets::pickerInput(ns("source_meta"), "Meta Data",
-                    choices = c("Meta Data" = "data_targets"),
+                    choices = c("Meta Data" = "data_example"),
                     options = list(style = "btn-primary"))),
         column(6, shinyWidgets::pickerInput(ns("source_data"), "Tabular Data",
-                    choices = c("Template Data Tab" = "data_template"),
+                    choices = c("Template Data Tab" = "data_example"),
                     options = list(style = "btn-primary"))), spsHr(),
         div(style = "text-align: center;",
             strong("Click the button below to start or reload data"), br(),
@@ -82,10 +81,10 @@ plot_templateUI <- function(id){
 #' @importFrom shinytoastr toastr_success toastr_info
 #' @importFrom plotly renderPlotly ggplotly
 #' @importFrom shinyjs show
-plot_templateServer <- function(id, shared){
+plot_exampleServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
-        tab_id <- "plot_template"
+        tab_id <- "plot_example"
         # define data containers
         mydata <- reactiveValues()
         # start the tab by checking if required packages are installed

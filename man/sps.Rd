@@ -4,7 +4,7 @@
 \alias{sps}
 \title{SystemPipeShiny app start function}
 \usage{
-sps(vstabs = "", plugin = "", server_expr = NULL)
+sps(vstabs = "", plugin = "", server_expr = NULL, app_path = getwd())
 }
 \arguments{
 \item{vstabs}{custom visualization tab IDs you want to display, in a character
@@ -18,6 +18,8 @@ certain tabs from a plugin, specify in \code{vstabs} argument.}
 to run. This will run after the default server expressions. It means you can
 have access to internal server expression objects, like the reactiveValues
 object \code{shared}. You can also overwrite other values.}
+
+\item{app_path}{SPS project path}
 }
 \value{
 a list contains the UI and  server

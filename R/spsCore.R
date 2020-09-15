@@ -16,6 +16,7 @@ NULL
 #' to run. This will run after the default server expressions. It means you can
 #' have access to internal server expression objects, like the reactiveValues
 #' object `shared`. You can also overwrite other values.
+#' @param app_path SPS project path
 #' @details You must set the project root as working directory for this
 #' function to find required files.
 #' @importFrom dplyr as_tibble filter tibble
@@ -33,7 +34,7 @@ NULL
 #'         }
 #'     )
 #' }
-sps <- function(vstabs = "", plugin = "", server_expr=NULL){
+sps <- function(vstabs = "", plugin = "", server_expr=NULL, app_path = getwd()){
     assert_that(is.character(vstabs))
     assert_that(is.character(plugin))
     if(any(duplicated(vstabs)))

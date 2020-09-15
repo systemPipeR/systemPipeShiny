@@ -8,7 +8,6 @@ library(systemPipeShiny)
 
 ## suggested to install, no need to library them:
 # to unlock some tabs, visualizations and more
-# BiocManager::install("dreamRs/particlesjs") # particlesjs for loading theme
 # BiocManager::install("systemPipeR")
 # BiocManager::install("DESeq2")
 # BiocManager::install("edgeR")
@@ -21,12 +20,12 @@ library(systemPipeShiny)
 
 ## SPS options
 # mode: running mode - local, server
-# warning_toast: toast popup message when you are under some dangerous options - TRUE, FALSE
+# warning_toast: toast pop-up message when you are under some dangerous options - TRUE, FALSE
 # loading_screen: to show loading screen? - TRUE, FALSE
-# loading_theme: loading screen themes, loading_screen must be TRUE - vhelix
-# use_crayon: Do you want colorful terminal messages? must install `crayon`- TRUE, FALSE
+# loading_theme: loading screen themes, loading_screen need be TRUE - vhelix
+# use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
-# dev: developer mode, add 2 template tabs - TRUE, FALSE
+# eg_tab: show example visualization tabs? add 2 example tabs - TRUE, FALSE
 # admin_url: admin_page query url - admin
 options(sps = list(
     mode = "local",
@@ -35,7 +34,7 @@ options(sps = list(
     loading_theme = "vhelix",
     use_crayon = TRUE,
     verbose = TRUE,
-    dev = TRUE,
+    eg_tab = TRUE,
     admin_page = FALSE,
     admin_url = "admin"
 ))
@@ -65,6 +64,7 @@ sps_enc <- spsEncryption$new()
 
 sps_app <- sps(
     vstabs = "",
+    plugin = "",
     server_expr = {
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }

@@ -35,7 +35,7 @@ spsServer <- function(tabs, server_expr) {
         # VS tabs
         spsinfo("Loading vs tabs server")
         vs_mainServer("vs_main", shared)
-        devComponents("server", shared = shared) # for templates
+        egComponents("server", shared = shared) # for templates
         # user modules
         mapply(function(module, name){
             spsinfo(glue("Loading server for {name}"))
@@ -167,11 +167,11 @@ wfProgressPanel <- function(shared){
 #' @importFrom shinyWidgets sendSweetAlert
 spsWarnings <- function(session){
     sps_warnings <- list()
-    if(spsOption('dev')) {
-        msg("Developer mode is on. you shouldn't deploy app with this mode",
-            "SPS-DANGER", "red")
-        sps_warnings[['dev']] <- h4("You are on developer mode")
-    }
+    # if(spsOption('eg_tab')) {
+    #     msg("Developer mode is on. you shouldn't deploy app with this mode",
+    #         "SPS-DANGER", "red")
+    #     sps_warnings[['eg_tab']] <- h4("You are on developer mode")
+    # }
     if(getQueryString() == "admin"){
         msg("You admin page url is default, consider to change it",
             "SPS-DANGER", "red")

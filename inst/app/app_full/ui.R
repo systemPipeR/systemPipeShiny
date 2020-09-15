@@ -28,7 +28,7 @@ dashboardSidebar <-  dashboardSidebar(
             menuItem(
                 text = "Prepare dataset",
                 ## vs dfs add to sidebar
-                devComponents("ui_menu_df"),
+                egComponents("ui_menu_df"),
                 menuSubItem(text = "Targets", tabName = "data_targets"),
                 menuSubItem(text = "Count data", tabName = "data_count"),
                 menuSubItem(text = "DEG Count data", tabName = "data_degcount"),
@@ -37,7 +37,7 @@ dashboardSidebar <-  dashboardSidebar(
             menuItem(
                 text = "Collection of plots",
                 ## vs plots add to sidebar
-                devComponents("ui_menu_plot"),
+                egComponents("ui_menu_plot"),
                 menuSubItem(text = "PCA Plot", tabName = "plot_pca"),
                 menuSubItem(text = "Box Plot", tabName = "plot_box"),
                 menuSubItem(text = "t-SNE", tabName = "plot_tsne"),
@@ -72,13 +72,13 @@ dashboardBody <- dashboardBody(
         # VS tabs
         tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         ## vs dfs
-        devComponents("ui_tab_df"),
+        egComponents("ui_tab_df"),
         tabItem(tabName = "data_targets", df_targetsUI("data_targets")),
         tabItem(tabName = "data_count", df_countUI("data_count")),
         tabItem(tabName = "data_degcount", df_degcountUI("data_degcount")),
         tabItem(tabName = "data_edgeR", df_edgeRUI("data_edgeR")),
         ## vs plots
-        devComponents("ui_tab_plot"),
+        egComponents("ui_tab_plot"),
         tabItem(tabName = "plot_pca", plot_pcaUI("plot_pca")),
         tabItem(tabName = "plot_box", plot_boxUI("plot_box")),
         tabItem(tabName = "plot_tsne", plot_tsneUI("plot_tsne")),
