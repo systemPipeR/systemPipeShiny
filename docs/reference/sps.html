@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SystemPipeShiny app start function — sps • systemPipeShiny</title>
+<title>SystemPipeShiny app main function — sps • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="SystemPipeShiny app start function — sps" />
-<meta property="og:description" content="SystemPipeShiny app start function" />
+<meta property="og:title" content="SystemPipeShiny app main function — sps" />
+<meta property="og:description" content="SystemPipeShiny app main function" />
 
 
 
@@ -111,23 +111,30 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>SystemPipeShiny app start function</h1>
+    <h1>SystemPipeShiny app main function</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsCore.R'><code>R/spsCore.R</code></a></small>
     <div class="hidden name"><code>sps.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>SystemPipeShiny app start function</p>
+    <p>SystemPipeShiny app main function</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sps</span>(<span class='no'>vstabs</span>, <span class='kw'>server_expr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>sps</span>(<span class='kw'>vstabs</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>server_expr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>vstabs</th>
-      <td><p>your custom visualization tabs you want to display</p></td>
+      <td><p>custom visualization tab IDs that you want to display, in a character
+vector. Use <code><a href='spsTabInfo.html'>spsTabInfo()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>plugin</th>
+      <td><p>If you have loaded some SPS plugins, you can specify here as a
+character vector, and it will load all plugin tabs to SPS. If you only want
+certain tabs from a plugin, specify in <code>vstabs</code> argument.</p></td>
     </tr>
     <tr>
       <th>server_expr</th>
@@ -136,11 +143,19 @@ to run. This will run after the default server expressions. It means you can
 have access to internal server expression objects, like the reactiveValues
 object <code>shared</code>. You can also overwrite other values.</p></td>
     </tr>
+    <tr>
+      <th>app_path</th>
+      <td><p>SPS project path</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a list contains the UI and  server</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>You must set the project root as working directory for this
+function to find required files.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){

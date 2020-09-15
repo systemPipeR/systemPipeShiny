@@ -387,22 +387,15 @@ when the template is created, manually change it.</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-09-11 01:18:39 Overwrite things in /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200911</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-11 01:18:39 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200911/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 Key md5 75cf8bf8e66b7d1765207a95b12f3655</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 SPS project setup done!</span><span></div><div class='input'><span class='fu'>newTabData</span>(
+    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:34 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-09-15 15:12:34 Overwrite things in /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200915</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:34 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:34 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:34 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:34 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-15 15:12:34 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200915/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:34 Key md5 bc27ac28e49f53e45e4b0c1b65c2a9ce</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:34 SPS project setup done!</span><span></div><div class='input'><span class='fu'>newTabData</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"data_new"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first data tab"</span>,
     <span class='kw'>prepro_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='makePrepro.html'>makePrepro</a></span>(<span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"do nothing"</span>,
                                      <span class='kw'>plot_options</span> <span class='kw'>=</span> <span class='st'>"plot_new"</span>)),
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:39 Write to file SPS_20200911/R/tab_vs_data_new.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
-#&gt;  SPS_20200911/R/tab_vs_data_new.R ℹ 
-#&gt; ────────────────────────────────────────
-#&gt; Status	Count	Legend 
-#&gt; ✓ 	0	File unchanged.
-#&gt; ℹ 	1	File changed.
-#&gt; x 	0	Styling threw an error.
-#&gt; ────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:42 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-11 01:18:42 New tab created!</span><span></div><div class='input'><span class='fu'>newTabPlot</span>(
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-15 15:12:34 File SPS_20200915/R/tab_vs_data_new.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabPlot</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"plot_new1"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first plot tab"</span>,
     <span class='kw'>plot_data</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
@@ -411,38 +404,17 @@ when the template is created, manually change it.</p></li>
                      <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>))
     ),
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:42 Write to file SPS_20200911/R/tab_vs_plot_new1.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
-#&gt;  SPS_20200911/R/tab_vs_plot_new1.R ℹ 
-#&gt; ────────────────────────────────────────
-#&gt; Status	Count	Legend 
-#&gt; ✓ 	0	File unchanged.
-#&gt; ℹ 	1	File changed.
-#&gt; x 	0	Styling threw an error.
-#&gt; ────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:44 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-11 01:18:44 New tab created!</span><span></div><div class='input'><span class='fu'>newTabData</span>(
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-15 15:12:34 File SPS_20200915/R/tab_vs_plot_new1.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabData</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"data_empty"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first empty data tab"</span>,
     <span class='kw'>empty</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:44 Write to file SPS_20200911/R/tab_vs_data_empty.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
-#&gt;  SPS_20200911/R/tab_vs_data_empty.R ℹ 
-#&gt; ────────────────────────────────────────
-#&gt; Status	Count	Legend 
-#&gt; ✓ 	0	File unchanged.
-#&gt; ℹ 	1	File changed.
-#&gt; x 	0	Styling threw an error.
-#&gt; ────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:44 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-11 01:18:44 New tab created!</span><span></div><div class='input'><span class='fu'>newTabPlot</span>(
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-15 15:12:34 File SPS_20200915/R/tab_vs_data_empty.R exists.</span><span></span></div><div class='input'><span class='fu'>newTabPlot</span>(
     <span class='kw'>tab_id</span> <span class='kw'>=</span> <span class='st'>"plot_empty"</span>,
     <span class='kw'>tab_displayname</span> <span class='kw'>=</span> <span class='st'>"my first empty plot tab"</span>,
     <span class='kw'>empty</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
     <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>)
-)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:45 Write to file SPS_20200911/R/tab_vs_plot_empty.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
-#&gt;  SPS_20200911/R/tab_vs_plot_empty.R ℹ 
-#&gt; ────────────────────────────────────────
-#&gt; Status	Count	Legend 
-#&gt; ✓ 	0	File unchanged.
-#&gt; ℹ 	1	File changed.
-#&gt; x 	0	Styling threw an error.
-#&gt; ────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:45 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-11 01:18:45 New tab created!</span><span></div></span></pre>
+)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-15 15:12:34 File SPS_20200915/R/tab_vs_plot_empty.R exists.</span><span></span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
