@@ -26,7 +26,7 @@ vs_mainUI <- function(id){
         </ol>
              '),
         br(),
-        genHrefTable(rows = list(workflow1 = c("data_targets", "data_count"),
+        genHrefTable(rows = list(workflow1 = c("data_example"),
                                  workflow2 =  "data"),
                      title = "All SPS data input options"),
         br(),

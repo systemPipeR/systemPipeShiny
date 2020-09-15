@@ -127,7 +127,7 @@ function, make sure there is a SPS project and <em>config/tabs.csv</em> exists.<
     <pre class="usage"><span class='fu'>makePlotData</span>(
   <span class='kw'>dataset_id</span> <span class='kw'>=</span> <span class='st'>"data"</span>,
   <span class='kw'>dataset_label</span> <span class='kw'>=</span> <span class='st'>"Raw data"</span>,
-  <span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='st'>"data_template"</span>,
+  <span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='st'>"data_example"</span>,
   <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({     <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata</span>$<span class='no'>data</span>))          <span class='fl'>TRUE</span>     <span class='kw'>else</span>
     <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Data xx needs to be a dataframe or tibble"</span>) }),
   <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>(),

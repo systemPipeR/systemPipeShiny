@@ -476,7 +476,7 @@ newTabData <- function(tab_id = "data_id1",
 #'            plot_data = list(plotdata_raw, plotdata_meta))
 makePlotData <- function(dataset_id = "data",
                        dataset_label = "Raw data",
-                       receive_datatab_ids = "data_template",
+                       receive_datatab_ids = "data_example",
                        vd_expr = spsValidate({
                            if(is.data.frame(mydata$data)) TRUE
                            else stop("Data xx needs to be a dataframe or tibble")

@@ -28,9 +28,9 @@ verbose:
     default: false
     other: [true]
 
-dev:
-    default: false
-    other: [true]
+eg_tab:
+    default: true
+    other: [false]
 
 admin_page:
     default: false

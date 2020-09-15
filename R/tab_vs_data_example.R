@@ -5,7 +5,7 @@
 #' @importFrom DT DTOutput
 #' @importFrom shinyWidgets radioGroupButtons pickerInput
 #' @noRd
-data_templateUI <- function(id){
+data_exampleUI <- function(id){
     ns <- NS(id)
     # describe your tab in markdown format, this will go right under the title
     desc <- "
@@ -98,10 +98,10 @@ data_templateUI <- function(id){
 #' @importFrom shinytoastr toastr_success
 #' @importFrom methods is
 #' @noRd
-data_templateServer <-function(id, shared){
+data_exampleServer <-function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
-        tab_id <- "data_template"
+        tab_id <- "data_example"
         # start the tab by checking if required packages are installed
         observeEvent(input$validate_start, {
             req(shinyCheckPkg(
@@ -204,7 +204,7 @@ data_templateServer <-function(id, shared){
             gallery <- switch(
                 input$select_prepro,
                 'md1' = genGallery("plot_pca"),
-                'md2' = genGallery(c("plot_template", "plot_pca")),
+                'md2' = genGallery(c("plot_example", "plot_pca")),
                 genGallery(type = "plot")
             )
             output$plot_option <- renderUI({

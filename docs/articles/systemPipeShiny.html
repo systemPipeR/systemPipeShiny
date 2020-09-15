@@ -385,7 +385,7 @@ a.bttn-default {
 <p><strong><span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny</strong>(SPS) is a <a href="https://shiny.rstudio.com/">Shiny</a>-based R/Bioconductor package that has two main purposes:</p>
 <ol style="list-style-type: decimal">
 <li>To help non-programmers like wet lab researchers on data analysis workflow management and downstream data visualizations with a graphical user interface(GUI).</li>
-<li>An user friendly framework for both beginners and advanced developers to fast extend with more visualization options(more plot types) and to quickly deploy the app to a Shiny sever.</li>
+<li>An user friendly framework for both beginning and advanced developers to fast extend with more visualization options(more plot types) and to quickly deploy the app to a Shiny sever.</li>
 </ol>
 <p>You can try our demo at <a href="https://tgirke.shinyapps.io/systemPipeShiny/">here</a>. There are 5 different interactive tutorials embedded on the demo that you can follow(right upper corner). Each tutorial covers a major topic of SPS and show how you can interactive with app.</p>
 <p>This vignette introduces main features and functionalities of SPS. Due to size limit, a full version of users’ manual will be later updated at <a href="https://systempipe.org/systemPipeShiny-book/">SytemPipeShiny-book</a> which will include more small demos, screenshots, and <em>gif</em> illustrations.</p>
@@ -418,15 +418,15 @@ a.bttn-default {
 <p>Before starting with SPS, you need to create a SPS project:</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">sps_tmp_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span>()
 <span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>(<span class="kw">dir_path</span> <span class="kw">=</span> <span class="no">sps_tmp_dir</span>, <span class="kw">change_wd</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">project_name</span> <span class="kw">=</span> <span class="st">"SPSProject"</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Start to create a new SPS project</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Create project under /tmp/RtmpvbK8Em/SPSProject</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Now copy files</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Create SPS database</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Created SPS database method container</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:02 Creating SPS db...</code></pre>
-<pre><code>## [SPS-DANGER] 2020-09-14 12:06:03 Db created at '/tmp/RtmpvbK8Em/SPSProject/config/sps.db'. DO NOT share this file with others
-## [SPS-INFO] 2020-09-14 12:06:03 Key md5 741b2b29043c13cf1aa5e1fa01aa06f9
-## [SPS-INFO] 2020-09-14 12:06:03 SPS project setup done!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:01 Start to create a new SPS project</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:01 Create project under /tmp/RtmpqihDAX/SPSProject</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:01 Now copy files</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:01 Create SPS database</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:01 Created SPS database method container</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:01 Creating SPS db...</code></pre>
+<pre><code>## [SPS-DANGER] 2020-09-14 19:45:01 Db created at '/tmp/RtmpqihDAX/SPSProject/config/sps.db'. DO NOT share this file with others
+## [SPS-INFO] 2020-09-14 19:45:01 Key md5 0de0d799a2c9a6271f1e6710893d1c98
+## [SPS-INFO] 2020-09-14 19:45:01 SPS project setup done!</code></pre>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">sps_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">sps_tmp_dir</span>, <span class="st">"SPSProject"</span>)</pre></body></html></div>
 <p>Here for building the vignette we are not switching to the app directory and are using a temp directory, in a real case, you <strong>shouldn’t</strong> store you SPS project in a <strong>temp directory</strong>. Just use the following instead:</p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>()</pre></body></html></div>
@@ -434,12 +434,13 @@ a.bttn-default {
 <p style="color:var(--info)">
 Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 </p>
-<p>By default, your working directory should be set inside that project folder automatically. If you are using Rstudio, <code>global.R</code> file will be opened for you. This is the only file that you need to make custom change if there is any. Now you can just run the app by type <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">shiny::runApp()</a></code> in console or click on the <img src="img/app_start.png" style="display: inline; padding-left:0; width:10px; height:15px;"><code>Run App</code> button on top right corner of the any these 3 files in Rstudio. In your global.R, scroll down to the bottom, you should see:</p>
+<p>By default, your working directory should be set inside that project folder automatically. If you are using Rstudio, <em>global.R</em> file will be opened for you. This is the only file that you need to make custom change if there is any. Now you can just run the app by type <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">shiny::runApp()</a></code> in console or click on the <img src="img/app_start.png" style="display: inline; padding-left:0; width:10px; height:15px;"><code>Run App</code> button on top right corner in Rstudio. In your <em>global.R</em>, scroll down to the bottom, you should see:</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">server_expr</span> <span class="kw">=</span> {
     <span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>,
         <span class="st">"green"</span>)
 })</pre></body></html></div>
-<p>This is the SPS main function. You can load/unload tabs by providing tab IDs in <code>vstabs</code> argument, like <code>c("tab1", "tab2)</code>. See <code>config/tabs.csv</code> in your project folder for what tabs IDs can be load and other tab information. Currently you can only load/unload visualization tabs, type of <em>vs</em>; core tabs(<em>core</em>) and workflow tabs (<em>wf</em>) are loaded automatically. You can run additional server code by passing it to <code>server_expr</code> argument. If the expression is multiple-lined, use <code>{}</code> to wrap them.</p>
+<p>This is the SPS main function. You can load/unload tabs by providing tab IDs in <code>vstabs</code> argument, like <code>c("tab1", "tab2)</code>. See <em>config/tabs.csv</em> or use <code><a href="../reference/spsTabInfo.html">spsTabInfo()</a></code> what tabs IDs can be load and other tab information. Currently you can only load/unload visualization tabs, type of <code>vs</code>; essential framework tabs(<em>core</em>) and workflow tabs (<em>wf</em>) are loaded automatically and these tabs cannot be modified.</p>
+<p>Also, SPS tabs are built on top of <a href="https://shiny.rstudio.com/articles/modules.html">Shiny modules</a> and there is one top-level server that is above all modules. You can run additional top-level server code by passing it to <code>server_expr</code> argument. If the expression is multiple-lined, use <code>{}</code> to wrap them.</p>
 </div>
 <div id="sps-plugins" class="section level2">
 <h2 class="hasAnchor">
@@ -447,11 +448,9 @@ Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 <p>On default start, current SPS contains the workflow tabs and one example data tab, and one example plot tab for visualization. We have created many more plots options and they are distributed as “SPS plugins”. A SPS plugin is a special formed R package. You need to install the plugin like you do with normal R packages by <code>install.packages</code>, <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> or <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The plugins(packages) come with SPS tabs, data, and other helper functions. Using <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin()</a></code> function, you are able to load them into SPS framework.</p>
 <p>Using <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin()</a></code> without any argument will list all available plugins and instructions to install them.</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsLoadPlugin</a></span>()</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:03 Current SPS has following plugins</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:01 Current SPS has following plugins</code></pre>
 <pre><code>## spsBio               Biological plots
-## BiocManager::install("systemPipeR/spsBio")
-## spsDS                A variety of plots for general data analysis
-## remotes::install_github("systemPipeR/spsDS")</code></pre>
+## BiocManager::install("systemPipeR/spsBio")</code></pre>
 <p>To load a specific plugin:</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsLoadPlugin</a></span>(<span class="kw">plugin</span> <span class="kw">=</span> <span class="st">"PLUGIN_NAME"</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="st">"PATH_OF_SPS"</span>)</pre></body></html></div>
 <p>At this stage, there is only one plugin, the <em>spsBio</em>: plots for biological data visualization. There will be more plugins in the near future.</p>
@@ -480,7 +479,7 @@ SPS_xx/
 ├── R                      <span class="text-primary">| All SPS additional tab files and helper R function files</span> 
 │   ├── tab_xx.R            
 ├── README.md              
-├── results                <span class="text-gray">| No in use for this current version, you can store some data been generated from the app</span> 
+├── results                <span class="text-gray">| Not in use for this current version, you can store some data been generated from the app</span> 
 │   └── README.md          
 └── www                    <span class="text-primary">| Internet resources</span>  
     ├── about              <span class="text-gray">| About tab information</span> 
@@ -500,12 +499,12 @@ SPS_xx/
 <div id="app-ui-structure" class="section level2">
 <h2 class="hasAnchor">
 <a href="#app-ui-structure" class="anchor"></a>App UI structure</h2>
-<p>SPS provides two core components – workflow management and data visualization. The UI is designed as a dashboard(<em>Fig 1</em>). Individual components are classified into two categories of tabs (<em>Fig 1. a-b</em>).</p>
+<p>SPS provides two core components – <strong>workflow management</strong> and <strong>data visualization</strong>. The UI is designed as a dashboard(<em>Fig 1</em>). Individual components are classified into two categories of tabs (<em>Fig 1. a-b</em>).</p>
 <center id="sps_ui">
 <img src="img/sps_ui_main.jpg" alt="sps_ui"><strong>Figure 1. SPS UI</strong>
 </center>
 <p>The app UI structure can be understood as following(<em>Fig 2</em>). Users first need to choose either the workflow or visualization part to start with. Workflow part helps users to prepare data analysis workflow files in <a href="http://systempipe.org/">systemPipeR</a>(SPR) format. Visualization part helps users to make different types of plots, take interactive snapshot of plots and combine/compare different plots on the “Canvas” workbench.</p>
-<p>To start, click on the “Workflow Management” or “Visualization” on the left navigation bar will direct you to the workflow or visualization main page. There will be some general summary and instructions.</p>
+<p>To start, clicking on the “Workflow Management” or “Visualization” on the left navigation bar will direct you to the workflow or visualization main page. There will be some general summary and instructions.</p>
 <center id="sps_structure">
 <img src="img/sps_structure.png" alt="SPS_structure"><strong>Figure 2. SPS Structure</strong>
 </center>
@@ -523,7 +522,7 @@ SPS_xx/
 <div id="targets-file" class="section level3">
 <h3 class="hasAnchor">
 <a href="#targets-file" class="anchor"></a>Targets file</h3>
-<p>In SPR environment, the metadata file is also called the <em>targets file</em>. The <em>Targets</em> tab in SPS will help you to prepare this file(<em>Fig3. A</em>). The targets file has 2 parts: header and data. Header should start with <code>#</code> and you can edit it or add new lines in the editing box. Data is loaded as table, and you can also edit, right-click to add/remove records. If you are on <em><a href="#app-options">local mode</a></em>, the left-side panel will also show targets statistics and can check the file existence of your selected column.</p>
+<p>In SPR environment, the metadata file is also called the <em>targets file</em>. The <em>Targets</em> tab in SPS will help you to prepare this file(<em>Fig3. A</em>). The targets file has 2 parts: header and data. Header should start with <code>#</code> and you can edit it or add new lines in the editing box. Data is loaded as a table, and you can edit, right-click to add/remove records. If you are on <em><a href="#app-options">local mode</a></em>, the left-side panel will also show targets statistics and can help you to check the file existence of your selected column.</p>
 <center>
 <img src="img/sps_ui_targets.png" alt="wf_targets"><strong>Figure 3. A. Workflow Management - Targets File</strong>
 </center>
@@ -531,7 +530,7 @@ SPS_xx/
 <div id="workflow-file" class="section level3">
 <h3 class="hasAnchor">
 <a href="#workflow-file" class="anchor"></a>Workflow file</h3>
-<p>A workflow file is a file that defines workflow steps. In SPR, this is provided as a R markdown file, so you need to prepare a file with <code>.Rmd</code> extension or download one template from SPR. Once your have uploaded or used the example, you can see the workflow steps in a tree-like structure(<em>Fig3. B</em>). The step levels in SPR are defined by the hash tag <code>#</code> level in Rmd, the same way as the tile level in a markdown file. For example, text and code under a single <code>#</code> title means this is a top level step, text and code under <code>##</code> title is a secondary sub step …</p>
+<p>A workflow file is a file that defines workflow steps. In SPR, this is provided as a R markdown file, so you need to prepare a file with <code>.Rmd</code> extension or download one <a href="https://github.com/tgirke/systemPipeR">template from SPR</a>. Once you have uploaded or used the example, you can see the workflow steps in a tree-like structure(<em>Fig3. B</em>). The step levels in SPR are defined by the hash tag <code>#</code> level in Rmd, the same way as the tile level in a markdown file. For example, text and code under a single <code>#</code> title means this is a top level step, text and code under <code>##</code> title is a secondary sub step …</p>
 <p>To choose the steps you want to run, check them inside the “Choose the steps you want” section. If there are some substeps under a major step, you can click the triangle button <img src="img/sub_step_icon.png" style="display: inline; padding-left:0; width:10px; height:10px;"> to expand and choose substeps.</p>
 <p>If at least one step is checked, the 4 buttons in “Choose the steps you want” will be enabled.</p>
 <ul>
@@ -572,19 +571,19 @@ Note: Skip(uncheck) some steps may cause the workflow fail to run, read more <a 
 <div id="data-visualization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-visualization" class="anchor"></a>Data Visualization</h2>
-<div id="tabs" class="section level3">
+<div id="data-visualization-tabs" class="section level3">
 <h3 class="hasAnchor">
-<a href="#tabs" class="anchor"></a>Tabs</h3>
-<p>There are two types of data visualization(VS) tabs: <em>data tab</em> and <em>plot tab</em>. A data tab is where you prepare plotting data, including different preprocess options. Depending on the data tab and preprocess options you choose, you will be given different plot tab options.</p>
+<a href="#data-visualization-tabs" class="anchor"></a>data visualization tabs</h3>
+<p>There are two types of data visualization(VS) tabs: <strong>data tab</strong> and <strong>plot tab</strong>. A data tab is where you prepare plotting data, including different preprocess options. Depending on the data tab and preprocess options you choose, you will be given different plot tab options.</p>
 <p>You should first going to the VS main tab by clicking <em><i class="fa fa-images"></i>Visualization</em> and read the instructions there.</p>
 <p>There are two ways to make a plot:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Begin with a data tab</strong>: If you know have run some data analysis workflows and have obtained results but don’t know what you can plot from these results, browse the table on visualization main tab. The table is sorted by workflows as rows. Based on the data type you have, you can click on the data type in the table, you will jump to the corresponding data preparation tab and you will see what plots you can make after data preparation.</li>
+<strong>Begin with a data tab</strong>: If you know have run some data analysis workflows and have obtained results but don’t know what you can plot from these results, browse the table on visualization main tab. The table is sorted by workflows as rows(<em>Fig.4 top</em>). Based on the data type you have, you can click on the data tabs in the table, you will jump to the corresponding data preparation tab and you will see what plots you can make after data preparation.</li>
 <li>
-<strong>Begin with a plot tab</strong>: If you already know what plots you want, there is a gallery on visualization main tab. You can click on the plot you want and it will jump to the plot tab directly. On the redirected plot tab, you will see to make this plot what input data need to be prepared. By choosing under the <strong>Data Preparation</strong>, you will go to a data tab and once you have prepared the required data, you will be guided back to this plotting tab to make the plot.</li>
+<strong>Begin with a plot tab</strong>: If you already know what plots you want, there is a gallery on visualization main tab(<em>Fig.4 bottom</em>). You can click on the plot you want and it will jump to the plot tab directly. On the redirected plot tab, you will see to make this plot what input data need to be prepared. By choosing under the <strong>Data Preparation</strong>, you will go to a data tab and once you have prepared the required data, you will be guided back to this plotting tab to make the plot.</li>
 </ol>
-<p>You can take a look of the VS table and VS gallery on the VS main page by clicking “Visualization” on the left navigation bar (<em>Fig.4</em>).</p>
+<p>You can take a look of the VS table and VS gallery on the VS main page by clicking “Visualization” on the left navigation bar(<em>Fig.4</em>).</p>
 <center id="vs_main">
 <img src="img/sps_vs_main.png" alt="vs_main"><strong>Figure 4. Summary table and gallery on VS main tab</strong>
 </center>
@@ -641,7 +640,7 @@ Note: Upload file selection can be different depending on the mode, see <a href=
 <center>
 <img src="img/sps_data_table.png" alt="data_table"><strong>Figure 5. Data tab input table</strong>
 </center>
-<p>You can filter data by key words or by range if the column is numeric. There are some other options on the top-left corner where you can copy data to clipboard, export as csv, Excel and other functions. Editing the table content is technically possible but disabled over here, because one should not edit large data table by hand and workload will be heavy for the sever. SPS is not designed for this purpose. Please edit the input data in a professional data editing tool before upload.</p>
+<p>You can filter data by key words or by range if the column is numeric. There are some other options on the top-left corner where you can copy data to clipboard, export as csv, Excel and other functions. Editing the table content is technically possible but disabled over here, because one should not edit large data table by hand and the workload will be heavy for the sever. SPS is not designed for this purpose. Please edit the input data in a professional data editing tool before upload.</p>
 <p>When you are satisfied with the input data, you can preprocess the filtered data by selecting a preprocess method and hit the “Preprocess” button to start. The preprocess takes place in the server-side. When it is done, you will see some green messages on the right-bottom corner. Otherwise, you will see orange warning boxes or red error boxes telling you the details.</p>
 
 <div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
@@ -657,7 +656,7 @@ Note: Upload file selection can be different depending on the mode, see <a href=
 </button>
 
 <p>Once the preprocess is done, different plot options will show up as a gallery that is similar to the one on the VS main tab(<a href="#vs_main"><em>Fig.4</em></a>), but is only limited to a few possible plots.</p>
-<p>What kinds of preprocess methods, how many possible plotting options available are purely depend on the tab developers. Read instructions on the top of each tab will give you better glues of what is possible on the tab.</p>
+<p>What kinds of preprocess methods, how many possible plotting options available are purely depend on the tab developers. Read instructions on the top of each tab will give you better clues of what is possible on the tab.</p>
 </div>
 <div id="plot-tabs" class="section level3">
 <h3 class="hasAnchor">
@@ -665,14 +664,14 @@ Note: Upload file selection can be different depending on the mode, see <a href=
 <p>When you have prepared data from a data tab and jump to a plotting tab. Again, read the instructions(Description) on the top first.</p>
 <p>There will be a “Data preparation” section right below the “Description” section(<em>Fig. 6</em>). Most plots only require one type of data input. If that is the case, select which tab your data in coming from by the dropdown menu under “<em>select which tab(s) your data is coming from:</em>”. Even if a plot tab only has one type data input, but you need to clarify where the data is coming from, because different data tabs can prepare the same kind of input data. See <a href="#sps_structure">Figure 2</a> for details of relationship between data and plot tabs.</p>
 <p>Some plot tabs require more than one type of data input. For example, experimental data and sample information(metadata), just like <em>Figure 6</em>. In this case, you need to go to different data tab(s) and prepare other set(s) of data like usual. The “data preparation” should clearly state how many data sets you need to have and where you can prepare them.</p>
-<p>If you are not sure if you have the required data set(s), click on the <button type="button" class="btn btn-default"> Start/Reload </button> button and SPS will check/validate required data for you. If everything is okay, there will be a green message on the right-bottom corner and you should see some plotting control elements appear on the “Plotting” section. These are plot control UIs. They control how the plot is generated, such as what the plot title is, where the legend location is, what colors to use for samples, and more. These part is defined by the tab developer, so they should give you instructions in “Description” section.</p>
+<p>If you are not sure if you have the required data set(s), click on the <button type="button" class="btn btn-default"> Start/Reload </button> button and SPS will check/validate required data for you. If everything is okay, there will be a green message on the right-bottom corner and you should see some plotting control elements appear on the “Plotting” section. If not, there will be different colored message boxes telling you the error. Or you can open up the <a href="#progress-tracking">progress tracker</a> on the top-right corner to see what is missing. These are plot control UIs. They control how the plot is generated, such as what the plot title is, where the legend location is, what colors to use for samples, and more. These part is defined by the tab developer, so they should give you instructions at tab “Description” section.</p>
 <center id="plot_data_prep">
 <img src="img/sps_plot_data_prep.png" alt="plot_data_prep"><strong>Figure 6. Plot Data Preparation</strong>
 </center>
-<p>Click on the <button type="button" class="btn btn-default"> <i class="fa fa-paper-plane"></i> Render/Snapshot plot </button> button the <strong>first</strong> time will generate the plot and you can tweaking different plot control options to change your plot looking. You can drag the plot by <img src="img/resize_icon.png" style="display: inline; padding-left:0; width:10px; height:10px;"> on the bottom-right corner of the plot to resize your plot to unlimited height and maximum your screen width.</p>
+<p>Click on the <button type="button" class="btn btn-default"> <i class="fa fa-paper-plane"></i> Render/Snapshot plot </button> button the <strong>first</strong> time will generate the plot and you can tweaking different plot control options to change your plot looking. You can drag the plot by <img src="img/resize_icon.png" style="display: inline; padding-left:0; width:10px; height:10px;"> on the bottom-right corner of the plot to resize your plot to unlimited height and at maximum your screen width.</p>
 <ul>
 <li>You can then right click to save the plot as an image if the plot is rendered by <a href="https://ggplot2.tidyverse.org/">ggplot</a> or some base R plots.</li>
-<li>Most SPS example/built-in plots are rendered by <a href="https://plotly.com/r/">Plotly</a> and they are interative plots, so you cannot right-click. Instead, there is the <i class="fa fa-camera"></i> icon on plot you click to download the screenshot.</li>
+<li>Most SPS examples/built-in plots are rendered by <a href="https://plotly.com/r/">Plotly</a> and they are interative plots, so you cannot right-click. Instead, there is the <i class="fa fa-camera"></i> icon on plot you click to download the screenshot.</li>
 </ul>
 <p>Both methods take the screenshot of your plot “what you see is what you get”, meaning the height and width will be the same as what you see on SPS when you download the screenshot. Of course, you can use some other third-party screenshot tools as well.</p>
 <p>Click on the <button type="button" class="btn btn-default"> <i class="fa fa-paper-plane"></i> Render/Snapshot plot </button> button the <strong>second</strong> time and on will take a “snapshot” of current plot. You should see the message on bottom-right to info you that a snapshot of current plot has been sent to snapshot.</p>
@@ -689,7 +688,7 @@ Note: Upload file selection can be different depending on the mode, see <a href=
 <div id="snapshot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#snapshot" class="anchor"></a>Snapshot</h3>
-<p>When a snapshot is taken from a plot tab, it records the plot states and control options and can later be displayed on the Canvas. One example will be: there is a plotting option to choose how many samples on the plot and then you choose 5 and take a snapshot1. When this snapshot1 is displayed on the Canvas, there will be 5 samples. Later, you change the sample to 10 and take snapshot2. At this point, snapshot1 and snapshot2 will both be displayed on Canvas and one plot has 5 samples one has 10. These two plots on the Canvas are now independent from each other and both independent to the original plot on the plot tab. Whatever the additional change you make on the plot tab, these two snapshots will not be affected.</p>
+<p>When a snapshot is taken from a plot tab, it records the plot states and control options and can later be displayed on the Canvas. One example will be: there is a plotting option to choose how many samples on the plot and then you choose 5 and take a <em>snapshot1.</em> When this <em>snapshot1</em> is displayed on the Canvas, there will be 5 samples. Later, you change the sample to 10 and take <em>snapshot2.</em> At this point, <em>snapshot1</em> and <em>snapshot2</em> will both be displayed on Canvas and one plot has 5 samples one has 10. These two plots on the Canvas are now independent from each other and both independent to the original plot on the plot tab. Whatever the additional change you make on the plot tab, these two snapshots will not be affected.</p>
 <p>It is similar to a screenshot of a plot, but this “screenshot” is still interactive if the plot is rendered by an interactive plotting library, like a plotly plot, or at least can be a resizable vector image if it is rendered by base or ggplot2.</p>
 <div id="manage-snapshots" class="section level4">
 <h4 class="hasAnchor">
@@ -717,8 +716,8 @@ Note: Downloaded snapshots are encrypted for app security reasons. Each SPS proj
 <a href="#canvas" class="anchor"></a>Canvas</h3>
 <p>Canvas is a playground or a workbench where you can view all saved snapshots. Then you can resize, drag plots around to make a big figure. Figure 8 illustrates: compare plot snapshots from the same plot tab but with different sample size or groups.</p>
 <ul>
-<li>Resize: Every plot on Canvas has a <img src="img/resize_icon.png" style="display: inline; padding-left:0; width:10px; height:10px;"> icon on the bottom-right corner of the plot. Left-click and drag it to the size you want.</li>
-<li>Reposition: When you mouse hovers on any plot snapshot, the blue title will appear, drag on the title will move the entire snapshot.</li>
+<li>Resize: Just like a plot in a plot tab, every plot on Canvas has a <img src="img/resize_icon.png" style="display: inline; padding:0px; width:10px; height:10px;"> icon on the bottom-right corner of the plot. Left-click and drag it to the size you want.</li>
+<li>Reposition: When you mouse hovers on any plot snapshot, the blue title will appear, drag on the title and move your mouse will reposition the entire snapshot.</li>
 <li>Exclude snapshots:
 <ul>
 <li>Hover on any plot snapshot, when title appears, click on the “X” icon will temporarily remove the snapshot from current Canvas, but when you click on <button type="button" class="btn btn-default">Refresh Canvas</button>, it will come back.</li>
@@ -753,7 +752,7 @@ Note: Downloaded snapshots are encrypted for app security reasons. Each SPS proj
 ##  admin_page: list(default = FALSE, other = TRUE)
 ##  admin_url: list(default = "admin", other = "*")
 ##  warning_toast: list(default = TRUE, other = FALSE)</code></pre>
-<p>To view a single option value, use <code><a href="../reference/spsOption.html">spsOption(opt = "option_name")</a></code>, to overwrite a single option, use <code><a href="../reference/spsOption.html">spsOption(opt = "option_name", value = new_value)</a></code>.</p>
+<p>To view a single option value, use <code><a href="../reference/spsOption.html">spsOption(opt = "OPTION_NAME")</a></code>; to overwrite a single option, use <code><a href="../reference/spsOption.html">spsOption(opt = "OPTION_NAME", value = "NEW_VALUE")</a></code>.</p>
 <p style="color:var(--info)">
 Note:Don’t worry if you set some invalid values, on app start, <code><a href="../reference/sps.html">sps()</a></code> will check all SPS options, ignore unknown values and set invalid values back to default. You will see warning messages on console to tell you specifically what’s wrong with options.
 </p>
@@ -802,8 +801,8 @@ Note:Don’t worry if you set some invalid values, on app start, <code><a href="
 <td>FALSE</td>
 </tr>
 <tr class="odd">
-<td>dev</td>
-<td>developer mode? add 2 template tabs</td>
+<td>eg_tab</td>
+<td>show example VS tabs?</td>
 <td>TRUE</td>
 <td>FALSE</td>
 </tr>
@@ -828,7 +827,7 @@ Note:Don’t worry if you set some invalid values, on app start, <code><a href="
 </li>
 <li>warning_toast: A toast pop-up message when you are under some dangerous options when app starts.</li>
 <li>loading_theme: <code>loading_screen</code> must be <code>TRUE</code>. Only one theme for now, we will add more in future.</li>
-<li>use_crayon: Give you more information on debugging.</li>
+<li>verbose: Give you more information on debugging.</li>
 <li>admin_url: the admin page url , will be added in an upcoming version, a preview can be seen by adding “/?admin” to the end of app url, e.g. “<a href="https://tgirke.shinyapps.io/systemPipeShiny/?admin">https://tgirke.shinyapps.io/systemPipeShiny/?admin</a>”.</li>
 </ul>
 </div>
@@ -846,7 +845,7 @@ Note:Don’t worry if you set some invalid values, on app start, <code><a href="
 <a href="#progress-tracking" class="anchor"></a>Progress tracking</h2>
 <p>A progress tracking panel is provided on each tab to notify users about run status. Tabs under workflow management shares the same progress panel and each VS tab has its own individual progress tracker.</p>
 <p>The tracker is located on the top-right corner and by default it is collapsed. You can often it up by clicking the “-” icon. If you think this tracker is blocking your sight, you can drag it to anywhere you like. The example looks like below(draggable in the real app):</p>
-<div id="plot_template-pg-pg-container" class="tab-pane" style="padding-left: 130px;">
+<div id="plot_example-pg-pg-container" class="tab-pane" style="padding-left: 130px;">
 <div class="control-panel draggable ui-draggable ui-draggable-handle" style="width: 400px; height: auto; background-color: var(--light);">
 <div class="row">
 <div class="col-sm-1">
@@ -888,11 +887,11 @@ Workflow-prepare
 <div id="extend-spsfor-developers" class="section level1">
 <h1 class="hasAnchor">
 <a href="#extend-spsfor-developers" class="anchor"></a>Extend SPS(for developers)</h1>
-<p>As a framework, SPS allows users to add/remove/customize individual tabs. At current version, you can only modify tabs in VS part(data tabs, plot tabs). Use <code>newTabData</code> to add a new data tab and <code>newTabPlot</code> for a plot tab. These functions will help you to create the tab file to the <em>R</em> folder in your SPS project <strong>and</strong> register tab information by adding records to <em>config/tabs.csv</em>. Most arguments are self-explanatory or can be easily understood by reading the the help file. Here are some important points:</p>
+<p>As a framework, SPS allows users to add/remove/customize individual tabs. At current version, you can only modify tabs in VS part(data tabs, plot tabs). Use <code>newTabData</code> to add a new data tab and <code>newTabPlot</code> for a plot tab. These functions will help you to <strong>create the tab file</strong>, store it to the <em>R</em> folder in your SPS project, and <strong>register tab information</strong> by adding records to <em>config/tabs.csv</em>. Most arguments are self-explanatory or can be easily understood by reading the the help file. Here are some important points:</p>
 <ul>
 <li>
 <code>tab_id</code> must start with “data_” for a data tab and “plot_” for a plot tab.</li>
-<li>Augments with <code>xx_func</code> or <code>xx_expr</code> use <a href="http://adv-r.had.co.nz/Computing-on-the-language.html">non-standard evaluation</a>, please do not add quotes. If you want to use quotes, set <code>use_string = TRUE</code>
+<li>Arguments with <code>xx_func</code> or <code>xx_expr</code> are expression arguments and they use <a href="http://adv-r.had.co.nz/Computing-on-the-language.html">non-standard evaluation</a>, please do not add quotes. If you want to use quotes, set <code>use_string = TRUE</code>
 </li>
 <li>For expressions in SPS or Shiny, if you are expect to return an object, directly write the return object to the last line of the expression, instead of using <code><a href="https://rdrr.io/r/base/function.html">return(xxx)</a></code>. Expressions are not functions, you shouldn’t use <code>return</code>.</li>
 </ul>
@@ -909,6 +908,7 @@ Workflow-prepare
 <div id="new-data-tab" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-data-tab" class="anchor"></a>New data tab</h2>
+<p>To create a new data tab:</p>
 <div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
     <span class="kw">prepro_methods</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePrepro.html">makePrepro</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="st">"do nothing"</span>, <span class="kw">plot_options</span> <span class="kw">=</span> <span class="st">"plot_new"</span>)))</pre></body></html></div>
 <div id="add-preprocess-methods" class="section level3">
@@ -942,17 +942,17 @@ Note: An object called <code>data_filtered</code> is created for you which conta
 </p>
 <div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
     <span class="kw">prepro_methods</span> <span class="kw">=</span> <span class="no">pms</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:03 Write to file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_new.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:02 Write to file /tmp/RtmpqihDAX/SPSProject/R/tab_vs_data_new.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_new.R ℹ 
+##  /tmp/RtmpqihDAX/SPSProject/R/tab_vs_data_new.R ℹ 
 ## ──────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
 ## ──────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:07 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:07 New tab created!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:05 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 19:45:05 New tab created!</code></pre>
 <p>On UI side, when you run SPS, your options will be displayed like this:</p>
 
 <div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
@@ -972,27 +972,28 @@ Note: An object called <code>data_filtered</code> is created for you which conta
 <div id="new-plot-tab" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-plot-tab" class="anchor"></a>New plot tab</h2>
+<p>To create a new plot tab:</p>
 <div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabPlot</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
     <span class="kw">plot_data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePlotData.html">makePlotData</a></span>(<span class="kw">dataset_label</span> <span class="kw">=</span> <span class="st">"Data from my new tab"</span>,
         <span class="kw">receive_datatab_ids</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)))</pre></body></html></div>
 <div id="add-plot-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#add-plot-data" class="anchor"></a>Add plot data</h3>
-<p>The <code>plot_data</code> argument in <code>newTabPlot</code> is very similar to <code>prepro_methods</code> in <code>newTabData</code>. It controls how many different unique data sets a plot tab requires and where(which data tabs) these data sets can come from. <code>plot_data</code> expect a list of <code>makePlotData</code> results. Each <code>makePlotData</code> result specify one unique input data set and source data tab options. For example, we want to have a plot tab that needs 2 unique data set, one for metadata, one for some numeric data, we can do:</p>
+<p>The <code>plot_data</code> argument in <code>newTabPlot</code> is very similar to <code>prepro_methods</code> in <code>newTabData</code>. It controls how many different unique data sets a plot tab requires and where(which data tabs) these data sets can come from. <code>plot_data</code> expect a list of <code>makePlotData</code> results. Each <code>makePlotData</code> result specifies one unique input data set and source data tab options. For example, we want to have a plot tab that needs 2 unique data set, one for metadata, one for some numeric data, we can do:</p>
 <div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="co"># We don't have the metadata tab, need to create one first.</span>
 <span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_meta"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"Meta Data"</span>,
     <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:07 Write to file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_meta.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:05 Write to file /tmp/RtmpqihDAX/SPSProject/R/tab_vs_data_meta.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_meta.R ℹ 
+##  /tmp/RtmpqihDAX/SPSProject/R/tab_vs_data_meta.R ℹ 
 ## ───────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
 ## ───────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:11 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:11 New tab created!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:09 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 19:45:09 New tab created!</code></pre>
 <div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># now we can use `makePlotData` method for metadata</span>
 <span class="no">pd</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePlotData.html">makePlotData</a></span>(<span class="kw">dataset_id</span> <span class="kw">=</span> <span class="st">"meta"</span>, <span class="kw">receive_datatab_ids</span> <span class="kw">=</span> <span class="st">"data_meta"</span>,
     <span class="kw">dataset_label</span> <span class="kw">=</span> <span class="st">"Meta data"</span>, <span class="kw">vd_expr</span> <span class="kw">=</span> <span class="fu"><a href="../reference/spsValidate.html">spsValidate</a></span>({
@@ -1007,27 +1008,27 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 </p>
 <div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabPlot</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
     <span class="kw">plot_data</span> <span class="kw">=</span> <span class="no">pd</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:11 Write to file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_plot_new.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:09 Write to file /tmp/RtmpqihDAX/SPSProject/R/tab_vs_plot_new.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_plot_new.R ℹ 
+##  /tmp/RtmpqihDAX/SPSProject/R/tab_vs_plot_new.R ℹ 
 ## ──────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
 ## ──────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:14 New tab created!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:11 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 19:45:11 New tab created!</code></pre>
 <p>You can specify more than one tab IDs in <code>receive_datatab_ids</code> argument, meaning this type of input data can be prepared by more than one data type, <code>receive_datatab_ids = c("data_df1", "data_df2")</code>.</p>
 <p>The rendered UI will look similar to <a href="#plot_data_prep">Fig.6</a> or you can check the online <a href="https://tgirke.shinyapps.io/systemPipeShiny/">demo</a>.</p>
 </div>
-<div id="an-empty-tab-file" class="section level3">
+<div id="empty-tab-file" class="section level3">
 <h3 class="hasAnchor">
-<a href="#an-empty-tab-file" class="anchor"></a>an empty tab file</h3>
-<p>If you don’t like the structure of SPS template tabs or want to load data other than a regular tabular data, like a <em>rds</em> file contains a <code>S4</code> object(you can only load tabular data files with default templates). You can create your own tab structure, and it is totally supported in SPS. In <code>newTabData</code> or <code>newTabPlot</code>, change <code>empty = TRUE</code> and specify <code>tab_id</code>, <code>display_name</code> and <code>author</code>. Leave all other arguments as defaults.</p>
+<a href="#empty-tab-file" class="anchor"></a>Empty tab file</h3>
+<p>If you don’t like the structure of SPS template tabs or want to load data other than a regular tabular data, like a <em>rds</em> file contains a <code>S4</code> object(you can only load tabular data files with default templates), then you can create your own tab structure, and it is totally supported in SPS. In <code>newTabData</code> or <code>newTabPlot</code>, change <code>empty = TRUE</code> and specify <code>tab_id</code>, <code>display_name</code> and <code>author</code>. Leave all other arguments as defaults.</p>
 <div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_empty"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"an empty one"</span>,
     <span class="kw">author</span> <span class="kw">=</span> <span class="st">"me"</span>, <span class="kw">empty</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p>It will create an empty tab file with empty UI and server function. You can write any legit shiny code inside. Again, SPS is built on <a href="#modular-isolation">Shiny modules</a>, so each tab is like a small sandbox and variables, objects do not conflict with other tabs.</p>
+<p>It will create an empty tab file with empty UI and server function. You can write any legit shiny code inside. Again, SPS is built on <a href="#modular-isolation">Shiny modules</a>, so each tab is like a small sandbox with local variables, objects do not conflict with other tabs.</p>
 </div>
 </div>
 <div id="run-new-tabs" class="section level2">
@@ -1044,19 +1045,19 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <div id="remove-a-tab" class="section level2">
 <h2 class="hasAnchor">
 <a href="#remove-a-tab" class="anchor"></a>Remove a tab</h2>
-<p>Use <code><a href="../reference/removeSpsTab.html">removeSpsTab(tab_id = "tabID")</a></code> to remove a tab. You can check <em>config/tabs.csv</em> to see what are the tabs and tab IDs you have. <code>tab_id</code> only allows one character string but allows regular expression match. By default, if it matches more than one ID, functions aborts, unless you change <code>multiple = TRUE</code>. The function will ask for your confirmation if any match is found, and you can directly proceed without confirmation by <code>force = TRUE</code>, if you want to do it in a programmatic way or use it in a loop. Once the function runs, it will remove both records in <em>config/tabs.csv</em> and tab files in <em>R</em> folder.</p>
+<p>Use <code><a href="../reference/removeSpsTab.html">removeSpsTab(tab_id = "tabID")</a></code> to remove a tab. You can check <em>config/tabs.csv</em> to see what are the tabs and tab IDs you have. <code>tab_id</code> only allows one character string but allows <strong>regular expression</strong> match. By default, if it matches more than one ID, function aborts, unless you change <code>multiple = TRUE</code>. The function will ask for your confirmation if any match is found, and you can directly proceed without confirmation by <code>force = TRUE</code>, in case you want to do it in a programmatic way or use it in a loop. Once the function runs, it will remove both records in <em>config/tabs.csv</em> and tab files in <em>R</em> folder.</p>
 <div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co"># for example, to remove the new tab we just created</span>
 <span class="fu"><a href="../reference/removeSpsTab.html">removeSpsTab</a></span>(<span class="st">"data_new"</span>, <span class="kw">force</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 Matched tab(s): data_new</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 1 tabs removed from tabs.csv</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-14 12:06:14 Now remove file /tmp/RtmpvbK8Em/SPSProject/R/tab_vs_data_new.R</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-14 12:06:14 Removal complete</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:11 Matched tab(s): data_new</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:11 1 tabs removed from tabs.csv</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-14 19:45:11 Now remove file /tmp/RtmpqihDAX/SPSProject/R/tab_vs_data_new.R</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-14 19:45:11 Removal complete</code></pre>
 <p>There are 3 main types of tabs in current version of SPS: <em>core</em>, <em>wf</em> and <em>vs</em>. <em>core</em> tabs are SPS framework essential tabs, <em>wf</em> tabs are Workflow Management components, and you are only allowed to modify <em>vs</em> tabs.</p>
 </div>
 <div id="build-a-plugin" class="section level2">
 <h2 class="hasAnchor">
 <a href="#build-a-plugin" class="anchor"></a>Build a Plugin</h2>
-<p>To build a new plugin, use <code><a href="../reference/spsLoadPlugin.html">spsNewPlugin()</a></code>.</p>
+<p>If you want to create a plenty of tabs and would like to have other people to use them. It is best to bundle your tabs as a SPS plugin. To build a new plugin, use <code><a href="../reference/spsLoadPlugin.html">spsNewPlugin()</a></code>.</p>
 <div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsNewPlugin</a></span>(<span class="kw">path</span> <span class="kw">=</span> <span class="st">"PATH_OF_PLUGIN"</span>)</pre></body></html></div>
 <p>This will create a new directory with all plugin required files.</p>
 <pre>
@@ -1069,11 +1070,10 @@ Plugin_root/
     └── config
       └── tabs.csv         Required tab registration metadata information. 
 </pre>
-<p>Only the <em>Plygin_root/inst/app/config/tabs.csv</em>. So one can easily move a SPS project to a SPS plugin by copying all files into <em>Plygin_root/inst/app/</em>.</p>
-<p>If your plugin provides some SPS tabs, you can use <code><a href="../reference/newTabPlot.html">newTabData(plugin = "PLUGIN_NAME", ...)</a></code> or <code><a href="../reference/newTabPlot.html">newTabPlot(plugin = "PLUGIN_NAME", ...)</a></code><br>
-to create them and tab meta information will automatically added to <em>tabs.csv</em>, so you don’t need to manually edit it. The text in <code>plugin</code> column of <em>tabs.csv</em> should be the same as your plugin name.</p>
-<p>In additional to tab files, all other files in <em>Plygin_root/inst/app/</em> will also be copied to users’ SPS project.</p>
-<p>At this point, this is just a very basic structure of a SPS plugin. To make it more publishable like a normal R package, it is recommended to use <code><a href="https://usethis.r-lib.org/reference/create_package.html">usethis::create_package("PLUGIN_ROOT_PATH")</a></code> and other functions come with <code>usethis</code>to add additional files like <em>man</em>, <em>vignettes</em> that are required by a formal R package. Please contact us if you want to have your plugin to be “officially”, otherwise, you can use <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin(..., third_party = TRUE)</a></code> to load your personal plugins.</p>
+<p>Only the <em>Plugin_root/inst/app/config/tabs.csv</em> file is required, So one can easily move a SPS project to a SPS plugin by copying all files into <em>Plygin_root/inst/app/</em>.</p>
+<p>Plugin tabs are the same as regular SPS VS tabs. You only need to add the plugin information when you create a new tab. You can use <code><a href="../reference/newTabPlot.html">newTabData(plugin = "PLUGIN_NAME", ...)</a></code> or <code><a href="../reference/newTabPlot.html">newTabPlot(plugin = "PLUGIN_NAME", ...)</a></code> to create them and tab meta information will automatically added to <em>tabs.csv</em>, so you don’t need to manually edit it. The text in <code>plugin</code> column of <em>tabs.csv</em> should be the same as your plugin name.</p>
+<p>In additional to tab files, all other files in <em>Plugin_root/inst/app/</em> will also be copied to users’ SPS project.</p>
+<p>When you proceed to this point, it only gives you a very basic structure of a SPS plugin. To make it more publishable like a normal R package, it is recommended to use <code><a href="https://usethis.r-lib.org/reference/create_package.html">usethis::create_package("PLUGIN_ROOT_PATH")</a></code> and other functions come with <code>usethis</code> package to add additional files like <em>man</em>, <em>vignettes</em> that are required by a formal R package. Please contact us if you want to have your plugin to be “official”, otherwise, you can use <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin(..., third_party = TRUE)</a></code> to load your personal plugins.</p>
 </div>
 <div id="naming" class="section level2">
 <h2 class="hasAnchor">
@@ -1081,7 +1081,6 @@ to create them and tab meta information will automatically added to <em>tabs.csv
 <ol style="list-style-type: decimal">
 <li>tabs:
 <ul>
-<li>All store in <code>R</code> folder;</li>
 <li>All should be named as <code>tab_xx.R</code>. If this tab is a sub tab, name it <code>tab_type_id.R</code>, e.g. a tab for visualization new data type will be <code>tab_vs_data_xxx.R</code>, a new plot tab will be <code>tab_vs_plot_xxx.R</code>.</li>
 </ul>
 </li>
@@ -1147,21 +1146,21 @@ to create them and tab meta information will automatically added to <em>tabs.csv
 <a href="#simple-logging" class="anchor"></a>Simple logging</h4>
 <p>The simplest logging is done by <code>msg</code> function. It prints out a message on console in <em>[Level] + time + message</em> format. By default, if you only provide the message, it uses <code>message</code> function; if you specify the level to be “warning” or “error”, it will use R base <code>warning</code> and <code>error</code> function; other levels uses <code>cat</code> method. Therefore, you can use <code>msg</code> to generate warnings or stop a function.</p>
 <div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"message"</span>)</pre></body></html></div>
-<pre><code>## [INFO] 2020-09-14 12:06:14 message</code></pre>
+<pre><code>## [INFO] 2020-09-14 19:45:11 message</code></pre>
 <div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"a warning"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"warning"</span>)</pre></body></html></div>
-<pre><code>## Warning: [WARNING] 2020-09-14 12:06:14 a warning</code></pre>
+<pre><code>## Warning: [WARNING] 2020-09-14 19:45:11 a warning</code></pre>
 <div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>(<span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"an error"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"error"</span>))</pre></body></html></div>
 <pre><code>## Error : 
-[ERROR] 2020-09-14 12:06:14 an error</code></pre>
+[ERROR] 2020-09-14 19:45:11 an error</code></pre>
 <p>If you set the SPS option <code>use_crayon = TRUE</code>, your message will be colorful.</p>
 <p style="color: blue">
-[INFO] 2020-09-14 12:06:14 message level
+[INFO] 2020-09-14 19:45:11 message level
 </p>
 <p style="color: orange">
-[WARNING] 2020-09-14 12:06:14 warning level
+[WARNING] 2020-09-14 19:45:11 warning level
 </p>
 <p style="color: red">
-[ERROR] 2020-09-14 12:06:14 error level
+[ERROR] 2020-09-14 19:45:11 error level
 </p>
 <p><code>spsinfo</code>, <code>spswarn</code>, and <code>spserror</code> are similar to <code>msg</code> but with <em>[SPS-]</em> prefix.</p>
 </div>
@@ -1180,7 +1179,7 @@ to create them and tab meta information will automatically added to <em>tabs.csv
     <span class="fu"><a href="../reference/shinyCatch.html">shinyCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"error"</span>), <span class="kw">shiny</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">blocking_level</span> <span class="kw">=</span> <span class="st">"error"</span>)
     <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Blocked\n"</span>)
 })</pre></body></html></div>
-<pre><code>## [SPS-ERROR] 2020-09-14 12:06:14 error
+<pre><code>## [SPS-ERROR] 2020-09-14 19:45:11 error
 ## Error : </code></pre>
 <p>Or you catch the exception but still allow other code to be executed.</p>
 <div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="co"># You should see the message</span>
@@ -1188,7 +1187,7 @@ to create them and tab meta information will automatically added to <em>tabs.csv
     <span class="fu"><a href="../reference/shinyCatch.html">shinyCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"error"</span>), <span class="kw">shiny</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
     <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Not blocked\n"</span>)
 })</pre></body></html></div>
-<pre><code>## [SPS-ERROR] 2020-09-14 12:06:14 error
+<pre><code>## [SPS-ERROR] 2020-09-14 19:45:11 error
 ## Not blocked</code></pre>
 </div>
 </div>
@@ -1205,7 +1204,7 @@ to create them and tab meta information will automatically added to <em>tabs.csv
 <div id="spsdb-and-spsencrytion" class="section level4">
 <h4 class="hasAnchor">
 <a href="#spsdb-and-spsencrytion" class="anchor"></a>spsDb and SpsEncrytion</h4>
-<p>You may have noticed there is a <em>sps.db</em> file in <em>config</em> folder. This file is a SQLite database which on current version stores some a table of meta information of your SPS project, like project creation date, and a table of binary data which includes the encryption key of snapshots.</p>
+<p>You may have noticed there is a <em>sps.db</em> file in <em>config</em> folder. This file is a SQLite database which on current version stores a table of meta information of your SPS project, like project creation date, and a table of binary data which includes the encryption key of snapshots.</p>
 <p><code>SpsEncrytion</code> inherits all methods from <code>spsDb</code>, so if there is any need to modify the database, you can just use <code>SpsEncrytion</code>. By default, it needs to be save in global environment <code>sps_enc &lt;- spsEncryption$new()</code>. This is written for you in the <em>global.R</em> file.</p>
 <ul>
 <li>
@@ -1272,145 +1271,54 @@ Note: Encrypting the snapshot file is because the snapshot file contains server 
 ## [9] BiocStyle_2.16.0      
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] backports_1.1.8            
-##   [2] plyr_1.8.6                 
-##   [3] igraph_1.2.5               
-##   [4] lazyeval_0.2.2             
-##   [5] shinydashboard_0.7.1       
-##   [6] splines_4.0.2              
-##   [7] BiocParallel_1.22.0        
-##   [8] GenomeInfoDb_1.24.2        
-##   [9] digest_0.6.25              
-##  [10] htmltools_0.5.0            
-##  [11] fansi_0.4.1                
-##  [12] memoise_1.1.0              
-##  [13] shinyFiles_0.8.0           
-##  [14] annotate_1.66.0            
-##  [15] matrixStats_0.56.0         
-##  [16] R.utils_2.9.2              
-##  [17] vroom_1.3.1                
-##  [18] askpass_1.1                
-##  [19] pkgdown_1.5.1              
-##  [20] colorspace_1.4-1           
-##  [21] blob_1.2.1                 
-##  [22] ggrepel_0.8.2              
-##  [23] xfun_0.15                  
-##  [24] dplyr_1.0.0                
-##  [25] crayon_1.3.4               
-##  [26] RCurl_1.98-1.2             
-##  [27] jsonlite_1.7.0             
-##  [28] bootstraplib_0.1.0.9000    
-##  [29] genefilter_1.70.0          
-##  [30] survival_3.2-3             
-##  [31] ape_5.4                    
-##  [32] gtable_0.3.0               
-##  [33] zlibbioc_1.34.0            
-##  [34] XVector_0.28.0             
-##  [35] DelayedArray_0.14.1        
-##  [36] V8_3.2.0                   
-##  [37] R.cache_0.14.0             
-##  [38] BiocGenerics_0.34.0        
-##  [39] scales_1.1.1               
-##  [40] pheatmap_1.0.12            
-##  [41] DBI_1.1.0                  
-##  [42] GGally_2.0.0               
-##  [43] miniUI_0.1.1.1             
-##  [44] Rcpp_1.0.5                 
-##  [45] viridisLite_0.3.0          
-##  [46] xtable_1.8-4               
-##  [47] tidytree_0.3.3             
-##  [48] bit_1.1-15.2               
-##  [49] stats4_4.0.2               
-##  [50] rsvg_2.1                   
-##  [51] DT_0.14                    
-##  [52] htmlwidgets_1.5.1          
-##  [53] shinyjqui_0.3.3            
-##  [54] httr_1.4.2                 
-##  [55] RColorBrewer_1.1-2         
-##  [56] shinyAce_0.4.1             
-##  [57] ellipsis_0.3.1             
-##  [58] R.methodsS3_1.8.0          
-##  [59] pkgconfig_2.0.3            
-##  [60] shinydashboardPlus_0.7.5   
-##  [61] reshape_0.8.8              
-##  [62] XML_3.99-0.4               
-##  [63] sass_0.2.0                 
-##  [64] locfit_1.5-9.4             
-##  [65] tidyselect_1.1.0           
-##  [66] rlang_0.4.7                
-##  [67] later_1.1.0.1              
-##  [68] AnnotationDbi_1.50.1       
-##  [69] munsell_0.5.0              
-##  [70] tools_4.0.2                
-##  [71] cli_2.0.2                  
-##  [72] generics_0.0.2             
-##  [73] RSQLite_2.2.0              
-##  [74] evaluate_0.14              
-##  [75] fastmap_1.0.1              
-##  [76] yaml_2.2.1                 
-##  [77] rematch2_2.1.2             
-##  [78] ggtree_2.2.4               
-##  [79] knitr_1.29                 
-##  [80] bit64_0.9-7.1              
-##  [81] fs_1.4.2                   
-##  [82] purrr_0.3.4                
-##  [83] nlme_3.1-148               
-##  [84] mime_0.9                   
-##  [85] formatR_1.7                
-##  [86] R.oo_1.23.0                
-##  [87] rhandsontable_0.3.7        
-##  [88] aplot_0.0.5                
-##  [89] compiler_4.0.2             
-##  [90] rstudioapi_0.11            
-##  [91] plotly_4.9.2.1             
-##  [92] curl_4.3                   
-##  [93] pushbar_0.1.0              
-##  [94] treeio_1.12.0              
-##  [95] tibble_3.0.3               
-##  [96] geneplotter_1.66.0         
-##  [97] stringi_1.4.6              
-##  [98] desc_1.2.0                 
-##  [99] lattice_0.20-41            
-## [100] Matrix_1.2-18              
-## [101] glmpca_0.2.0               
-## [102] styler_1.3.2               
-## [103] markdown_1.1               
-## [104] shinyjs_1.1                
-## [105] vctrs_0.3.2                
-## [106] pillar_1.4.6               
-## [107] lifecycle_0.2.0            
-## [108] networkD3_0.4              
-## [109] BiocManager_1.30.10        
-## [110] jquerylib_0.1.2            
-## [111] data.table_1.12.8          
-## [112] bitops_1.0-6               
-## [113] httpuv_1.5.4               
-## [114] patchwork_1.0.1            
-## [115] GenomicRanges_1.40.0       
-## [116] R6_2.4.1                   
-## [117] bookdown_0.20              
-## [118] promises_1.1.1             
-## [119] IRanges_2.22.2             
-## [120] codetools_0.2-16           
-## [121] colourpicker_1.0           
-## [122] MASS_7.3-51.6              
-## [123] SummarizedExperiment_1.18.2
-## [124] openssl_1.4.2              
-## [125] DESeq2_1.28.1              
-## [126] rprojroot_1.3-2            
-## [127] shinyWidgets_0.5.3         
-## [128] withr_2.2.0                
-## [129] S4Vectors_0.26.1           
-## [130] GenomeInfoDbData_1.2.3     
-## [131] parallel_4.0.2             
-## [132] grid_4.0.2                 
-## [133] tidyr_1.1.0                
-## [134] DOT_0.1                    
-## [135] rmarkdown_2.4.0            
-## [136] rvcheck_0.1.8              
-## [137] shinytoastr_2.1.1          
-## [138] Rtsne_0.15                 
-## [139] Biobase_2.48.0</code></pre>
+##  [1] fs_1.4.2                 bit64_0.9-7.1           
+##  [3] httr_1.4.2               rprojroot_1.3-2         
+##  [5] R.cache_0.14.0           tools_4.0.2             
+##  [7] backports_1.1.8          R6_2.4.1                
+##  [9] DT_0.14                  DBI_1.1.0               
+## [11] lazyeval_0.2.2           colorspace_1.4-1        
+## [13] pushbar_0.1.0            shinyjqui_0.3.3         
+## [15] withr_2.2.0              tidyselect_1.1.0        
+## [17] bit_1.1-15.2             curl_4.3                
+## [19] compiler_4.0.2           cli_2.0.2               
+## [21] formatR_1.7              shinyjs_1.1             
+## [23] desc_1.2.0               plotly_4.9.2.1          
+## [25] rhandsontable_0.3.7      colourpicker_1.0        
+## [27] bookdown_0.20            sass_0.2.0              
+## [29] scales_1.1.1             askpass_1.1             
+## [31] pkgdown_1.5.1            digest_0.6.25           
+## [33] shinydashboardPlus_0.7.5 R.utils_2.9.2           
+## [35] rmarkdown_2.4.0          pkgconfig_2.0.3         
+## [37] htmltools_0.5.0          DOT_0.1                 
+## [39] styler_1.3.2             fastmap_1.0.1           
+## [41] htmlwidgets_1.5.1        rlang_0.4.7             
+## [43] rstudioapi_0.11          RSQLite_2.2.0           
+## [45] jquerylib_0.1.2          generics_0.0.2          
+## [47] jsonlite_1.7.0           vroom_1.3.1             
+## [49] R.oo_1.23.0              dplyr_1.0.0             
+## [51] fansi_0.4.1              Rcpp_1.0.5              
+## [53] munsell_0.5.0            R.methodsS3_1.8.0       
+## [55] lifecycle_0.2.0          stringi_1.4.6           
+## [57] yaml_2.2.1               MASS_7.3-51.6           
+## [59] shinytoastr_2.1.1        bootstraplib_0.1.0.9000 
+## [61] grid_4.0.2               blob_1.2.1              
+## [63] shinyFiles_0.8.0         parallel_4.0.2          
+## [65] promises_1.1.1           shinydashboard_0.7.1    
+## [67] crayon_1.3.4             miniUI_0.1.1.1          
+## [69] knitr_1.29               pillar_1.4.6            
+## [71] igraph_1.2.5             markdown_1.1            
+## [73] codetools_0.2-16         evaluate_0.14           
+## [75] V8_3.2.0                 data.table_1.12.8       
+## [77] BiocManager_1.30.10      vctrs_0.3.2             
+## [79] httpuv_1.5.4             networkD3_0.4           
+## [81] gtable_0.3.0             openssl_1.4.2           
+## [83] purrr_0.3.4              tidyr_1.1.0             
+## [85] rematch2_2.1.2           xfun_0.15               
+## [87] mime_0.9                 xtable_1.8-4            
+## [89] rsvg_2.1                 later_1.1.0.1           
+## [91] viridisLite_0.3.0        tibble_3.0.3            
+## [93] memoise_1.1.0            shinyWidgets_0.5.3      
+## [95] ellipsis_0.3.1           shinyAce_0.4.1</code></pre>
 </div>
 <div id="funding" class="section level1">
 <h1 class="hasAnchor">

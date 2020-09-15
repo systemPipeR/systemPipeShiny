@@ -84,13 +84,13 @@ spsUI <- function(tabs_df, tabs_plot){
                         shinydashboard::menuItem(
                             text = "Prepare dataset",
                             ## vs dfs add to sidebar
-                            devComponents("ui_menu_df"),
+                            egComponents("ui_menu_df"),
                             menu_df
                         ),
                         shinydashboard::menuItem(
                             text = "Collection of plots",
                             ## vs plots add to sidebar
-                            devComponents("ui_menu_plot"),
+                            egComponents("ui_menu_plot"),
                             menu_plot
                         )
                     ),
@@ -120,8 +120,8 @@ spsUI <- function(tabs_df, tabs_plot){
         shinydashboard::tabItem(tabName = "wf_run", wf_runUI("wf_run")),
         # VS tabs
         shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
-        devComponents("ui_tab_df"),
-        devComponents("ui_tab_plot"),
+        egComponents("ui_tab_df"),
+        egComponents("ui_tab_plot"),
         # core tabs
         shinydashboard::tabItem(tabName = "core_dashboard",
                                 core_dashboardUI("core_dashboard")),
@@ -181,7 +181,7 @@ spsUI <- function(tabs_df, tabs_plot){
 #' if(interactive()){
 #'     spsInit()
 #'     ui <- fluidPage(
-#'         genGallery(c("plot_template")),
+#'         genGallery(c("plot_example")),
 #'         genGallery(type = "plot")
 #'     )
 #'     server <- function(input, output, session) {
@@ -267,25 +267,25 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
 #'
 #' @importFrom shinydashboard menuSubItem tabItem
 #' @noRd
-devComponents <- function(element, shared=NULL){
+egComponents <- function(element, shared=NULL){
     element <- match.arg(element, c("ui_menu_df", "ui_menu_plot",
                                     "ui_tab_df", "ui_tab_plot", "server"))
 
-    if(spsOption('dev')){
+    if(spsOption('eg_tab')){
         switch(element,
                 "ui_menu_df" = shinydashboard::menuSubItem(
-                    text = "Template data", tabName = "data_template"),
+                    text = "Template data", tabName = "data_example"),
                 "ui_menu_plot" = shinydashboard::menuSubItem(
-                    text = "Template Plot", tabName = "plot_template"),
+                    text = "Template Plot", tabName = "plot_example"),
                 "ui_tab_df" = shinydashboard::tabItem(
-                    tabName = "data_template", data_templateUI("data_template")),
+                    tabName = "data_example", data_exampleUI("data_example")),
                 "ui_tab_plot" = shinydashboard::tabItem(
-                    tabName = "plot_template",
-                    plot_templateUI("plot_template")
+                    tabName = "plot_example",
+                    plot_exampleUI("plot_example")
                 ),
                 "server" = {
-                    data_templateServer("data_template", shared)
-                    plot_templateServer("plot_template", shared)
+                    data_exampleServer("data_example", shared)
+                    plot_exampleServer("plot_example", shared)
                 }
         )
     } else {shinydashboard::tabItem("")}
