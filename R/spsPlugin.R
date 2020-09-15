@@ -1,26 +1,27 @@
 ##########################   SPS plugins    ####################################
 
 #' SPS plugin operations
-#' @description `spsLoadPlugin()` is used to load an existing SPS plugin,
+#' @description `spsLoadPlugin()` loads an existing SPS plugin,
 #' `spsRemovePlugin()` is to remove a loaded plugin, and `spsNewPlugin()` is
 #' for developers to create a minimum plugin structure and required files.
 #' @param plugin character, a plugin name. It can also be a path in
-#' `spsLoadPlugin` function  when if `third_party = TRUE`.
+#' `spsLoadPlugin()` function if `third_party = TRUE`.
 #' @param app_path the SPS project you want to load plugin to
 #' @param verbose bool, show more information?
 #' @param third_party bool, is this an official plugin?
 #' @param overwrite one of 0, 1 or 2, if there are file conflicts, how to
 #' handle conflict files, see details.
 #' @param colorful bool, colorful message?
-#'
 #' @return No return
 #' @details
 #' #### General
 #'
-#' - Make sure there is a 'config/tabs.csv' file in your SPS project when you
-#' load the plugin.
 #' - You can just use `spsLoadPlugin()` without any argument to see
 #' what are the plugin options.
+#' - `plugin` should be a single name when `third_party = FALSE`, and
+#' can be a path to a custom plugin root when `third_party = TRUE`.
+#' - Make sure there is a 'config/tabs.csv' file in your SPS project when you
+#' load the plugin.
 #' - If there is any file conflicts when loading plugins, please see the
 #' app structure tree and refer to the legend below the tree to help you resolve
 #' conflicts. Overwriting current files is not recommended. Rename conflict

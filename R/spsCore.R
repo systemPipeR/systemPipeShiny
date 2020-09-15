@@ -6,16 +6,19 @@
 NULL
 
 
-#' SystemPipeShiny app start function
-#' @param vstabs custom visualization tab IDs you want to display, in a character
-#' vector.
-#' @param plugin If you have loaded some SPS plugins, you can specify here as a
-#' character vector, and it will load all plugin tabs to SPS. If you only want
+#' SystemPipeShiny app main function
+#' @param vstabs custom visualization tab IDs that you want to display, in a character
+#' vector. Use [spsTabInfo()] to see what tab IDs you can load
+#' @param plugin If you have loaded some SPS plugins by [spsLoadPlugin()],
+#' you can specify here as a character vector, and it will load all tabs that
+#' belong to that plugin to SPS. If you only want
 #' certain tabs from a plugin, specify in `vstabs` argument.
 #' @param server_expr additional top level sever expression you want
 #' to run. This will run after the default server expressions. It means you can
-#' have access to internal server expression objects, like the reactiveValues
-#' object `shared`. You can also overwrite other values.
+#' have access to internal server expression objects, like the
+#' [shiny::reactiveValues()]
+#' object `shared`. You can also overwrite other values. Read "shared object" in
+#' vignette.
 #' @param app_path SPS project path
 #' @details You must set the project root as working directory for this
 #' function to find required files.
@@ -77,16 +80,22 @@ sps <- function(vstabs = "", plugin = "", server_expr=NULL, app_path = getwd()){
 
 
 #' Create a SystemPipeShiny project
-#'
-#' @param dir_path path, where do you want to create this project
-#' @param project_name Your project name
-#' @param database_name project database name, recommend to use the default name
-#' @param overwrite bool, overwrite the `dir_path`?
-#' @param change_wd bool, when creation is done, change working directory?
+#' @description To run a SPS app, you need to first create a SPS project, a
+#' directory contains the required files.
+#' @param app_path path, a directory where do you want to create this project,
+#' must exist.
+#' @param project_name Your project name, default is `SPS_` + `time`
+#' @param database_name project database name, recommend to use the default
+#'  name: "sps.db". It is used to store app meta information, see [spsDb()]
+#' @param overwrite bool, overwrite the `app_path` if there is a folder that
+#' has the same name as `project_name`?
+#' @param change_wd bool, when creation is done, change working directory into
+#' the project?
 #' @param verbose bool, do you want additional message?
 #' @param open_files bool, If `change_wd == TRUE` and you are also in Rstudio,
-#' it will open up global.R, ui.R and server.R for you
+#' it will open up *global.R* for you
 #' @param colorful bool, should message from this function be colorful?
+#' @details Make sure you have write permission to `app_path`
 #' @importFrom rstudioapi isAvailable navigateToFile
 #' @export
 #' @return creates the project folder
@@ -94,7 +103,7 @@ sps <- function(vstabs = "", plugin = "", server_expr=NULL, app_path = getwd()){
 #' if(interactive()){
 #'     spsInit(change_wd = FALSE)
 #' }
-spsInit <- function(dir_path=getwd(),
+spsInit <- function(app_path=getwd(),
                     project_name = glue("SPS_{format(Sys.time(), '%Y%m%d')}"),
                     database_name = "sps.db",
                     overwrite = FALSE,
@@ -104,11 +113,11 @@ spsInit <- function(dir_path=getwd(),
                     colorful = TRUE
 ){
     options(sps=list(verbose = verbose, use_crayon = colorful))
-    if(is.writeable(dir_path))
+    if(is.writeable(app_path))
         spsinfo("Start to create a new SPS project", TRUE)
-    else spserror(glue("{dir_path} is not writeable."))
+    else spserror(glue("{app_path} is not writeable."))
 
-    project_dir <- file.path(dir_path, project_name)
+    project_dir <- file.path(app_path, project_name)
     if(dir.exists(project_dir) & !overwrite) {
         spserror(glue("{project_dir} exists"))
     } else if(dir.exists(project_dir) & overwrite) {
@@ -318,16 +327,16 @@ copySPSfiles <- function(file_path,
     if(sps_path == "")
         spserror(glue("Can't find required SPS files {file_path}.
                        Did you install SPS correctly?"))
-    dir_path <- file.path(project_dir, basename(sps_path))
-    if(dir.exists(dir_path) | !is_dir){
+    app_path <- file.path(project_dir, basename(sps_path))
+    if(dir.exists(app_path) | !is_dir){
         file.copy(sps_path, project_dir,
                   recursive = TRUE, overwrite = overwrite)
     } else {
-        dir.create(dir_path)
+        dir.create(app_path)
         file.copy(sps_path, project_dir,
                   recursive = TRUE, overwrite = overwrite)
     }
-    spsinfo(glue("File(s) copied for {dir_path}"), verbose)
+    spsinfo(glue("File(s) copied for {app_path}"), verbose)
 }
 
 

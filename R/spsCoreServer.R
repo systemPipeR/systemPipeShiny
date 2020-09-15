@@ -109,7 +109,7 @@ spsServer <- function(tabs, server_expr) {
 #' @importFrom shinydashboardPlus timelineBlock timelineItem timelineLabel
 #' @importFrom shinyWidgets progressBar
 #' @return reactive renderUI object
-#' @seealso pgPaneUpdate
+#' @seealso [pgPaneUpdate()]
 #' @noRd
 # @examples
 # wfProgressPanel(shared)

@@ -2,13 +2,13 @@
 % Please edit documentation in R/spsCore.R
 \name{sps}
 \alias{sps}
-\title{SystemPipeShiny app start function}
+\title{SystemPipeShiny app main function}
 \usage{
 sps(vstabs = "", plugin = "", server_expr = NULL, app_path = getwd())
 }
 \arguments{
-\item{vstabs}{custom visualization tab IDs you want to display, in a character
-vector.}
+\item{vstabs}{custom visualization tab IDs that you want to display, in a character
+vector. Use \code{\link[=spsTabInfo]{spsTabInfo()}}}
 
 \item{plugin}{If you have loaded some SPS plugins, you can specify here as a
 character vector, and it will load all plugin tabs to SPS. If you only want
@@ -25,7 +25,7 @@ object \code{shared}. You can also overwrite other values.}
 a list contains the UI and  server
 }
 \description{
-SystemPipeShiny app start function
+SystemPipeShiny app main function
 }
 \details{
 You must set the project root as working directory for this

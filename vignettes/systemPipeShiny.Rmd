@@ -758,33 +758,39 @@ for example:
 
 ```{r, eval=TRUE}
 pms <- list(
-    makePrepro(method_id = "nothing", 
-               label = "Do nothing", 
-               vd_expr = spsValidate({if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")}), 
-               pre_expr = {data_filtered},
-               plot_options = "plot_new"),
-    makePrepro(method_id = "md1", 
-               label = "Method 1", 
-               vd_expr = spsValidate({
-                   if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
-                   if(!nrow(data_filtered) < 1) stop("Data must have at least 1 row")
-               }, pass_msg = "method 1 validation pass"), 
-               pre_expr = {
-                   if(is.numeric(data_filtered[, 1])) data_filtered[1, 1] = 1
-                   data_filtered
-               },
-               plot_options = "plot_new"),
-    makePrepro(method_id = "md2", 
-               label = "Method 2", 
-               vd_expr = spsValidate({
-                   if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
-                   if(!ncol(data_filtered) < 2) stop("Data must have at least 2 columns")
-               }, pass_msg = "method 2 validation pass"), 
-               pre_expr = {
-                   if(is.numeric(data_filtered[, 2])) data_filtered[2, 1] = 1
-                   data_filtered
-               },
-               plot_options = "plot_new")
+    makePrepro(
+        method_id = "nothing", 
+        label = "Do nothing", 
+        vd_expr = spsValidate({if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")}), 
+        pre_expr = {data_filtered},
+        plot_options = "plot_new"
+    ),
+    makePrepro(
+        method_id = "md1", 
+        label = "Method 1", 
+        vd_expr = spsValidate({
+            if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
+            if(!nrow(data_filtered) < 1) stop("Data must have at least 1 row")
+        }, pass_msg = "method 1 validation pass"), 
+        pre_expr = {
+            if(is.numeric(data_filtered[, 1])) data_filtered[1, 1] = 1
+            data_filtered
+        },
+        plot_options = "plot_new"
+    ),
+    makePrepro(
+        method_id = "md2", 
+        label = "Method 2", 
+        vd_expr = spsValidate({
+            if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
+            if(!ncol(data_filtered) < 2) stop("Data must have at least 2 columns")
+        }, pass_msg = "method 2 validation pass"), 
+        pre_expr = {
+            if(is.numeric(data_filtered[, 2])) data_filtered[2, 1] = 1
+            data_filtered
+        },
+        plot_options = "plot_new"
+    )
 )
 ```
 
@@ -795,7 +801,8 @@ newTabData(
     app_path = sps_dir,
     tab_id = "data_new", 
     tab_displayname = "my first data tab",
-    prepro_methods = pms
+    prepro_methods = pms,
+    verbose = TRUE
 )
 ```
 
@@ -1113,12 +1120,12 @@ database, you can just use `SpsEncrytion`. By default, it needs to be save in gl
 - `spsDb` allows you to create database, query/modify/delete/add records.
 - `SpsEncrytion` enables you to view/change the encryption key, and encrypt/decrypt any file you desire.
 
-All downloaded SPS snapshot files are encrypted by `SpsEncrytion`. It uses *RSA256* key pair, so each 
-SPS project will have its own key pair, which means uploading snapshot file from one project 
-to another is not possible. If you want to have a snapshot running in another SPS project, 
-use `spsEncryption$decrypt()` to decrypt the snapshot file and contact the owner of 
-the other SPS project. Ask them to use their key to encrypt the file `spsEncryption$encrypt()` and 
-the snapshot file can be uploaded as usual to that SPS app. 
+All downloaded SPS snapshot files are encrypted by `SpsEncrytion`. It uses *RSA256* key pair, so each
+SPS project will have its own key pair, which means uploading snapshot file from one project
+to another is not possible. If you want to have a snapshot running in another SPS project,
+use `spsEncryption$decrypt()` to decrypt the snapshot file and contact the owner of
+the other SPS project. Ask them to use their key to encrypt the file `spsEncryption$encrypt()` and
+the snapshot file can be uploaded as usual to that SPS app.
 
 <p style="color:var(--info)">Note: Encrypting the snapshot file is because the snapshot file contains server code which can be modified easily by any one and running arbitrary code uploaded by users can be dangerous.</p>
 
