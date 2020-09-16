@@ -9,7 +9,7 @@ NULL
 #' SystemPipeShiny app main function
 #' @param vstabs custom visualization tab IDs that you want to display, in a character
 #' vector. Use [spsTabInfo()] to see what tab IDs you can load
-#' @param plugin If you have loaded some SPS plugins by [spsLoadPlugin()],
+#' @param plugin If you have loaded some SPS plugins by [spsAddPlugin()],
 #' you can specify here as a character vector, and it will load all tabs that
 #' belong to that plugin to SPS. If you only want
 #' certain tabs from a plugin, specify in `vstabs` argument.
@@ -253,16 +253,16 @@ resolveOptions <- function(app_path = getwd()){
     options(sps = sps_defaults)
 }
 
-#' Print systemPipeShiny default Options
-#' @description  Make sure you created the app folder and has config.yaml
-#' in config folder
-#' @param app_path where is the app directory
+#' Print SPS default options
+#' @description  Make sure you have created the app directory and it
+#' has *config/config.yaml* file
+#' @param app_path path, where is the app directory
 #'
 #' @export
 #' @return cat to console the default options
 #' @examples
 #' if(interactive()){
-#'     spsInit()
+#'     spsInit(open_files = FALSE)
 #'     viewSpsDefaults()
 #' }
 viewSpsDefaults <- function(app_path = getwd()){
@@ -345,15 +345,15 @@ copySPSfiles <- function(file_path,
 #' @param opt string, length 1, what option you want to get or set
 #' @param value if this is not `NULL`, this function will set the
 #' option you choose to this value
-#' @param empty_is_false bool, when you get an option, if the option is
-#' `NULL`, `NA`, `""` or length is 0, return `FALSE`?
-#' @return option value if value exists; `FALSE` if the value is empty,
-#' like `NULL`, `NA`, `""`; `NULL` if `empty_is_false = FALSE`;
+#' @param empty_is_false bool, when trying to get an option value, if the
+#' option is `NULL`, `NA`, `""` or length is 0, return `FALSE`?
+#' @return return the option value if value exists; return `FALSE` if the value
+#' is empty, like `NULL`, `NA`, `""`; return `NULL` if `empty_is_false = FALSE`;
 #'  see [emptyIsFalse]
 #'
-#'  If `value != NULL` will set the value, no returns.
+#'  If `value != NULL` will set the option to this new value, no returns.
 #' @export
-#'
+#' @seealso [viewSpsDefaults()] for options you can view or set
 #' @examples
 #' spsOption("test1", 1)
 #' spsOption("test1")

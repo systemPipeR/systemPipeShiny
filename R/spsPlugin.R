@@ -1,11 +1,11 @@
 ##########################   SPS plugins    ####################################
 
 #' SPS plugin operations
-#' @description `spsLoadPlugin()` loads an existing SPS plugin,
+#' @description `spsAddPlugin()` adds an existing SPS plugin to a SPS project,
 #' `spsRemovePlugin()` is to remove a loaded plugin, and `spsNewPlugin()` is
 #' for developers to create a minimum plugin structure and required files.
 #' @param plugin character, a plugin name. It can also be a path in
-#' `spsLoadPlugin()` function if `third_party = TRUE`.
+#' `spsAddPlugin()` function if `third_party = TRUE`.
 #' @param app_path the SPS project you want to load plugin to
 #' @param verbose bool, show more information?
 #' @param third_party bool, is this an official plugin?
@@ -16,7 +16,7 @@
 #' @details
 #' #### General
 #'
-#' - You can just use `spsLoadPlugin()` without any argument to see
+#' - You can just use `spsAddPlugin()` without any argument to see
 #' what are the plugin options.
 #' - `plugin` should be a single name when `third_party = FALSE`, and
 #' can be a path to a custom plugin root when `third_party = TRUE`.
@@ -29,7 +29,8 @@
 #' - When a plugin is removed, only tab files from that plugin are removed and
 #' entries on *config/tabs.csv* are removed. Other files come from the plugin
 #' will not be removed.
-#'
+#' - After adding the plugin to a SPS project, you need to load it on app
+#' start, [sps(..., plugin = "PLUGIN_NAME")][sps()].
 #' #### overwrite mode
 #'
 #' - 0, if there is any conflict, abort
@@ -54,7 +55,7 @@
 #'
 #' @examples
 #' # see what official plugins you can install:
-#' spsLoadPlugin()
+#' spsAddPlugin()
 #' # create a project
 #' spsInit(project_name = "testProject",
 #'         change_wd = FALSE,
@@ -78,7 +79,7 @@
 #'            reformat = FALSE,
 #'            open_file = FALSE)
 #' # load the plugin, the plugin is not published, so `third_party = TRUE`
-#' spsLoadPlugin(plugin = "testPlugin",
+#' spsAddPlugin(plugin = "testPlugin",
 #'               app_path = "testProject",
 #'               third_party = TRUE,
 #'               overwrite = 1)
@@ -95,7 +96,7 @@
 #' list.files(file.path("testProject", "R"))
 #' vroom::vroom(file.path("testProject", "config", "tabs.csv"),
 #'              comment = "#") %>% tail()
-spsLoadPlugin <- function(
+spsAddPlugin <- function(
     plugin = "",
     app_path = getwd(),
     verbose = FALSE,
@@ -384,7 +385,7 @@ spsLoadPlugin <- function(
 
            ########### remove plugin #############
 
-#' @rdname spsLoadPlugin
+#' @rdname spsAddPlugin
 #' @param force bool, if plugin files found, confirm before remove?
 #' @export
 #' @importFrom dplyr filter
@@ -437,7 +438,7 @@ spsRemovePlugin <- function(
 }
 
 ########### new plugin #############
-#' @rdname spsLoadPlugin
+#' @rdname spsAddPlugin
 #' @param path character string, path of where you want to create the plugin
 #' directory, can be a non-existing location but make sure you have write
 #' permission.

@@ -222,6 +222,8 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 }
 
 #' Server side function for dynamicFile
+#' @description Server side function for [dynamicFile] to parse the uploaded
+#' file path
 #' @param input shiny server input
 #' @param session shiny server session
 #' @param id input file element ID.
@@ -243,14 +245,14 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 #'
 #'     server <- function(input,output,session){
 #'         runjs('$(".sps-file input").attr("readonly", true)')
-#'         myfile <- dynamicFileServer(input,session, id = "getFile")
+#'         myfile <- dynamicFileServer(input, session, id = "getFile")
 #'         observe({
 #'             print(myfile()) # remember to use `()` for reactive value
 #'         })
 #'     }
 #'     shinyApp(ui = ui, server = server)
 #' }
-dynamicFileServer <- function(input,session, id){
+dynamicFileServer <- function(input, session, id){
     file_return <- reactiveVal(NULL)
     if (spsOption('mode') == "local") {
         roots <- c(current=getwd(), shinyFiles::getVolumes()())
@@ -347,12 +349,12 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 
 }
 
-#' Add and get data between shiny modules
+#' Add and get data between SPS tabs
 #'
-#' These function groups are designed to be used inside shiny modules
+#' These functions are designed to be used inside SPS tabs
 #' @param data any type of R object you want to store and use in other tabs
-#' @param shared the a shared reactivevalues object that is defined on the top
-#' level server
+#' @param shared the a `shared` reactivevalues object that is defined on the top
+#' level server. Read vignette for more details about this object
 #' @param tab_id tab ID of current tab if using `addData` method and tab
 #' ID to get data from if using `getData`.
 #' @return Nothing to return with `add` method and returns original object for

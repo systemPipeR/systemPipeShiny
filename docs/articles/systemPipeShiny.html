@@ -445,14 +445,14 @@ Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 <div id="sps-plugins" class="section level2">
 <h2 class="hasAnchor">
 <a href="#sps-plugins" class="anchor"></a>SPS plugins</h2>
-<p>On default start, current SPS contains the workflow tabs and one example data tab, and one example plot tab for visualization. We have created many more plots options and they are distributed as “SPS plugins”. A SPS plugin is a special formed R package. You need to install the plugin like you do with normal R packages by <code>install.packages</code>, <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> or <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The plugins(packages) come with SPS tabs, data, and other helper functions. Using <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin()</a></code> function, you are able to load them into SPS framework.</p>
-<p>Using <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin()</a></code> without any argument will list all available plugins and instructions to install them.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsLoadPlugin</a></span>()</pre></body></html></div>
+<p>On default start, current SPS contains the workflow tabs and one example data tab, and one example plot tab for visualization. We have created many more plots options and they are distributed as “SPS plugins”. A SPS plugin is a special formed R package. You need to install the plugin like you do with normal R packages by <code>install.packages</code>, <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> or <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The plugins(packages) come with SPS tabs, data, and other helper functions. Using <code><a href="../referespsAddPluginugin.htspsAddPluginugin()</a></code> function, you are able to load them into SPS framework.</p>
+<p>Using <code><a href="../reference/spsAddPlugin.html">spsAddPlugin()</a></code> without any argument will list all available plugins and instructions to install them.</p>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span>()</pre></body></html></div>
 <pre><code>## [SPS-INFO] 2020-09-15 15:10:23 Current SPS has following plugins</code></pre>
 <pre><code>## spsBio               Biological plots
 ## BiocManager::install("systemPipeR/spsBio")</code></pre>
 <p>To load a specific plugin:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsLoadPlugin</a></span>(<span class="kw">plugin</span> <span class="kw">=</span> <span class="st">"PLUGIN_NAME"</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="st">"PATH_OF_SPS"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span>(<span class="kw">plugin</span> <span class="kw">=</span> <span class="st">"PLUGIN_NAME"</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="st">"PATH_OF_SPS"</span>)</pre></body></html></div>
 <p>At this stage, there is only one plugin, the <em>spsBio</em>: plots for biological data visualization. There will be more plugins in the near future.</p>
 <p>For developers, read <a href="#build-a-plugin">Build a Plugin</a> section for building your own SPS plugins.</p>
 </div>
@@ -1073,8 +1073,8 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <div id="build-a-plugin" class="section level2">
 <h2 class="hasAnchor">
 <a href="#build-a-plugin" class="anchor"></a>Build a Plugin</h2>
-<p>If you want to create a plenty of tabs and would like to have other people to use them. It is best to bundle your tabs as a SPS plugin. To build a new plugin, use <code><a href="../reference/spsLoadPlugin.html">spsNewPlugin()</a></code>.</p>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="fu"><a href="../reference/spsLoadPlugin.html">spsNewPlugin</a></span>(<span class="kw">path</span> <span class="kw">=</span> <span class="st">"PATH_OF_PLUGIN"</span>)</pre></body></html></div>
+<p>If you want to create a plenty of tabs and would like to have other people to use them. It is best to bundle your tabs as a SPS plugin. To build a new plugin, use <code><a href="../reference/spsAddPlugin.html">spsNewPlugin()</a></code>.</p>
+<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="fu"><a href="../reference/spsAddPlugin.html">spsNewPlugin</a></span>(<span class="kw">path</span> <span class="kw">=</span> <span class="st">"PATH_OF_PLUGIN"</span>)</pre></body></html></div>
 <p>This will create a new directory with all plugin required files.</p>
 <pre>
 Plugin_root/  
@@ -1089,7 +1089,7 @@ Plugin_root/
 <p>Only the <em>Plugin_root/inst/app/config/tabs.csv</em> file is required, So one can easily move a SPS project to a SPS plugin by copying all files into <em>Plygin_root/inst/app/</em>.</p>
 <p>Plugin tabs are the same as regular SPS VS tabs. You only need to add the plugin information when you create a new tab. You can use <code><a href="../reference/newTabPlot.html">newTabData(plugin = "PLUGIN_NAME", ...)</a></code> or <code><a href="../reference/newTabPlot.html">newTabPlot(plugin = "PLUGIN_NAME", ...)</a></code> to create them and tab meta information will automatically added to <em>tabs.csv</em>, so you don’t need to manually edit it. The text in <code>plugin</code> column of <em>tabs.csv</em> should be the same as your plugin name.</p>
 <p>In additional to tab files, all other files in <em>Plugin_root/inst/app/</em> will also be copied to users’ SPS project.</p>
-<p>When you proceed to this point, it only gives you a very basic structure of a SPS plugin. To make it more publishable like a normal R package, it is recommended to use <code><a href="https://usethis.r-lib.org/reference/create_package.html">usethis::create_package("PLUGIN_ROOT_PATH")</a></code> and other functions come with <code>usethis</code> package to add additional files like <em>man</em>, <em>vignettes</em> that are required by a formal R package. Please contact us if you want to have your plugin to be “official”, otherwise, you can use <code><a href="../reference/spsLoadPlugin.html">spsLoadPlugin(..., third_party = TRUE)</a></code> to load your personal plugins.</p>
+<p>When you proceed to this point, it only gives you a very basic structure of a SPS plugin. To make it more publishable like a normal R package, it is recommended to use <code><a href="https://usethis.r-lib.org/reference/create_package.html">usethis::create_package("PLUGIN_ROOT_PATH")</a></code> and other functions come with <code>usethis</code> package to add additional files like <em>man</em>, <em>vignettes</em> that are required by a formal R package. Please contact us if you want to have your plugin to be “official”, otherwise, you can use <code><a href="../referespsAddPluginugin.htspsAddPluginugin(..., third_party = TRUE)</a></code> to load your personal plugins.</p>
 </div>
 <div id="naming" class="section level2">
 <h2 class="hasAnchor">

@@ -354,13 +354,13 @@ renderDesc <- function(id, desc) {
     '))
 }
 
-#' dynamically generate select file input
-#' @description  depending on the mode in options, render similar UI but
-#' server side works differently. `local` mode will not copy file, directly
+#' Dynamically generate Shiny file selection component
+#' @description  Depending on the "mode" in SPS options, this function renders
+#' a similar UI components but behaves differently on server.
+#' `local` mode will not copy file, directly
 #' use a path pointer, `server` mode upload file and store in temp. Expect
-#' similar behavior as
-#' `fileInput`.
-#' @param id element id
+#' similar behavior as [shiny::fileInput].
+#' @param id element ID
 #' @param title element title
 #' @param label upload button label
 #' @param icon button icon, only works for `local` mode
@@ -368,7 +368,7 @@ renderDesc <- function(id, desc) {
 #' @param multiple multiple files allowed
 #' @importFrom shinyAce is.empty
 #' @importFrom shinyFiles shinyFilesButton
-#' @return div
+#' @return a Shiny upload component
 #' @export
 #'
 #' @examples

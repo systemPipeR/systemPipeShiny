@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SPS plugin operations — spsLoadPlugin • systemPipeShiny</title>
+<title>SPS plugin operations �spsAddPluginin • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="SPS plugin operations — spsLoadPlugin" />
-<meta property="og:description" content="spsLoadPlugin() is used to load an existing SPS plugin,
+<meta property="og:title" content="SPS plugin operations �spsAddPluginin" />
+<meta property="og:description" content="spsAddPlugin() is used to load an existing SPS plugin,
 spsRemovePlugin() is to remove a loaded plugin, and spsNewPlugin() is
 for developers to create a minimum plugin structure and required files." />
 
@@ -115,16 +115,16 @@ for developers to create a minimum plugin structure and required files." />
     <div class="page-header">
     <h1>SPS plugin operations</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsPlugin.R'><code>R/spsPlugin.R</code></a></small>
-    <div class="hidden name"><code>spsLoadPlugin.Rd</code></div>
+    <div class="hidden name"><code>spsAddPlugin.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>spsLoadPlugin()</code> is used to load an existing SPS plugin,
+    <p><code>spsAddPlugin()</code> is used to load an existing SPS plugin,
 <code>spsRemovePlugin()</code> is to remove a loaded plugin, and <code>spsNewPlugin()</code> is
 for developers to create a minimum plugin structure and required files.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>spsLoadPlugin</span>(
+    <pre class="usage"><span class='fu'>spsAddPlugin</span>(
   <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>""</span>,
   <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>(),
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -149,7 +149,7 @@ for developers to create a minimum plugin structure and required files.</p>
     <tr>
       <th>plugin</th>
       <td><p>character, a plugin name. It can also be a path in
-<code>spsLoadPlugin</code> function  when if <code>third_party = TRUE</code>.</p></td>
+<code>spsAddPlugin</code> function  when if <code>third_party = TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>app_path</th>
@@ -199,7 +199,7 @@ permission.</p></td>
 <ul>
 <li><p>Make sure there is a 'config/tabs.csv' file in your SPS project when you
 load the plugin.</p></li>
-<li><p>You can just use <code>spsLoadPlugin()</code> without any argument to see
+<li><p>You can just use <code>spsAddPlugin()</code> without any argument to see
 what are the plugin options.</p></li>
 <li><p>If there is any file conflicts when loading plugins, please see the
 app structure tree and refer to the legend below the tree to help you resolve
@@ -240,7 +240,7 @@ this file exists, content will be <code>cat</code> to console when plugin is loa
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># see what official plugins you can install:</span>
-<span class='fu'>spsLoadPlugin</span>()</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:40 Current SPS has following plugins</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>spsBio              </span><span> </span><span style='color: #00BB00;font-weight: bold;'>Biological plots</span><span>
+<span class='fu'>spsAddPlugin</span>()</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:40 Current SPS has following plugins</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>spsBio              </span><span> </span><span style='color: #00BB00;font-weight: bold;'>Biological plots</span><span>
 #&gt; BiocManager::install("systemPipeR/spsBio")</div><div class='input'><span class='co'># create a project</span>
 <span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>project_name</span> <span class='kw'>=</span> <span class='st'>"testProject"</span>,
         <span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -262,7 +262,7 @@ this file exists, content will be <code>cat</code> to console when plugin is loa
            <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>,
            <span class='kw'>reformat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
            <span class='kw'>open_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-15 15:12:40 File testPlugin/inst/app/R/tab_vs_plot_a.R exists.</span><span></span></div><div class='input'><span class='co'># load the plugin, the plugin is not published, so `third_party = TRUE`</span>
-<span class='fu'>spsLoadPlugin</span>(<span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>,
+<span class='fu'>spsAddPlugin</span>(<span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>,
               <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"testProject"</span>,
               <span class='kw'>third_party</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
               <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>New directory will be:</span><span> 

@@ -161,20 +161,20 @@ one example plot tab for visualization. We have created many more plots options 
 they are distributed as "SPS plugins". A SPS plugin is a special formed R package. 
 You need to install the plugin like you do with normal R packages by `install.packages`, 
 `BiocManager::install` or `remotes::install_github()`. The plugins(packages) come with 
-SPS tabs, data, and other helper functions. Using `spsLoadPlugin()` function, you 
+SPS tabs, data, and other helper functions. Using `spsAddPlugin()` function, you 
 are able to load them into SPS framework. 
 
-Using `spsLoadPlugin()` without any argument will list all available plugins and 
+Using `spsAddPlugin()` without any argument will list all available plugins and 
 instructions to install them. 
 
 ```{r , eval=TRUE}
-spsLoadPlugin()
+spsAddPlugin()
 ```
 
 To load a specific plugin:
 
 ```{r , eval=FALSE}
-spsLoadPlugin(plugin = "PLUGIN_NAME", app_path = "PATH_OF_SPS")
+spsAddPlugin(plugin = "PLUGIN_NAME", app_path = "PATH_OF_SPS")
 ```
 
 At this stage, there is only one plugin, the *spsBio*: plots for biological data 
@@ -986,7 +986,7 @@ When you proceed to this point, it only gives you a very basic structure of a SP
 like a normal R package, it is recommended to use `usethis::create_package("PLUGIN_ROOT_PATH")` and
 other functions come with `usethis` package to add additional files like *man*, *vignettes* that 
 are required by a formal R package. Please contact us if you want to have your plugin to 
-be "official", otherwise, you can use `spsLoadPlugin(..., third_party = TRUE)` to load 
+be "official", otherwise, you can use `spsAddPlugin(..., third_party = TRUE)` to load 
 your personal plugins.
 
 ## Naming

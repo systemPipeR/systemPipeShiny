@@ -8,16 +8,19 @@ sps(vstabs = "", plugin = "", server_expr = NULL, app_path = getwd())
 }
 \arguments{
 \item{vstabs}{custom visualization tab IDs that you want to display, in a character
-vector. Use \code{\link[=spsTabInfo]{spsTabInfo()}}}
+vector. Use \code{\link[=spsTabInfo]{spsTabInfo()}} to see what tab IDs you can load}
 
-\item{plugin}{If you have loaded some SPS plugins, you can specify here as a
-character vector, and it will load all plugin tabs to SPS. If you only want
+\item{plugin}{If you have loaded some SPS plugins by \code{\link[=spsAddPlugin]{spsAddPlugin()}},
+you can specify here as a character vector, and it will load all tabs that
+belong to that plugin to SPS. If you only want
 certain tabs from a plugin, specify in \code{vstabs} argument.}
 
 \item{server_expr}{additional top level sever expression you want
 to run. This will run after the default server expressions. It means you can
-have access to internal server expression objects, like the reactiveValues
-object \code{shared}. You can also overwrite other values.}
+have access to internal server expression objects, like the
+\code{\link[shiny:reactiveValues]{shiny::reactiveValues()}}
+object \code{shared}. You can also overwrite other values. Read "shared object" in
+vignette.}
 
 \item{app_path}{SPS project path}
 }

@@ -163,15 +163,15 @@ spsUI <- function(tabs_df, tabs_plot){
 
 
 #' generate gallery by only providing tab names
-#'
-#' @param tab_ids tab IDs, string vector
-#' will be included
-#' @param Id div ID
+#' @description A fast way in SPS to generate a [gallery] of plot tabs
+#' @param tab_ids  a vector of tab IDs
+#' @param Id element ID
 #' @param title gallery title
-#' @param title_color title color
+#' @param title_color title color, common colors or hex code
 #' @param image_frame_size integer, 1-12
-#' @param type filter by tab type, then tab_ids will be
-#' ignored: core, wf, data, vs
+#' @param type If this value is not `NULL`, filter by tab type, and tab_ids
+#' will be ignored. One of c("core", "wf", "data", "vs"). use [spsTabInfo()]
+#' to see tab information
 #'
 #' @export
 #' @return gallery div
