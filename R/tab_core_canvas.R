@@ -125,10 +125,10 @@ core_canvasServer <- function(id, shared){
                                      message = "Need at least one snapshot"))
                 ui <- ui[snaps]
                 snap_severs <- snap_severs[snaps]
-                sapply(seq_along(ui), function(i){
+                lapply(seq_along(ui), function(i){
                     column(
                         width = 12/isolate(input$ncols),
-                        class = "collapse in",
+                        classspsPlugin.R = "collapse in",
                         id = glue("{ui[[i]][2]}-container"),
                         div(class = "snap-drag bg-primary",
                             h4(glue("Plot {ui[[i]][2]}")),

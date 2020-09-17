@@ -456,7 +456,7 @@ spsNewPlugin <- function(path, readme = TRUE, verbose = FALSE, colorful = TRUE){
     }
     if(!dir.exists(path)){
         spsinfo(c(path, "does not exist, try to create"), TRUE)
-        if(!shinyCatch(dir.create(path, recursive = TRUE), shiny = F)){
+        if(!shinyCatch(dir.create(path, recursive = TRUE), shiny = FALSE)){
             spserror("Cannot create directory, abort")
         }
     } else if(!is.writeable(path)) spserror("Path exists but not writeable")

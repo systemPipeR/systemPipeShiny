@@ -37,7 +37,7 @@ knitr::opts_chunk$set(
     tidy.opts=list(width.cutoff=60), 
     tidy=TRUE,
     eval = FALSE)
-shiny::tagList(rmarkdown::html_dependency_font_awesome())
+# shiny::tagList(rmarkdown::html_dependency_font_awesome())
 ```
 
 ```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=TRUE}
