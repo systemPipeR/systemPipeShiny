@@ -3,7 +3,7 @@
 \name{newTabPlot}
 \alias{newTabPlot}
 \alias{newTabData}
-\title{Create a new SPS Tab}
+\title{Create a new SPS tab}
 \usage{
 newTabPlot(
   tab_id = "plot_id1",
@@ -54,10 +54,12 @@ newTabData(
 }
 \arguments{
 \item{tab_id}{character string, length 1, must start with "\emph{plot_}" for plot
-tabs and "\emph{data_}" for data tabs. Must be a unique value.}
+tabs and "\emph{data_}" for data tabs. Must be a unique value. use
+\link[=spsTabInfo]{spsTabInfo(app_path = "YOUR_APP_PATH")} to see current tab
+IDs.}
 
 \item{tab_displayname}{character string, length 1, the name to be displayed
-on sidebar tab list and tab}
+on side navigation bar list and tab title}
 
 \item{desc}{character string, length 1 in markdown format. Tab description
 and instructions. You can make type it in multiple lines but in only one
@@ -69,19 +71,22 @@ string (one pair of quotes). e.g.\preformatted{"
 "
 }}
 
-\item{img}{an example image of the kind of plot users can make out of this
-tab. It can be a internet link or a local link which uses the \emph{www} folder as
-the root. e.g. drop your image \emph{plot.png} inside \emph{www/plot_list}, then the
+\item{img}{realtive path, ideally a plot screenshot of users expect
+to see when they make the plot. It can be a internet link or a local
+link which uses the \emph{www} folder asthe root.
+e.g. drop your image \emph{plot.png} inside \emph{www/plot_list}, then the
 link here is "plot_list/plot.png". Only needed for plot tabs.}
 
 \item{plot_expr}{the plot expression, like all other expression in other
-shiny reactive expressions. e.g for more than one line use \emph{{}}. default is\preformatted{plotly::ggplotly(
+shiny reactive expressions. e.g for more than one line use \emph{{}}. Only to be
+used for plot tabs. default is\preformatted{plotly::ggplotly(
     ggplot(mydata$data,
            aes_string(names(mydata$data)[1],
-                      names(mydata$data)[2])) +
-        geom_point(aes(
+                      names(mydata$data)[2])
+    ) +
+    geom_point(aes(
             color = seq_len(nrow(mydata$data))
-        ))
+    ))
 )
 }}
 
@@ -115,7 +120,7 @@ plot will not show up.}
 \item{app_path}{string, app directory, default is current directory}
 
 \item{out_folder_path}{string, which directory to write the new tab file,
-default is the \emph{R} folder a SPS project}
+default is the \emph{R} folder in the SPS project}
 
 \item{plot_control_ui}{additional UI components you want to
 add to control plotting options, like additional slider bar, some on/off
@@ -176,7 +181,7 @@ escape or use alternative of single/double quotes.\preformatted{newTabPlot(
 
 \item{colorful}{bool, whether the message will be colorful or not}
 
-\item{common_validation}{expression, use '{}' to wrap around multiple line
+\item{common_validation}{expression, use '\{\}' to wrap around multiple line
 expressions. Usually a \link{spsValidate} object. You can use shiny's built in
 \link[shiny:req]{shiny::req} or \link[shiny:validate]{shiny::validate} for a simpler version.}
 
@@ -192,33 +197,36 @@ project}
 a tab file in R folder and tab info registered on config/tabs.csv
 }
 \description{
-functions to create a new SPS tab. It is recommended to create
-the data tab first then linked plot tabs.
+Functions to create a new SPS tab. It is recommended to create
+the data tab first then its linked plot tabs.
 }
 \details{
 \itemize{
-\item Must use this function inside a SPS project, use \emph{spsInit()} if
+\item Must use this function inside a SPS project, use \code{\link[=spsInit]{spsInit()}} if
 there is no project.
 \item For a new data tab, different preprocessing methods, their
 pre-prequirements and what plotting options available after each
-preprocess is controlled by the \link{makePrepro} function. Each call from
-this function specify one preprocessing method. All preprocess methods
-should be provided in a list to the \emph{prepro_methods} argument.
+preprocess is controlled by the \code{\link[=makePrepro]{makePrepro()}} function. Each call from
+\link{makePrepro} function specify one preprocessing method.
+All preprocess methods should be provided in a list
+and passed to the \emph{prepro_methods} argument.
 \item A new plot tab can have more than one data set as the input. For example a
 plot can require a metadata table and a log transformed table as inputs.
-There maybe multiple data tabs can preprocess and produce the same log table.
+There can also be multiple data tabs can preprocess and produce the same log table.
 So you need to specify how many data inputs this plot requires; for each
 input which data tab(s) this plot tab can receive data from; for each input
 data type, what validations (data format checks) you want to do. All of these
 are controlled by \link{makePlotData} and return(s) of this function should be
 provided in a list to the \emph{plot_data} argument.
+\item Different reprocess methods in a data tab
 is controlled by the \link{makePrepro} function. Each call from
 this function specify one preprocessing method. All preprocess methods
 should be provided in a list to the \emph{prepro_methods} argument.
-\item One step in creating plot tab is specify incoming data source options by
-the \link{makePlotData} method. It requires the data tab IDs exist in the
+\item One of the steps in creating a plot tab is to specify incoming data source.
+This is controlled by \code{receive_datatab_ids} argument in \code{\link[=makePlotData]{makePlotData()}}.
+It requires the data tab IDs exist in the
 config file \emph{config/tabs.csv}. So, it is best to create all required data
-tabs first. Or specify it to any existing data tab like 'data_raw' and
+tabs first. Or specify it to any existing data tab like 'data_example' and
 when the template is created, manually change it.
 }
 }

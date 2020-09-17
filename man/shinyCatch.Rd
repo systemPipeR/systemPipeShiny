@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsServerCollections.R
 \name{shinyCatch}
 \alias{shinyCatch}
-\title{Catch  error, warning, message text}
+\title{Shiny exception handling}
 \usage{
 shinyCatch(
   expr,
@@ -14,34 +14,43 @@ shinyCatch(
 \arguments{
 \item{expr}{expression}
 
-\item{position}{toastr position, one of: c("top-right", "top-center", "top-left",
-"top-full-width", "bottom-right", "bottom-center", "bottom-left",
-"bottom-full-width")}
+\item{position}{client side message bar position, one of:
+c("top-right", "top-center", "top-left","top-full-width", "bottom-right",
+"bottom-center", "bottom-left","bottom-full-width").}
 
 \item{blocking_level}{what level you want to block the execution, one
 of "error", "warning", "message"}
 
 \item{shiny}{bool, It is also possible to use without a shiny session. Only
-shows on console log, works very similar as \code{tryCatch} and can block at
+shows on console log, works very similar as \code{\link[=tryCatch]{tryCatch()}} and can block at
 multiple levels}
 }
 \value{
 see description
 }
 \description{
-Catch error, warning, message by a toastr bar on shiny front end
-also log the text on backend console. Will return original value if not
+Exception in Shiny apps can crash the app. Most time we don't
+want the app to crash but just stop this block, inform users and continue
+with other code blocks. This function is designed to handle these issues.
+}
+\details{
+Show error, warning, message by a toast bar on client end and
+also log the text on backend console. It will return original value if not
 blocking at "warning" "message" level, and return \code{NULL} at error level.
 If blocks at \code{error}, function will be stopped and other code in the same
 reactive context will be blocked. If blocks at \code{warning} level, warning and
 error will be blocked; \code{message} level blocks all 3 levels. The blocking works
-similar to shiny's \code{req()} and \code{validate()}. If anything inside fails, it will
-block the rest of the code in your reactive expression domain
+similar to shiny's \code{\link[shiny:req]{shiny::req()}} and \code{\link[shiny:validate]{shiny::validate()}}.
+If anything inside fails, it will
+block the rest of the code in your reactive expression domain.
+
+Messages will be displayed for 3s, 5s for warnings and errors will never
+go away on UI unless users' mouse hover on the bar or manually close it.
 }
 \examples{
 if(interactive()){
     ui <- fluidPage(
-        useToastr(),
+        useSps(),
         actionButton("btn1","error and blocking"),
         actionButton("btn2","error no blocking"),
         actionButton("btn3","warning but still returns value"),
@@ -82,6 +91,5 @@ if(interactive()){
 shinyCatch(message("this message"), shiny = FALSE)
 try({shinyCatch(stop("this error"), shiny = FALSE); "no block"}, silent = TRUE)
 try({shinyCatch(stop("this error"), shiny = FALSE, blocking_level = "error")
-    "blocked"},
-    silent = TRUE)
+    "blocked"}, silent = TRUE)
 }

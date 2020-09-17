@@ -136,17 +136,20 @@ option you choose to this value</p></td>
     </tr>
     <tr>
       <th>empty_is_false</th>
-      <td><p>bool, when you get an option, if the option is
-<code>NULL</code>, <code>NA</code>, <code>""</code> or length is 0, return <code>FALSE</code>?</p></td>
+      <td><p>bool, when trying to get an option value, if the
+option is <code>NULL</code>, <code>NA</code>, <code>""</code> or length is 0, return <code>FALSE</code>?</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>option value if value exists; <code>FALSE</code> if the value is empty,
-like <code>NULL</code>, <code>NA</code>, <code>""</code>; <code>NULL</code> if <code>empty_is_false = FALSE</code>;
+    <p>return the option value if value exists; return <code>FALSE</code> if the value
+is empty, like <code>NULL</code>, <code>NA</code>, <code>""</code>; return <code>NULL</code> if <code>empty_is_false = FALSE</code>;
 see <a href='emptyIsFalse.html'>emptyIsFalse</a></p>
-<p>If <code>value != NULL</code> will set the value, no returns.</p>
+<p>If <code>value != NULL</code> will set the option to this new value, no returns.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='viewSpsDefaults.html'>viewSpsDefaults()</a></code> for options you can view or set</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>spsOption</span>(<span class='st'>"test1"</span>, <span class='fl'>1</span>)

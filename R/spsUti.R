@@ -141,11 +141,12 @@ step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
 }
 
 
-#' suppress cat print output
-#'
+#' Suppress cat print output
+#' @description Useful if you want to suppress cat or print
 #' @param x function or expression or value assignment expression
 #' @export
-#' @return invisible value
+#' @return If your original fucntions has a return, it will return in
+#' `invisible(x)`
 #' @examples
 #' quiet(print(1))
 #' quiet(cat(1))
@@ -286,13 +287,16 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
 #' @param warning_text warning level text prefix
 #' @param error_text error level text prefix
 #' @return see description
-#'
+#' @details If you want to use this function to generate colorful log messages
+#' but not in SPS framework. Use [spsOption] to set up the option on very top
+#' of your scripts: `spsOption("use_crayon", TRUE)`.
 #' @examples
 #' msg("this is info")
 #' msg("this is warning", "warning")
 #' try(msg("this is error", "error"))
 #' msg("this is other", "error2")
-#' spsinfo("some msg")
+#' spsinfo("some msg, verbose false", verbose = FALSE) # will not show up
+#' spsinfo("some msg, verbose true", verbose = TRUE)
 #' spswarn("sps warning")
 #' try(spserror("sps error"))
 #'
@@ -379,9 +383,13 @@ timline_pg_status <- function(progress = 0){
     else "success"
 }
 
-#' empty things and FALSE will return FALSE
-#' @description not working on S4 class
-#' @param x expression
+#' Empty objects and FALSE will return FALSE
+#' @description judge if an object is empty or FALSE, and return FALSE if it is
+#' @details  not working on S4 class objects.
+#'
+#' Useful for if statement. Normal empty object in if will spawn error. Wrap the
+#' expression with `emptyIsFalse` can avoid this. See examples
+#' @param x any R object
 #'
 #' @export
 #' @return `NA`, `""`, `NULL`, `length(0)`, `nchar == 0` and `FALSE` will return
@@ -390,6 +398,9 @@ timline_pg_status <- function(progress = 0){
 #' emptyIsFalse(NULL)
 #' emptyIsFalse(NA)
 #' emptyIsFalse("")
+#' try(`if(NULL) "not empty" else "empty"`) # will generate error
+#' if(emptyIsFalse(NULL)) "not empty" else "empty" # this will work
+#' # similar for `NA`, `""`, `character(0)` and more
 emptyIsFalse <- function(x){
     if(is.function(x)) return(TRUE)
     if(length(x) > 1)  return(TRUE)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{hrefTable}
 \alias{hrefTable}
-\title{A table of lists of hyper reference buttons}
+\title{A table of hyper reference buttons}
 \usage{
 hrefTable(
   Id = NULL,
@@ -21,11 +21,13 @@ hrefTable(
 
 \item{text_color}{text color}
 
-\item{item_titles}{vector string, a vector of titles for table items}
+\item{item_titles}{vector of strings, a vector of titles for table row names}
 
-\item{item_labels}{list, a list of button lables in each table item}
+\item{item_labels}{list, a list of character vectors to specify button
+labels in each table item}
 
-\item{item_hrefs}{list, a list of hrefs for each button}
+\item{item_hrefs}{list, a list  of character vectors to specify button hrefs
+links}
 
 \item{...}{other HTML args}
 }
@@ -33,11 +35,23 @@ hrefTable(
 HTML elements
 }
 \description{
-A table of lists of hyper reference buttons
+creates a table in Shiny which the cells are hyper reference
+buttons
 }
 \details{
-\code{item_titles}, \code{item_labels}, \code{item_hrefs} must have the same length
-nth item in \code{item_labels}, \code{item_hrefs} must have the same length
+\code{item_titles}, \code{item_labels}, \code{item_hrefs} must have the same
+length. Each item in \code{item_labels}, \code{item_hrefs} must also have the same
+length. For example, if we want to make a table of two rows, the first row
+has 1 cell and the second row has 2 cells:\preformatted{ hrefTable(
+     item_titles = c("row 1", "row 2"),
+     item_labels = list(c("cell 1"), c("cell 1", "cell 2")),
+     item_hrefs = list(c("link1"), c("link1", "link2")
+ )
+}
+
+Must call \code{\link[=useSps]{useSps()}} in UI.
+
+The more often used versuin in SPS framework is \code{\link[=genHrefTable]{genHrefTable()}}
 }
 \examples{
 if(interactive()){

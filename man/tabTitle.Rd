@@ -9,11 +9,11 @@ tabTitle(title, ...)
 \arguments{
 \item{title}{title text}
 
-\item{...}{other attributes and children to this DOM}
+\item{...}{other attributes and children to this element}
 }
 \value{
-a h2 level heading with bootstrap4 info color, bt4 color not the
-default bt3 info color
+a h2 level heading with bootstrap4 "info" color(bt4 color not the
+default bt3 info color)
 }
 \description{
 h2 title with bootstrap info color

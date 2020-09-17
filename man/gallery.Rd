@@ -34,7 +34,11 @@ a div element
 }
 \description{
 \code{texts}, \code{hrefs}, \code{images} Must have the same length
-Must be used with Bootstrap3 and sps.css file
+}
+\details{
+\code{\link[=useSps]{useSps()}} must be called in UI before using this function.
+
+The version usually been used in SPS framework is \code{\link[=genGallery]{genGallery()}}
 }
 \examples{
 if(interactive()){

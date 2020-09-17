@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Hexagon logo and logo panel — hexLogo" />
-<meta property="og:description" content="hexLogo() generates a single hexagon, and hexPanel()
+<meta property="og:description" content="Shiny UI widgets to generate hexagon logo(s).
+hexLogo() generates a single hexagon, and hexPanel()
 generates a panel of hex logos" />
 
 
@@ -118,7 +119,8 @@ generates a panel of hex logos" />
     </div>
 
     <div class="ref-description">
-    <p><code>hexLogo()</code> generates a single hexagon, and <code>hexPanel()</code>
+    <p>Shiny UI widgets to generate hexagon logo(s).
+<code>hexLogo()</code> generates a single hexagon, and <code>hexPanel()</code>
 generates a panel of hex logos</p>
     </div>
 
@@ -175,11 +177,11 @@ displayed on the left</p></td>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>string, X offset</p></td>
+      <td><p>character of number, X offset, e.g. "-10" instead of -10L</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>string, Y offset</p></td>
+      <td><p>character of number, Y offset</p></td>
     </tr>
     <tr>
       <th>hex_imgs</th>
@@ -220,9 +222,9 @@ default -10</p></td>
     <p>HTML elements</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The image in each hexagon is resized to the same size as the hex and then
-enlarged 125%. You may want to use x, y offset value to change the image
-position.</p>
+    <p>The image in each hexagon is resized to the same size as the hex border
+and then enlarged 125%. You may want to use x, y offset value to change
+the image position.</p>
 <p>If your image source is local, you need to add your local directory to the
 shiny server, e.g. <code>addResourcePath("sps", "www")</code>. This example add <code>www</code>
 folder under my current working directory as <code>sps</code> to the server. Then you
@@ -234,6 +236,7 @@ occupy space in the vector. e.g. I have 3 logos, but I only want to add
 <code>footers = c("footer1", "footer2", "")</code>,
 <code>footer_links = c("", "https://mylink", "")</code>. By doing so  <code>footers</code> and
 <code>footer_links</code> has the same required length.</p>
+<p><code><a href='useSps.html'>useSps()</a></code> must be called on Shiny UI to load the required css style.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){

@@ -42,9 +42,9 @@ displayed on the left}
 
 \item{footer_link}{single value of \code{footer_links}}
 
-\item{x}{string, X offset}
+\item{x}{character of number, X offset, e.g. "-10" instead of -10L}
 
-\item{y}{string, Y offset}
+\item{y}{character of number, Y offset}
 
 \item{hex_imgs}{a character vector of logo image source, can be online or
 local, see details}
@@ -68,13 +68,14 @@ default -10}
 HTML elements
 }
 \description{
+Shiny UI widgets to generate hexagon logo(s).
 \code{hexLogo()} generates a single hexagon, and \code{hexPanel()}
 generates a panel of hex logos
 }
 \details{
-The image in each hexagon is resized to the same size as the hex and then
-enlarged 125\%. You may want to use x, y offset value to change the image
-position.
+The image in each hexagon is resized to the same size as the hex border
+and then enlarged 125\%. You may want to use x, y offset value to change
+the image position.
 
 If your image source is local, you need to add your local directory to the
 shiny server, e.g. \code{addResourcePath("sps", "www")}. This example add \code{www}
@@ -88,6 +89,8 @@ occupy space in the vector. e.g. I have 3 logos, but I only want to add
 \code{footers = c("footer1", "footer2", "")},
 \code{footer_links = c("", "https://mylink", "")}. By doing so  \code{footers} and
 \code{footer_links} has the same required length.
+
+\code{\link[=useSps]{useSps()}} must be called on Shiny UI to load the required css style.
 }
 \examples{
 if(interactive()){

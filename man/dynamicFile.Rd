@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{dynamicFile}
 \alias{dynamicFile}
-\title{dynamically generate select file input}
+\title{Dynamically generate Shiny file selection component}
 \usage{
 dynamicFile(
   id,
@@ -14,7 +14,7 @@ dynamicFile(
 )
 }
 \arguments{
-\item{id}{element id}
+\item{id}{element ID}
 
 \item{title}{element title}
 
@@ -27,14 +27,14 @@ dynamicFile(
 \item{multiple}{multiple files allowed}
 }
 \value{
-div
+a Shiny upload component
 }
 \description{
-depending on the mode in options, render similar UI but
-server side works differently. \code{local} mode will not copy file, directly
+Depending on the "mode" in SPS options, this function renders
+a similar UI components but behaves differently on server.
+\code{local} mode will not copy file, directly
 use a path pointer, \code{server} mode upload file and store in temp. Expect
-similar behavior as
-\code{fileInput}.
+similar behavior as \link[shiny:fileInput]{shiny::fileInput}.
 }
 \examples{
 if(interactive()){

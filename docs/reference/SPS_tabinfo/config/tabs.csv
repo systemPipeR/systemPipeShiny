@@ -1,0 +1,17 @@
+# List of SPS tabs,,,,,,,
+# Editing by hand is not recommended ,,,,,,,
+# image paths use `www` folder as root,,,,,,,
+tab_id,display_label,type,type_sub,image,displayed,tab_file_name,plugin
+core_about,About this App,core,,,1,No file for core,core
+core_canvas,Plot Canvas,core,,,1,No file for core,core
+core_dashboard,Home,core,,,1,No file for core,core
+core_right,Right side menu,core,,,1,No file for core,core
+core_top,Top push bars,core,,,1,No file for core,core
+wf_main,Workflow Main Page,wf,,,1,No file for core,core
+wf_config,Workflow Config,wf,,,1,No file for core,core
+wf_run,Workflow Run,wf,,,1,No file for core,core
+wf_target,Workflow Metadata,wf,,,1,No file for core,core
+wf_wf,Workflow Steps,wf,,,1,No file for core,core
+vs_main,Visualization Main Page,vs,,,1,No file for core,core
+data_example,Data Tab Example,vs,data,,1,No file for core,core
+plot_example,Plot Tab Example,vs,plot,plot_list/plot_point.png,1,No file for core,core

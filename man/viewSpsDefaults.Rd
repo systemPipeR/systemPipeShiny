@@ -2,23 +2,23 @@
 % Please edit documentation in R/spsCore.R
 \name{viewSpsDefaults}
 \alias{viewSpsDefaults}
-\title{Print systemPipeShiny default Options}
+\title{Print SPS default options}
 \usage{
 viewSpsDefaults(app_path = getwd())
 }
 \arguments{
-\item{app_path}{where is the app directory}
+\item{app_path}{path, where is the app directory}
 }
 \value{
 cat to console the default options
 }
 \description{
-Make sure you created the app folder and has config.yaml
-in config folder
+Make sure you have created the app directory and it
+has \emph{config/config.yaml} file
 }
 \examples{
 if(interactive()){
-    spsInit()
+    spsInit(open_files = FALSE)
     viewSpsDefaults()
 }
 }

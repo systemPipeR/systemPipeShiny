@@ -40,8 +40,10 @@
 
 
 <meta property="og:title" content="SPS snapshots container — plotContainer" />
-<meta property="og:description" content="Initiate this container at the global level.
-This container is used to communicate plotting tabs with the canvas tab" />
+<meta property="og:description" content="Initiate this container at the global level, this is done
+for you in global.R and you only need to call the sps_plots object when
+you need methods from this class.
+This container is used to communicate plotting tabs with the canvas tab." />
 
 
 
@@ -118,8 +120,10 @@ This container is used to communicate plotting tabs with the canvas tab" />
     </div>
 
     <div class="ref-description">
-    <p>Initiate this container at the global level.
-This container is used to communicate plotting tabs with the canvas tab</p>
+    <p>Initiate this container at the global level, this is done
+for you in <em>global.R</em> and you only need to call the <code>sps_plots</code> object when
+you need methods from this class.</p>
+<p>This container is used to communicate plotting tabs with the canvas tab.</p>
     </div>
 
 
@@ -151,8 +155,7 @@ method</p></dd>
 </ul>
 <p><hr>
 <a id="method-new"></a></p><h3>Method <code>new()</code></h3>
-
-<h3>Usage</h3>
+<p>initialize a new class container</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='no'>plotContainer</span>$<span class='fu'>new</span>()</pre><p></div></p>
 
 <p><hr>
@@ -203,7 +206,7 @@ original plot output server function, like <code>renderPlot</code>,
 <p><div class="arguments"></p><dl'>
 <dt><code>render_func</code></dt><dd><p>plot output server function</p></dd>
 
-<dt><code>tab_id</code></dt><dd><p>unique ID, usually the tab ID if used in a module</p></dd>
+<dt><code>tab_id</code></dt><dd><p>unique ID, usually the tab ID if used in a SPS tab</p></dd>
 
 <dt><code>expr</code></dt><dd><p>the reactive expression to render the plot,
 same as <code>expr</code>
@@ -263,7 +266,8 @@ certain number</p></dd>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <pre class="examples"><div class='input'><span class='co'># a simple example to show how the snapshots communicates with Canvas</span>
+<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
     <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>shiny</span>)
     <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>shinydashboard</span>)
     <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>shinyjs</span>)

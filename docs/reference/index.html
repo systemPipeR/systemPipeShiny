@@ -147,7 +147,7 @@
         <td>
           <p><code><a href="sps.html">sps()</a></code> </p>
         </td>
-        <td><p>SystemPipeShiny app start function</p></td>
+        <td><p>SystemPipeShiny app main function</p></td>
       </tr><tr>
         
         <td>
@@ -170,7 +170,7 @@
       <tr>
         
         <td>
-          <p><code><a href="spsLoadPlugin.html">spsLoadPlugin()</a></code> <code><a href="spsLoadPlugin.html">spsRemovePlugin()</a></code> <code><a href="spsLoadPlugin.html">spsNewPlugin()</a></code> </p>
+          <p><code><a href="spsAddPlugin.html">spsAddPlugin()</a></code> <code><a href="spsAddPlugin.html">spsRemovePlugin()</a></code> <code><a href="spsAddPlugin.html">spsNewPlugin()</a></code> </p>
         </td>
         <td><p>SPS plugin operations</p></td>
       </tr>
@@ -178,7 +178,7 @@
       
       <tr>
         <th colspan="2">
-          <h3 id="section-sps-config" class="hasAnchor"><a href="#section-sps-config" class="anchor"></a>SPS config</h3>
+          <h3 id="section-sps-options" class="hasAnchor"><a href="#section-sps-options" class="anchor"></a>SPS options</h3>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -197,7 +197,7 @@
         <td>
           <p><code><a href="viewSpsDefaults.html">viewSpsDefaults()</a></code> </p>
         </td>
-        <td><p>Print systemPipeShiny default Options</p></td>
+        <td><p>Print SPS default options</p></td>
       </tr>
     </tbody><tbody>
       
@@ -216,7 +216,7 @@
         <td>
           <p><code><a href="newTabPlot.html">newTabPlot()</a></code> <code><a href="newTabPlot.html">newTabData()</a></code> </p>
         </td>
-        <td><p>Create a new SPS Tab</p></td>
+        <td><p>Create a new SPS tab</p></td>
       </tr><tr>
         
         <td>
@@ -228,13 +228,19 @@
         <td>
           <p><code><a href="makePlotData.html">makePlotData()</a></code> </p>
         </td>
-        <td><p>Create data receive methods for plot tabs</p></td>
+        <td><p>Create data receiving methods for plot tabs</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="makePrepro.html">makePrepro()</a></code> </p>
         </td>
         <td><p>Create data tab preprocess methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsTabInfo.html">spsTabInfo()</a></code> </p>
+        </td>
+        <td><p>View SPS project 'config/tabs.csv' information</p></td>
       </tr>
     </tbody><tbody>
       
@@ -284,7 +290,7 @@
         <td>
           <p><code><a href="addData.html">addData()</a></code> <code><a href="addData.html">getData()</a></code> </p>
         </td>
-        <td><p>Add and get data between shiny modules</p></td>
+        <td><p>Add and get data between SPS tabs</p></td>
       </tr><tr>
         
         <td>
@@ -307,33 +313,21 @@
       <tr>
         
         <td>
-          <p><code><a href="dynamicFile.html">dynamicFile()</a></code> </p>
-        </td>
-        <td><p>dynamically generate select file input</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="dynamicFileServer.html">dynamicFileServer()</a></code> </p>
-        </td>
-        <td><p>Server side function for dynamicFile</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="genGallery.html">genGallery()</a></code> </p>
         </td>
-        <td><p>generate gallery by only providing tab names</p></td>
+        <td><p>Generate gallery by only providing tab names</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="genHrefTable.html">genHrefTable()</a></code> </p>
         </td>
-        <td><p>generate a table that lists of hyper reference buttons by rows</p></td>
+        <td><p>Generate a table that lists tabs by rows</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="hrefTab.html">genHrefTab()</a></code> <code><a href="hrefTab.html">hrefTab()</a></code> </p>
         </td>
-        <td><p>Show a list of tabs in buttons</p></td>
+        <td><p>Display a list of links in a row of buttons</p></td>
       </tr><tr>
         
         <td>
@@ -344,80 +338,7 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section--visualization" class="hasAnchor"><a href="#section--visualization" class="anchor"></a>2. Visualization</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="exploreDDS.html">exploreDDS()</a></code> </p>
-        </td>
-        <td><p>exploreDDS</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="exploreDDSplot.html">exploreDDSplot()</a></code> </p>
-        </td>
-        <td><p>exploreDDSplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="GLMplot.html">GLMplot()</a></code> </p>
-        </td>
-        <td><p>Dimension Reduction with GLMplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hclustplot.html">hclustplot()</a></code> </p>
-        </td>
-        <td><p>Hierarchical Clustering Dendrogram (hclustplot)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="heatMaplot.html">heatMaplot()</a></code> </p>
-        </td>
-        <td><p>Hierarchical Clustering HeatMap (heatMaplot)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="MAplot.html">MAplot()</a></code> </p>
-        </td>
-        <td><p>MAplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="MDSplot.html">MDSplot()</a></code> </p>
-        </td>
-        <td><p>Multidimensional scaling with MDSplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="PCAplot.html">PCAplot()</a></code> </p>
-        </td>
-        <td><p>PCAplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tSNEplot.html">tSNEplot()</a></code> </p>
-        </td>
-        <td><p>t-Distributed Stochastic Neighbor embedding with tSNEplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="volcanoplot.html">volcanoplot()</a></code> </p>
-        </td>
-        <td><p>Volcano plot with <code>volcanoplot</code></p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section--general-r-utility" class="hasAnchor"><a href="#section--general-r-utility" class="anchor"></a>3. General R utility</h2>
+          <h2 id="section--general-r-utility" class="hasAnchor"><a href="#section--general-r-utility" class="anchor"></a>2. General R utility</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -431,7 +352,7 @@
         <td>
           <p><code><a href="emptyIsFalse.html">emptyIsFalse()</a></code> </p>
         </td>
-        <td><p>empty things and FALSE will return FALSE</p></td>
+        <td><p>Empty objects and FALSE will return FALSE</p></td>
       </tr><tr>
         
         <td>
@@ -443,12 +364,12 @@
         <td>
           <p><code><a href="quiet.html">quiet()</a></code> </p>
         </td>
-        <td><p>suppress cat print output</p></td>
+        <td><p>Suppress cat print output</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section--general-shiny-server-utility" class="hasAnchor"><a href="#section--general-shiny-server-utility" class="anchor"></a>4. General Shiny server utility</h2>
+          <h2 id="section--general-shiny-server-utility" class="hasAnchor"><a href="#section--general-shiny-server-utility" class="anchor"></a>3. General Shiny server utility</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -460,6 +381,12 @@
       <tr>
         
         <td>
+          <p><code><a href="dynamicFileServer.html">dynamicFileServer()</a></code> </p>
+        </td>
+        <td><p>Server side function for dynamicFile</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="loadDF.html">loadDF()</a></code> </p>
         </td>
         <td><p>Load tabular files as tibbles to server</p></td>
@@ -468,18 +395,18 @@
         <td>
           <p><code><a href="shinyCatch.html">shinyCatch()</a></code> </p>
         </td>
-        <td><p>Catch  error, warning, message text</p></td>
+        <td><p>Shiny exception handling</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="shinyCheckPkg.html">shinyCheckPkg()</a></code> </p>
         </td>
-        <td><p>check name space in server</p></td>
+        <td><p>Shiny package checker</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section--general-html-components-and-their-server-functions" class="hasAnchor"><a href="#section--general-html-components-and-their-server-functions" class="anchor"></a>5. General HTML components and their server functions</h2>
+          <h2 id="section--general-html-components-and-their-server-functions" class="hasAnchor"><a href="#section--general-html-components-and-their-server-functions" class="anchor"></a>4. General HTML components and their server functions</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -493,14 +420,19 @@
         <td>
           <p><code><a href="useSps.html">useSps()</a></code> </p>
         </td>
-        <td><p>Use SystemPipeShiny javascripts and css style
-call it in your head section</p></td>
+        <td><p>Use SystemPipeShiny javascripts and css style</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="clearableTextInput.html">clearableTextInput()</a></code> </p>
         </td>
-        <td><p>A clearable text inputInput UI</p></td>
+        <td><p>A clearable text inputInput control</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dynamicFile.html">dynamicFile()</a></code> </p>
+        </td>
+        <td><p>Dynamically generate Shiny file selection component</p></td>
       </tr><tr>
         
         <td>
@@ -530,13 +462,13 @@ call it in your head section</p></td>
         <td>
           <p><code><a href="hrefTab.html">genHrefTab()</a></code> <code><a href="hrefTab.html">hrefTab()</a></code> </p>
         </td>
-        <td><p>Show a list of tabs in buttons</p></td>
+        <td><p>Display a list of links in a row of buttons</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="hrefTable.html">hrefTable()</a></code> </p>
         </td>
-        <td><p>A table of lists of hyper reference buttons</p></td>
+        <td><p>A table of hyper reference buttons</p></td>
       </tr><tr>
         
         <td>
@@ -548,7 +480,7 @@ call it in your head section</p></td>
         <td>
           <p><code><a href="renderDesc.html">renderDesc()</a></code> </p>
         </td>
-        <td><p>Render some collapsible description</p></td>
+        <td><p>Render some collapsible markdown text</p></td>
       </tr><tr>
         
         <td>

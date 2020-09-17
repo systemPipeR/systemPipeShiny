@@ -2,22 +2,31 @@
 % Please edit documentation in R/spsUti.R
 \name{emptyIsFalse}
 \alias{emptyIsFalse}
-\title{empty things and FALSE will return FALSE}
+\title{Empty objects and FALSE will return FALSE}
 \usage{
 emptyIsFalse(x)
 }
 \arguments{
-\item{x}{expression}
+\item{x}{any R object}
 }
 \value{
 \code{NA}, \code{""}, \code{NULL}, \code{length(0)}, \code{nchar == 0} and \code{FALSE} will return
 \code{FALSE}, otherwise \code{TRUE}.
 }
 \description{
-not working on S4 class
+judge if an object is empty or FALSE, and return FALSE if it is
+}
+\details{
+not working on S4 class objects.
+
+Useful for if statement. Normal empty object in if will spawn error. Wrap the
+expression with \code{emptyIsFalse} can avoid this. See examples
 }
 \examples{
 emptyIsFalse(NULL)
 emptyIsFalse(NA)
 emptyIsFalse("")
+try(`if(NULL) "not empty" else "empty"`) # will generate error
+if(emptyIsFalse(NULL)) "not empty" else "empty" # this will work
+# similar for `NA`, `""`, `character(0)` and more
 }

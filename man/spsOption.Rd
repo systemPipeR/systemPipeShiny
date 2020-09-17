@@ -12,15 +12,15 @@ spsOption(opt, value = NULL, empty_is_false = TRUE)
 \item{value}{if this is not \code{NULL}, this function will set the
 option you choose to this value}
 
-\item{empty_is_false}{bool, when you get an option, if the option is
-\code{NULL}, \code{NA}, \code{""} or length is 0, return \code{FALSE}?}
+\item{empty_is_false}{bool, when trying to get an option value, if the
+option is \code{NULL}, \code{NA}, \code{""} or length is 0, return \code{FALSE}?}
 }
 \value{
-option value if value exists; \code{FALSE} if the value is empty,
-like \code{NULL}, \code{NA}, \code{""}; \code{NULL} if \code{empty_is_false = FALSE};
+return the option value if value exists; return \code{FALSE} if the value
+is empty, like \code{NULL}, \code{NA}, \code{""}; return \code{NULL} if \code{empty_is_false = FALSE};
 see \link{emptyIsFalse}
 
-If \code{value != NULL} will set the value, no returns.
+If \code{value != NULL} will set the option to this new value, no returns.
 }
 \description{
 Get or set SPS options
@@ -30,4 +30,7 @@ spsOption("test1", 1)
 spsOption("test1")
 spsOption("test2")
 spsOption("test2", empty_is_false = FALSE)
+}
+\seealso{
+\code{\link[=viewSpsDefaults]{viewSpsDefaults()}} for options you can view or set
 }

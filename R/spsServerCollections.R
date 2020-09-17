@@ -3,23 +3,30 @@
 ## use on top of shiny
 
 
-#' Catch  error, warning, message text
-#' @description Catch error, warning, message by a toastr bar on shiny front end
-#' also log the text on backend console. Will return original value if not
+#' Shiny exception handling
+#' @description Exception in Shiny apps can crash the app. Most time we don't
+#' want the app to crash but just stop this block, inform users and continue
+#' with other code blocks. This function is designed to handle these issues.
+#' @details  Show error, warning, message by a toast bar on client end and
+#' also log the text on backend console. It will return original value if not
 #' blocking at "warning" "message" level, and return `NULL` at error level.
 #' If blocks at `error`, function will be stopped and other code in the same
 #' reactive context will be blocked. If blocks at `warning` level, warning and
 #' error will be blocked; `message` level blocks all 3 levels. The blocking works
-#' similar to shiny's `req()` and `validate()`. If anything inside fails, it will
-#' block the rest of the code in your reactive expression domain
+#' similar to shiny's [shiny::req()] and [shiny::validate()].
+#' If anything inside fails, it will
+#' block the rest of the code in your reactive expression domain.
+#'
+#' Messages will be displayed for 3s, 5s for warnings and errors will never
+#' go away on UI unless users' mouse hover on the bar or manually close it.
 #' @param expr expression
-#' @param position toastr position, one of: c("top-right", "top-center", "top-left",
-#' "top-full-width", "bottom-right", "bottom-center", "bottom-left",
-#' "bottom-full-width")
+#' @param position client side message bar position, one of:
+#' c("top-right", "top-center", "top-left","top-full-width", "bottom-right",
+#' "bottom-center", "bottom-left","bottom-full-width").
 #' @param blocking_level  what level you want to block the execution, one
 #' of "error", "warning", "message"
 #' @param shiny bool, It is also possible to use without a shiny session. Only
-#' shows on console log, works very similar as `tryCatch` and can block at
+#' shows on console log, works very similar as [tryCatch()] and can block at
 #' multiple levels
 #' @return see description
 #' @importFrom shinytoastr toastr_info toastr_warning toastr_error
@@ -28,7 +35,7 @@
 #' @examples
 #' if(interactive()){
 #'     ui <- fluidPage(
-#'         useToastr(),
+#'         useSps(),
 #'         actionButton("btn1","error and blocking"),
 #'         actionButton("btn2","error no blocking"),
 #'         actionButton("btn3","warning but still returns value"),
@@ -69,8 +76,7 @@
 #' shinyCatch(message("this message"), shiny = FALSE)
 #' try({shinyCatch(stop("this error"), shiny = FALSE); "no block"}, silent = TRUE)
 #' try({shinyCatch(stop("this error"), shiny = FALSE, blocking_level = "error")
-#'     "blocked"},
-#'     silent = TRUE)
+#'     "blocked"}, silent = TRUE)
 shinyCatch <- function(expr, position = "bottom-right",
                        blocking_level = "none", shiny = TRUE) {
     assert_that(is.logical(shiny))
@@ -149,13 +155,18 @@ shinyCatch <- function(expr, position = "bottom-right",
 }
 
 
-#' check name space in server
-#' @description  check name space and pop up warnings in shiny
-#' if package is missing.
+#' Shiny package checker
+#' @description  check package name space for some required packages and pop up
+#' warnings in shiny telling users how to install the missing packages.
+#'
+#' This is useful when some of packages are required by a shiny app. Before
+#' running into that part of code, using this function to check the required
+#' pakcage and pop up warnings will prevent app to crash.
 #' @param session shiny session
-#' @param cran_pkg vector of strings
-#' @param bioc_pkg vector of strings
-#' @param github vector of strings, github package must specify user name, c("user1/pkg1", "user2/pkg2")
+#' @param cran_pkg vector of package names
+#' @param bioc_pkg vector of package names
+#' @param github vector of github packages, github package must use the format of
+#'  "github user name/ repository name", eg. c("user1/pkg1", "user2/pkg2")
 #' @param quietly bool, should warning messages be suppressed?
 #' @importFrom shinyAce is.empty
 #' @importFrom shinytoastr toastr_success
@@ -167,9 +178,10 @@ shinyCatch <- function(expr, position = "bottom-right",
 #' if(interactive()){
 #'     shinyApp(ui = shinyUI(
 #'         fluidPage(actionButton("haha", "haha"))
-#'     ), server = function(input, output, session) {
-#'         observeEvent(input$haha, shinyCheckPkg(session, cran_pkg = "1",
-#'                                                bioc_pkg = "haha", github = "sdasdd/asdsad"))
+#'     ), server = function(input, output, session){
+#'         observeEvent(input$haha,
+#'             shinyCheckPkg(session, cran_pkg = c("pkg1", "pkg2"),
+#'                           bioc_pkg = "haha", github = "sdasdd/asdsad"))
 #'     })
 #' }
 shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NULL, quietly = FALSE) {
@@ -222,6 +234,8 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 }
 
 #' Server side function for dynamicFile
+#' @description Server side function for [dynamicFile] to parse the uploaded
+#' file path
 #' @param input shiny server input
 #' @param session shiny server session
 #' @param id input file element ID.
@@ -243,14 +257,14 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 #'
 #'     server <- function(input,output,session){
 #'         runjs('$(".sps-file input").attr("readonly", true)')
-#'         myfile <- dynamicFileServer(input,session, id = "getFile")
+#'         myfile <- dynamicFileServer(input, session, id = "getFile")
 #'         observe({
 #'             print(myfile()) # remember to use `()` for reactive value
 #'         })
 #'     }
 #'     shinyApp(ui = ui, server = server)
 #' }
-dynamicFileServer <- function(input,session, id){
+dynamicFileServer <- function(input, session, id){
     file_return <- reactiveVal(NULL)
     if (spsOption('mode') == "local") {
         roots <- c(current=getwd(), shinyFiles::getVolumes()())
@@ -273,14 +287,19 @@ dynamicFileServer <- function(input,session, id){
 }
 
 #' A draggable progress panel
-#' @description  Use `pgPaneUI` on UI side and use `pgPaneUpdate` to update it.
+#' @description  Creates a panel that displays multiple progress items.
+#' Use `pgPaneUI` on UI side and use `pgPaneUpdate` to update it.
 #' The UI only
-#' renders correctly inside `shinydashboard` or `shinydashboardPlus`.
+#' renders correctly inside [shinydashboard::dashboardPage()] or
+#' [shinydashboardPlus::dashboardPagePlus()].
+#'
+#' A overall progress is automatically calculated on the bottom.
 #' @param pane_id Progress panel main ID, use `ns` wrap it on `pgPaneUI` but not
 #' on `pgPaneUpdate` if using shiny module
-#' @param pg_id a character string of ID for the progress you want to update.
-#'  Do not use \code{ns(pg_id)} to wrap it on server
-#' @param value 0-100 real number to update the progress you use `pg_id` to
+#' @param pg_id a character string of ID indicating which progress within this
+#' panel you want to update.
+#'  Do not use `ns(pg_id)` to wrap it on server
+#' @param value 0-100 number to update the progress you use `pg_id` to
 #' choose
 #' @param session current shiny session
 #' @importFrom shinyWidgets updateProgressBar
@@ -289,6 +308,7 @@ dynamicFileServer <- function(input,session, id){
 #' @examples
 #' if(interactive()){
 #'     library(shinydashboard)
+#'     # try to slide c under 0
 #'     ui <- dashboardPage(header = dashboardHeader(),
 #'                         sidebar = dashboardSidebar(),
 #'                         body = dashboardBody(
@@ -347,12 +367,12 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 
 }
 
-#' Add and get data between shiny modules
+#' Add and get data between SPS tabs
 #'
-#' These function groups are designed to be used inside shiny modules
+#' These functions are designed to be used inside SPS tabs
 #' @param data any type of R object you want to store and use in other tabs
-#' @param shared the a shared reactivevalues object that is defined on the top
-#' level server
+#' @param shared the a `shared` reactivevalues object that is defined on the top
+#' level server. Read vignette for more details about this object
 #' @param tab_id tab ID of current tab if using `addData` method and tab
 #' ID to get data from if using `getData`.
 #' @return Nothing to return with `add` method and returns original object for

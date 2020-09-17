@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A table of lists of hyper reference buttons — hrefTable • systemPipeShiny</title>
+<title>A table of hyper reference buttons — hrefTable • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="A table of lists of hyper reference buttons — hrefTable" />
-<meta property="og:description" content="A table of lists of hyper reference buttons" />
+<meta property="og:title" content="A table of hyper reference buttons — hrefTable" />
+<meta property="og:description" content="creates a table in Shiny which the cells are hyper reference
+buttons" />
 
 
 
@@ -111,13 +112,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A table of lists of hyper reference buttons</h1>
+    <h1>A table of hyper reference buttons</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsUIcollections.R'><code>R/spsUIcollections.R</code></a></small>
     <div class="hidden name"><code>hrefTable.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A table of lists of hyper reference buttons</p>
+    <p>creates a table in Shiny which the cells are hyper reference
+buttons</p>
     </div>
 
     <pre class="usage"><span class='fu'>hrefTable</span>(
@@ -147,15 +149,17 @@
     </tr>
     <tr>
       <th>item_titles</th>
-      <td><p>vector string, a vector of titles for table items</p></td>
+      <td><p>vector of strings, a vector of titles for table row names</p></td>
     </tr>
     <tr>
       <th>item_labels</th>
-      <td><p>list, a list of button lables in each table item</p></td>
+      <td><p>list, a list of character vectors to specify button
+labels in each table item</p></td>
     </tr>
     <tr>
       <th>item_hrefs</th>
-      <td><p>list, a list of hrefs for each button</p></td>
+      <td><p>list, a list  of character vectors to specify button hrefs
+links</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -168,8 +172,18 @@
     <p>HTML elements</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>item_titles</code>, <code>item_labels</code>, <code>item_hrefs</code> must have the same length
-nth item in <code>item_labels</code>, <code>item_hrefs</code> must have the same length</p>
+    <p><code>item_titles</code>, <code>item_labels</code>, <code>item_hrefs</code> must have the same
+length. Each item in <code>item_labels</code>, <code>item_hrefs</code> must also have the same
+length. For example, if we want to make a table of two rows, the first row
+has 1 cell and the second row has 2 cells:</p><pre> hrefTable(
+     item_titles = c("row 1", "row 2"),
+     item_labels = list(c("cell 1"), c("cell 1", "cell 2")),
+     item_hrefs = list(c("link1"), c("link1", "link2")
+ )
+</pre>
+
+<p>Must call <code><a href='useSps.html'>useSps()</a></code> in UI.</p>
+<p>The more often used versuin in SPS framework is <code><a href='genHrefTable.html'>genHrefTable()</a></code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){

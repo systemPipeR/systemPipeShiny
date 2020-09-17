@@ -28,7 +28,7 @@ a pre-created variable called \emph{data_filtered} to start and this is the
 object that contains filtered data after users filtering on the UI. In the
 end of this expression, you should return a preprocessed dataframe or
 whatever object type that can be accepted by the desired plot tab. It is
-recommended to write the preprocess method into a function and directly use
+recommended to write the preprocess method into a function and directly call
 the function here, e.g.\preformatted{myPreprocess <- function(data)\{
     if(is.numeric(data[ ,1]))
         data[ ,1] <- data[ ,1] + 1
@@ -42,23 +42,26 @@ makePrepro(
 }}
 
 \item{plot_options}{plot tab IDs: if data is preprocessed by this method,
-what kind of plots can it make, specify plot tab IDs in a vector. Note:
+what kind of plots it can make, specify plot tab IDs in a vector. Note:
 unlike the \emph{receive_datatab_ids} argument in \link{makePlotData} that requires
 the \emph{config/tabs.csv} exists, this argument doesn't require the config file
-or the plot tab to be existing. One can use any ID(s) here. The ID checking
+or the plot tab to be existing. You can use any ID(s) here. The ID checking
 is postponed when the \link{genGallery} function runs on app start. "default"
 means all possible plot tabs, the same as \emph{type = 'plot'} in \link{genGallery}.}
 
-\item{use_string}{same as the same argument in \link{newTabPlot}, controls
+\item{use_string}{same as the argument in \link{newTabPlot}, controls
 \emph{vd_expr} and \emph{pre_expr} in this function}
 }
 \value{
 a special list that contains all info for a preprocess method
 }
 \description{
-Given the same uploaded data set, users can choose different
-ways to preprocess the data and therefore different preprocessing methods
-will lead to different plot tab options
+On a data tab, given the same uploaded data set,
+users can choose different ways to preprocess the data and therefore
+different preprocessing methods will lead to different plot tab options.
+Every call of this function defines a preprocess method: 1. data
+validation expression before preprocess; 2. actual preprocess expression; 3.
+plot options after preprocess.
 }
 \details{
 for \emph{vd_expr}, \emph{pre_expr} a variable called \emph{data_filtered} is
@@ -66,7 +69,8 @@ accessible and is the object where data stored. One should use this
 object to do validation or preprocess. See examples.
 }
 \examples{
-spsInit(change_wd = FALSE, overwrite = TRUE)
+spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_prepro")
+# first preprocess method
 prepro_log <- makePrepro(
     "log", "take log of first column",
     vd_expr = spsValidate({
@@ -82,8 +86,8 @@ prepro_log <- makePrepro(
     },
     plot_options = c("plot_xx1", "plot_xx2")
     )
-##### remember to save these helper functions in a R scripts under the R
-##### folder. They will be automatically sourced when app starts.
+## remember to save these helper functions in a R scripts under the R
+## folder. They will be automatically sourced when app starts.
 myPreprocess <- function(data){
     if(is.numeric(data[ ,1]))
         data[ ,1] <- data[ ,1] + 1
@@ -95,15 +99,16 @@ myVd <- function(data, vd_name){
             stop("Input input data need to be a dataframe")
     }, vd_name = vd_name)
 }
-#####
+# second preprocess method
 prepro_addone <- makePrepro(
     "addone", "add one to first column",
     vd_expr = myVd(data_filtered, "add one method pre-checks"),
     pre_expr = myPreprocess(data_filtered),
     plot_options = c("plot_xx1")
 )
+# Combine two methods and make a new data tab
 newTabData("data_test1",  "test 1",
-           app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
+           app_path = "SPS_prepro"),
            prepro_methods = list(prepro_log, prepro_addone)
            )
 }

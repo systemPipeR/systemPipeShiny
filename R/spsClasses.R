@@ -2,12 +2,17 @@
 
 #' SPS snapshots container
 #'
-#' @description  Initiate this container at the global level.
-#' This container is used to communicate plotting tabs with the canvas tab
+#' @description  Initiate this container at the global level, this is done
+#' for you in *global.R* and you only need to call the `sps_plots` object when
+#' you need methods from this class.
+#'
+#' This container is used to communicate plotting tabs with the canvas tab.
+#'
 #' @importFrom R6 R6Class
 #' @importFrom rlang eval_tidy parse_expr
 #' @export
 #' @examples
+#' # a simple example to show how the snapshots communicates with Canvas
 #' if(interactive()){
 #'     library(shiny)
 #'     library(shinydashboard)
@@ -152,6 +157,7 @@
 #' }
 plotContainer <- R6::R6Class("plot_container",
     public = list(
+        #' @description initialize a new class container
         initialize = function(){
             spsinfo("Created a plot container R6 object", verbose = TRUE)
         },
@@ -210,7 +216,7 @@ plotContainer <- R6::R6Class("plot_container",
         #' original plot output server function, like `renderPlot`,
         #' `renderPlotly`
         #' @param render_func plot output server function
-        #' @param tab_id unique ID, usually the tab ID if used in a module
+        #' @param tab_id unique ID, usually the tab ID if used in a SPS tab
         #' @param expr the reactive expression to render the plot,
         #' same as `expr`
         #' in other render function
@@ -310,17 +316,20 @@ NULL
 #'
 #' @description Initiate this container at global level.
 #' Methods in this class can help admin to
-#' manage general information of sps. For now it only stores some meta data and
+#' manage general information of SPS. For now it only stores some meta data and
 #' the encryption key pairs. You can use this database to store
-#' other useful things, like user pass hash, IP, browsing info ...
+#' other useful things, like user password hash, IP, browsing info ...
 #'
 #' A SQLite database by default is created inside `config` directory.
 #' If not, you
 #' can use `createDb` method to create one. On initiation, this class checks
 #' if the default db is there and gives warnings if not.
+#'
+#' One instance of this class is created by the [spsEncryption] super class in
+#' *global.R*, normal users don't need to change anything.
 #' @export
 #' @examples
-#' dir.create("config")
+#' dir.create("config", showWarnings = FALSE)
 #' mydb <- spsDb$new()
 #' mydb$createDb()
 #' mydb$queryValue("sps_meta")
@@ -340,6 +349,7 @@ NULL
 #' mydb$queryDel("sps_meta", WHERE = "value = '234'")
 spsDb <- R6::R6Class("spsDb",
     public = list(
+        #' @description initialize a new class object
         initialize = function(){
             spsinfo("Created SPS database method container", verbose = TRUE)
             on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
@@ -362,7 +372,7 @@ spsDb <- R6::R6Class("spsDb",
             }
         },
 
-        #' @description Create a snap hash database
+        #' @description Create a SPS database
         #'
         #' @param db_name database path, you need to
         #' manually create parent directory
@@ -424,12 +434,12 @@ spsDb <- R6::R6Class("spsDb",
             }
         },
 
-        #' @description Query database with dplyr grammar
+        #' @description Query database with [dplyr] grammar
         #'
         #' Only supports simple selections, like comparison, %in%, `between()`,
         #' `is.na()`, etc. Advanced selections like wildcard,
-        #' using outside dplyr functions like `str_detect`, `grepl`
-        #' are not supported.
+        #' using outside dplyr functions like `[stringr::str_detect()]`,
+        #'  `[base::grepl()]` are not supported.
         #'
         #' @param db_name  database path
         #' @param table  table name
@@ -547,26 +557,34 @@ spsDb <- R6::R6Class("spsDb",
 
 #' SPS encryption functions
 #'
-#' @description Initiate this container at global level.
+#' @description
 #' Methods in this class can help admin to encrypt files been output from sps.
 #' For now it is only used to encypt and decrypt snapshots.
 #' This class requires the SPS database. This class inherits all functions from
-#' the db class, so there is no need to initiate the `spsDb` container.
+#' the [spsDb] class, so there is no need to initiate the `spsDb` container.
+#'
+#' This class is required to run a SPS app. This class needs to be initialized
+#' global level. This has already been written in *global.R* for you.
 #' @export
 #' @examples
-#' dir.create("config")
+#' dir.create("config", showWarnings = FALSE)
 #' spsOption('verbose', TRUE)
 #' my_ecpt <- spsEncryption$new()
 #' my_ecpt$createDb()
 #' my_ecpt$keyChange()
+#' # imagine a file has one line "test"
 #' writeLines("test", "test.txt")
-#' my_ecpt$encrypt("test.txt", "test.bin")
-#' my_ecpt$decrypt("test.bin", "test_decpt.txt", TRUE)
+#' # encrypt the file
+#' my_ecpt$encrypt("test.txt", "test.bin", overwrite = TRUE)
+#' # decrypt the file
+#' my_ecpt$decrypt("test.bin", "test_decpt.txt", overwrite = TRUE)
+#' # check the decrypted file content
 #' readLines('test_decpt.txt')
 spsEncryption <- R6::R6Class(
     "spsencrypt",
     inherit = spsDb,
     public = list(
+        #' @description initialize a new class container
         initialize = function(){
             spsinfo("Created SPS encryption method container", verbose = TRUE)
             spsinfo("This container inherits all functions from spsDb class")

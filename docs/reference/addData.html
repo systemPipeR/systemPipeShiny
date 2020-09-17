@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add and get data between shiny modules — addData • systemPipeShiny</title>
+<title>Add and get data between SPS tabs — addData • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Add and get data between shiny modules — addData" />
-<meta property="og:description" content="These function groups are designed to be used inside shiny modules" />
+<meta property="og:title" content="Add and get data between SPS tabs — addData" />
+<meta property="og:description" content="These functions are designed to be used inside SPS tabs" />
 
 
 
@@ -111,13 +111,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add and get data between shiny modules</h1>
+    <h1>Add and get data between SPS tabs</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsServerCollections.R'><code>R/spsServerCollections.R</code></a></small>
     <div class="hidden name"><code>addData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These function groups are designed to be used inside shiny modules</p>
+    <p>These functions are designed to be used inside SPS tabs</p>
     </div>
 
     <pre class="usage"><span class='fu'>addData</span>(<span class='no'>data</span>, <span class='no'>shared</span>, <span class='no'>tab_id</span>)
@@ -133,8 +133,8 @@
     </tr>
     <tr>
       <th>shared</th>
-      <td><p>the a shared reactivevalues object that is defined on the top
-level server</p></td>
+      <td><p>the a <code>shared</code> reactivevalues object that is defined on the top
+level server. Read vignette for more details about this object</p></td>
     </tr>
     <tr>
       <th>tab_id</th>

@@ -21,19 +21,19 @@ be careful. If more than one tabs are matched, stop by default}
 
 \item{app_path}{app directory}
 
-\item{multiple}{bool, if matched more than one tab, trun this to \emph{TRUE} can
+\item{multiple}{bool, if matched more than one tab, turn this to \emph{TRUE} can
 remove more than one tab at a time. Be careful.}
 
 \item{verbose}{bool, follows project setting, but can be overwrite.
 \emph{TRUE} will give you more information}
 
-\item{colorful}{bool, whether the message will be colorful or not}
+\item{colorful}{bool, whether the message will be colorful?}
 }
 \value{
 remove the tab file and register info in \emph{tabs.csv}
 }
 \description{
-remove a tab R file and remove from the tabs.csv config file
+Remove a tab R file and remove from the tabs.csv config file
 }
 \examples{
 spsInit(change_wd = FALSE, overwrite = TRUE)

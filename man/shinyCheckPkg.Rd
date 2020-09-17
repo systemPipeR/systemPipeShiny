@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsServerCollections.R
 \name{shinyCheckPkg}
 \alias{shinyCheckPkg}
-\title{check name space in server}
+\title{Shiny package checker}
 \usage{
 shinyCheckPkg(
   session,
@@ -15,11 +15,12 @@ shinyCheckPkg(
 \arguments{
 \item{session}{shiny session}
 
-\item{cran_pkg}{vector of strings}
+\item{cran_pkg}{vector of package names}
 
-\item{bioc_pkg}{vector of strings}
+\item{bioc_pkg}{vector of package names}
 
-\item{github}{vector of strings, github package must specify user name, c("user1/pkg1", "user2/pkg2")}
+\item{github}{vector of github packages, github package must use the format of
+"github user name/ repository name", eg. c("user1/pkg1", "user2/pkg2")}
 
 \item{quietly}{bool, should warning messages be suppressed?}
 }
@@ -27,16 +28,21 @@ shinyCheckPkg(
 TRUE if pass, sweet alert massage and FALSE if fail
 }
 \description{
-check name space and pop up warnings in shiny
-if package is missing.
+check package name space for some required packages and pop up
+warnings in shiny telling users how to install the missing packages.
+
+This is useful when some of packages are required by a shiny app. Before
+running into that part of code, using this function to check the required
+pakcage and pop up warnings will prevent app to crash.
 }
 \examples{
 if(interactive()){
     shinyApp(ui = shinyUI(
         fluidPage(actionButton("haha", "haha"))
-    ), server = function(input, output, session) {
-        observeEvent(input$haha, shinyCheckPkg(session, cran_pkg = "1",
-                                               bioc_pkg = "haha", github = "sdasdd/asdsad"))
+    ), server = function(input, output, session){
+        observeEvent(input$haha,
+            shinyCheckPkg(session, cran_pkg = c("pkg1", "pkg2"),
+                          bioc_pkg = "haha", github = "sdasdd/asdsad"))
     })
 }
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsCoreUI.R
 \name{genGallery}
 \alias{genGallery}
-\title{generate gallery by only providing tab names}
+\title{Generate gallery by only providing tab names}
 \usage{
 genGallery(
   tab_ids = NULL,
@@ -14,17 +14,17 @@ genGallery(
 )
 }
 \arguments{
-\item{tab_ids}{tab IDs, string vector
-will be included}
+\item{tab_ids}{a vector of tab IDs}
 
-\item{Id}{div ID}
+\item{Id}{element ID}
 
 \item{title}{gallery title}
 
-\item{type}{filter by tab type, then tab_ids will be
-ignored: core, wf, data, vs}
+\item{type}{If this value is not \code{NULL}, filter by tab type, and tab_ids
+will be ignored. One of c("core", "wf", "data", "vs"). use \code{\link[=spsTabInfo]{spsTabInfo()}}
+to see tab information}
 
-\item{title_color}{title color}
+\item{title_color}{title color, common colors or hex code}
 
 \item{image_frame_size}{integer, 1-12}
 }
@@ -32,11 +32,12 @@ ignored: core, wf, data, vs}
 gallery div
 }
 \description{
-generate gallery by only providing tab names
+A fast way in SPS to generate a \link{gallery} to display plot tab
+screenshots
 }
 \details{
 require a SPS project and the config/tabs.csv file. If you want to
-use gallery outside a SPS project, use \link{gallery}
+use gallery outside a SPS project, use \code{\link[=gallery]{gallery()}}
 }
 \examples{
 if(interactive()){

@@ -5,7 +5,7 @@
 \title{Create a SystemPipeShiny project}
 \usage{
 spsInit(
-  dir_path = getwd(),
+  app_path = getwd(),
   project_name = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
   database_name = "sps.db",
   overwrite = FALSE,
@@ -16,20 +16,24 @@ spsInit(
 )
 }
 \arguments{
-\item{dir_path}{path, where do you want to create this project}
+\item{app_path}{path, a directory where do you want to create this project,
+must exist.}
 
-\item{project_name}{Your project name}
+\item{project_name}{Your project name, default is \code{SPS_} + \code{time}}
 
-\item{database_name}{project database name, recommend to use the default name}
+\item{database_name}{project database name, recommend to use the default
+name: "sps.db". It is used to store app meta information, see \code{\link[=spsDb]{spsDb()}}}
 
-\item{overwrite}{bool, overwrite the \code{dir_path}?}
+\item{overwrite}{bool, overwrite the \code{app_path} if there is a folder that
+has the same name as \code{project_name}?}
 
-\item{change_wd}{bool, when creation is done, change working directory?}
+\item{change_wd}{bool, when creation is done, change working directory into
+the project?}
 
 \item{verbose}{bool, do you want additional message?}
 
 \item{open_files}{bool, If \code{change_wd == TRUE} and you are also in Rstudio,
-it will open up global.R, ui.R and server.R for you}
+it will open up \emph{global.R} for you}
 
 \item{colorful}{bool, should message from this function be colorful?}
 }
@@ -37,7 +41,11 @@ it will open up global.R, ui.R and server.R for you}
 creates the project folder
 }
 \description{
-Create a SystemPipeShiny project
+To run a SPS app, you need to first create a SPS project, a
+directory contains the required files.
+}
+\details{
+Make sure you have write permission to \code{app_path}
 }
 \examples{
 if(interactive()){

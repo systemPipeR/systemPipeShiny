@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create data receive methods for plot tabs — makePlotData • systemPipeShiny</title>
+<title>Create data receiving methods for plot tabs — makePlotData • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,13 @@
 
 
 
-<meta property="og:title" content="Create data receive methods for plot tabs — makePlotData" />
+<meta property="og:title" content="Create data receiving methods for plot tabs — makePlotData" />
 <meta property="og:description" content="This function specify for each input data type in a plot tab,
-where the data is coming from, how to validate incoming data. To use this
-function, make sure there is a SPS project and config/tabs.csv exists." />
+where the data is coming from, 2. how to validate incoming data.
+To use this function, make sure there is a SPS project and
+config/tabs.csv exists.
+
+" />
 
 
 
@@ -113,15 +116,18 @@ function, make sure there is a SPS project and config/tabs.csv exists." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create data receive methods for plot tabs</h1>
+    <h1>Create data receiving methods for plot tabs</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsNewtab.R'><code>R/spsNewtab.R</code></a></small>
     <div class="hidden name"><code>makePlotData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function specify for each input data type in a plot tab,
-where the data is coming from, how to validate incoming data. To use this
-function, make sure there is a SPS project and <em>config/tabs.csv</em> exists.</p>
+    <p>This function specify for each input data type in a plot tab,</p><ol>
+<li><p>where the data is coming from, 2. how to validate incoming data.
+To use this function, make sure there is a SPS project and
+<em>config/tabs.csv</em> exists.</p></li>
+</ol>
+
     </div>
 
     <pre class="usage"><span class='fu'>makePlotData</span>(
@@ -149,11 +155,11 @@ type of input data</p></td>
     </tr>
     <tr>
       <th>receive_datatab_ids</th>
-      <td><p>a vector of tab IDs: For this kind of data input,
+      <td><p>a vector of tab IDs: for this kind of data input,
 which data tabs that can be used as input source(s). For example, if this
 plot tab requires a dataframe and can be produced from "data_df1" or
 "data_df2", <em>receive_datatab_ids = c("data_df1", "data_df2")</em>. These options
-are later rendered as a drop down menu for users to choose for this where
+are later rendered as a drop down menu for users to choose where
 they have prepared the required data from.</p></td>
     </tr>
     <tr>
@@ -163,76 +169,36 @@ Usually it is a <a href='spsValidate.html'>spsValidate</a> object</p></td>
     </tr>
     <tr>
       <th>app_path</th>
-      <td><p>SPS project folder</p></td>
+      <td><p>path, SPS project folder</p></td>
     </tr>
     <tr>
       <th>use_string</th>
       <td><p>bool, if you don't want to parse <em>vd_expr</em>, use quoted
-string for <em>vd_expr</em> amd turn this to TRUE. see <a href='newTabPlot.html'>newTabPlot</a></p></td>
+string for <em>vd_expr</em> and turn this to TRUE. See the same argument in
+<a href='newTabPlot.html'>newTabPlot</a></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a special list storing the incoming data info</p>
+    <p>a special list that stores one type of data input info</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>For the validation expression, the incoming data is stored in a
 reactive values object, and you can access this data object
 by <em>mydata$dataset_id</em>,
 e.g. the dataset_id is "raw_data", then when the time you validate this
-type of incoming data set, a variable <em>mydata$raw_data</em> is accessible.</p>
+type of incoming data set, a variable <em>mydata$raw_data</em> is accessible. So you
+can directly use <code>mydata$raw_data</code> in <em>vd_expr</em>.</p>
 <p>It is recommended to create data tabs first before running this function,
 because <em>receive_datatab_ids</em> required data tab id exists in the <em>tabs.csv</em>
 file.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><a href='newTabPlot.html'>newTabPlot</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Create project under /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200911</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-11 01:18:25 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_20200911/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Key md5 40856d3943e845dc307f2aed605711a5</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 SPS project setup done!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_df1"</span>, <span class='st'>"df 1"</span>,
-           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>),
-           <span class='kw'>open_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:25 Write to file SPS_20200911/R/tab_vs_data_df1.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
-#&gt;  SPS_20200911/R/tab_vs_data_df1.R ℹ 
-#&gt; ────────────────────────────────────────
-#&gt; Status	Count	Legend 
-#&gt; ✓ 	0	File unchanged.
-#&gt; ℹ 	1	File changed.
-#&gt; x 	0	Styling threw an error.
-#&gt; ────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:28 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-11 01:18:28 New tab created!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_df2"</span>, <span class='st'>"df 2"</span>,
-           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>),
-           <span class='kw'>open_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:28 Write to file SPS_20200911/R/tab_vs_data_df2.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
-#&gt;  SPS_20200911/R/tab_vs_data_df2.R ℹ 
-#&gt; ────────────────────────────────────────
-#&gt; Status	Count	Legend 
-#&gt; ✓ 	0	File unchanged.
-#&gt; ℹ 	1	File changed.
-#&gt; x 	0	Styling threw an error.
-#&gt; ────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:31 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-11 01:18:31 New tab created!</span><span></div><div class='input'><span class='no'>plotdata_raw</span> <span class='kw'>&lt;-</span> <span class='fu'>makePlotData</span>(<span class='st'>"raw"</span>, <span class='st'>"raw data"</span>,
-             <span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='st'>"data_df1"</span>,
-             <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
-                 <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata</span>$<span class='no'>raw</span>))
-                     <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input raw data need to be a dataframe"</span>)
-             }, <span class='kw'>vd_name</span> <span class='kw'>=</span> <span class='st'>"Validate raw data"</span>),
-             <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>))
-<span class='no'>plotdata_meta</span> <span class='kw'>&lt;-</span> <span class='fu'>makePlotData</span>(<span class='st'>"meta"</span>, <span class='st'>"meta data"</span>,
-             <span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"data_df1"</span>, <span class='st'>"data_df2"</span>),
-             <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
-                 <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata</span>$<span class='no'>meta</span>))
-                     <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input raw data need to be a dataframe"</span>)
-                 <span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>mydata</span>$<span class='no'>meta</span>) <span class='kw'>&lt;</span> <span class='fl'>1</span>)
-                     <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input raw data need to have at least one row"</span>)
-             }, <span class='kw'>vd_name</span> <span class='kw'>=</span> <span class='st'>"Validate meta data"</span>),
-             <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>))
-<span class='fu'><a href='newTabPlot.html'>newTabPlot</a></span>(<span class='st'>"plot_test1"</span>,
-           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'>glue</span>(<span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span>),
-           <span class='kw'>plot_data</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>plotdata_raw</span>, <span class='no'>plotdata_meta</span>))</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:31 Write to file SPS_20200911/R/tab_vs_plot_test1.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
-#&gt;  SPS_20200911/R/tab_vs_plot_test1.R ℹ 
-#&gt; ────────────────────────────────────────
-#&gt; Status	Count	Legend 
-#&gt; ✓ 	0	File unchanged.
-#&gt; ℹ 	1	File changed.
-#&gt; x 	0	Styling threw an error.
-#&gt; ────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-11 01:18:34 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-11 01:18:34 New tab created!</span><span></div></span></pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

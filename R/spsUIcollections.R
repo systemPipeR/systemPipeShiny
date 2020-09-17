@@ -3,7 +3,10 @@
 ## use on top of shiny
 
 #' Use SystemPipeShiny javascripts and css style
-#' call it in your head section
+#' @description call it in your head section of your shiny UI. Adding this to
+#' the Shiny app UI is required for most SPS shiny widgets. This is required for
+#' using SPS widgets outside of SPS framework. No need to load this function
+#' again if you are working within SPS framework.
 #' @importFrom shinytoastr useToastr
 #' @export
 #' @return HTML head
@@ -20,10 +23,10 @@ useSps <- function(){
     )
 }
 
-#' A clearable text inputInput UI
+#' A clearable text inputInput control
 #' @description An UI component with a "X" button in the end to clear the entire
-#' typed text. It works the same as `Textinput`, must be call `useSps` at head
-#' to load css and js
+#' entered text. It works the same as `Textinput`.
+#' @details must be call [useSps()] at head to load css and js
 #'
 #' @param inputId ID
 #' @param label text label above
@@ -109,7 +112,9 @@ textInputGroup <- function(textId, btnId, title="",
 
 #' A shiny gallery component
 #' @description `texts`, `hrefs`, `images` Must have the same length
-#' Must be used with Bootstrap3 and sps.css file
+#' @details [useSps()] must be called in UI before using this function.
+#'
+#' The version usually been used in SPS framework is [genGallery()]
 #' @importFrom assertthat assert_that
 #' @param Id ID of this gallery
 #' @param title Title of gallery
@@ -172,21 +177,21 @@ gallery <- function(Id = NULL, title = "Gallery",
 }
 
 
-#' Show a list of tabs in buttons
-#' @details `hrefTab` can be use for any purpose of shiny.
+#' Display a list of links in a row of buttons
+#' @description `hrefTab` can be use for any purpose of shiny.
 #' `genHrefTab` is upper level wrapper of `hrefTab` and should
-#' only be used under systemPipeShiny framework for fast retrieving tab info and
+#' only be used under SPS framework for fast retrieving tab info and
 #' generate the `hrefTab`. To use `genHrefTab`, the `tab_info.csv` config file
-#' must be in `./config` directory.
+#' must be there in `config` directory.
 #' `label_text`, `hrefs` must be the same length
 #' @importFrom assertthat assert_that
-#' @param Id optional
+#' @param Id optional element ID
 #' @param title Item title
 #' @param title_color title color
 #' @param label_text individual tab labels
 #' @param hrefs individual tab links
-#' @param ... other args pass to the html container
-#' @return a div element
+#' @param ... other arguments to be passed to the html element
+#' @return a HTML element
 #' @details *genHrefTab* require a SPS project and the config/tabs.csv file.
 #' If you want to use hrefTab outside a SPS project just use *hrefTab*
 #' @export
@@ -224,16 +229,34 @@ hrefTab <- function(Id = NULL, title = "A list of tabs",
     )
 }
 
-#' A table of lists of hyper reference buttons
-#' @details `item_titles`, `item_labels`, `item_hrefs` must have the same length
-#' nth item in `item_labels`, `item_hrefs` must have the same length
+#' A table of hyper reference buttons
+#' @description creates a table in Shiny which the cells are hyper reference
+#' buttons
+#' @details `item_titles`, `item_labels`, `item_hrefs` must have the same
+#' length. Each item in `item_labels`, `item_hrefs` must also have the same
+#' length. For example, if we want to make a table of two rows, the first row
+#' has 1 cell and the second row has 2 cells:
+#'
+#' ```
+#'  hrefTable(
+#'      item_titles = c("row 1", "row 2"),
+#'      item_labels = list(c("cell 1"), c("cell 1", "cell 2")),
+#'      item_hrefs = list(c("link1"), c("link1", "link2")
+#'  )
+#' ```
+#'
+#' Must call [useSps()] in UI.
+#'
+#' The more often used versuin in SPS framework is [genHrefTable()]
 #' @importFrom assertthat assert_that
 #' @param Id optional
 #' @param title title of this table
 #' @param text_color text color
-#' @param item_titles vector string, a vector of titles for table items
-#' @param item_labels list, a list of button lables in each table item
-#' @param item_hrefs list, a list of hrefs for each button
+#' @param item_titles vector of strings, a vector of titles for table row names
+#' @param item_labels list, a list of character vectors to specify button
+#' labels in each table item
+#' @param item_hrefs list, a list  of character vectors to specify button hrefs
+#' links
 #' @param ... other HTML args
 #' @export
 #' @return HTML elements
@@ -306,9 +329,9 @@ hrefTable <- function(Id = NULL, title = "A Table of list of tabs",
 }
 
 
-#' Render some collapsible description
+#' Render some collapsible markdown text
 #' @description write some text in markdown format and it will help you
-#' render to a collapsible markdown section
+#' render to a collapsible markdown section on Shiny UI
 #' @param desc one string in markdown format
 #' @param id HTML ID
 #' @importFrom markdown renderMarkdown
@@ -354,13 +377,13 @@ renderDesc <- function(id, desc) {
     '))
 }
 
-#' dynamically generate select file input
-#' @description  depending on the mode in options, render similar UI but
-#' server side works differently. `local` mode will not copy file, directly
+#' Dynamically generate Shiny file selection component
+#' @description  Depending on the "mode" in SPS options, this function renders
+#' a similar UI components but behaves differently on server.
+#' `local` mode will not copy file, directly
 #' use a path pointer, `server` mode upload file and store in temp. Expect
-#' similar behavior as
-#' `fileInput`.
-#' @param id element id
+#' similar behavior as [shiny::fileInput].
+#' @param id element ID
 #' @param title element title
 #' @param label upload button label
 #' @param icon button icon, only works for `local` mode
@@ -368,7 +391,7 @@ renderDesc <- function(id, desc) {
 #' @param multiple multiple files allowed
 #' @importFrom shinyAce is.empty
 #' @importFrom shinyFiles shinyFilesButton
-#' @return div
+#' @return a Shiny upload component
 #' @export
 #'
 #' @examples
@@ -420,9 +443,9 @@ dynamicFile <- function(id, title = "Select your file:",
 
 #' Example UI elements for plotting
 #' @description return some example UI elements can be toggled on plotting.
-#'  This functions is only used as a temp solution for template tab to
-#'  demonstrate what UI compoents
-#'  you could use. Will be removed in later releases as we have a better tab
+#'  This functions is only used as a temp solution for the example tab to
+#'  demonstrate what UI components
+#'  you can use. Will be removed in later releases as we have a better tab
 #'  organizations.
 #' @param ns namespace function
 #'
@@ -434,9 +457,9 @@ dynamicFile <- function(id, title = "Select your file:",
 #' @export
 #' @examples
 #' if(interactive()){
-#' ui <- fluidPage(useSps(), uiExamples(NS("example")))
-#' server <- function(input, output, session) {}
-#' shinyApp(ui, server)
+#'     ui <- fluidPage(useSps(), uiExamples(NS("example")))
+#'     server <- function(input, output, session) {}
+#'     shinyApp(ui, server)
 #' }
 uiExamples <- function(ns){
     tagList(
@@ -598,8 +621,8 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
 #' @param hex_link single value of `hex_links`
 #' @param footer single value of `footers`
 #' @param footer_link single value of `footer_links`
-#' @param x string, X offset
-#' @param y string, Y offset
+#' @param x character of number, X offset, e.g. "-10" instead of -10L
+#' @param y character of number, Y offset
 #' @importFrom shinyAce is.empty
 #' @export
 hexLogo <- function(id, title="", hex_img, hex_link = "" ,
@@ -637,7 +660,8 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
 
 
 #' Hexagon logo and logo panel
-#' @description `hexLogo()` generates a single hexagon, and `hexPanel()`
+#' @description Shiny UI widgets to generate hexagon logo(s).
+#' `hexLogo()` generates a single hexagon, and `hexPanel()`
 #' generates a panel of hex logos
 #' @param id input ID
 #' @param title title of the logo, display on top of logo or title of logo panel
@@ -654,9 +678,9 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
 #' default -10
 #' @param ys Y coordinates offset, must be the same length as `xs`, default -20
 #' @details
-#' The image in each hexagon is resized to the same size as the hex and then
-#' enlarged 125%. You may want to use x, y offset value to change the image
-#' position.
+#' The image in each hexagon is resized to the same size as the hex border
+#' and then enlarged 125%. You may want to use x, y offset value to change
+#' the image position.
 #'
 #' If your image source is local, you need to add your local directory to the
 #' shiny server, e.g. `addResourcePath("sps", "www")`. This example add `www`
@@ -670,6 +694,8 @@ hexLogo <- function(id, title="", hex_img, hex_link = "" ,
 #' `footers = c("footer1", "footer2", "")`,
 #' `footer_links = c("", "https://mylink", "")`. By doing so  `footers` and
 #' `footer_links` has the same required length.
+#'
+#' [useSps()] must be called on Shiny UI to load the required css style.
 #' @export
 #' @return HTML elements
 #' @examples
@@ -731,9 +757,9 @@ hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
 #' h2 title with bootstrap info color
 #'
 #' @param title title text
-#' @param ... other attributes and children to this DOM
-#' @return a h2 level heading with bootstrap4 info color, bt4 color not the
-#' default bt3 info color
+#' @param ... other attributes and children to this element
+#' @return a h2 level heading with bootstrap4 "info" color(bt4 color not the
+#' default bt3 info color)
 #' @export
 #'
 #' @examples
