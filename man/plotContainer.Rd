@@ -4,10 +4,14 @@
 \alias{plotContainer}
 \title{SPS snapshots container}
 \description{
-Initiate this container at the global level.
-This container is used to communicate plotting tabs with the canvas tab
+Initiate this container at the global level, this is done
+for you in \emph{global.R} and you only need to call the \code{sps_plots} object when
+you need methods from this class.
+
+This container is used to communicate plotting tabs with the canvas tab.
 }
 \examples{
+# a simple example to show how the snapshots communicates with Canvas
 if(interactive()){
     library(shiny)
     library(shinydashboard)
@@ -179,6 +183,7 @@ method}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+initialize a new class container
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{plotContainer$new()}\if{html}{\out{</div>}}
 }
@@ -252,7 +257,7 @@ original plot output server function, like \code{renderPlot},
 \describe{
 \item{\code{render_func}}{plot output server function}
 
-\item{\code{tab_id}}{unique ID, usually the tab ID if used in a module}
+\item{\code{tab_id}}{unique ID, usually the tab ID if used in a SPS tab}
 
 \item{\code{expr}}{the reactive expression to render the plot,
 same as \code{expr}

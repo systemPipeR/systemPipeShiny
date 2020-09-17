@@ -42,13 +42,15 @@
 <meta property="og:title" content="SPS database functions — spsDb" />
 <meta property="og:description" content="Initiate this container at global level.
 Methods in this class can help admin to
-manage general information of sps. For now it only stores some meta data and
+manage general information of SPS. For now it only stores some meta data and
 the encryption key pairs. You can use this database to store
-other useful things, like user pass hash, IP, browsing info ...
+other useful things, like user password hash, IP, browsing info ...
 A SQLite database by default is created inside config directory.
 If not, you
 can use createDb method to create one. On initiation, this class checks
-if the default db is there and gives warnings if not." />
+if the default db is there and gives warnings if not.
+One instance of this class is created by the spsEncryption super class in
+global.R, normal users don't need to change anything." />
 
 
 
@@ -127,13 +129,15 @@ if the default db is there and gives warnings if not." />
     <div class="ref-description">
     <p>Initiate this container at global level.
 Methods in this class can help admin to
-manage general information of sps. For now it only stores some meta data and
+manage general information of SPS. For now it only stores some meta data and
 the encryption key pairs. You can use this database to store
-other useful things, like user pass hash, IP, browsing info ...</p>
+other useful things, like user password hash, IP, browsing info ...</p>
 <p>A SQLite database by default is created inside <code>config</code> directory.
 If not, you
 can use <code>createDb</code> method to create one. On initiation, this class checks
 if the default db is there and gives warnings if not.</p>
+<p>One instance of this class is created by the <a href='spsEncryption.html'>spsEncryption</a> super class in
+<em>global.R</em>, normal users don't need to change anything.</p>
     </div>
 
 
@@ -155,13 +159,12 @@ if the default db is there and gives warnings if not.</p>
 </ul>
 <p><hr>
 <a id="method-new"></a></p><h3>Method <code>new()</code></h3>
-
-<h3>Usage</h3>
+<p>initialize a new class object</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='no'>spsDb</span>$<span class='fu'>new</span>()</pre><p></div></p>
 
 <p><hr>
 <a id="method-createDb"></a></p><h3>Method <code>createDb()</code></h3>
-<p>Create a snap hash database</p><h3>Usage</h3>
+<p>Create a SPS database</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='no'>spsDb</span>$<span class='fu'>createDb</span>(<span class='kw'>db_name</span> <span class='kw'>=</span> <span class='st'>"config/sps.db"</span>)</pre><p></div></p>
 
 <h3>Arguments</h3>
@@ -191,11 +194,11 @@ if not exists</p></dd>
 <p>query result, usually a dataframe</p>
 <p><hr>
 <a id="method-queryValueDp"></a></p><h3>Method <code>queryValueDp()</code></h3>
-<p>Query database with dplyr grammar</p>
+<p>Query database with <a href='https://dplyr.tidyverse.org/reference/dplyr-package.html'>dplyr</a> grammar</p>
 <p>Only supports simple selections, like comparison, %in%, <code><a href='https://dplyr.tidyverse.org/reference/between.html'>between()</a></code>,
 <code><a href='https://rdrr.io/r/base/NA.html'>is.na()</a></code>, etc. Advanced selections like wildcard,
-using outside dplyr functions like <code>str_detect</code>, <code>grepl</code>
-are not supported.</p><h3>Usage</h3>
+using outside dplyr functions like <code>[stringr::str_detect()]</code>,
+<code>[base::grepl()]</code> are not supported.</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='no'>spsDb</span>$<span class='fu'>queryValueDp</span>(
   <span class='no'>table</span>,
   <span class='kw'>dp_expr</span> <span class='kw'>=</span> <span class='st'>"select(., everything())"</span>,
@@ -276,16 +279,17 @@ component of the chain expression</p></dd>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='st'>"config"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'config' already exists</span></div><div class='input'><span class='no'>mydb</span> <span class='kw'>&lt;-</span> <span class='no'>spsDb</span>$<span class='fu'>new</span>()</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 Created SPS database method container</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>createDb</span>()</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-15 15:12:38 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 Key md5 465b02cd25d80111c848e24968567beb</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200915151238</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"'new1', '1'"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 Inerted 1 rows</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200915151238
-#&gt; 2          new1              1</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"'new2'"</span>, <span class='st'>"'2'"</span>))</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 Inerted 1 rows</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200915151238
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='st'>"config"</span>, <span class='kw'>showWarnings</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>mydb</span> <span class='kw'>&lt;-</span> <span class='no'>spsDb</span>$<span class='fu'>new</span>()</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:16 Created SPS database method container</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>createDb</span>()</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:16 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-16 21:54:16 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:16 Key md5 abf3a57d12fa7d2a79defee5d9936314</span><span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200916215416</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"'new1', '1'"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:16 Inerted 1 rows</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200916215416
+#&gt; 2          new1              1</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryInsert</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"'new2'"</span>, <span class='st'>"'2'"</span>))</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:16 Inerted 1 rows</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200916215416
 #&gt; 2          new1              1
 #&gt; 3          new2              2</div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryUpdate</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>'234'</span>,
-                 <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"value"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"info = 'new1'"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 Updated 1 rows</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20200915151238
+                 <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"value"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"info = 'new1'"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:16 Updated 1 rows</span><span></span></div><div class='input'><span class='no'>mydb</span>$<span class='fu'>queryValue</span>(<span class='st'>"sps_meta"</span>)</div><div class='output co'>#&gt;            info          value
+#&gt; 1 creation_date 20200916215416
 #&gt; 2          new1            234
 #&gt; 3          new2              2</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
     <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
@@ -293,7 +297,7 @@ component of the chain expression</p></dd>
         <span class='st'>"sps_meta"</span>,
         <span class='kw'>dp_expr</span><span class='kw'>=</span><span class='st'>"filter(., info %in% c('new1', 'new2') %&gt;% select(2)"</span>)
 }
-<span class='no'>mydb</span>$<span class='fu'>queryDel</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"value = '234'"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 Deleted 1 rows</span><span></span></div></span></pre>
+<span class='no'>mydb</span>$<span class='fu'>queryDel</span>(<span class='st'>"sps_meta"</span>, <span class='kw'>WHERE</span> <span class='kw'>=</span> <span class='st'>"value = '234'"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:16 Deleted 1 rows</span><span></span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

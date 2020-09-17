@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Server side function for dynamicFile — dynamicFileServer" />
-<meta property="og:description" content="Server side function for dynamicFile" />
+<meta property="og:description" content="Server side function for dynamicFile to parse the uploaded
+file path" />
 
 
 
@@ -117,7 +118,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Server side function for dynamicFile</p>
+    <p>Server side function for <a href='dynamicFile.html'>dynamicFile</a> to parse the uploaded
+file path</p>
     </div>
 
     <pre class="usage"><span class='fu'>dynamicFileServer</span>(<span class='no'>input</span>, <span class='no'>session</span>, <span class='no'>id</span>)</pre>
@@ -157,7 +159,7 @@ expression, observe, or inside <code>isolate</code></p>
 
     <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>,<span class='no'>output</span>,<span class='no'>session</span>){
         <span class='fu'><a href='https://rdrr.io/pkg/shinyjs/man/runjs.html'>runjs</a></span>(<span class='st'>'$(".sps-file input").attr("readonly", true)'</span>)
-        <span class='no'>myfile</span> <span class='kw'>&lt;-</span> <span class='fu'>dynamicFileServer</span>(<span class='no'>input</span>,<span class='no'>session</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"getFile"</span>)
+        <span class='no'>myfile</span> <span class='kw'>&lt;-</span> <span class='fu'>dynamicFileServer</span>(<span class='no'>input</span>, <span class='no'>session</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"getFile"</span>)
         <span class='fu'>observe</span>({
             <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>myfile</span>()) <span class='co'># remember to use `()` for reactive value</span>
         })

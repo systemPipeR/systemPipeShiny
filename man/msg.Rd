@@ -57,12 +57,18 @@ package, if not specified, it follows the project option, can be be forced to
 \code{TRUE} and \code{FALSE}. \code{TRUE} will forcefully generate the msg, and \code{FALSE}
 will be no message.
 }
+\details{
+If you want to use this function to generate colorful log messages
+but not in SPS framework. Use \link{spsOption} to set up the option on very top
+of your scripts: \code{spsOption("use_crayon", TRUE)}.
+}
 \examples{
 msg("this is info")
 msg("this is warning", "warning")
 try(msg("this is error", "error"))
 msg("this is other", "error2")
-spsinfo("some msg")
+spsinfo("some msg, verbose false", verbose = FALSE) # will not show up
+spsinfo("some msg, verbose true", verbose = TRUE)
 spswarn("sps warning")
 try(spserror("sps error"))
 

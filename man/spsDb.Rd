@@ -6,17 +6,20 @@
 \description{
 Initiate this container at global level.
 Methods in this class can help admin to
-manage general information of sps. For now it only stores some meta data and
+manage general information of SPS. For now it only stores some meta data and
 the encryption key pairs. You can use this database to store
-other useful things, like user pass hash, IP, browsing info ...
+other useful things, like user password hash, IP, browsing info ...
 
 A SQLite database by default is created inside \code{config} directory.
 If not, you
 can use \code{createDb} method to create one. On initiation, this class checks
 if the default db is there and gives warnings if not.
+
+One instance of this class is created by the \link{spsEncryption} super class in
+\emph{global.R}, normal users don't need to change anything.
 }
 \examples{
-dir.create("config")
+dir.create("config", showWarnings = FALSE)
 mydb <- spsDb$new()
 mydb$createDb()
 mydb$queryValue("sps_meta")
@@ -52,6 +55,7 @@ mydb$queryDel("sps_meta", WHERE = "value = '234'")
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+initialize a new class object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{spsDb$new()}\if{html}{\out{</div>}}
 }
@@ -61,7 +65,7 @@ mydb$queryDel("sps_meta", WHERE = "value = '234'")
 \if{html}{\out{<a id="method-createDb"></a>}}
 \if{latex}{\out{\hypertarget{method-createDb}{}}}
 \subsection{Method \code{createDb()}}{
-Create a snap hash database
+Create a SPS database
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{spsDb$createDb(db_name = "config/sps.db")}\if{html}{\out{</div>}}
 }
@@ -106,12 +110,12 @@ query result, usually a dataframe
 \if{html}{\out{<a id="method-queryValueDp"></a>}}
 \if{latex}{\out{\hypertarget{method-queryValueDp}{}}}
 \subsection{Method \code{queryValueDp()}}{
-Query database with dplyr grammar
+Query database with \link{dplyr} grammar
 
 Only supports simple selections, like comparison, \%in\%, \code{between()},
 \code{is.na()}, etc. Advanced selections like wildcard,
-using outside dplyr functions like \code{str_detect}, \code{grepl}
-are not supported.
+using outside dplyr functions like \verb{[stringr::str_detect()]},
+\verb{[base::grepl()]} are not supported.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{spsDb$queryValueDp(
   table,

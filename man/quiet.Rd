@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsUti.R
 \name{quiet}
 \alias{quiet}
-\title{suppress cat print output}
+\title{Suppress cat print output}
 \usage{
 quiet(x)
 }
@@ -10,10 +10,11 @@ quiet(x)
 \item{x}{function or expression or value assignment expression}
 }
 \value{
-invisible value
+If your original fucntions has a return, it will return in
+\code{invisible(x)}
 }
 \description{
-suppress cat print output
+Useful if you want to suppress cat or print
 }
 \examples{
 quiet(print(1))

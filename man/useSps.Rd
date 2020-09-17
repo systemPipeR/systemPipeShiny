@@ -2,8 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{useSps}
 \alias{useSps}
-\title{Use SystemPipeShiny javascripts and css style
-call it in your head section}
+\title{Use SystemPipeShiny javascripts and css style}
 \usage{
 useSps()
 }
@@ -11,8 +10,10 @@ useSps()
 HTML head
 }
 \description{
-Use SystemPipeShiny javascripts and css style
-call it in your head section
+call it in your head section of your shiny UI. Adding this to
+the Shiny app UI is required for most SPS shiny widgets. This is required for
+using SPS widgets outside of SPS framework. No need to load this function
+again if you are working within SPS framework.
 }
 \examples{
 useSps()

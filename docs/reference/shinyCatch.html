@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Catch  error, warning, message text — shinyCatch • systemPipeShiny</title>
+<title>Shiny exception handling — shinyCatch • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,10 @@
 
 
 
-<meta property="og:title" content="Catch  error, warning, message text — shinyCatch" />
-<meta property="og:description" content="Catch error, warning, message by a toastr bar on shiny front end
-also log the text on backend console. Will return original value if not
-blocking at &quot;warning&quot; &quot;message&quot; level, and return NULL at error level.
-If blocks at error, function will be stopped and other code in the same
-reactive context will be blocked. If blocks at warning level, warning and
-error will be blocked; message level blocks all 3 levels. The blocking works
-similar to shiny's req() and validate(). If anything inside fails, it will
-block the rest of the code in your reactive expression domain" />
+<meta property="og:title" content="Shiny exception handling — shinyCatch" />
+<meta property="og:description" content="Exception in Shiny apps can crash the app. Most time we don't
+want the app to crash but just stop this block, inform users and continue
+with other code blocks. This function is designed to handle these issues." />
 
 
 
@@ -118,20 +113,15 @@ block the rest of the code in your reactive expression domain" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Catch  error, warning, message text</h1>
+    <h1>Shiny exception handling</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsServerCollections.R'><code>R/spsServerCollections.R</code></a></small>
     <div class="hidden name"><code>shinyCatch.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Catch error, warning, message by a toastr bar on shiny front end
-also log the text on backend console. Will return original value if not
-blocking at "warning" "message" level, and return <code>NULL</code> at error level.
-If blocks at <code>error</code>, function will be stopped and other code in the same
-reactive context will be blocked. If blocks at <code>warning</code> level, warning and
-error will be blocked; <code>message</code> level blocks all 3 levels. The blocking works
-similar to shiny's <code>req()</code> and <code>validate()</code>. If anything inside fails, it will
-block the rest of the code in your reactive expression domain</p>
+    <p>Exception in Shiny apps can crash the app. Most time we don't
+want the app to crash but just stop this block, inform users and continue
+with other code blocks. This function is designed to handle these issues.</p>
     </div>
 
     <pre class="usage"><span class='fu'>shinyCatch</span>(
@@ -150,9 +140,9 @@ block the rest of the code in your reactive expression domain</p>
     </tr>
     <tr>
       <th>position</th>
-      <td><p>toastr position, one of: c("top-right", "top-center", "top-left",
-"top-full-width", "bottom-right", "bottom-center", "bottom-left",
-"bottom-full-width")</p></td>
+      <td><p>client side message bar position, one of:
+c("top-right", "top-center", "top-left","top-full-width", "bottom-right",
+"bottom-center", "bottom-left","bottom-full-width").</p></td>
     </tr>
     <tr>
       <th>blocking_level</th>
@@ -162,7 +152,7 @@ of "error", "warning", "message"</p></td>
     <tr>
       <th>shiny</th>
       <td><p>bool, It is also possible to use without a shiny session. Only
-shows on console log, works very similar as <code>tryCatch</code> and can block at
+shows on console log, works very similar as <code><a href='https://rdrr.io/r/base/conditions.html'>tryCatch()</a></code> and can block at
 multiple levels</p></td>
     </tr>
     </table>
@@ -170,11 +160,24 @@ multiple levels</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>see description</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Show error, warning, message by a toast bar on client end and
+also log the text on backend console. It will return original value if not
+blocking at "warning" "message" level, and return <code>NULL</code> at error level.
+If blocks at <code>error</code>, function will be stopped and other code in the same
+reactive context will be blocked. If blocks at <code>warning</code> level, warning and
+error will be blocked; <code>message</code> level blocks all 3 levels. The blocking works
+similar to shiny's <code><a href='https://shiny.rstudio.com/reference/shiny/latest/req.html'>shiny::req()</a></code> and <code><a href='https://shiny.rstudio.com/reference/shiny/latest/validate.html'>shiny::validate()</a></code>.
+If anything inside fails, it will
+block the rest of the code in your reactive expression domain.</p>
+<p>Messages will be displayed for 3s, 5s for warnings and errors will never
+go away on UI unless users' mouse hover on the bar or manually close it.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
     <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
-        <span class='fu'>useToastr</span>(),
+        <span class='fu'><a href='useSps.html'>useSps</a></span>(),
         <span class='fu'>actionButton</span>(<span class='st'>"btn1"</span>,<span class='st'>"error and blocking"</span>),
         <span class='fu'>actionButton</span>(<span class='st'>"btn2"</span>,<span class='st'>"error no blocking"</span>),
         <span class='fu'>actionButton</span>(<span class='st'>"btn3"</span>,<span class='st'>"warning but still returns value"</span>),
@@ -212,10 +215,9 @@ multiple levels</p></td>
     <span class='fu'>shinyApp</span>(<span class='no'>ui</span>, <span class='no'>server</span>)
 }
 <span class='co'>#outside shiny examples</span>
-<span class='fu'>shinyCatch</span>(<span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span>(<span class='st'>"this message"</span>), <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-15 15:12:38 this message
-#&gt; </span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>({<span class='fu'>shinyCatch</span>(<span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"this error"</span>), <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>); <span class='st'>"no block"</span>}, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-15 15:12:38 this error</span><span></div><div class='output co'>#&gt; [1] "no block"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>({<span class='fu'>shinyCatch</span>(<span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"this error"</span>), <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>blocking_level</span> <span class='kw'>=</span> <span class='st'>"error"</span>)
-    <span class='st'>"blocked"</span>},
-    <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-15 15:12:38 this error</span><span></div></span></pre>
+<span class='fu'>shinyCatch</span>(<span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span>(<span class='st'>"this message"</span>), <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-16 21:54:15 this message
+#&gt; </span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>({<span class='fu'>shinyCatch</span>(<span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"this error"</span>), <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>); <span class='st'>"no block"</span>}, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-16 21:54:15 this error</span><span></div><div class='output co'>#&gt; [1] "no block"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>({<span class='fu'>shinyCatch</span>(<span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"this error"</span>), <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>blocking_level</span> <span class='kw'>=</span> <span class='st'>"error"</span>)
+    <span class='st'>"blocked"</span>}, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-16 21:54:15 this error</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

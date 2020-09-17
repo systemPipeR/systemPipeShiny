@@ -13,10 +13,11 @@ pgPaneUI(pane_id, titles, pg_ids, title_main = NULL)
 \item{pane_id}{Progress panel main ID, use \code{ns} wrap it on \code{pgPaneUI} but not
 on \code{pgPaneUpdate} if using shiny module}
 
-\item{pg_id}{a character string of ID for the progress you want to update.
+\item{pg_id}{a character string of ID indicating which progress within this
+panel you want to update.
 Do not use \code{ns(pg_id)} to wrap it on server}
 
-\item{value}{0-100 real number to update the progress you use \code{pg_id} to
+\item{value}{0-100 number to update the progress you use \code{pg_id} to
 choose}
 
 \item{session}{current shiny session}
@@ -35,13 +36,18 @@ to use \code{ns} wrap each ID.}
 HTML elements
 }
 \description{
+Creates a panel that displays multiple progress items.
 Use \code{pgPaneUI} on UI side and use \code{pgPaneUpdate} to update it.
 The UI only
-renders correctly inside \code{shinydashboard} or \code{shinydashboardPlus}.
+renders correctly inside \code{\link[shinydashboard:dashboardPage]{shinydashboard::dashboardPage()}} or
+\code{\link[shinydashboardPlus:dashboardPagePlus]{shinydashboardPlus::dashboardPagePlus()}}.
+
+A overall progress is automatically calculated on the bottom.
 }
 \examples{
 if(interactive()){
     library(shinydashboard)
+    # try to slide c under 0
     ui <- dashboardPage(header = dashboardHeader(),
                         sidebar = dashboardSidebar(),
                         body = dashboardBody(

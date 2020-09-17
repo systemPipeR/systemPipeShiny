@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Show a list of tabs in buttons — genHrefTab • systemPipeShiny</title>
+<title>Display a list of links in a row of buttons — genHrefTab • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="Show a list of tabs in buttons — genHrefTab" />
-<meta property="og:description" content="Show a list of tabs in buttons" />
+<meta property="og:title" content="Display a list of links in a row of buttons — genHrefTab" />
+<meta property="og:description" content="hrefTab can be use for any purpose of shiny.
+genHrefTab is upper level wrapper of hrefTab and should
+only be used under SPS framework for fast retrieving tab info and
+generate the hrefTab. To use genHrefTab, the tab_info.csv config file
+must be there in config directory.
+label_text, hrefs must be the same length" />
 
 
 
@@ -111,13 +116,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Show a list of tabs in buttons</h1>
+    <h1>Display a list of links in a row of buttons</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsCoreUI.R'><code>R/spsCoreUI.R</code></a>, <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsUIcollections.R'><code>R/spsUIcollections.R</code></a></small>
     <div class="hidden name"><code>hrefTab.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Show a list of tabs in buttons</p>
+    <p><code>hrefTab</code> can be use for any purpose of shiny.
+<code>genHrefTab</code> is upper level wrapper of <code>hrefTab</code> and should
+only be used under SPS framework for fast retrieving tab info and
+generate the <code>hrefTab</code>. To use <code>genHrefTab</code>, the <code>tab_info.csv</code> config file
+must be there in <code>config</code> directory.
+<code>label_text</code>, <code>hrefs</code> must be the same length</p>
     </div>
 
     <pre class="usage"><span class='fu'>genHrefTab</span>(
@@ -146,7 +156,7 @@
     </tr>
     <tr>
       <th>Id</th>
-      <td><p>optional</p></td>
+      <td><p>optional element ID</p></td>
     </tr>
     <tr>
       <th>title</th>
@@ -158,7 +168,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>other args pass to the html container</p></td>
+      <td><p>other arguments to be passed to the html element</p></td>
     </tr>
     <tr>
       <th>title_color</th>
@@ -176,16 +186,10 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a div element</p>
+    <p>a HTML element</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>hrefTab</code> can be use for any purpose of shiny.
-<code>genHrefTab</code> is upper level wrapper of <code>hrefTab</code> and should
-only be used under systemPipeShiny framework for fast retrieving tab info and
-generate the <code>hrefTab</code>. To use <code>genHrefTab</code>, the <code>tab_info.csv</code> config file
-must be in <code>./config</code> directory.
-<code>label_text</code>, <code>hrefs</code> must be the same length</p>
-<p><em>genHrefTab</em> require a SPS project and the config/tabs.csv file.
+    <p><em>genHrefTab</em> require a SPS project and the config/tabs.csv file.
 If you want to use hrefTab outside a SPS project just use <em>hrefTab</em></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

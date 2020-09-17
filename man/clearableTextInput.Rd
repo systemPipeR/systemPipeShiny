@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{clearableTextInput}
 \alias{clearableTextInput}
-\title{A clearable text inputInput UI}
+\title{A clearable text inputInput control}
 \usage{
 clearableTextInput(inputId, label, value = "", placeholder = "")
 }
@@ -20,8 +20,10 @@ a div
 }
 \description{
 An UI component with a "X" button in the end to clear the entire
-typed text. It works the same as \code{Textinput}, must be call \code{useSps} at head
-to load css and js
+entered text. It works the same as \code{Textinput}.
+}
+\details{
+must be call \code{\link[=useSps]{useSps()}} at head to load css and js
 }
 \examples{
 if(interactive()){

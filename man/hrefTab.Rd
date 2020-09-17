@@ -3,7 +3,7 @@
 \name{genHrefTab}
 \alias{genHrefTab}
 \alias{hrefTab}
-\title{Show a list of tabs in buttons}
+\title{Display a list of links in a row of buttons}
 \usage{
 genHrefTab(
   tab_ids,
@@ -25,13 +25,13 @@ hrefTab(
 \arguments{
 \item{tab_ids}{tab names, must have the \code{tab_info} dataframe}
 
-\item{Id}{optional}
+\item{Id}{optional element ID}
 
 \item{title}{Item title}
 
 \item{text_color}{Table text color}
 
-\item{...}{other args pass to the html container}
+\item{...}{other arguments to be passed to the html element}
 
 \item{title_color}{title color}
 
@@ -40,19 +40,17 @@ hrefTab(
 \item{hrefs}{individual tab links}
 }
 \value{
-a div element
+a HTML element
 }
 \description{
-Show a list of tabs in buttons
-}
-\details{
 \code{hrefTab} can be use for any purpose of shiny.
 \code{genHrefTab} is upper level wrapper of \code{hrefTab} and should
-only be used under systemPipeShiny framework for fast retrieving tab info and
+only be used under SPS framework for fast retrieving tab info and
 generate the \code{hrefTab}. To use \code{genHrefTab}, the \code{tab_info.csv} config file
-must be in \code{./config} directory.
+must be there in \code{config} directory.
 \code{label_text}, \code{hrefs} must be the same length
-
+}
+\details{
 \emph{genHrefTab} require a SPS project and the config/tabs.csv file.
 If you want to use hrefTab outside a SPS project just use \emph{hrefTab}
 }

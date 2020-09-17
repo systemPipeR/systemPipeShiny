@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsCoreUI.R
 \name{genHrefTable}
 \alias{genHrefTable}
-\title{generate a table that lists of hyper reference buttons by rows}
+\title{Generate a table that lists tabs by rows}
 \usage{
 genHrefTable(
   rows,
@@ -13,9 +13,10 @@ genHrefTable(
 )
 }
 \arguments{
-\item{rows}{a named list of character vector, each item name in the list
-will be the row name, each item is a vector of tab names. Or you can use one
-of 'core', 'wf', 'vs', 'data', 'plot' to specify a tab type, so it will find
+\item{rows}{a named list of character vector, the item names in the list
+will be the row names and each item should be a vector of tab IDs.
+Or you can use one of 'core', 'wf', 'vs', 'data', 'plot' to specify a tab
+type, so it will find
 all tabs matching that type. See \code{tab_info.csv} under \code{config} directory for
 type info.}
 
@@ -25,27 +26,30 @@ type info.}
 
 \item{text_color}{text color for table}
 
-\item{...}{any additional args to the html element, like class, style ...}
+\item{...}{any additional arguments to the html element, like class, style...}
 }
 \value{
 HTML elements
 }
 \description{
-generate a table that lists of hyper reference buttons by rows
+A fast way in SPS to generate a table that lists SPS tabs
 }
 \details{
 For \code{rows}, there are some specially reserved characters
-for type and sub types. If indicated, it will return a list of tabs matching
-the indicated tabs instead of searching individual tab names. These words
-include: core, wf, vs, data, plot.
+for type and sub-types, one of c('core', 'wf', 'vs', 'data', 'plot').
+If indicated, it will return a list of tabs matching
+the indicated tabs instead of searching individual tab names. See examples.
 
-require a SPS project and the config/tabs.csv file. If you want to
-use hrefTable outside a SPS project, use \link{hrefTable}
+This function requires a SPS project and the config/tabs.csv file.
+If you want to use hrefTable outside a SPS project, or want to create some
+links pointing to outside web resources, use \link{hrefTable}
 }
 \examples{
 if(interactive()){
     spsInit()
-    rows <- list(wf1 = c("core_canvas", "core_about"), wf2 =  "data")
+    # will be two rows, one row is searched by tab IDs and the other is
+    # searched by type.
+    rows <- list(row1 = c("core_canvas", "core_about"), row2 =  "data")
     ui <- fluidPage(
         genHrefTable(rows)
     )

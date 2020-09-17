@@ -134,7 +134,7 @@ the name is `SPS_` + `today's date` in *ISO 8601* format, e.g.
 By default, your working directory should be set inside that project folder automatically. 
 If you are using Rstudio, *global.R* file will be opened for you. This is the only
 file that you need to make custom change if there is any. 
-Now you can just run the app by type `shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
+Now you can just run the app by typing `shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
 button on top right corner in Rstudio. 
 In your *global.R*, scroll down to the bottom, you should see:
 
@@ -149,14 +149,14 @@ sps_app <- sps(
 ```
 
 This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
-`c("tab1", "tab2)`. See *config/tabs.csv* or use `spsTabInfo()` what tabs IDs can be load and other 
-tab information. Currently you can only load/unload visualization tabs, type of `vs`; essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatically and these tabs cannot be modified. 
+`c("tab1", "tab2)`. Open *config/tabs.csv* or use `spsTabInfo()` to see what tabs IDs can be load and other 
+tab information. Currently you can only load/unload visualization tabs, key word `vs` under column "*type*"; essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatically and these tabs cannot be modified. 
 
-Also, SPS tabs are built on top of [Shiny modules](https://shiny.rstudio.com/articles/modules.html) and there is one top-level server that is above all modules. You can run additional top-level server code by passing it to `server_expr` argument. If the expression is multiple-lined, use `{}` to wrap them. 
+Also, SPS tabs are built on top of [Shiny modules](https://shiny.rstudio.com/articles/modules.html) and there is one top-level server that is above all tabs(modules). You can run additional top-level server code by passing it to `server_expr` argument. If the expression is multiple-lined, use `{}` to wrap them. 
 
 ## SPS plugins
 
-On default start, current SPS contains the workflow tabs and one example data tab, and 
+On default start, current SPS contains the workflow tabs, one example data tab, and 
 one example plot tab for visualization. We have created many more plots options and 
 they are distributed as "SPS plugins". A SPS plugin is a special formed R package. 
 You need to install the plugin like you do with normal R packages by `install.packages`, 

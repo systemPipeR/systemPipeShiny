@@ -2,7 +2,7 @@
 % Please edit documentation in R/spsUIcollections.R
 \name{renderDesc}
 \alias{renderDesc}
-\title{Render some collapsible description}
+\title{Render some collapsible markdown text}
 \usage{
 renderDesc(id, desc)
 }
@@ -16,7 +16,7 @@ HTML elements
 }
 \description{
 write some text in markdown format and it will help you
-render to a collapsible markdown section
+render to a collapsible markdown section on Shiny UI
 }
 \examples{
 if(interactive()){

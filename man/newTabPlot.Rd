@@ -202,28 +202,31 @@ the data tab first then its linked plot tabs.
 }
 \details{
 \itemize{
-\item Must use this function inside a SPS project, use \emph{spsInit()} if
+\item Must use this function inside a SPS project, use \code{\link[=spsInit]{spsInit()}} if
 there is no project.
 \item For a new data tab, different preprocessing methods, their
 pre-prequirements and what plotting options available after each
-preprocess is controlled by the \link{makePrepro} function. Each call from
-this function specify one preprocessing method. All preprocess methods
-should be provided in a list to the \emph{prepro_methods} argument.
+preprocess is controlled by the \code{\link[=makePrepro]{makePrepro()}} function. Each call from
+\link{makePrepro} function specify one preprocessing method.
+All preprocess methods should be provided in a list
+and passed to the \emph{prepro_methods} argument.
 \item A new plot tab can have more than one data set as the input. For example a
 plot can require a metadata table and a log transformed table as inputs.
-There maybe multiple data tabs can preprocess and produce the same log table.
+There can also be multiple data tabs can preprocess and produce the same log table.
 So you need to specify how many data inputs this plot requires; for each
 input which data tab(s) this plot tab can receive data from; for each input
 data type, what validations (data format checks) you want to do. All of these
 are controlled by \link{makePlotData} and return(s) of this function should be
 provided in a list to the \emph{plot_data} argument.
+\item Different reprocess methods in a data tab
 is controlled by the \link{makePrepro} function. Each call from
 this function specify one preprocessing method. All preprocess methods
 should be provided in a list to the \emph{prepro_methods} argument.
-\item One step in creating plot tab is specify incoming data source options by
-the \link{makePlotData} method. It requires the data tab IDs exist in the
+\item One of the steps in creating a plot tab is to specify incoming data source.
+This is controlled by \code{receive_datatab_ids} argument in \code{\link[=makePlotData]{makePlotData()}}.
+It requires the data tab IDs exist in the
 config file \emph{config/tabs.csv}. So, it is best to create all required data
-tabs first. Or specify it to any existing data tab like 'data_raw' and
+tabs first. Or specify it to any existing data tab like 'data_example' and
 when the template is created, manually change it.
 }
 }

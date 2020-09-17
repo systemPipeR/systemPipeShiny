@@ -38,35 +38,48 @@ see help file of \code{vroom}}
 \item{...}{other params for vroom, see help file of \code{vroom}}
 }
 \value{
-a tibble
+returns a tibble or \code{NULL} if parsing is unsuccessful
 }
 \description{
-load a file to server end. Designed to be used with the input
-file source switch button. Use \code{vroom} to load the file. In SPS, this
-function is usually combined with \code{dynamicFile()} function to help users
-upload file and read the file. This loading function only works for parsing
-tabular data, use \code{vroom()} internally.
+load a file to server end. It's designed to be used with the
+input file source switch button(see it in a SPS new template data tab).
+It uses \link[vroom:vroom]{vroom::vroom} to load the file. In SPS, this
+function is usually combined as downstream of  \code{\link[=dynamicFileServer]{dynamicFileServer()}}
+function on on the server side to
+read the file into R. This loading function only works for parsing
+tabular data, use \code{\link[vroom:vroom]{vroom::vroom()}} internally.
+}
+\details{
+This is function is wrapped by the \code{\link[=shinyCatch]{shinyCatch()}} function, so it
+will show loading information both on console and on UI. This function
+prevents errors to crash the Shiny app, so any kind of file upload will not
+crash the app. To show message on UI, \code{\link[=useSps]{useSps()}} must be used in Shiny UI
+function, see examples.
 }
 \examples{
 if(interactive()){
     library(shinyWidgets)
+    # change value to 'local' to see the difference
+    spsOption("mode", value = "server")
     ui <- fluidPage(
+        useSps(),
         shinyWidgets::radioGroupButtons(
             inputId = "data_source", label = "Choose your data file source:",
             selected = "upload",
             choiceNames = c("Upload", "Example"),
             choiceValues = c("upload", "eg")
         ),
-        fileInput("data_path", label = "input file"),
+        dynamicFile("data_path", label = "input file"),
         dataTableOutput("df")
     )
 
     server <- function(input, output, session) {
         tmp_file <- tempfile(fileext = ".csv")
         write.csv(iris, file = tmp_file)
+        upload_path <- dynamicFileServer(input, session, "data_path")
         data_df <- reactive({
             loadDF(choice = input$data_source,
-                   upload_path = input$data_path$datapath,
+                   upload_path = upload_path()$datapath,
                    delim = ",", eg_path = tmp_file)
         })
         output$df <- renderDataTable(data_df())

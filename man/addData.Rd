@@ -3,7 +3,7 @@
 \name{addData}
 \alias{addData}
 \alias{getData}
-\title{Add and get data between shiny modules}
+\title{Add and get data between SPS tabs}
 \usage{
 addData(data, shared, tab_id)
 
@@ -12,8 +12,8 @@ getData(tab_id, shared)
 \arguments{
 \item{data}{any type of R object you want to store and use in other tabs}
 
-\item{shared}{the a shared reactivevalues object that is defined on the top
-level server}
+\item{shared}{the a \code{shared} reactivevalues object that is defined on the top
+level server. Read vignette for more details about this object}
 
 \item{tab_id}{tab ID of current tab if using \code{addData} method and tab
 ID to get data from if using \code{getData}.}
@@ -23,7 +23,7 @@ Nothing to return with \code{add} method and returns original object for
 the \code{get} method
 }
 \description{
-These function groups are designed to be used inside shiny modules
+These functions are designed to be used inside SPS tabs
 }
 \examples{
 if(interactive()){

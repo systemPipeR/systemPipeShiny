@@ -162,8 +162,9 @@ spsUI <- function(tabs_df, tabs_plot){
 
 
 
-#' generate gallery by only providing tab names
-#' @description A fast way in SPS to generate a [gallery] of plot tabs
+#' Generate gallery by only providing tab names
+#' @description A fast way in SPS to generate a [gallery] to display plot tab
+#' screenshots
 #' @param tab_ids  a vector of tab IDs
 #' @param Id element ID
 #' @param title gallery title
@@ -176,7 +177,7 @@ spsUI <- function(tabs_df, tabs_plot){
 #' @export
 #' @return gallery div
 #' @details require a SPS project and the config/tabs.csv file. If you want to
-#' use gallery outside a SPS project, use [gallery]
+#' use gallery outside a SPS project, use [gallery()]
 #' @examples
 #' if(interactive()){
 #'     spsInit()
@@ -211,29 +212,33 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
             label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
 }
 
-#' generate a table that lists of hyper reference buttons by rows
-#'
-#' @param rows a named list of character vector, each item name in the list
-#' will be the row name, each item is a vector of tab names. Or you can use one
-#' of 'core', 'wf', 'vs', 'data', 'plot' to specify a tab type, so it will find
+#' Generate a table that lists tabs by rows
+#' @description  A fast way in SPS to generate a table that lists SPS tabs
+#' @param rows a named list of character vector, the item names in the list
+#' will be the row names and each item should be a vector of tab IDs.
+#' Or you can use one of 'core', 'wf', 'vs', 'data', 'plot' to specify a tab
+#' type, so it will find
 #' all tabs matching that type. See `tab_info.csv` under `config` directory for
 #' type info.
 #' @param Id element ID
 #' @param title table title
 #' @param text_color text color for table
-#' @param ... any additional args to the html element, like class, style ...
+#' @param ... any additional arguments to the html element, like class, style...
 #' @details For `rows`, there are some specially reserved characters
-#' for type and sub types. If indicated, it will return a list of tabs matching
-#' the indicated tabs instead of searching individual tab names. These words
-#' include: core, wf, vs, data, plot.
+#' for type and sub-types, one of c('core', 'wf', 'vs', 'data', 'plot').
+#' If indicated, it will return a list of tabs matching
+#' the indicated tabs instead of searching individual tab names. See examples.
 #' @return HTML elements
-#' @details require a SPS project and the config/tabs.csv file. If you want to
-#' use hrefTable outside a SPS project, use [hrefTable]
+#' @details This function requires a SPS project and the config/tabs.csv file.
+#' If you want to use hrefTable outside a SPS project, or want to create some
+#' links pointing to outside web resources, use [hrefTable]
 #' @export
 #' @examples
 #' if(interactive()){
 #'     spsInit()
-#'     rows <- list(wf1 = c("core_canvas", "core_about"), wf2 =  "data")
+#'     # will be two rows, one row is searched by tab IDs and the other is
+#'     # searched by type.
+#'     rows <- list(row1 = c("core_canvas", "core_about"), row2 =  "data")
 #'     ui <- fluidPage(
 #'         genHrefTable(rows)
 #'     )

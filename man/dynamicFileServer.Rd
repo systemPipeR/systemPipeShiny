@@ -19,7 +19,8 @@ reactive dataframe, need to extract the value inside reactive
 expression, observe, or inside \code{isolate}
 }
 \description{
-Server side function for dynamicFile
+Server side function for \link{dynamicFile} to parse the uploaded
+file path
 }
 \examples{
 if(interactive()){
@@ -33,7 +34,7 @@ if(interactive()){
 
     server <- function(input,output,session){
         runjs('$(".sps-file input").attr("readonly", true)')
-        myfile <- dynamicFileServer(input,session, id = "getFile")
+        myfile <- dynamicFileServer(input, session, id = "getFile")
         observe({
             print(myfile()) # remember to use `()` for reactive value
         })

@@ -191,11 +191,13 @@ spsWarnings <- function(session){
 
 
 #' Load tabular files as tibbles to server
-#' @description load a file to server end. Designed to be used with the input
-#' file source switch button. Use `vroom` to load the file. In SPS, this
-#' function is usually combined with `dynamicFile()` function to help users
-#' upload file and read the file. This loading function only works for parsing
-#' tabular data, use `vroom()` internally.
+#' @description load a file to server end. It's designed to be used with the
+#' input file source switch button(see it in a SPS new template data tab).
+#' It uses [vroom::vroom] to load the file. In SPS, this
+#' function is usually combined as downstream of  [dynamicFileServer()]
+#' function on on the server side to
+#' read the file into R. This loading function only works for parsing
+#' tabular data, use [vroom::vroom()] internally.
 #' @param choice where this file comes from, from 'upload' or example 'eg'?
 #' @param data_init a tibble to return if `upload_path` or `eg_path` is not
 #' provided. Return a 8x8 empty tibble if not provided
@@ -209,8 +211,12 @@ spsWarnings <- function(session){
 #' see help file of `vroom`
 #' @param col_types columns specifications, see help file of `vroom`
 #' @param ... other params for vroom, see help file of `vroom`
-#'
-#' @return a tibble
+#' @details This is function is wrapped by the [shinyCatch()] function, so it
+#' will show loading information both on console and on UI. This function
+#' prevents errors to crash the Shiny app, so any kind of file upload will not
+#' crash the app. To show message on UI, [useSps()] must be used in Shiny UI
+#' function, see examples.
+#' @return returns a tibble or `NULL` if parsing is unsuccessful
 #' @export
 #' @importFrom shinyAce is.empty
 #' @importFrom tibble as_tibble
@@ -218,23 +224,27 @@ spsWarnings <- function(session){
 #' @examples
 #' if(interactive()){
 #'     library(shinyWidgets)
+#'     # change value to 'local' to see the difference
+#'     spsOption("mode", value = "server")
 #'     ui <- fluidPage(
+#'         useSps(),
 #'         shinyWidgets::radioGroupButtons(
 #'             inputId = "data_source", label = "Choose your data file source:",
 #'             selected = "upload",
 #'             choiceNames = c("Upload", "Example"),
 #'             choiceValues = c("upload", "eg")
 #'         ),
-#'         fileInput("data_path", label = "input file"),
+#'         dynamicFile("data_path", label = "input file"),
 #'         dataTableOutput("df")
 #'     )
 #'
 #'     server <- function(input, output, session) {
 #'         tmp_file <- tempfile(fileext = ".csv")
 #'         write.csv(iris, file = tmp_file)
+#'         upload_path <- dynamicFileServer(input, session, "data_path")
 #'         data_df <- reactive({
 #'             loadDF(choice = input$data_source,
-#'                    upload_path = input$data_path$datapath,
+#'                    upload_path = upload_path()$datapath,
 #'                    delim = ",", eg_path = tmp_file)
 #'         })
 #'         output$df <- renderDataTable(data_df())

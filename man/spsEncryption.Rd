@@ -4,21 +4,27 @@
 \alias{spsEncryption}
 \title{SPS encryption functions}
 \description{
-Initiate this container at global level.
 Methods in this class can help admin to encrypt files been output from sps.
 For now it is only used to encypt and decrypt snapshots.
 This class requires the SPS database. This class inherits all functions from
-the db class, so there is no need to initiate the \code{spsDb} container.
+the \link{spsDb} class, so there is no need to initiate the \code{spsDb} container.
+
+This class is required to run a SPS app. This class needs to be initialized
+global level. This has already been written in \emph{global.R} for you.
 }
 \examples{
-dir.create("config")
+dir.create("config", showWarnings = FALSE)
 spsOption('verbose', TRUE)
 my_ecpt <- spsEncryption$new()
 my_ecpt$createDb()
 my_ecpt$keyChange()
+# imagine a file has one line "test"
 writeLines("test", "test.txt")
-my_ecpt$encrypt("test.txt", "test.bin")
-my_ecpt$decrypt("test.bin", "test_decpt.txt", TRUE)
+# encrypt the file
+my_ecpt$encrypt("test.txt", "test.bin", overwrite = TRUE)
+# decrypt the file
+my_ecpt$decrypt("test.bin", "test_decpt.txt", overwrite = TRUE)
+# check the decrypted file content
 readLines('test_decpt.txt')
 }
 \section{Super class}{
@@ -51,6 +57,7 @@ readLines('test_decpt.txt')
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+initialize a new class container
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{spsEncryption$new()}\if{html}{\out{</div>}}
 }
