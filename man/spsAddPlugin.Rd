@@ -139,6 +139,10 @@ list.files(file.path("testProject", "R"))
 vroom::vroom(file.path("testProject", "config", "tabs.csv"),
              comment = "#") \%>\% tail()
 # now remove the plugin
+# now remove the plugin
+# Windows connection close is delayed, may cause problems, run next line 
+# before remove a plugin
+closeAllConnections(); quiet(gc())
 spsRemovePlugin(plugin = "testPlugin", app_path = "testProject", force = TRUE)
 # let check these files again:
 list.files(file.path("testProject", "R"))
