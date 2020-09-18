@@ -573,7 +573,7 @@ spsDb <- R6::R6Class("spsDb",
 #' my_ecpt$createDb()
 #' my_ecpt$keyChange()
 #' # imagine a file has one line "test"
-#' writeLines("test", "test.txt")
+#' writeLines(text = "test", con = "test.txt")
 #' # encrypt the file
 #' my_ecpt$encrypt("test.txt", "test.bin", overwrite = TRUE)
 #' # decrypt the file

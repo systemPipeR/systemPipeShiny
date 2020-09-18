@@ -380,7 +380,7 @@ spsAddPlugin <- function(
         {.[str_which(., "^#")]}
     c(header, names(tab_info_new) %>% glue_collapse(sep = ","),
       apply(tab_info_new, 1, paste, collapse = ",")) %>%
-        writeLines(file.path(app_path, "config", "tabs.csv"))
+        writeLines(con = file.path(app_path, "config", "tabs.csv"))
 }
 
            ########### remove plugin #############
@@ -418,7 +418,7 @@ spsRemovePlugin <- function(
         {.[str_which(., "^#")]}
     c(header, names(tab_info) %>% glue_collapse(sep = ","),
       apply(tab_info[tab_info$plugin != plugin,], 1, paste, collapse = ",")) %>%
-        writeLines(file.path(app_path, "config", "tabs.csv"))
+        writeLines(con = file.path(app_path, "config", "tabs.csv"))
     options(sps = old_opt)
     msg(glue("Plugin {plugin} removed!"), "SPS-SUCCESS", "green")
 }
