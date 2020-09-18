@@ -63,10 +63,10 @@ file.
 \examples{
 spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_plotdata")
 newTabData("data_df1", "df 1",
-           app_path = "SPS_plotdata"),
+           app_path = "SPS_plotdata",
            open_file = FALSE)
 newTabData("data_df2", "df 2",
-           app_path = "SPS_plotdata"),
+           app_path = "SPS_plotdata",
            open_file = FALSE)
 plotdata_raw <- makePlotData("raw", "raw data",
              receive_datatab_ids = "data_df1",
@@ -74,7 +74,7 @@ plotdata_raw <- makePlotData("raw", "raw data",
                  if(!is.data.frame(mydata$raw))
                      stop("Input raw data need to be a dataframe")
              }, vd_name = "Validate raw data"),
-             app_path = "SPS_plotdata"))
+             app_path = "SPS_plotdata")
 plotdata_meta <- makePlotData("meta", "meta data",
              receive_datatab_ids = c("data_df1", "data_df2"),
              vd_expr = spsValidate({
@@ -83,9 +83,9 @@ plotdata_meta <- makePlotData("meta", "meta data",
                  if(nrow(mydata$meta) < 1)
                      stop("Input raw data need to have at least one row")
              }, vd_name = "Validate meta data"),
-             app_path = "SPS_plotdata"))
+             app_path = "SPS_plotdata")
 newTabPlot("plot_test1",
-           app_path = "SPS_plotdata"),
+           app_path = "SPS_plotdata",
            plot_data = list(plotdata_raw, plotdata_meta))
 }
 \seealso{
