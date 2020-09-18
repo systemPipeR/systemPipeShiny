@@ -262,10 +262,10 @@ newTabPlot <- function(tab_id = "plot_id1",
     author <- glue_collapse(author, sep = ", ")
     spsinfo("Ensure all template replacements are length 1 strings")
     list(tab_id, tab_displayname, desc,
-      pg_id, pg_title, select_input,
-      getdata, vd, plot_expr,
-      p_out_func, p_render_func, author,
-      pkgs, hreftab, control_ui) %>%
+         pg_id, pg_title, select_input,
+         getdata, vd, plot_expr,
+         p_out_func, p_render_func, author,
+         pkgs, hreftab, control_ui) %>%
         {
             check_names <- c("tab Id", "display name", "description",
                              "progress data ID", "progress data title",
@@ -383,9 +383,10 @@ newTabData <- function(tab_id = "data_id1",
     pkgs <- .resolveTabPkg(pkgs)
     spsinfo("Parsing author(s)")
     author <- glue_collapse(author, sep = ", ")
+    eg_path = eg_path = normalizePath(eg_path, winslash = "/")
     spsinfo("Ensure all template replacements are length 1 strings")
     list(tab_id, tab_displayname, desc, common_validation,
-      choices, vds, pre, author, eg_path, pkgs) %>%
+         choices, vds, pre, author, eg_path, pkgs) %>%
         {check_names <- c("tab Id", "display name", "description",
                           "common validation expressions",
                           "preprocess choices", "preprocess validation",
@@ -462,10 +463,10 @@ newTabData <- function(tab_id = "data_id1",
 #' @examples
 #' spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_plotdata")
 #' newTabData("data_df1", "df 1",
-#'            app_path = "SPS_plotdata"),
+#'            app_path = "SPS_plotdata",
 #'            open_file = FALSE)
 #' newTabData("data_df2", "df 2",
-#'            app_path = "SPS_plotdata"),
+#'            app_path = "SPS_plotdata",
 #'            open_file = FALSE)
 #' plotdata_raw <- makePlotData("raw", "raw data",
 #'              receive_datatab_ids = "data_df1",
@@ -473,7 +474,7 @@ newTabData <- function(tab_id = "data_id1",
 #'                  if(!is.data.frame(mydata$raw))
 #'                      stop("Input raw data need to be a dataframe")
 #'              }, vd_name = "Validate raw data"),
-#'              app_path = "SPS_plotdata"))
+#'              app_path = "SPS_plotdata")
 #' plotdata_meta <- makePlotData("meta", "meta data",
 #'              receive_datatab_ids = c("data_df1", "data_df2"),
 #'              vd_expr = spsValidate({
@@ -482,19 +483,19 @@ newTabData <- function(tab_id = "data_id1",
 #'                  if(nrow(mydata$meta) < 1)
 #'                      stop("Input raw data need to have at least one row")
 #'              }, vd_name = "Validate meta data"),
-#'              app_path = "SPS_plotdata"))
+#'              app_path = "SPS_plotdata")
 #' newTabPlot("plot_test1",
-#'            app_path = "SPS_plotdata"),
+#'            app_path = "SPS_plotdata",
 #'            plot_data = list(plotdata_raw, plotdata_meta))
 makePlotData <- function(dataset_id = "data",
-                       dataset_label = "Raw data",
-                       receive_datatab_ids = "data_example",
-                       vd_expr = spsValidate({
-                           if(is.data.frame(mydata$data)) TRUE
-                           else stop("Data xx needs to be a dataframe or tibble")
-                       }),
-                       app_path = getwd(),
-                       use_string = FALSE){
+                         dataset_label = "Raw data",
+                         receive_datatab_ids = "data_example",
+                         vd_expr = spsValidate({
+                             if(is.data.frame(mydata$data)) TRUE
+                             else stop("Data xx needs to be a dataframe or tibble")
+                         }),
+                         app_path = getwd(),
+                         use_string = FALSE){
     stopifnot(is.character(dataset_id) & length(dataset_id) == 1)
     stopifnot(is.character(dataset_label) & length(dataset_label) == 1)
     stopifnot(is.character(receive_datatab_ids))
@@ -611,7 +612,7 @@ makePlotData <- function(dataset_id = "data",
 #' )
 #' # Combine two methods and make a new data tab
 #' newTabData("data_test1",  "test 1",
-#'            app_path = "SPS_prepro"),
+#'            app_path = "SPS_prepro",
 #'            prepro_methods = list(prepro_log, prepro_addone)
 #'            )
 makePrepro <- function(method_id = "md1",
@@ -798,15 +799,15 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         ) %>% glue_collapse(',\n')
     # server get data
     pt_data[['getdata']] <-
-    glue('mydata${ids} <- getData(isolate(input$source_{ids}), shared)
+        glue('mydata${ids} <- getData(isolate(input$source_{ids}), shared)
           pgPaneUpdate("pg", "{ids}", 100)') %>%
         glue_collapse('\n')
     # validates
     pt_data[['vd']] <-
-    glue('{vds}
+        glue('{vds}
          pgPaneUpdate("pg", "vd_{ids}", 100)') %>%
         glue_collapse("\n")
-     pt_data
+    pt_data
 }
 
 
@@ -903,7 +904,7 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         spsinfo("reformat output R file")
 
         reformat_result <- shinyCatch(styler::style_file(
-            out_p,
+            normalizePath(out_p),
             transformers =
                 styler::tidyverse_style(indent_by = 4,
                                         scope = "line_breaks")
@@ -933,14 +934,14 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
     stopifnot(is.logical(preview))
     spsinfo("checking tab ID")
     switch (type_sub,
-        'data' = {
-            if(!str_detect(tab_id, "^data_"))
-                spserror("Tab ID must start with 'data_'")
-        },
-        'plot' = {
-            if(!str_detect(tab_id, "^plot_"))
-                spserror("Tab ID must start with 'plot_'")
-        }
+            'data' = {
+                if(!str_detect(tab_id, "^data_"))
+                    spserror("Tab ID must start with 'data_'")
+            },
+            'plot' = {
+                if(!str_detect(tab_id, "^plot_"))
+                    spserror("Tab ID must start with 'plot_'")
+            }
     )
     spsinfo("checking output path")
     if(file.exists(out_p))
@@ -996,5 +997,4 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         {glue("'{.}'")} %>% {glue("github = c({.})")}
     glue_collapse(c(cran_text, bioc_text, github_text), sep='\n')
 }
-
 

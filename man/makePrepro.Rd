@@ -108,7 +108,7 @@ prepro_addone <- makePrepro(
 )
 # Combine two methods and make a new data tab
 newTabData("data_test1",  "test 1",
-           app_path = "SPS_prepro"),
+           app_path = "SPS_prepro",
            prepro_methods = list(prepro_log, prepro_addone)
            )
 }

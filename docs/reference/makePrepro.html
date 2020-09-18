@@ -203,7 +203,56 @@ accessible and is the object where data stored. One should use this
 object to do validation or preprocess. See examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>project_name</span> <span class='kw'>=</span> <span class='st'>"SPS_prepro"</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:29 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:29 Create project under /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_prepro</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:29 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:29 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:29 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:29 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-17 18:34:30 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_prepro/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:30 Key md5 8ecde669d3c7e84014f7f3f47b77eff0</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:30 SPS project setup done!</span><span></div><div class='input'><span class='co'># first preprocess method</span>
+<span class='no'>prepro_log</span> <span class='kw'>&lt;-</span> <span class='fu'>makePrepro</span>(
+    <span class='st'>"log"</span>, <span class='st'>"take log of first column"</span>,
+    <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
+        <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>data_filtered</span>))
+            <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input input data need to be a dataframe"</span>)
+    }, <span class='kw'>vd_name</span> <span class='kw'>=</span> <span class='st'>"log method pre-checks"</span>),
+    <span class='kw'>pre_expr</span> <span class='kw'>=</span> {
+        <span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>is.numeric</a></span>(<span class='no'>data_filtered</span>[ ,<span class='fl'>1</span>]))
+            {<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span>(<span class='no'>data_filtered</span>[ ,<span class='fl'>1</span>] <span class='kw'>&gt;</span> <span class='fl'>0</span>)){
+                <span class='no'>data_filtered</span>[ ,<span class='fl'>1</span>] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>data_filtered</span>[ ,<span class='fl'>1</span>])}
+            }
+        <span class='no'>data_filtered</span>
+    },
+    <span class='kw'>plot_options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"plot_xx1"</span>, <span class='st'>"plot_xx2"</span>)
+    )
+<span class='co'>## remember to save these helper functions in a R scripts under the R</span>
+<span class='co'>## folder. They will be automatically sourced when app starts.</span>
+<span class='no'>myPreprocess</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>data</span>){
+    <span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>is.numeric</a></span>(<span class='no'>data</span>[ ,<span class='fl'>1</span>]))
+        <span class='no'>data</span>[ ,<span class='fl'>1</span>] <span class='kw'>&lt;-</span> <span class='no'>data</span>[ ,<span class='fl'>1</span>] + <span class='fl'>1</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='no'>data</span>)
+}
+<span class='no'>myVd</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>data</span>, <span class='no'>vd_name</span>){
+    <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
+        <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>data</span>))
+            <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input input data need to be a dataframe"</span>)
+    }, <span class='kw'>vd_name</span> <span class='kw'>=</span> <span class='no'>vd_name</span>)
+}
+<span class='co'># second preprocess method</span>
+<span class='no'>prepro_addone</span> <span class='kw'>&lt;-</span> <span class='fu'>makePrepro</span>(
+    <span class='st'>"addone"</span>, <span class='st'>"add one to first column"</span>,
+    <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'>myVd</span>(<span class='no'>data_filtered</span>, <span class='st'>"add one method pre-checks"</span>),
+    <span class='kw'>pre_expr</span> <span class='kw'>=</span> <span class='fu'>myPreprocess</span>(<span class='no'>data_filtered</span>),
+    <span class='kw'>plot_options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"plot_xx1"</span>)
+)
+<span class='co'># Combine two methods and make a new data tab</span>
+<span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_test1"</span>,  <span class='st'>"test 1"</span>,
+           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_prepro"</span>,
+           <span class='kw'>prepro_methods</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>prepro_log</span>, <span class='no'>prepro_addone</span>)
+           )</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:30 Write to file SPS_prepro/R/tab_vs_data_test1.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
+#&gt;  /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_prepro/R/tab_vs_data_test1.R ℹ 
+#&gt; ────────────────────────────────────────────────────────────────────────────────
+#&gt; Status	Count	Legend 
+#&gt; ✓ 	0	File unchanged.
+#&gt; ℹ 	1	File changed.
+#&gt; x 	0	Styling threw an error.
+#&gt; ────────────────────────────────────────────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-17 18:34:33 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-17 18:34:33 New tab created!</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -68,16 +68,14 @@
 
       
 
-      </header><script src="systemPipeShiny_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="systemPipeShiny_files/font-awesome-5.1.0/css/all.css" rel="stylesheet">
-<link href="systemPipeShiny_files/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet">
-<div class="row">
+      </header><script src="systemPipeShiny_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>
 <span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny</h1>
                         <h4 class="author">Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher and Thomas Girke</h4>
             
-            <h4 class="date">Last update: 16 September, 2020</h4>
+            <h4 class="date">Last update: 17 September, 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/systemPipeR/systemPipeShiny/blob/master/vignettes/systemPipeShiny.Rmd"><code>vignettes/systemPipeShiny.Rmd</code></a></small>
       <div class="hidden name"><code>systemPipeShiny.Rmd</code></div>
@@ -418,19 +416,19 @@ a.bttn-default {
 <p>Before starting with SPS, you need to create a SPS project:</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">sps_tmp_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span>()
 <span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_tmp_dir</span>, <span class="kw">change_wd</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">project_name</span> <span class="kw">=</span> <span class="st">"SPSProject"</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-15 15:12:44 Start to create a new SPS project</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:12:44 Create project under /tmp/RtmpyKwjTm/SPSProject</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:12:44 Now copy files</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:12:44 Create SPS database</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:12:44 Created SPS database method container</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:12:44 Creating SPS db...</code></pre>
-<pre><code>## [SPS-DANGER] 2020-09-15 15:12:44 Db created at '/tmp/RtmpyKwjTm/SPSProject/config/sps.db'. DO NOT share this file with others
-## [SPS-INFO] 2020-09-15 15:12:44 Key md5 e97ee075a7d939dfac3ac5fc8b566956
-## [SPS-INFO] 2020-09-15 15:12:44 SPS project setup done!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Start to create a new SPS project</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Create project under /tmp/RtmpJocvAt/SPSProject</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Now copy files</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Create SPS database</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Created SPS database method container</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Creating SPS db...</code></pre>
+<pre><code>## [SPS-DANGER] 2020-09-17 17:25:40 Db created at '/tmp/RtmpJocvAt/SPSProject/config/sps.db'. DO NOT share this file with others
+## [SPS-INFO] 2020-09-17 17:25:40 Key md5 7264e0bd02d3f634432e1ad424e204ff
+## [SPS-INFO] 2020-09-17 17:25:40 SPS project setup done!</code></pre>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">sps_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">sps_tmp_dir</span>, <span class="st">"SPSProject"</span>)</pre></body></html></div>
 <p>Here for building the vignette we are not switching to the app directory and are using a temp directory, in a real case, you <strong>shouldn’t</strong> store you SPS project in a <strong>temp directory</strong>. Just use the following instead:</p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>()</pre></body></html></div>
-<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200916</p>
+<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200917</p>
 <p style="color:var(--info)">
 Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 </p>
@@ -448,7 +446,7 @@ Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 <p>On default start, current SPS contains the workflow tabs, one example data tab, and one example plot tab for visualization. We have created many more plots options and they are distributed as “SPS plugins”. A SPS plugin is a special formed R package. You need to install the plugin like you do with normal R packages by <code>install.packages</code>, <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> or <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The plugins(packages) come with SPS tabs, data, and other helper functions. Using <code><a href="../reference/spsAddPlugin.html">spsAddPlugin()</a></code> function, you are able to load them into SPS framework.</p>
 <p>Using <code><a href="../reference/spsAddPlugin.html">spsAddPlugin()</a></code> without any argument will list all available plugins and instructions to install them.</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span>()</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-16 21:54:21 Current SPS has following plugins</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Current SPS has following plugins</code></pre>
 <pre><code>## spsBio               Biological plots
 ## BiocManager::install("systemPipeR/spsBio")</code></pre>
 <p>To load a specific plugin:</p>
@@ -942,33 +940,33 @@ Note: An object called <code>data_filtered</code> is created for you which conta
 </p>
 <div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
     <span class="kw">prepro_methods</span> <span class="kw">=</span> <span class="no">pms</span>, <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Asserting tab ID</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Asserting info for tab data_new</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 checking tab ID</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 checking output path</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 checking tab ID in tabs.csv</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Tab id no conflict, continue.</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 checking R folder</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Creates descrption</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Parsing common validation</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Parsing preprocess methods</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Parsing package requirements</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Parsing author(s)</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Ensure all template replacements are length 1 strings</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Start to inject to template...</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 Write to file /tmp/RtmpUgIkS2/SPSProject/R/tab_vs_data_new.R</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:24 reformat output R file</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Asserting tab ID</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Asserting info for tab data_new</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 checking tab ID</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 checking output path</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 checking tab ID in tabs.csv</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Tab id no conflict, continue.</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 checking R folder</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Creates descrption</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Parsing common validation</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Parsing preprocess methods</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Parsing package requirements</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Parsing author(s)</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Ensure all template replacements are length 1 strings</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Start to inject to template...</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 Write to file /tmp/RtmpJocvAt/SPSProject/R/tab_vs_data_new.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:40 reformat output R file</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmpUgIkS2/SPSProject/R/tab_vs_data_new.R ℹ 
+##  /tmp/RtmpJocvAt/SPSProject/R/tab_vs_data_new.R ℹ 
 ## ──────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
 ## ──────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:27 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:27 Now open the file for you</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-15 15:10:27 New tab created!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:44 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:44 Now open the file for you</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-17 17:25:44 New tab created!</code></pre>
 <p>On UI side, when you run SPS, your options will be displayed like this:</p>
 
 <div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
@@ -999,17 +997,17 @@ Note: An object called <code>data_filtered</code> is created for you which conta
 <div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="co"># We don't have the metadata tab, need to create one first.</span>
 <span class="fu"><a href="../reference/newTabPlot.html">newTabData</a></span>(<span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_meta"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"Meta Data"</span>,
     <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:27 Write to file /tmp/RtmpUgIkS2/SPSProject/R/tab_vs_data_meta.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:44 Write to file /tmp/RtmpJocvAt/SPSProject/R/tab_vs_data_meta.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmpUgIkS2/SPSProject/R/tab_vs_data_meta.R ℹ 
+##  /tmp/RtmpJocvAt/SPSProject/R/tab_vs_data_meta.R ℹ 
 ## ───────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
 ## ───────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:31 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-15 15:10:31 New tab created!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:48 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-17 17:25:48 New tab created!</code></pre>
 <div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co"># now we can use `makePlotData` method for metadata</span>
 <span class="no">pd</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="../reference/makePlotData.html">makePlotData</a></span>(<span class="kw">dataset_id</span> <span class="kw">=</span> <span class="st">"meta"</span>, <span class="kw">receive_datatab_ids</span> <span class="kw">=</span> <span class="st">"data_meta"</span>,
     <span class="kw">dataset_label</span> <span class="kw">=</span> <span class="st">"Meta data"</span>, <span class="kw">vd_expr</span> <span class="kw">=</span> <span class="fu"><a href="../reference/spsValidate.html">spsValidate</a></span>({
@@ -1024,17 +1022,17 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 </p>
 <div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="fu"><a href="../reference/newTabPlot.html">newTabPlot</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>, <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"plot_new"</span>, <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first plot tab"</span>,
     <span class="kw">plot_data</span> <span class="kw">=</span> <span class="no">pd</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:31 Write to file /tmp/RtmpUgIkS2/SPSProject/R/tab_vs_plot_new.R</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:48 Write to file /tmp/RtmpJocvAt/SPSProject/R/tab_vs_plot_new.R</code></pre>
 <pre><code>## Styling  1  files:
-##  /tmp/RtmpUgIkS2/SPSProject/R/tab_vs_plot_new.R ℹ 
+##  /tmp/RtmpJocvAt/SPSProject/R/tab_vs_plot_new.R ℹ 
 ## ──────────────────────────────────────────────
 ## Status   Count   Legend 
 ## ✓    0   File unchanged.
 ## ℹ    1   File changed.
 ## x    0   Styling threw an error.
 ## ──────────────────────────────────────────────</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:34 Now register your new tab to config/tab.csv</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-15 15:10:34 New tab created!</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:51 Now register your new tab to config/tab.csv</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-17 17:25:51 New tab created!</code></pre>
 <p>You can specify more than one tab IDs in <code>receive_datatab_ids</code> argument, meaning this type of input data can be prepared by more than one data type, <code>receive_datatab_ids = c("data_df1", "data_df2")</code>.</p>
 <p>The rendered UI will look similar to <a href="#plot_data_prep">Fig.6</a> or you can check the online <a href="https://tgirke.shinyapps.io/systemPipeShiny/">demo</a>.</p>
 </div>
@@ -1064,10 +1062,10 @@ Note: An object named <code>mydata$ + dataset_id</code> is created for you which
 <p>Use <code><a href="../reference/removeSpsTab.html">removeSpsTab(tab_id = "tabID")</a></code> to remove a tab. You can check <em>config/tabs.csv</em> to see what are the tabs and tab IDs you have. <code>tab_id</code> only allows one character string but allows <strong>regular expression</strong> match. By default, if it matches more than one ID, function aborts, unless you change <code>multiple = TRUE</code>. The function will ask for your confirmation if any match is found, and you can directly proceed without confirmation by <code>force = TRUE</code>, in case you want to do it in a programmatic way or use it in a loop. Once the function runs, it will remove both records in <em>config/tabs.csv</em> and tab files in <em>R</em> folder.</p>
 <div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># for example, to remove the new tab we just created</span>
 <span class="fu"><a href="../reference/removeSpsTab.html">removeSpsTab</a></span>(<span class="st">"data_new"</span>, <span class="kw">force</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:34 Matched tab(s): data_new</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:34 1 tabs removed from tabs.csv</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-15 15:10:34 Now remove file /tmp/RtmpUgIkS2/SPSProject/R/tab_vs_data_new.R</code></pre>
-<pre><code>## [SPS-SUCCESS] 2020-09-15 15:10:34 Removal complete</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:51 Matched tab(s): data_new</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:51 1 tabs removed from tabs.csv</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-17 17:25:51 Now remove file /tmp/RtmpJocvAt/SPSProject/R/tab_vs_data_new.R</code></pre>
+<pre><code>## [SPS-SUCCESS] 2020-09-17 17:25:51 Removal complete</code></pre>
 <p>There are 3 main types of tabs in current version of SPS: <em>core</em>, <em>wf</em> and <em>vs</em>. <em>core</em> tabs are SPS framework essential tabs, <em>wf</em> tabs are Workflow Management components, and you are only allowed to modify <em>vs</em> tabs.</p>
 </div>
 <div id="build-a-plugin" class="section level2">
@@ -1162,21 +1160,21 @@ Plugin_root/
 <a href="#simple-logging" class="anchor"></a>Simple logging</h4>
 <p>The simplest logging is done by <code>msg</code> function. It prints out a message on console in <em>[Level] + time + message</em> format. By default, if you only provide the message, it uses <code>message</code> function; if you specify the level to be “warning” or “error”, it will use R base <code>warning</code> and <code>error</code> function; other levels uses <code>cat</code> method. Therefore, you can use <code>msg</code> to generate warnings or stop a function.</p>
 <div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"message"</span>)</pre></body></html></div>
-<pre><code>## [INFO] 2020-09-15 15:10:34 message</code></pre>
+<pre><code>## [INFO] 2020-09-17 17:25:51 message</code></pre>
 <div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"a warning"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"warning"</span>)</pre></body></html></div>
-<pre><code>## Warning: [WARNING] 2020-09-15 15:10:34 a warning</code></pre>
+<pre><code>## Warning: [WARNING] 2020-09-17 17:25:51 a warning</code></pre>
 <div class="sourceCode" id="cb69"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>(<span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"an error"</span>, <span class="kw">level</span> <span class="kw">=</span> <span class="st">"error"</span>))</pre></body></html></div>
 <pre><code>## Error : 
-[ERROR] 2020-09-15 15:10:34 an error</code></pre>
+[ERROR] 2020-09-17 17:25:51 an error</code></pre>
 <p>If you set the SPS option <code>use_crayon = TRUE</code>, your message will be colorful.</p>
 <p style="color: blue">
-[INFO] 2020-09-16 21:54:21 message level
+[INFO] 2020-09-17 18:34:51 message level
 </p>
 <p style="color: orange">
-[WARNING] 2020-09-16 21:54:21 warning level
+[WARNING] 2020-09-17 18:34:51 warning level
 </p>
 <p style="color: red">
-[ERROR] 2020-09-16 21:54:21 error level
+[ERROR] 2020-09-17 18:34:51 error level
 </p>
 <p><code>spsinfo</code>, <code>spswarn</code>, and <code>spserror</code> are similar to <code>msg</code> but with <em>[SPS-]</em> prefix.</p>
 </div>
@@ -1195,7 +1193,7 @@ Plugin_root/
     <span class="fu"><a href="../reference/shinyCatch.html">shinyCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"error"</span>), <span class="kw">shiny</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">blocking_level</span> <span class="kw">=</span> <span class="st">"error"</span>)
     <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Blocked\n"</span>)
 })</pre></body></html></div>
-<pre><code>## [SPS-ERROR] 2020-09-15 15:10:34 error
+<pre><code>## [SPS-ERROR] 2020-09-17 17:25:51 error
 ## Error : </code></pre>
 <p>Or you catch the exception but still allow other code to be executed.</p>
 <div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="co"># You should see the message</span>
@@ -1203,7 +1201,7 @@ Plugin_root/
     <span class="fu"><a href="../reference/shinyCatch.html">shinyCatch</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"error"</span>), <span class="kw">shiny</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
     <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Not blocked\n"</span>)
 })</pre></body></html></div>
-<pre><code>## [SPS-ERROR] 2020-09-15 15:10:34 error
+<pre><code>## [SPS-ERROR] 2020-09-17 17:25:51 error
 ## Not blocked</code></pre>
 </div>
 </div>

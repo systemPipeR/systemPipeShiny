@@ -563,7 +563,7 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
     assert_that(is.character(pg_ids))
     assert_that(length(titles) == length(pg_ids))
 
-    sapply(seq_along(pg_ids), function(i) {
+    lapply(seq_along(pg_ids), function(i) {
         tags$li(style = "margin-bottom: 0;",
                 tags$i(id = glue("{pg_ids[i]}-icon"),
                        class = "fa fa-times bg-red"),
@@ -577,7 +577,7 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
                     )
                 )
         )
-    }, simplify = FALSE) %>% {
+    }) %>% {
         shinydashboardPlus::timelineBlock(reversed = FALSE,
                                           id = glue("{pane_id}-timeline"),
                       .,
@@ -739,14 +739,14 @@ hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
         assert_that(length(hex_imgs) == length(ys))
     if(is.null(xs)) xs <- rep("-10", length(hex_imgs))
     if(is.null(ys)) ys <- rep("-20", length(hex_imgs))
-    sapply(seq_along(hex_imgs), function(i){
+    lapply(seq_along(hex_imgs), function(i){
         div(class="hex-item",
             hexLogo(id = paste0(id, i), title = hex_titles[i],
                     hex_img = hex_imgs[i], hex_link = hex_links[i],
                     footer = footers[i], footer_link = footer_links[i],
                     x = xs[i], y=ys[i])
         )
-    }, simplify = FALSE) %>% {
+    }) %>% {
         fluidRow(class = "hex-panel",
                  h5(class = "text-primary", title),
                  tagList(.)

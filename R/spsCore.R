@@ -175,9 +175,8 @@ verifyConfig <- function(app_path) {
     sps_options <-
         yaml::yaml.load_file(glue("{app_path}/config/sps_options.yaml"))
     # can't use vapply, mix types of returns
-    sps_defaults <- sapply(names(sps_options),
-                           function(x) sps_options[[x]][['default']],
-                           simplify = FALSE)
+    sps_defaults <- lapply(names(sps_options),
+                           function(x) sps_options[[x]][['default']])
     vapply(seq_along(sps_defaults),
            function(x) if(length(sps_defaults[x]) != 1)
            {
@@ -282,7 +281,8 @@ checkTabs <- function(app_path, warn_img = TRUE){
             comment = "#",
             altrep = FALSE,
             delim = ",",
-            col_types= vroom::cols(image = vroom::col_character()),
+            col_types= vroom::cols(image = vroom::col_character(),
+                                   displayed = vroom::col_character()),
             na = character())
         ),
         error = function(e){

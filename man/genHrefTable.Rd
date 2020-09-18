@@ -49,7 +49,8 @@ if(interactive()){
     spsInit()
     # will be two rows, one row is searched by tab IDs and the other is
     # searched by type.
-    rows <- list(row1 = c("core_canvas", "core_about"), row2 =  "data")
+    rows <- list(row1 = c("core_canvas", "core_about"),
+                 row2 =  "data")
     ui <- fluidPage(
         genHrefTable(rows)
     )

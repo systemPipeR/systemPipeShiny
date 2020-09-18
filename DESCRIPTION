@@ -26,7 +26,6 @@ Imports:
     RSQLite,
     colourpicker,
     crayon,
-    DESeq2,
     dplyr,
     markdown,
     methods,
@@ -46,9 +45,10 @@ Imports:
     shinyjqui,
     shinyjs,
     shinytoastr,
-    SummarizedExperiment,
+    stats,
     styler,
     tibble,
+    utils,
     vroom (>= 1.3.1),
     yaml
 Suggests:
