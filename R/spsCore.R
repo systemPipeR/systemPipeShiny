@@ -281,7 +281,8 @@ checkTabs <- function(app_path, warn_img = TRUE){
             comment = "#",
             altrep = FALSE,
             delim = ",",
-            col_types= vroom::cols(image = vroom::col_character()),
+            col_types= vroom::cols(image = vroom::col_character(),
+                                   displayed = vroom::col_character()),
             na = character())
         ),
         error = function(e){

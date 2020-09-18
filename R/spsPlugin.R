@@ -91,6 +91,10 @@
 #' vroom::vroom(file.path("testProject", "config", "tabs.csv"),
 #'              comment = "#") %>% tail()
 #' # now remove the plugin
+#' # now remove the plugin
+#' # Windows connection close is delayed, may cause problems, run next line 
+#' # before remove a plugin
+#' closeAllConnections(); quiet(gc())
 #' spsRemovePlugin(plugin = "testPlugin", app_path = "testProject", force = TRUE)
 #' # let check these files again:
 #' list.files(file.path("testProject", "R"))
@@ -375,7 +379,7 @@ spsAddPlugin <- function(
         })
     }
     spsinfo("Now rewrite 'config/tabs.csv'")
-    tab_info_new <- tab_info %>% dplyr::add_row(tab_info_plugin)
+    tab_info_new <- tab_info %>% rbind(tab_info_plugin)
     header <- readLines(file.path(app_path, "config", "tabs.csv")) %>%
         {.[str_which(., "^#")]}
     c(header, names(tab_info_new) %>% glue_collapse(sep = ","),
@@ -402,8 +406,8 @@ spsRemovePlugin <- function(
         spserror("Plugin name must be a length 1 character string")
     }
     spsinfo("Load tabs.csv from your SPS project")
-    tab_info <- .checkTabFile(app_path)
-    tab_plugin <- dplyr::filter(tab_info, plugin != "core")
+    tabs <- .checkTabFile(app_path)
+    tab_plugin <- dplyr::filter(tabs, plugin != "core")
     if(plugin == ""){
         spsinfo("Installed plugins:", TRUE)
         cat("core(unremovable)\n")
@@ -416,11 +420,20 @@ spsRemovePlugin <- function(
     spsinfo("Now rewrite 'config/tabs.csv'")
     header <- readLines(file.path(app_path, "config", "tabs.csv")) %>%
         {.[str_which(., "^#")]}
-    c(header, names(tab_info) %>% glue_collapse(sep = ","),
-      apply(tab_info[tab_info$plugin != plugin,], 1, paste, collapse = ",")) %>%
-        writeLines(con = file.path(app_path, "config", "tabs.csv"))
+    file_content <- c(header, names(tabs) %>% glue_collapse(sep = ","),
+      apply(tabs[tabs$plugin != plugin,], 1, paste, collapse = ","))
+    file_path <- file.path(app_path, "config", "tabs.csv")
+    con <- suppressWarnings(try(file(file_path, "w"), silent = TRUE)) 
+    if(inherits(con, "try-error")){
+      spswarn(c("Unable to write to ", file_path, 
+                "\nFile in use or no permission ", 
+                "use 'closeAllConnections(); gc()' and try again"))
+    } else{
+      close(con)
+      writeLines(file_content, con = file_path)
+      msg(glue("Plugin {plugin} removed!"), "SPS-SUCCESS", "green")
+    }
     options(sps = old_opt)
-    msg(glue("Plugin {plugin} removed!"), "SPS-SUCCESS", "green")
 }
 
 .removePluginFiles <- function(files, app_path, force){
