@@ -383,6 +383,7 @@ newTabData <- function(tab_id = "data_id1",
     pkgs <- .resolveTabPkg(pkgs)
     spsinfo("Parsing author(s)")
     author <- glue_collapse(author, sep = ", ")
+    eg_path = eg_path = normalizePath(eg_path, winslash = "/")
     spsinfo("Ensure all template replacements are length 1 strings")
     list(tab_id, tab_displayname, desc, common_validation,
       choices, vds, pre, author, eg_path, pkgs) %>%
@@ -462,18 +463,18 @@ newTabData <- function(tab_id = "data_id1",
 #' @examples
 #' spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_plotdata")
 #' newTabData("data_df1", "df 1",
-#'            app_path = "SPS_plotdata",
+#'            app_path = "SPS_plotdata"),
 #'            open_file = FALSE)
 #' newTabData("data_df2", "df 2",
-#'            app_path = "SPS_plotdata",
+#'            app_path = "SPS_plotdata"),
 #'            open_file = FALSE)
 #' plotdata_raw <- makePlotData("raw", "raw data",
 #'              receive_datatab_ids = "data_df1",
 #'              vd_expr = spsValidate({
-#'                      if(!is.data.frame(mydata$raw))
-#'                          stop("Input raw data need to be a dataframe")
-#'                  }, vd_name = "Validate raw data"),
-#'              app_path = "SPS_plotdata")
+#'                  if(!is.data.frame(mydata$raw))
+#'                      stop("Input raw data need to be a dataframe")
+#'              }, vd_name = "Validate raw data"),
+#'              app_path = "SPS_plotdata"))
 #' plotdata_meta <- makePlotData("meta", "meta data",
 #'              receive_datatab_ids = c("data_df1", "data_df2"),
 #'              vd_expr = spsValidate({
@@ -481,11 +482,10 @@ newTabData <- function(tab_id = "data_id1",
 #'                      stop("Input raw data need to be a dataframe")
 #'                  if(nrow(mydata$meta) < 1)
 #'                      stop("Input raw data need to have at least one row")
-#'              },
-#'              vd_name = "Validate meta data"),
-#'              app_path = "SPS_plotdata")
+#'              }, vd_name = "Validate meta data"),
+#'              app_path = "SPS_plotdata"))
 #' newTabPlot("plot_test1",
-#'            app_path = "SPS_plotdata",
+#'            app_path = "SPS_plotdata"),
 #'            plot_data = list(plotdata_raw, plotdata_meta))
 makePlotData <- function(dataset_id = "data",
                        dataset_label = "Raw data",
@@ -612,9 +612,9 @@ makePlotData <- function(dataset_id = "data",
 #' )
 #' # Combine two methods and make a new data tab
 #' newTabData("data_test1",  "test 1",
-#'            app_path = "SPS_prepro",
+#'            app_path = "SPS_prepro"),
 #'            prepro_methods = list(prepro_log, prepro_addone)
-#' )
+#'            )
 makePrepro <- function(method_id = "md1",
                        label = "New method1",
                        vd_expr = spsValidate(is.data.frame(data_filtered)),
@@ -904,7 +904,7 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         spsinfo("reformat output R file")
 
         reformat_result <- shinyCatch(styler::style_file(
-            out_p,
+            normalizePath(out_p),
             transformers =
                 styler::tidyverse_style(indent_by = 4,
                                         scope = "line_breaks")
