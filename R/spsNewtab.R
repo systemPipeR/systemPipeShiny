@@ -262,10 +262,10 @@ newTabPlot <- function(tab_id = "plot_id1",
     author <- glue_collapse(author, sep = ", ")
     spsinfo("Ensure all template replacements are length 1 strings")
     list(tab_id, tab_displayname, desc,
-      pg_id, pg_title, select_input,
-      getdata, vd, plot_expr,
-      p_out_func, p_render_func, author,
-      pkgs, hreftab, control_ui) %>%
+         pg_id, pg_title, select_input,
+         getdata, vd, plot_expr,
+         p_out_func, p_render_func, author,
+         pkgs, hreftab, control_ui) %>%
         {
             check_names <- c("tab Id", "display name", "description",
                              "progress data ID", "progress data title",
@@ -386,7 +386,7 @@ newTabData <- function(tab_id = "data_id1",
     eg_path = eg_path = normalizePath(eg_path, winslash = "/")
     spsinfo("Ensure all template replacements are length 1 strings")
     list(tab_id, tab_displayname, desc, common_validation,
-      choices, vds, pre, author, eg_path, pkgs) %>%
+         choices, vds, pre, author, eg_path, pkgs) %>%
         {check_names <- c("tab Id", "display name", "description",
                           "common validation expressions",
                           "preprocess choices", "preprocess validation",
@@ -488,14 +488,14 @@ newTabData <- function(tab_id = "data_id1",
 #'            app_path = "SPS_plotdata"),
 #'            plot_data = list(plotdata_raw, plotdata_meta))
 makePlotData <- function(dataset_id = "data",
-                       dataset_label = "Raw data",
-                       receive_datatab_ids = "data_example",
-                       vd_expr = spsValidate({
-                           if(is.data.frame(mydata$data)) TRUE
-                           else stop("Data xx needs to be a dataframe or tibble")
-                       }),
-                       app_path = getwd(),
-                       use_string = FALSE){
+                         dataset_label = "Raw data",
+                         receive_datatab_ids = "data_example",
+                         vd_expr = spsValidate({
+                             if(is.data.frame(mydata$data)) TRUE
+                             else stop("Data xx needs to be a dataframe or tibble")
+                         }),
+                         app_path = getwd(),
+                         use_string = FALSE){
     stopifnot(is.character(dataset_id) & length(dataset_id) == 1)
     stopifnot(is.character(dataset_label) & length(dataset_label) == 1)
     stopifnot(is.character(receive_datatab_ids))
@@ -799,15 +799,15 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         ) %>% glue_collapse(',\n')
     # server get data
     pt_data[['getdata']] <-
-    glue('mydata${ids} <- getData(isolate(input$source_{ids}), shared)
+        glue('mydata${ids} <- getData(isolate(input$source_{ids}), shared)
           pgPaneUpdate("pg", "{ids}", 100)') %>%
         glue_collapse('\n')
     # validates
     pt_data[['vd']] <-
-    glue('{vds}
+        glue('{vds}
          pgPaneUpdate("pg", "vd_{ids}", 100)') %>%
         glue_collapse("\n")
-     pt_data
+    pt_data
 }
 
 
@@ -934,14 +934,14 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
     stopifnot(is.logical(preview))
     spsinfo("checking tab ID")
     switch (type_sub,
-        'data' = {
-            if(!str_detect(tab_id, "^data_"))
-                spserror("Tab ID must start with 'data_'")
-        },
-        'plot' = {
-            if(!str_detect(tab_id, "^plot_"))
-                spserror("Tab ID must start with 'plot_'")
-        }
+            'data' = {
+                if(!str_detect(tab_id, "^data_"))
+                    spserror("Tab ID must start with 'data_'")
+            },
+            'plot' = {
+                if(!str_detect(tab_id, "^plot_"))
+                    spserror("Tab ID must start with 'plot_'")
+            }
     )
     spsinfo("checking output path")
     if(file.exists(out_p))
@@ -997,5 +997,4 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         {glue("'{.}'")} %>% {glue("github = c({.})")}
     glue_collapse(c(cran_text, bioc_text, github_text), sep='\n')
 }
-
 

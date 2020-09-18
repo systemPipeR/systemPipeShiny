@@ -7,7 +7,7 @@
 ^rsconnect/
 ^.git/
 ^.github/
-.idea/
+^\.idea/
 ^docs/
 manifest.json
 _pkgdown.yml
