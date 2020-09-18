@@ -93,7 +93,7 @@ To install SPS:
 ```{r, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
+BiocManager::install("systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
 ```
 
 If you are on Linux, you also need(use Ubuntu as example):

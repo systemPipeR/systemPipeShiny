@@ -4,9 +4,9 @@
 
 time_start <- Sys.time()
 library(systemPipeShiny)
+# load additional libraries you want to use here
 
-
-## suggested to install, no need to library them:
+## suggested to install:
 # to unlock some tabs, visualizations and more
 # BiocManager::install("systemPipeR")
 # BiocManager::install("DESeq2")

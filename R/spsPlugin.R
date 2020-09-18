@@ -92,7 +92,7 @@
 #'              comment = "#") %>% tail()
 #' # now remove the plugin
 #' spsRemovePlugin(plugin = "testPlugin", app_path = "testProject", force = TRUE)
-#' # let check these files again:
+#' # let's check these files again:
 #' list.files(file.path("testProject", "R"))
 #' vroom::vroom(file.path("testProject", "config", "tabs.csv"),
 #'              comment = "#") %>% tail()
