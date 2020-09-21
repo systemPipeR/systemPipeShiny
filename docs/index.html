@@ -83,7 +83,11 @@
 <p>You can install the released version of <code>systemPipeShiny</code> from Github with:</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span><span class="kw">=</span><span class="fl">TRUE</span>))
     <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
-<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeR/systemPipeShiny"</span>, <span class="kw">build_vignettes</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">dependencies</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></div>
+<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeShiny"</span>)</pre></div>
+<p>Develop version</p>
+<div class="sourceCode" id="cb2"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span><span class="kw">=</span><span class="fl">TRUE</span>))
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
+<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeR/systemPipeShiny"</span>)</pre></div>
 <p>If you are on Linux, you also need</p>
 <pre><code>sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libv8-dev
@@ -94,10 +98,10 @@ sudo apt-get install libssl-dev</code></pre>
 <h2 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h2>
 <p>To start to use SPS</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">systemPipeShiny</span>)
+<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">systemPipeShiny</span>)
 <span class="fu"><a href="reference/spsInit.html">spsInit</a></span>()</pre></div>
 <p>Then there should be a project folder created for you. By default, it is named <code>SPS_</code>+<code>DATE</code>. Your working directory should be set inside that project folder automatically. If you are using Rstudio, three main files will be opened for you: <code>global.R</code>, <code>ui.R</code> and <code>server.R</code>. Now you can just run the app by type <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">shiny::runApp()</a></code> in console or click on the green <code>&gt; Run App</code> button on top right corner of the any these 3 files in Rstudio. In your global.R, scroll down to the bottom, you should see:</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/sps.html">sps</a></span>(
+<div class="sourceCode" id="cb5"><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/sps.html">sps</a></span>(
     <span class="kw">vstabs</span> <span class="kw">=</span> <span class="st">""</span>,
     <span class="kw">server_expr</span> <span class="kw">=</span> {
         <span class="fu"><a href="reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>, <span class="st">"green"</span>)
@@ -109,7 +113,7 @@ sudo apt-get install libssl-dev</code></pre>
 <a href="#load-custom-new-tabs" class="anchor"></a>Load custom new tabs</h3>
 <p><strong>Experimental</strong></p>
 <p>After you have created your SPS project by the <code>spsInit</code> function, you can use <code>newTabData</code> to create a data tab and use <code>newTabPlot</code> to create a plot tab.</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="reference/newTabPlot.html">newTabData</a></span>(
+<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="reference/newTabPlot.html">newTabData</a></span>(
     <span class="kw">tab_id</span> <span class="kw">=</span> <span class="st">"data_new"</span>,
     <span class="kw">tab_displayname</span> <span class="kw">=</span> <span class="st">"my first data tab"</span>,
     <span class="kw">prepro_methods</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="reference/makePrepro.html">makePrepro</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="st">"do nothing"</span>,
@@ -124,7 +128,7 @@ sudo apt-get install libssl-dev</code></pre>
 <p>This code should generate a new data tab called <em>data_new</em> with a label <em>my first data tab</em> (what you see on the UI), and a new plot tab <code>plot_new</code>.</p>
 <p>The important arg <code>plot_options = "plot_new"</code> is saying this data tab can make a plot, and the plot tab ID is “plot_new”. On the plot tab similarly, <code>receive_datatab_ids = "data_new"</code> tells the framework this plot tab need to receive data from data tab <code>data_new</code>. In this way, we connect the data tab and the plot tab with each other. Of course, one data tab can link to multiple plot tabs and a plot tab can receive data from multiple data tabs too. Just specify the tab IDs by a vector <code><a href="https://rdrr.io/r/base/c.html">c(xx, xx)</a></code>.</p>
 <p>Tabs are not loaded at this point, you need to specify you do want to load them by adding them to the app main function on the <code>global.R</code> file. Then launch the app as usually. New tab files are automatically created under your R folder, registered to your <code>config/tabs.csv</code> and sourced automatically.</p>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/sps.html">sps</a></span>(
+<div class="sourceCode" id="cb7"><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/sps.html">sps</a></span>(
     <span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data_new"</span>, <span class="st">"plot_new"</span>), <span class="co"># add new tab IDs here</span>
     <span class="kw">server_expr</span> <span class="kw">=</span> {
         <span class="fu"><a href="reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>, <span class="st">"green"</span>)
@@ -141,12 +145,12 @@ sudo apt-get install libssl-dev</code></pre>
 <div id="run-to-update-the-website-docs-folder" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-to-update-the-website-docs-folder" class="anchor"></a>Run to update the website (./docs/ folder)</h3>
-<div class="sourceCode" id="cb7"><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></div>
+<div class="sourceCode" id="cb8"><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></div>
 </div>
 <div id="running-roxygen" class="section level3">
 <h3 class="hasAnchor">
 <a href="#running-roxygen" class="anchor"></a>Running roxygen</h3>
-<div class="sourceCode" id="cb8"><pre class="r"><span class="kw pkg">roxygen2</span><span class="kw ns">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span>()</pre></div>
+<div class="sourceCode" id="cb9"><pre class="r"><span class="kw pkg">roxygen2</span><span class="kw ns">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span>()</pre></div>
 </div>
 <div id="todo-list" class="section level3">
 <h3 class="hasAnchor">

@@ -142,6 +142,7 @@ In your *global.R*, scroll down to the bottom, you should see:
 ```{r, eval=FALSE}
 sps_app <- sps(
     vstabs = "",
+    plugin = "",
     server_expr = {
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }

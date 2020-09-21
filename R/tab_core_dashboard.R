@@ -5,13 +5,17 @@ core_dashboardUI <- function(id){
     ns <- NS(id)
     tagList(
         tabTitle("systemPipeShiny Welcome"),
-        h2(strong("This app is under construction,
-                  please do not use it for production.")),
-        tags$p(strong("This page controls targets file and
-                      configuration of other parameters.")),
-        p("If you cannot click some buttons, that means they are
-          disabled at current tab or you need to do other things first,
-          e.g. upload a file."),
+        h2("Introduction"),
+        p("systemPipeShiny(SPS) can help on data analysis workflow management
+        and downstream data visualizations"),
+        spsHr(),
+        p("Start to use the app by choosing 'Workflow Management' or
+          'Visualization' from the left side navigation bar."),
+        spsHr(),
+        h2("Vignette"),
+        HTML('<p>There is a <a href="https://systempipe.org/systemPipeShiny/
+             articles/systemPipeShiny.html">vignette</a> to provide more
+             details.</p>'),
         fluidRow(
             shinydashboardPlus::carousel(width = 12,
                 id = "dashcarousel",
