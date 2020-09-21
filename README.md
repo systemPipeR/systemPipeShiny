@@ -70,8 +70,26 @@ sps_app <- sps(
 
 This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
 `c("tab1", "tab2)`. See *config/tabs.csv* or use `spsTabInfo()` in your project 
-folder for what tabs IDs can be load and other tab information. SPS plugins usually 
-are a collection of tabs, the current only option is `plugin = "spsBio"`.
+folder for what tabs IDs can be load and other tab information. 
+
+### Load a plugin 
+SPS plugins usually are a collection of tabs, and they are distributed as normal 
+R packages. First, you need to install the plugin using `install.packages`, `remotes` or 
+`BiocManager`. Then under the app directory use `spsAddPlugin("PLUGIN_NAME")` to 
+load the plugin.
+
+The current only option is `spsBio`. To install, run `BiocManager::install("systemPipeR/spsBio")`. To load, run `spsAddPlugin("spsBio")`.
+In your *global.R* add it to the `plugin` argument
+
+``` r
+sps_app <- sps(
+    vstabs = "",
+    plugin = "spsBio",
+    server_expr = {
+        msg("Custom expression runs -- Hello World", "GREETING", "green")
+    }
+)
+```
 
 ### Load custom new tabs
 
