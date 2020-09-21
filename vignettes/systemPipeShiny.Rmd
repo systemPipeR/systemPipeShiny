@@ -93,7 +93,7 @@ To install SPS:
 ```{r, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
+BiocManager::install("systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
 ```
 
 If you are on Linux, you also need(use Ubuntu as example):
@@ -142,6 +142,7 @@ In your *global.R*, scroll down to the bottom, you should see:
 ```{r, eval=FALSE}
 sps_app <- sps(
     vstabs = "",
+    plugin = "",
     server_expr = {
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }

@@ -3,11 +3,18 @@ wf_mainUI <- function(id){
     ns <- NS(id)
     tagList(
         tabTitle("WF main"),
-        p("Instructions on how to use the wf utilities."),
-        a(href = "#shiny-tab-wf_targets",
-          class = "tablink", "This is an inside link"),
-        h2("This is an outside link"),
-        a(href = "https://www.google.com", "Visit !")
+        p("Workflow management helps you to prepare a data analysis workflow
+          files in SPR format or can be used in other similar compatible
+          workflow environments. Files include the metadata(targets) file,
+          workflow step file(Rmarkdown format) and a workflow config file.
+          Each of these files are prepared in a SPS tab. You can find them
+          at the left side navigation bar. SPS helps users to check the
+          formats and requirements of each file. "),
+        HTML('
+        <p>You can read more details about workflow management in the
+        <a href="https://systempipe.org/systemPipeShiny/articles/
+        systemPipeShiny.html#workflow-management">vignette</a></p>
+             ')
     )
 
 }

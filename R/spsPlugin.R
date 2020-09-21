@@ -1,4 +1,4 @@
-##########################   SPS plugins    ####################################
+    ##########################   SPS plugins    ####################################
 
 #' SPS plugin operations
 #' @description `spsAddPlugin()` adds an existing SPS plugin to a SPS project,
@@ -92,11 +92,11 @@
 #'              comment = "#") %>% tail()
 #' # now remove the plugin
 #' # now remove the plugin
-#' # Windows connection close is delayed, may cause problems, run next line 
-#' # before remove a plugin
-#' closeAllConnections(); quiet(gc())
+#' # Windows connection close is delayed, may cause problems, uncomment to run
+#' # next line before remove a plugin and try again
+#' # closeAllConnections(); quiet(gc())
 #' spsRemovePlugin(plugin = "testPlugin", app_path = "testProject", force = TRUE)
-#' # let check these files again:
+#' # let's check these files again:
 #' list.files(file.path("testProject", "R"))
 #' vroom::vroom(file.path("testProject", "config", "tabs.csv"),
 #'              comment = "#") %>% tail()
@@ -387,7 +387,7 @@ spsAddPlugin <- function(
         writeLines(con = file.path(app_path, "config", "tabs.csv"))
 }
 
-           ########### remove plugin #############
+########### remove plugin #############
 
 #' @rdname spsAddPlugin
 #' @param force bool, if plugin files found, confirm before remove?
@@ -421,17 +421,17 @@ spsRemovePlugin <- function(
     header <- readLines(file.path(app_path, "config", "tabs.csv")) %>%
         {.[str_which(., "^#")]}
     file_content <- c(header, names(tabs) %>% glue_collapse(sep = ","),
-      apply(tabs[tabs$plugin != plugin,], 1, paste, collapse = ","))
+                      apply(tabs[tabs$plugin != plugin,], 1, paste, collapse = ","))
     file_path <- file.path(app_path, "config", "tabs.csv")
-    con <- suppressWarnings(try(file(file_path, "w"), silent = TRUE)) 
+    con <- suppressWarnings(try(file(file_path, "w"), silent = TRUE))
     if(inherits(con, "try-error")){
-      spswarn(c("Unable to write to ", file_path, 
-                "\nFile in use or no permission ", 
-                "use 'closeAllConnections(); gc()' and try again"))
+        spswarn(c("Unable to write to ", file_path,
+                  "\nFile in use or no permission ",
+                  "use 'closeAllConnections(); gc()' and try again"))
     } else{
-      close(con)
-      writeLines(file_content, con = file_path)
-      msg(glue("Plugin {plugin} removed!"), "SPS-SUCCESS", "green")
+        close(con)
+        writeLines(file_content, con = file_path)
+        msg(glue("Plugin {plugin} removed!"), "SPS-SUCCESS", "green")
     }
     options(sps = old_opt)
 }

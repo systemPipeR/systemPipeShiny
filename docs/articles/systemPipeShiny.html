@@ -75,7 +75,7 @@
 <span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny</h1>
                         <h4 class="author">Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher and Thomas Girke</h4>
             
-            <h4 class="date">Last update: 17 September, 2020</h4>
+            <h4 class="date">Last update: 18 September, 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/systemPipeR/systemPipeShiny/blob/master/vignettes/systemPipeShiny.Rmd"><code>vignettes/systemPipeShiny.Rmd</code></a></small>
       <div class="hidden name"><code>systemPipeShiny.Rmd</code></div>
@@ -401,7 +401,7 @@ a.bttn-default {
 <a href="#install" class="anchor"></a>Install</h2>
 <p>To install SPS:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)) <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
-<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeR/systemPipeShiny"</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeShiny"</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
     <span class="kw">dependencies</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p>If you are on Linux, you also need(use Ubuntu as example):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">sudo</span> apt-get install libv8-dev</span>
@@ -428,7 +428,7 @@ a.bttn-default {
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">sps_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">sps_tmp_dir</span>, <span class="st">"SPSProject"</span>)</pre></body></html></div>
 <p>Here for building the vignette we are not switching to the app directory and are using a temp directory, in a real case, you <strong>shouldn’t</strong> store you SPS project in a <strong>temp directory</strong>. Just use the following instead:</p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>()</pre></body></html></div>
-<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200917</p>
+<p>By default, you will get a folder created under your current working directory, the name is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g.  SPS_20200918</p>
 <p style="color:var(--info)">
 Note: all SPS date or time stamp objects use <em>ISO 8601</em> format
 </p>
@@ -1168,13 +1168,13 @@ Plugin_root/
 [ERROR] 2020-09-17 17:25:51 an error</code></pre>
 <p>If you set the SPS option <code>use_crayon = TRUE</code>, your message will be colorful.</p>
 <p style="color: blue">
-[INFO] 2020-09-17 18:34:51 message level
+[INFO] 2020-09-18 16:39:41 message level
 </p>
 <p style="color: orange">
-[WARNING] 2020-09-17 18:34:51 warning level
+[WARNING] 2020-09-18 16:39:41 warning level
 </p>
 <p style="color: red">
-[ERROR] 2020-09-17 18:34:51 error level
+[ERROR] 2020-09-18 16:39:41 error level
 </p>
 <p><code>spsinfo</code>, <code>spswarn</code>, and <code>spserror</code> are similar to <code>msg</code> but with <em>[SPS-]</em> prefix.</p>
 </div>
