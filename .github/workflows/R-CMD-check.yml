@@ -66,15 +66,9 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
-          remotes::install_github("dreamRs/particlesjs")
-          install.packages(c("BiocManager", "ape", "knitcitations", "DOT", "rmarkdown", "glue"))
-          BiocManager::install("Biostrings")
-          BiocManager::install("DESeq2")
+          remotes::install_github('rstudio/rmarkdown')
+          install.packages(c("BiocManager", "ape", "knitcitations", "DOT", "glue"))
           BiocManager::install("BiocStyle")
-          BiocManager::install("DelayedArray")
-          BiocManager::install("SummarizedExperiment")
-          BiocManager::install("systemPipeR")
-          BiocManager::install("systemPipeRdata")
         shell: Rscript {0}
 
       - name: Check
