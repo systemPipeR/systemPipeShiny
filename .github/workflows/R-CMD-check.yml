@@ -68,7 +68,7 @@ jobs:
           remotes::install_cran("rcmdcheck")
           remotes::install_github('rstudio/rmarkdown')
           install.packages(c("BiocManager", "ape", "knitcitations", "DOT", "glue"))
-          BiocManager::install("BiocStyle")
+          remotes::install_github("Bioconductor/BiocStyle")
         shell: Rscript {0}
 
       - name: Check
