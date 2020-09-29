@@ -5,8 +5,8 @@
 ![R-CMD-check](https://github.com/systemPipeR/systemPipeShiny/workflows/R-CMD-check/badge.svg)
 <!-- badges: end -->
 
-`systemPipeShiny`(SPS) a Shiny-based R/Bioconductor package that forms a framework for workflow management and data visualization. 
-
+`systemPipeShiny`(SPS) a Shiny-based R/Bioconductor package that extends the widely used 
+[systemPipeR](http://www.bioconductor.org/packages/release/bioc/html/systemPipeR.html) workflow environment and data visualization with a versatile graphical user interface.
 
 There is an online demo of [systempipeShiny](https://tgirke.shinyapps.io/systemPipeShiny/). 
 This application is hosted by a small server. Do not use it for production activities. 
@@ -14,24 +14,25 @@ Heavy tasks will crash it and disconnect you from it.
 
 ## Installation
 
-You can install the released version of `systemPipeShiny`:
+To install the package, please use the `BiocManager::install` command:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install("systemPipeShiny")
+BiocManager::install("systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
+
 ```
-Develop version
+To obtain the most recent updates immediately, one can install it directly from 
+[GitHub](https://github.com/systemPipeR/systemPipeShiny) as follow:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install("systemPipeR/systemPipeShiny")
+BiocManager::install("systemPipeR/systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
 ```
 
-
-If you are on Linux, you also need following. Different distributions may have different 
-commands, Ubuntu for example:
+If you are on Linux, you may also need the following libraries. Different distributions 
+may have different commands, but the following commands are examples for Ubuntu:
 
 ```
 sudo apt-get install libcurl4-openssl-dev
@@ -40,102 +41,32 @@ sudo apt-get install libxm12-dev
 sudo apt-get install libssl-dev
 ```
 
-## Setup
+## Quick start
 
-To start to use SPS
+This is a basic example which shows how to use `systempipeShiny` package:
 
 ``` r
+## Imports the library
 library(systemPipeShiny)
+## Creates the project directory
 spsInit()
 ```
 
-Then there should be a project folder created for you. By default, it is named `SPS_`+`DATE`. 
-Your working directory should be set inside that project folder automatically. 
-If you are using Rstudio, *global.R* file will be opened for you and this is the 
-only file you need to make custom changes, if there is any.
-Now you can just run the app by type `shiny::runApp()` in console or click on the green `> Run App` 
-button on top right corner of the any these 3 files in Rstudio. 
-In your *global.R*, scroll down to the bottom, you should see:
-
+By default, a project folder is created and named as `SPS_`+`DATE`. 
+This project folder provides all the necessary files to launch the application. If you are using Rstudio, `global.R` file will be opened automatically and this is the only file you may need to make custom changes if there is any.
 
 ``` r
-sps_app <- sps(
-    vstabs = "",
-    plugin = "",
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
+## Launching the interface
+shiny::runApp()
 ```
 
-This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
-`c("tab1", "tab2)`. See *config/tabs.csv* or use `spsTabInfo()` in your project 
-folder for what tabs IDs can be load and other tab information. 
+# Contact
 
-### Load a plugin 
-SPS plugins usually are a collection of tabs, and they are distributed as normal 
-R packages. First, you need to install the plugin using `install.packages`, `remotes` or 
-`BiocManager`. Then under the app directory use `spsAddPlugin("PLUGIN_NAME")` to 
-load the plugin.
-
-The current only option is `spsBio`. To install, run `BiocManager::install("systemPipeR/spsBio")`. To load, run `spsAddPlugin("spsBio")`.
-In your *global.R* add it to the `plugin` argument
-
-``` r
-sps_app <- sps(
-    vstabs = "",
-    plugin = "spsBio",
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
-```
-
-### Load custom new tabs
-
-After you have created your SPS project by the `spsInit` function, you can use `newTabData` to create a data tab 
-and use `newTabPlot` to create a plot tab.
-
-```r
-newTabData(
-    tab_id = "data_new", 
-    tab_displayname = "my first data tab",
-    prepro_methods = list(makePrepro(label = "do nothing",
-                                     plot_options = "plot_new"))
-)
-newTabPlot(
-    tab_id = "plot_new",
-    tab_displayname = "my first plot tab",
-    plot_data = list(makePlotData(dataset_label = "Data from my new tab",
-                                  receive_datatab_ids = "data_new"))
-           )
-```
-This code should generate a new data tab called *data_new* with a label *my first data tab* (what 
-you see on the UI), and a new plot tab `plot_new`.
-
-The important arg `plot_options = "plot_new"` is saying this data tab can make a plot, and the 
-plot tab ID is "plot_new". On the plot tab similarly, `receive_datatab_ids = "data_new"` tells 
-the framework this plot tab need to receive data from data tab `data_new`. In this way, we connect 
-the data tab and the plot tab with each other. Of course, one data tab can link to multiple 
-plot tabs and a plot tab can receive data from multiple data tabs too. Just specify the 
-tab IDs by a vector `c(xx, xx)`.
-
-Tabs are not loaded at this point, you need to specify you do want to load them by adding them 
-to the app main function on the `global.R` file. Then launch the app as usually. New tab files 
-are automatically created under your R folder, registered to your `config/tabs.csv` and 
-sourced automatically.
-
-``` r
-sps_app <- sps(
-    vstabs = c("data_new", "plot_new"), # add new tab IDs here
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
-```
-If you don't want any tab file, use `removeSpsTab("TAB_ID")` to remove a tab. It will remove the R 
-file and delete records in your `config/tabs.csv` file. 
-
+For additional details regarding the functions of `systempipeShiny`, please consult 
+the vignette available [here](https://systempipe.org/systemPipeShiny/articles/systemPipeShiny.html).
+ 
+Please use https://github.com/systemPipeR/systemPipeShiny/issues for reporting bugs, 
+issues or for suggesting new features to be implemented.
 
 ## Internal 
 
