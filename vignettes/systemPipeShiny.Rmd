@@ -246,7 +246,9 @@ tab information. Currently you can only load/unload visualization tabs, the key 
 The [developer section](#extend-sps) will teach you how to create your own tabs.
 
 For this vignette example, we will use as it is, so now you can run the SPS by typing 
-`shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
+`shiny::runApp()`^[<font style="color:red">ThG: This is the most important command of 
+the entire vignette. Why is it burried in the text. I would move it up to the beginning and
+dedicate a code box to it.</font>] in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
 button on top right corner in Rstudio. The app should be launched. Click on the 
 "Continue to app" button on the welcome screen and you should see SPS main dashboard like this one (Fig.2):
 
@@ -259,7 +261,7 @@ All SPS tabs are well classified into WF and VS part. We will start from WF mana
 
 ## Workflow management
 
-Workflow^[<font style="color:red">ThG: I wouldn't abbreviate work throught the text.</font> management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
+Workflow^[<font style="color:red">ThG: I wouldn't abbreviate work throught the text.</font>] management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
 R package that runs a WF in "command line + R code" manner. To run a SPR WF, you 
 need to prepare three very important files: a metadata(targets) file that contains 
 sample information, a workflow step file(Rmarkdown format) that defines the WF steps 
@@ -273,7 +275,8 @@ in SPS will be supported in an upcomming release.
 
 ### Prepare a target file
 Read ["Structure of targets file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file) section in SPR vignette to better undertand the 
-structure of this file. 
+structure of this file. ^[<font style="color:red">ThG: describe here briefly what a targets
+file is and how it relates to the colData slot in an SummarizedExperiment object.</font>]
 
 Now let us follow the order below to prepare a target file for a RNAseq project (Fig.3 A):
 
