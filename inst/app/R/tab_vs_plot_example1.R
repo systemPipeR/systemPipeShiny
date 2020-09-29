@@ -87,8 +87,13 @@ plot_example1Server <- function(id, shared){
             mydata$data <- getData(isolate(input$source_data), shared)
             pgPaneUpdate('pg', 'data', 100)
             spsValidate({
-                if (ncol(mydata$data) > 1) TRUE
+                vd_data <- as.data.frame(mydata$data)
+                if (ncol(vd_data) > 1) TRUE
                 else stop("Need more than 1 column")
+                if(any(names(vd_data) %in% "PC1")) TRUE
+                else stop("PC1 column missing")
+                if(any(names(vd_data) %in% "PC2")) TRUE
+                else stop("PC2 column missing")
             }, "Raw data column check")
 
             pgPaneUpdate('pg', 'vd_data', 100)
