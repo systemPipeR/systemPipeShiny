@@ -128,18 +128,18 @@ Let us use an **RNAseq** workflow as the example to demonstrate how to use SPS.
 After installation and before launching SPS, the first thing you need to do is to create 
 a SPS project: 
 
-```{r spsinit, eval=TRUE}
+
+```{r , eval=FALSE}
+spsInit(project_name = "SPSProject")
+sps_dir <- "SPSProject"
+```
+
+```{r spsinit, eval=TRUE, echo=FALSE}
 sps_tmp_dir <- tempdir()
 spsInit(app_path = sps_tmp_dir, change_wd = FALSE, project_name = "SPSProject")
 sps_dir <- file.path(sps_tmp_dir, "SPSProject")
 ```
-Here for building the vignette we are not switching to the app directory and are using a 
-temp directory, in a real case, you **should not** store you SPS project in a **temp directory**.
-Just use the following instead:
 
-```{r , eval=FALSE}
-spsInit()
-```
 
 
 By default, you will have a folder created under your current working directory, 
