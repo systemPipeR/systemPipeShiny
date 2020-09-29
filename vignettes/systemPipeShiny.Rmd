@@ -472,13 +472,14 @@ messages on console to tell you specifically what is wrong with your options.</p
 
 | Option          | Description                       | Default | Other     |
 |-----------------|-----------------------------------|---------|-----------|
-| mode            | running mode                      | "local" | "server"  |
+| mode            | running mode                      | "server"| "local"   |
 | warning_toast   | show security warnings?           | TRUE    | FALSE     |
 | loading_screen  | show loading screen?              | TRUE    | FALSE     |
 | loading_theme   | loading screen theme              | "vhelix"| any string|
 | use_crayon      | colorful console message?         | TRUE    | FALSE     |
-| verbose         |more details for SPS functions?    | TRUE    | FALSE     |
-| admin_url       |admin_page query url               | "admin" | any string|
+| verbose         | more details for SPS functions?   | FALSE   | TRUE      |
+| admin_page      | show admin page?                  | FALSE   | TRUE      |
+| admin_url       | admin_page query url              | "admin" | any string|
 
 some details:
 
@@ -489,7 +490,7 @@ some details:
 - warning_toast: A toast pop-up message when you are under some dangerous options when app starts.
 - loading_theme: `loading_screen` must be `TRUE`. Only one theme for now, we will add more in future.
 - verbose: Give you more information on debugging.
-- admin_url: the admin page url , will be added in an upcoming version, a preview can be seen by adding "/?admin" to the end of app url, e.g. "[https://tgirke.shinyapps.io/systemPipeShiny/?admin](https://tgirke.shinyapps.io/systemPipeShiny/?admin)".
+- admin_url: the admin page url, `admin_page` must be `TRUE` for it to work. It will be added in an upcoming version, a preview can be seen by adding "/?admin" to the end of app url, e.g. "[https://tgirke.shinyapps.io/systemPipeShiny/?admin](https://tgirke.shinyapps.io/systemPipeShiny/?admin)".
 
 ### Tab configurations
 

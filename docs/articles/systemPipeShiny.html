@@ -679,8 +679,8 @@ Note: Do not worry if you set some invalid values, on app start, <code><a href="
 <tr class="odd">
 <td>mode</td>
 <td>running mode</td>
-<td>“local”</td>
 <td>“server”</td>
+<td>“local”</td>
 </tr>
 <tr class="even">
 <td>warning_toast</td>
@@ -709,10 +709,16 @@ Note: Do not worry if you set some invalid values, on app start, <code><a href="
 <tr class="even">
 <td>verbose</td>
 <td>more details for SPS functions?</td>
-<td>TRUE</td>
 <td>FALSE</td>
+<td>TRUE</td>
 </tr>
 <tr class="odd">
+<td>admin_page</td>
+<td>show admin page?</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
 <td>admin_url</td>
 <td>admin_page query url</td>
 <td>“admin”</td>
@@ -734,7 +740,7 @@ Note: Do not worry if you set some invalid values, on app start, <code><a href="
 <li>warning_toast: A toast pop-up message when you are under some dangerous options when app starts.</li>
 <li>loading_theme: <code>loading_screen</code> must be <code>TRUE</code>. Only one theme for now, we will add more in future.</li>
 <li>verbose: Give you more information on debugging.</li>
-<li>admin_url: the admin page url , will be added in an upcoming version, a preview can be seen by adding “/?admin” to the end of app url, e.g. “<a href="https://tgirke.shinyapps.io/systemPipeShiny/?admin">https://tgirke.shinyapps.io/systemPipeShiny/?admin</a>”.</li>
+<li>admin_url: the admin page url, <code>admin_page</code> must be <code>TRUE</code> for it to work. It will be added in an upcoming version, a preview can be seen by adding “/?admin” to the end of app url, e.g. “<a href="https://tgirke.shinyapps.io/systemPipeShiny/?admin">https://tgirke.shinyapps.io/systemPipeShiny/?admin</a>”.</li>
 </ul>
 </div>
 <div id="tab-configurations" class="section level3">

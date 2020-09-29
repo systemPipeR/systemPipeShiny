@@ -1,6 +1,6 @@
 mode:
-    default: local
-    other: [server]
+    default: server
+    other: [local]
 
 loading_screen:
     default: true

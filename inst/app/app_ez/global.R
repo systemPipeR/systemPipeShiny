@@ -4,19 +4,8 @@
 
 time_start <- Sys.time()
 library(systemPipeShiny)
-# load additional libraries you want to use here
+# load additional libraries that you want to use here
 
-## suggested to install:
-# to unlock some tabs, visualizations and more
-# BiocManager::install("systemPipeR")
-# BiocManager::install("DESeq2")
-# BiocManager::install("edgeR")
-# BiocManager::install("ape")
-# BiocManager::install("glmpca")
-# BiocManager::install("RColorBrewer")
-# BiocManager::install("pheatmap")
-# BiocManager::install("limma")
-# BiocManager::install("Rtsne")
 
 ## SPS options
 # mode: running mode - local, server
@@ -25,14 +14,14 @@ library(systemPipeShiny)
 # loading_theme: loading screen themes, loading_screen need be TRUE - vhelix
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
-# admin_url: admin_page query url - admin
+# admin_url: admin_page query url - "admin"
 options(sps = list(
-    mode = "local",
+    mode = "server",
     warning_toast = FALSE,
     loading_screen = TRUE,
     loading_theme = "vhelix",
     use_crayon = TRUE,
-    verbose = TRUE,
+    verbose = FALSE,
     admin_page = FALSE,
     admin_url = "admin"
 ))
