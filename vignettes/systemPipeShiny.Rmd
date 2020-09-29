@@ -257,9 +257,9 @@ button on top right corner in Rstudio. The app should be launched. Click on the
 
 All SPS tabs are well classified into WF and VS part. We will start from WF management.
 
-## WF management
+## Workflow management
 
-WF management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
+Workflow^[<font style="color:red">ThG: I wouldn't abbreviate work throught the text.</font> management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
 R package that runs a WF in "command line + R code" manner. To run a SPR WF, you 
 need to prepare three very important files: a metadata(targets) file that contains 
 sample information, a workflow step file(Rmarkdown format) that defines the WF steps 
