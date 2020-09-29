@@ -1,5 +1,5 @@
 ---
-title: '<span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny'
+title: 'systemPipeShiny'
 author: "Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher and Thomas Girke"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`" 
 output:
@@ -62,38 +62,30 @@ knitr::include_graphics(path = "../inst/app/www/img/sps.png")
 # Introduction
 
 **<span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny**(SPS)
-is a [Shiny](https://shiny.rstudio.com/)-based R/Bioconductor package that  has two main purposes: 
+is a [Shiny](https://shiny.rstudio.com/)-based R/Bioconductor package that has 
+a graphical user interface (GUI). SPS is able to:
 
- 1. To help non-programmers like wet lab researchers on data analysis workflow management and downstream data 
-visualizations with a graphical user interface(GUI). 
- 2. An user friendly framework for both beginning and advanced developers to fast extend 
- with more visualization options(more plot types) and to quickly deploy the app to a Shiny sever. 
+ 1. Help for researchers on data analysis workflow management and downstream data 
+visualizations in quick and user friendly manner. 
+ 2. Provides an framework to be fast extended with more components and 
+ an web app that is open-box-ready-to-deploy to any Shiny server.
  
 You can try our demo at [here](https://tgirke.shinyapps.io/systemPipeShiny/). There are 5 
 different interactive tutorials embedded on the demo that you can follow(right upper corner). 
-Each tutorial covers a major topic of SPS and show how you can interactive with app.
+Each tutorial covers a major topic of SPS and shows how you can interactive with app.
 
-This vignette introduces main features and functionalities of SPS. Due to size limit, 
-a full version of users' manual will be later updated at [SytemPipeShiny-book](https://systempipe.org/systemPipeShiny-book/) 
-which will include more small demos, screenshots, and *gif* illustrations.
+This vignette illustrate the main concepts of SPS by using an RNAseq workflow as the 
+example.
 
-## Motivation
 
-SPS is originally designed as a GUI extension for the R workflow environment tool systemPipeR(SPR)
-to help users prepare a workflow and understand the workflow structure in an interactive way. 
-Later, SPS is enriched with other utilities, like the visualization part. Therefore, we decide to 
-move SPS as a stand-alone package. 
-
-# Quick start
-
-## Install
+# Installation
 
 To install SPS:
 
 ```{r, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install("systemPipeShiny", build_vignettes=TRUE, dependencies=TRUE)
+BiocManager::install("systemPipeShiny")
 ```
 
 If you are on Linux, you also need(use Ubuntu as example):
@@ -105,11 +97,36 @@ sudo apt-get install libcurl4-openssl-dev
 ```
 *libcurl4-openssl-dev* may not be required for Ubuntu > 18.04.
 
-Depending on the Linux distributions, command can be slightly different. 
+Depending on the Linux distributions, the command can be slightly different. 
 
-## Start the app
+# Main concept 
 
-Before starting with SPS, you need to create a SPS project: 
+The SPS is designed into two major categories, workflow management (WF) and 
+data visualization (VS) (*Fig 1*). WF part helps users to 
+prepare data analysis workflow files. 
+VS part helps users to make different types of plots, take interactive snapshot 
+of plots and combine/compare different plots on the "Canvas" workbench. 
+
+<center id="sps_structure">
+![SPS_structure](./img/sps_structure.png)
+**Figure 1. SPS Structure**
+</center>
+
+Inside the two major categories, there are small components. They are **SPS tabs**. 
+A SPS tab is similar to any other web dashboard tabs you see on the internet. Tabs 
+in SPS are built on top of [Shiny modules](https://shiny.rstudio.com/articles/modules.html) 
+as individual files. The modular structure makes it very easy to extend with more 
+SPS tabs. Functions and instructions are provided in the [developer section](#extend-sps). 
+
+
+# Step-by-step instruction of with an example workflow
+
+Let us use an **RNAseq** workflow as the example to demonstrate how to use SPS.
+
+## Create a SPS project
+
+After installation and before launching SPS, the first thing you need to do is to create 
+a SPS project: 
 
 ```{r spsinit, eval=TRUE}
 sps_tmp_dir <- tempdir()
@@ -117,7 +134,7 @@ spsInit(app_path = sps_tmp_dir, change_wd = FALSE, project_name = "SPSProject")
 sps_dir <- file.path(sps_tmp_dir, "SPSProject")
 ```
 Here for building the vignette we are not switching to the app directory and are using a 
-temp directory, in a real case, you **shouldn't** store you SPS project in a **temp directory**.
+temp directory, in a real case, you **should not** store you SPS project in a **temp directory**.
 Just use the following instead:
 
 ```{r , eval=FALSE}
@@ -125,69 +142,10 @@ spsInit()
 ```
 
 
-By default, you will get a folder created under your current working directory, 
+By default, you will have a folder created under your current working directory, 
 the name is `SPS_` + `today's date` in *ISO 8601* format, e.g. 
-`r glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")`
+`r glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")`. It looks like this:
 
-<p style="color:var(--info)">Note: all SPS date or time stamp objects use *ISO 8601* format</p>
-
-By default, your working directory should be set inside that project folder automatically. 
-If you are using Rstudio, *global.R* file will be opened for you. This is the only
-file that you need to make custom change if there is any. 
-Now you can just run the app by typing `shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
-button on top right corner in Rstudio. 
-In your *global.R*, scroll down to the bottom, you should see:
-
-
-```{r, eval=FALSE}
-sps_app <- sps(
-    vstabs = "",
-    plugin = "",
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
-```
-
-This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
-`c("tab1", "tab2)`. Open *config/tabs.csv* or use `spsTabInfo()` to see what tabs IDs can be load and other 
-tab information. Currently you can only load/unload visualization tabs, key word `vs` under column "*type*"; essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatically and these tabs cannot be modified. 
-
-Also, SPS tabs are built on top of [Shiny modules](https://shiny.rstudio.com/articles/modules.html) and there is one top-level server that is above all tabs(modules). You can run additional top-level server code by passing it to `server_expr` argument. If the expression is multiple-lined, use `{}` to wrap them. 
-
-## SPS plugins
-
-On default start, current SPS contains the workflow tabs, one example data tab, and 
-one example plot tab for visualization. We have created many more plots options and 
-they are distributed as "SPS plugins". A SPS plugin is a special formed R package. 
-You need to install the plugin like you do with normal R packages by `install.packages`, 
-`BiocManager::install` or `remotes::install_github()`. The plugins(packages) come with 
-SPS tabs, data, and other helper functions. Using `spsAddPlugin()` function, you 
-are able to load them into SPS framework. 
-
-Using `spsAddPlugin()` without any argument will list all available plugins and 
-instructions to install them. 
-
-```{r , eval=TRUE}
-spsAddPlugin()
-```
-
-To load a specific plugin:
-
-```{r , eval=FALSE}
-spsAddPlugin(plugin = "PLUGIN_NAME", app_path = "PATH_OF_SPS")
-```
-
-At this stage, there is only one plugin, the *spsBio*: plots for biological data 
-visualization. There will be more plugins in the near future. 
-
-For developers, read [Build a Plugin](#build-a-plugin) section for building your 
-own SPS plugins. 
-
-# SPS structure
-## App directory structure
-
-When a SPS project is created, you would expect the directory contains: 
 <pre>
 SPS_xx/  
 ├── server.R               <span class="text-success">|</span> 
@@ -220,380 +178,275 @@ SPS_xx/
         └── plot_xx.jpg      
 </pre>
 
-## App UI structure
-SPS provides two core components -- **workflow management** and **data visualization**. 
-The UI is designed as a dashboard(*Fig 1*). Individual components are classified 
-into two categories of tabs (*Fig 1. a-b*).
+
+## Launch SPS 
+
+By default, your working directory should be set inside that project folder automatically. 
+If you are using Rstudio, *global.R* file will be opened for you. This is the only
+file that you need to make custom change if there is any. 
+
+In your *global.R*, scroll down to the bottom, you should see:
+
+```{r, eval=FALSE}
+sps_app <- sps(
+    vstabs = c("data_example", "plot_example1", "plot_example2"),
+    plugin = "",
+    server_expr = {
+        msg("Custom expression runs -- Hello World", "GREETING", "green")
+    }
+)
+```
+
+This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
+`c("tab1", "tab2)`. Open *config/tabs.csv* or use `spsTabInfo()` to see what tabs IDs can be load and other 
+tab information. Currently you can only load/unload visualization tabs, the key word `vs` under column "*type*"; essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatically and these tabs cannot be modified.
+The [developer section](#extend-sps) will teach you how to create your own tabs.
+
+For this vignette example, we will use as it is, so now you can run the SPS by typing 
+`shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
+button on top right corner in Rstudio. The app should be launched. Click on the 
+"Continue to app" button on the welcome screen and you should see SPS main dashboard like this one (Fig.2):
 
 <center id="sps_ui">
 ![sps_ui](./img/sps_ui_main.jpg)
-**Figure 1. SPS UI**
+**Figure 2. SPS UI**
 </center>
 
-The app UI structure can be understood as following(*Fig 2*). Users first need to choose 
-either the workflow or visualization part to start with. Workflow part helps users to 
-prepare data analysis workflow files in [systemPipeR](http://systempipe.org/)(SPR) format. 
-Visualization part helps users to make different types of plots, take interactive snapshot 
-of plots and combine/compare different plots on the "Canvas" workbench. 
+All SPS tabs are well classified into WF and VS part. We will start from WF management.
 
-To start, clicking on the "Workflow Management" or "Visualization" on the left navigation 
-bar will direct you to the workflow or visualization main page. There will be some 
-general summary and instructions.
+## WF management
 
-<center id="sps_structure">
-![SPS_structure](./img/sps_structure.png)
-**Figure 2. SPS Structure**
-</center>
+WF management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
+R package that runs a WF in "command line + R code" manner. To run a SPR WF, you 
+need to prepare three very important files: a metadata(targets) file that contains 
+sample information, a workflow step file(Rmarkdown format) that defines the WF steps 
+and a WF config file that helps the program to set up your directory. In SPS, one 
+can easily prepare all of these three files in SPS tabs under "Workflow Management" 
+section. You can find them at the left side navigation bar (Fig2 a-b). 
 
-# UI details(for users)
-## Workflow management 
+Under current version of SPS, we only help you to prepare and check format of these 
+files. One should save these files and run a WF in SPR. Directly running a SPR WF 
+in SPS will be supported in an upcomming release.
 
- Workflow management helps you to prepare a data analysis workflow files in SPR format or can be used in other similar 
- compatible workflow environments. Files include the metadata(targets) file, workflow 
- step file(Rmarkdown format) and a workflow config file. Each of these files are 
- prepared in a SPS tab. You can find them at the left side navigation bar. 
- SPS helps users to check the formats and requirements of each file. Users can click on the
-<button type="button" class="btn btn-default">
-    <i class="fa fa-paper-plane"></i>
-        Add to task
-</button> 
-button on the page to check for problems. If everything is correct, a 
-pop-up message will show to users or if anything is wrong, a detailed window will 
-pop up to indicate errors. 
+### Prepare a target file
+Read ["Structure of targets file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file) section in SPR vignette to better undertand the 
+structure of this file. 
 
-In the upcoming version of SPS, users can directly run a workflow on the app, but for 
-now users need to download these files and copy them to a SPR project and run from 
-command line or R. You can download these files by clicking 
-<button  class="btn btn-default">
-     <i class="fa fa-download"></i>
-     Save
-</button>.
+Now let us follow the order below to prepare a target file for a RNAseq project (Fig.3 A):
 
-To see how your file preparation status, you can also open up the [progress tracker](#progress-tracking).
-
-### Targets file
-
-In SPR environment, the metadata file is also called the *targets file*. The *Targets* 
-tab in SPS will help you to prepare this file(*Fig3. A*). The targets file has 2 
-parts: header and data. Header should start with `#` and you can edit it or add new 
-lines in the editing box. Data is loaded as a table, and you can edit, right-click 
-to add/remove records. If you are on *[local mode](#app-options)*, the left-side panel will also 
-show targets statistics and can help you to check the file existence of your selected column. 
+1. Choose "Targets" from navigation bar;
+2. Select either "Example PE" or "Example SE"" for using a pair-end/single-end target file, then choose "confirm" on the pop-up. You will see the exmaple is loaded like Figure 3A. 
+3. You can edit, right click to add/remove rows/columns (The first row is treated as column names);
+4. SPR target file requres a header and you can edit it here. Headers should start with "#";
+5. The left section can help you to check sample statistics and file existence. Choose any column you want from the dropdown to check and watch the statistics bar change in this section;
+6. Click on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right;
+7. Now your target file is ready and you can click "save" to download it and later use in a SPR project. 
+8. Click on the "-" button on the "Workflow Progress", you should see the "Targets file" becomes green. 
 
 <center>
 ![wf_targets](./img/sps_ui_targets.png)
 **Figure 3. A. Workflow Management - Targets File**
 </center>
 
-### Workflow file
+### Prepare a workflow file
 
-A workflow file is a file that defines workflow steps. In SPR, this is provided as 
-a R markdown file, so you need to prepare a file with `.Rmd` extension or download 
-one [template from SPR](https://github.com/tgirke/systemPipeR). Once you have uploaded or used the example, you can see the 
-workflow steps in a tree-like structure(*Fig3. B*). The step levels in SPR are defined by
-the hash tag `#` level in Rmd, the same way as the tile level in a markdown file. 
-For example, text and code under a single `#` title means this is a top level step, 
-text and code under `##` title is a secondary sub step ...
+In SPR, workflows are defined in Rmarkdown files, you can read details and obtain them  [here](https://systempipe.org/pages/pipelines_area/).
 
-To choose the steps you want to run, check them inside the "Choose the steps you want"
-section. If there are some substeps under a major step, you can click the triangle button 
-<img src=img/sub_step_icon.png style="display: inline; padding-left:0; width:10px; height:10px;"> to
-expand and choose substeps. 
+Now let us follow the order below to see how SPS helps you to prepare a WF file for a RNAseq project (Fig.3 B):
 
-If at least one step is checked, the 4 buttons in "Choose the steps you want" will be enabled.
-
-- <button  class="btn btn-default"><i class="fa fa-download"></i>Save New Rmd</button> Save your chosen steps and download as a new workflow file.
-- <button  class="btn btn-default"><i class="fa fa-redo-alt"></i>Plot steps</button> A workflow diagram show the order of execution of steps you choose.
-- <button  class="btn btn-default"><i class="fa fa-redo-alt"></i>Report preview</button> The preview of what the workflow R markdown file look like when it is rendered, but no code is executed. 
-- <button  class="btn btn-default"><i class="fa fa-paper-plane"></i>Add to task</button> Add to a workflow task, will be useful in future. 
-
-
-<p style="color:var(--info)">Note: Skip(uncheck) some steps may cause the workflow fail to run, read more [SPR instructions](https://systempipe.org/docs/systemPipeR/)</p>
+1. Choose "Workflow File" from navigation bar;
+2. Choose "Example Rmd" to load an RNAseq WF;
+3. You can see the WF steps are displayed like a tree structure;
+4. Check all steps in the WF that you want to include. You can skip (leave blank) some steps but it may cause the WF to fail. Read more SPR instructions before do so. 
+5. Click on the "Plot steps" will show a flow chart of what the step execution orders will be when you run the WF in SPR. 
+6. Click "Report preview" generates a preview of what the final report will look like for current RNAseq WF, but in the preview, no code is evaluated.
+7. If you are satisfied with your WF file, click "Add to task" to update the workflow preparation progress just like it is for "targets file".
+8. Now choose "Save New Rmd" to save this new WF file to later be used a SPR RNAseq project running. 
 
 <center>
-![wf_wf](./img/sps_wf_wf.png)
+![wf_wf](./img/sps_ui_wf.png)
 **Figure 3. B. Workflow Management - Workflow File**
 </center>
 
-### Configuration File
+### Prepare a configuration file
 
-SPR uses a *yaml* file to control some workflow configurations. It is automatically been 
-generated when you create a SPR project and normally you don't need to change anything. 
-Here the config tab just provides a place you can edit the config file and download it 
-back to a SPR project.
+In SPR, the config file *SPRconfig.yaml* is required to define information like *project path*, *targets file path* and more. 
+Normally, this file is generated automatically when one starts a SPR project, but if any modification is made, 
+one needs to update this config file. For example, like we are now using SPS to prepare targets file and WF file and when we download these new files, file names and locations may be changed. In this case, we can update the config file in SPS (Fig.3 C):
 
-## Data Visualization
-
-### data visualization tabs
-
-There are two types of data visualization(VS) tabs: **data tab** and **plot tab**. A data 
-tab is where you prepare plotting data, including different preprocess options. 
-Depending on the data tab and preprocess options you choose, you will be given different 
-plot tab options. 
-
-You should first going to the VS main tab by clicking *<i class="fa fa-images"></i>Visualization*
-and read the instructions there.
-
-There are two ways to make a plot:
-
-1. **Begin with a data tab**: If you know have run some data analysis workflows and have obtained results but don't know what you can plot from these results, browse the table on visualization main tab. The table is sorted by workflows as rows(*Fig.4 top*). Based on the data type you have, you can click on the data tabs in the table, you will jump to the corresponding data preparation tab and you will see what plots you can make after data preparation.
-2. **Begin with a plot tab**: If you already know what plots you want, there is a gallery on visualization main tab(*Fig.4 bottom*). You can click on the plot you want and it will jump to the plot tab directly. On the redirected plot tab, you will see to make this plot what input data need to be prepared. By choosing under the **Data Preparation**, you will go to a data tab and once you have prepared the required data, you will be guided back to this plotting tab to make the plot.
-
-You can take a look of the VS table and VS gallery on the VS main page by clicking 
-"Visualization" on the left navigation bar(*Fig.4*).
-
-<center id="vs_main">
-![vs_main](./img/sps_vs_main.png)
-**Figure 4. Summary table and gallery on VS main tab**
-</center>
-
-
-All VS tabs has a start-up button
-<button  type="button" class="btn btn-default">Start with this tab</button>
-which will first check for packages requirements. If you don't have the required package for 
-the tab, there will be a pop-up window telling you how to install the required packages.
-In addition to package checks, plot tabs will also check for required plotting data. 
-Depending on missing or unqualified data, you will see different error messages on the 
-bottom right corner. See [SPS logging](#dual-end-logging) in for more information. 
-If everything is good, you will still see a green message and the main tab UI will 
-show up and you can continue. 
-
-### Data tabs
-
-Once you have passed the package checks, you should see the data tab main UI. Please 
-read the instructions on the top of each tab for how to prepare your data and data 
-format requirements. All SPS data tabs come with an example data set, and if you
-are not sure what data to prepare, you can first switch to the example data set and 
-play with it. When you are familiar with the tab, you can upload your own data set. 
-
-```{r , echo=FALSE, eval=TRUE}
-shiny::HTML('
-<div id="df_template-data_source" class="radioGroupButtons shiny-bound-input" style="padding-left: 60px;">
-  <div aria-label="..." class="btn-group btn-group-justified btn-group-container-sw" data-toggle="buttons" role="group">
-    <div class="btn-group btn-group-toggle" role="group">
-      <button class="btn radiobtn btn-default active">
-        <input type="radio" autocomplete="off" name="df_template-data_source" value="upload" checked="checked">
-        Upload
-      </button>
-    </div>
-    <div class="btn-group btn-group-toggle" role="group">
-      <button class="btn radiobtn btn-default">
-        <input type="radio" autocomplete="off" name="df_template-data_source" value="eg">
-        Example
-      </button>
-    </div>
-  </div>
-</div>    
-')
-```
-
-
-<p style="color:var(--info)">Note: Upload file selection can be different depending on the mode, see [App options](#app-options)</p>
-
-```{r , echo=FALSE, eval=TRUE}
-shiny::HTML('
-<div class="input-group" style="width: 30%; padding-left: 60px">
-  <label class="input-group-btn input-group-prepend">
-    <span class="btn btn-file btn-default">
-      Browse
-      <input id="df_template-file_upload" name="df_template-file_upload" type="file" style="display: none;">
-    </span>
-  </label>
-  <input type="text" class="form-control" placeholder="No file selected" readonly="readonly">
-</div>
-')
-```
-
-
-After you have used the example or uploaded the example data, the data table will 
-be displayed in the *Input Data* section. Depending on what you have uploaded and 
-the file format, you may need to change the file delimiter and the comment character. 
-They look like following:
-```{r , echo=FALSE, eval=TRUE}
-shiny::HTML('
-<div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px;">,</button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <label class="dropdown-item">Space</label>
-        <label class="dropdown-item">Tab</label>
-        <label class="dropdown-item">|</label>
-        <label class="dropdown-item">:</label>
-        <label class="dropdown-item">;</label>
-    </div>
-</div>
-<input type="text" value="#" placeholder="">
-')
-```
-
-The table will be displayed like this: 
+1. Choose "Targets" from navigation bar;
+2. Choose "Example" to load an RNAseq config file;
+3. Edit the file content and follow *yaml* format. You may need to update the target file and WF file name and location in the "*targets*" and "*Rmd*" lines here. 
+4. Once your editing is done, click "Add to task" to update the progress;
+5. Now your new config file is ready and you can click "Save" to download it;
+6. The progress tracker should all become green, which means you are ready to run the RNAseq workflow in SPR. 
 
 <center>
-![data_table](./img/sps_data_table.png)
-**Figure 5. Data tab input table**
+![wf_config](./img/sps_ui_config.png)
+**Figure 3. C. Workflow Management - Config File**
 </center>
 
-You can filter data by key words or by range if the column is numeric. There are 
-some other options on the top-left corner where you can copy data to clipboard, export 
-as csv, Excel and other functions. Editing the table content is technically possible but 
-disabled over here, because one should not edit large data table by hand and the workload will be 
-heavy for the sever. SPS is not designed for this purpose. Please edit the input data 
-in a professional data editing tool before upload.
+###  Finish WF management
 
-When you are satisfied with the input data, you can preprocess the filtered data 
-by selecting a preprocess method and hit the "Preprocess" button to start. The preprocess
-takes place in the server-side. When it is done, you will see some green messages 
-on the right-bottom corner. Otherwise, you will see orange warning boxes or red 
-error boxes telling you the details.
+If you have followed this instruction so far, the three most important WF files 
+have been created. You can copy them over to your SPR RNAseq project root and start to 
+generate results. 
 
-```{r , echo=FALSE, eval=TRUE}
-shiny::HTML('
-<div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px;">Do nothing</button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <label class="dropdown-item">Method 1</label>
-        <label class="dropdown-item">Method 2</label>
-    </div>
-</div>
-<button  class="btn btn-default">
-     <i class="fa fa-paper-plane"></i>
-     Preprocess
-</button>
-')
-```
+## Visualize workflow results
 
-Once the preprocess is done, different plot options will show up as a gallery that 
-is similar to the one on the VS main tab([*Fig.4*](#vs_main)), but is only limited to a few possible plots. 
+In the previous step that we have prepared files for running a SPR RNAseq workflow. 
+Now assume that the workflow has been successfully run and we have obtained some results. In this 
+part, we will use an example **count table** (RPKM normalized) to demonstrate 
+how to use the VS components. 
 
-What kinds of preprocess methods, how many possible plotting options available are purely depend on 
-the tab developers. Read instructions on the top of each tab will give you better clues 
-of what is possible on the tab. 
+VS tabs in SPS are sub-defined into two small groups, *data tabs* and *plot tabs*. A data tab 
+is where you prepare, filter and preprocess data. A plot tab is where the actual plots are generated.
+A plot tab requires at least one dataset from a data tab. Therefore, we need to first 
+prepare data in a data tab, depending on the preprocess method we choose, we will be given 
+different plot options (going to different plot tabs).
 
-### Plot tabs
+In this part, we will first load the raw count table and preprocess it in "Data Tab Example", generate some plots in "Plot Tab Example", and finally compare plots in the "Canvas" tab.
 
-When you have prepared data from a data tab and jump to a plotting tab. Again, read the instructions(Description) on the top first. 
+### Load raw count data
 
-There will be a "Data preparation" section right below the "Description" section(*Fig. 6*).
-Most plots only require one type of data input. If that is the case, select which tab your 
-data in coming from by the dropdown menu under "*select which tab(s) your data is coming from:*". 
-Even if a plot tab only has one type data input, but you need to clarify where the data is coming from,
-because different data tabs can prepare the same kind of input data. See [Figure 2](#sps_structure) 
-for details of relationship between data and plot tabs.
+Follow instructions in Figure 4A:
 
-Some plot tabs require more than one type of data input. For example, experimental 
-data and sample information(metadata), just like *Figure 6*. In this case, you need to 
-go to different data tab(s) and prepare other set(s) of data like usual. The "data 
-preparation" should clearly state how many data sets you need to have and where 
-you can prepare them.
-
-If you are not sure if you have the required data set(s), click on the 
-<button type="button" class="btn btn-default">
-        Start/Reload
-</button> 
-button and SPS will check/validate required data for you. If everything is okay, 
-there will be a green message on the right-bottom corner and you should see some 
-plotting control elements appear on the "Plotting" section. If not, there will be 
-different colored message boxes telling you the error. Or you can open up the 
-[progress tracker](#progress-tracking) on the top-right corner to see what is missing. 
-These are plot control UIs. They control how the plot is generated, such as 
-what the plot title is, where the legend location is, what colors to use for 
-samples, and more. These part is defined by the tab developer, so they should 
-give you instructions at tab "Description" section. 
-
-<center id="plot_data_prep">
-![plot_data_prep](./img/sps_plot_data_prep.png)
-**Figure 6. Plot Data Preparation**
-</center>
-
-Click on the 
-<button type="button" class="btn btn-default">
-    <i class="fa fa-paper-plane"></i>
-        Render/Snapshot plot
-</button> 
-button the **first** time will generate the plot and you can tweaking different plot 
-control options to change your plot looking. You can drag the plot 
-by <img src=img/resize_icon.png style="display: inline; padding-left:0; width:10px; height:10px;"> on
-the bottom-right corner of the plot to 
-resize your plot to unlimited height and at maximum your screen width. 
-
-- You can then right click to save the plot as an image if the plot is rendered by 
-[ggplot](https://ggplot2.tidyverse.org/) or some base R plots. 
-- Most SPS examples/built-in plots are rendered by [Plotly](https://plotly.com/r/) 
-and they are interative plots, so you cannot right-click. 
-Instead, there is the <i class="fa fa-camera"></i> icon 
-on plot you click to download the screenshot. 
-
-Both methods take the screenshot of 
-your plot "what you see is what you get", meaning the height and width will be the same as 
-what you see on SPS when you download the screenshot. Of course, you can use some other 
-third-party screenshot tools as well. 
-
-Click on the 
-<button type="button" class="btn btn-default">
-    <i class="fa fa-paper-plane"></i>
-        Render/Snapshot plot
-</button> 
-button the **second** time and on will take a "snapshot" of current plot. You should see 
-the message on bottom-right to info you that a snapshot of current plot has been sent 
-to snapshot. 
-
-## Snapshot and Canvas
-
-Snapshot and Canvas are part of SPS VS functionality and are designed for users to 
-
-- combine different kinds of plots from different plot tabs.
-- compare the same plot at different state(under different plot options)
- 
-### Snapshot
-
-When a snapshot is taken from a plot tab, it records the plot states and control options 
-and can later be displayed on the Canvas. One example will be: there is a plotting option to 
-choose how many samples on the plot and then you choose 5 and take a *snapshot1.* When this *snapshot1* is displayed 
-on the Canvas, there will be 5 samples. Later, you change the sample to 10 and take *snapshot2.* At this point, 
-*snapshot1* and *snapshot2* will both be displayed on Canvas and one plot has 5 samples one has 10. These two plots on 
-the Canvas are now independent from each other and both independent to the original plot on the plot tab. Whatever
-the additional change you make on the plot tab, these two snapshots will not be affected.
-
-It is similar to a screenshot of a plot, but this "screenshot" is still interactive if 
-the plot is rendered by an interactive plotting library, like a plotly plot, or at least 
-can be a resizable vector image if it is rendered by base or ggplot2. 
-
-#### Manage snapshots
-
-Snapshots can be managed by clicking *(Snapshots <i class="fa fa-camera"></i>)* on the 
-very top banner of SPS app. There will be dropdown tab displayed(*Fig.7*).
-
-- On top section:
-    - Left: your current snapshots 
-    - Right: you can drag a snapshot to right side and click the destroy to permanently delete unwanted snapshots.
-- Bottom section: You can download current snapshots in a compressed file and later upload it back to SPS. In this way, you can keep your snapshots and resume in a later time. 
-
-<p style="color:var(--info)">Note: Downloaded snapshots are encrypted for app security reasons. Each SPS project has its own encryption key, so you cannot upload snapshot files to a different SPS project. You need to contact the project owner to decrypt the snapshot file, use another project's key to encrypt it and then it can work in another project. See [developer section](#extend-spsfor-developers) for more details.</p>
-
+1. Select "Data Tab Example" tab from the left;
+2. Click "Start with this tab", it will be hidden after package requirement check has passed in the background. So it is not displayed in the figure. 
+3. Let us load an example RPKM  read count table. If you upload your own table, 
+the first column must be "Genes" and the rest of columns are treated as samples and they must be numeric values only. 
+4. You can click on box below each column name to filter data. 
+5. You can export your filtered data into clipboard, csv files, Excel ...
+6. After the data filtration, we can start to preprocess data. Here are two methods you can choose from the left dropdown menu: "Do Nothing" does not change the filtered data, and "PCA" calculates PCs based on samples. Let us just try "Do Nothing";
+7. When the data is preprocessed, plot options will be displayed in the below. You need to scroll down a little to see. "Do Nothing"  will give you the option 
+for a bar plot. Click on the plot image will redirect you to the corresponding tab. 
 
 <center>
-![sps_snapshot](./img/sps_snapshot.png)
-**Figure 7. Snapshot management**
+![data_tab](./img/sps_ui_data_tab.png)
+**Figure 4 A. VS - data tab**
 </center>
+
+### Create a plot
+
+Follow instructions in Figure 4B:
+
+1. Skip this step if you jumped directly from the "Data Tab Example", otherwise select "Plot Bar" to start;
+2. Click "Start/Reload", this button will validate if you have the required data set. If yes, you will see plot options and other UI.
+3. Click on "Render/Snapshot plot" to create the first plot. In SPS, the first time clicking on "Render" button creates a preview of the plot. From the second time and on, clicking on this button will take a *"snapshot"* of the plot. In SPS a snapshot is plot frozen with particular set of input data and plot options. It is isolated from the original plot tab and you cannot modify it anymore. It is similar to a screenshot but you can still interact within the plot. You will have a better understanding when we reach the *Canvas* section.
+4. Now you can interact with plot. Try to hover your mouse and move around the plot. There are many interactive components on the plot. Read more of what you can interact with a [Plotly plot](plotly.com).
+5. There is a tiny triangular icon on the right bottom corner of the plot where you can drag it to resize the plot to at most your window width and unlimited height;
+6. A panel of plot selection tools including a screenshot button is on the top 
+right;
+7. Let us take a snapshot by clicking "Render". You should see a blue message pop up from the right bottom of your screen.
+8. You can change the plot title by changing the text. This example plot tab only provides very simple plot controls. Change the text and watch how the plot title change. 
+9. Change a title and click "Render" again to take a second snapshot.
+
+<center>
+![plot_tab](./img/sps_ui_plot_tab.png)
+**Figure 4 B. VS - plot tab**
+</center>
+
+## Snap shots and Canvas
 
 ### Canvas
 
-Canvas is a playground or a workbench where you can view all saved snapshots. 
-Then you can resize, drag plots around to make a big figure. Figure 8 illustrates: 
-compare plot snapshots from the same plot tab but with different sample size or groups. 
+SPS Canvas is a place to display snapshots.  Snap shots can come from different
+plot tabs, or the same plot tab with different plot options. Here you can combine 
+plots together to a big scientific figure and compare plots with different plotting options side by side. 
 
-- Resize: Just like a plot in a plot tab, every plot on Canvas has a <img src=img/resize_icon.png style="display: inline; padding:0px; width:10px; height:10px;"> icon on the bottom-right corner of the plot. Left-click and drag it to the size you want.
-- Reposition: When you mouse hovers on any plot snapshot, the blue title will appear, drag on the title and move your mouse will reposition the entire snapshot.
-- Exclude snapshots:
-    - Hover on any plot snapshot, when title appears, click on the "X" icon will temporarily remove the snapshot from current Canvas, but when you click on <button type="button" class="btn btn-default">Refresh Canvas</button>, it will come back.
-    - Drag snapshots from "Current Snashots" box to "Snapshots excluded" box will prevent them to render on Canvas even when you refresh the Canvas. This still will not delete a snapshot. only [Manage snapshots](#manage-snapshots) tab can delete a snapshot. 
-- Adding text: adding additional text like a figure title etc. will be supported in the upcoming release.
+If you have followed the instructions so far, you should have at least two snapshots and we can start to use Canvas.
+
+1. Select "Canvas" tab;
+2. You will see your snapshots in "Current snapshots" box. If you do not want to 
+see any of them, drag it to the right side so it will not be rendered on Canvas.
+3. Click "Refresh Canvas" to render the Canvas for a quick glimpse; 
+4. You can change some Canvas settings on top;
+5. In the "bar plot" section, we took two snapshots, one with original plot title and one with custom title. If you made the change, you can see it is reflected on 
+Canvas. Move your mouse on the plots, you can see they are still interactive. Then, when you move the mouse near the top of a plot, a title section will show up and you can drag it to reposition your plot. 
+6. Similar to a plot tab, you can resize any plot on Canvas by dragging the bottom right corner of a plot. 
 
 <center>
-![systemPipeShiny](./img/sps_ui_canvas.png)
-**Figure 8. Canvas**
+![plot_tab](./img/sps_ui_canvas.png)
+**Figure 5 A. Canvas**
 </center>
 
-# Important features
+Now go back to [Load raw count data](#load-raw-count-data) section and select 
+"PCA" option in step 6 to reprocess and then go to PCA plot tab and repeat
+instructions in [Create a plot](#create-a-plot) to create and snapshot a few PCA 
+plots. The PCA plot tab has an additional plot point size control UI. You can try 
+to take snapshots with different point size. Finally come back to canvas and render all snapshots. You should then be able to see how point size on plots are different in different snapshots. 
+Now you can have a better understanding of the SPS snapshot-Cnavas feature.
+
+### Snapshot management
+
+Taking too many snapshots will slow down the app. A good solution is to manage 
+them through the snapshot manage menu. You can access it by clicking the 
+button "Snapshots" with a camera icon on the very top of SPS dashboard banner. 
+It will open up a big menu screen (Fig. 5B). 
+
+1. The left side displays all current snapshots. The label means the plot tab ID of which plot tab it comes from and the number after the dash means it is the Nth snapshot coming from that particular plot tab;
+2. If you want to delete any snapshot, drag it to the right;
+3. Click on "DESTROY" will permanently delete selected snapshots and cannot be recovered.
+4. Download your current snapshots to a compressed file.
+5. You can upload saved snapshot file and continue to work on it later. 
+
+Due to internet security reasons, snapshot files are encrypted. Each SPS project 
+has an unique key pair. Therefore, it is not possible to run a snapshot file in 
+a different SPS project. 
+
+<center>
+![plot_tab](./img/sps_ui_snap.png)
+**Figure 5 B. snapshot management**
+</center>
+
+
+
+# Advanced features
+
+
+## SPS plugins
+
+We have created many more plots options and 
+they are distributed as "SPS plugins". A SPS plugin is a collection of SPS tabs that 
+become small R packages. 
+You need to install the plugin like you do with normal R packages by `install.packages`, 
+`BiocManager::install` or `remotes::install_github()`. The plugins(packages) come with 
+SPS tabs, data, and other helper functions. Using `spsAddPlugin()` function, you 
+are able to load them into SPS framework. 
+
+Using `spsAddPlugin()` without any argument will list all available plugins and 
+instructions to install them. 
+
+```{r , eval=TRUE}
+spsAddPlugin()
+```
+
+To load a specific plugin:
+
+```{r , eval=FALSE}
+spsAddPlugin(plugin = "PLUGIN_NAME", app_path = "PATH_OF_SPS")
+```
+
+At this stage, there is only one plugin, the *spsBio*: plots for biological data 
+visualization. It is **under testing and please expect unstableness**. Under your project 
+directory:
+
+```{r, eval=FALSE}
+remotes::install_github("systemPipeR/spsBio")
+spsAddPlugin(plugin = "spsBio")
+```
+
+Inside your SPS project root, in the *global.R* file, specify that you want to 
+load the plugin to app and start the app like normal:
+```{r}
+sps_app <- sps(
+    vstabs = c("data_example", "plot_example1", "plot_example2"),
+    plugin = "spsBio",
+    server_expr = {
+        msg("Custom expression runs -- Hello World", "GREETING", "green")
+    }
+)
+```
 
 ## Configuration
 
@@ -613,9 +466,9 @@ viewSpsDefaults(app_path = sps_dir)
 To view a single option value, use `spsOption(opt = "OPTION_NAME")`; to overwrite a single 
 option, use `spsOption(opt = "OPTION_NAME", value = "NEW_VALUE")`.
 
-<p style="color:var(--info)">Note:Don't worry if you set some invalid values, on app start, `sps()` will check all SPS
+<p style="color:var(--info)">Note: Do not worry if you set some invalid values, on app start, `sps()` will check all SPS
 options, ignore unknown values and set invalid values back to default. You will see warning 
-messages on console to tell you specifically what's wrong with options.</p>
+messages on console to tell you specifically what is wrong with your options.</p>
 
 | Option          | Description                       | Default | Other     |
 |-----------------|-----------------------------------|---------|-----------|
@@ -625,7 +478,6 @@ messages on console to tell you specifically what's wrong with options.</p>
 | loading_theme   | loading screen theme              | "vhelix"| any string|
 | use_crayon      | colorful console message?         | TRUE    | FALSE     |
 | verbose         |more details for SPS functions?    | TRUE    | FALSE     |
-| eg_tab          |show example VS tabs?              | TRUE    | FALSE     |
 | admin_url       |admin_page query url               | "admin" | any string|
 
 some details:
@@ -655,59 +507,13 @@ sps_app <- sps(vstabs = c("ID1", "ID2", ...))
 *tabs.csv* has all the tab IDs. Under current version of SPS, you can only load/unload 
 tabs in the "vs" type. Tabs under "core" and "wf" types are unable to change.
 
-## Progress tracking
-
-A progress tracking panel is provided on each tab to notify users about run status. Tabs under workflow management 
-shares the same progress panel and each VS tab has its own individual progress tracker.
-
-The tracker is located on the top-right corner and by default it is collapsed. You can often it up by clicking 
-the "-" icon. If you think this tracker is blocking your sight, you can drag it to anywhere you like. The example 
-looks like below(draggable in the real app):
-
-<div id="plot_example-pg-pg-container" class="tab-pane" style="padding-left: 130px;">
-<div class="control-panel draggable ui-draggable ui-draggable-handle" style="width: 400px; height: auto; background-color: var(--light);">
-<div class="row">
-<div class="col-sm-1">
-</div>
-<div class="col-sm-9">
-<h5>
-Workflow-prepare
-</h5>
-</div>
-<div class="col-sm-2">
-<button class="btn btn-default" data-target="#pg-example" data-toggle="collapse" aria-expanded="true">
-<i class="fa fa-minus"></i>
-</button>
-</div>
-</div>
-<div id="pg-example" class="in collapse" aria-expanded="true" style="">
-<img src="img/sps_progress_bar.png" style="width:200% !important; padding:0; margin:0"></img>
-</div>
-</div>
-</div>
-
-## Dual-end logging
-
-Messages, warnings and errors from R functions are automatically captured and logged on
-both the server and client ends. The corresponding information can be displayed in a message box
-on bottom-right on SPS UI, see [Figure 1.f](#sps_ui). The same message will be logged to console 
-as well.
-
-## Modular isolation
-
-SPS is built on [Shiny modules](https://shiny.rstudio.com/articles/modules.html), 
-which provides local scope isolation between each tab.
-Objects on one tab do not conflict with other tabs. They work like individual posts 
-in a forum. SPS also supports global/between-tab scope interactions. Read more in 
-[developer section](#extend-spsfor-developers).
-
 ## A variety of additional shiny widgets 
 
 There are many useful HTML components that 
 can be use outside out SPS. You can include these widgets in your own Shiny apps without 
 loading SPS main framework. 
 
-# Extend SPS(for developers) 
+# Extend SPS
 
 As a framework, SPS allows users to add/remove/customize individual tabs. At current 
 version, you can only modify tabs in VS part(data tabs, plot tabs). 
@@ -715,442 +521,7 @@ Use `newTabData` to add a new data tab and `newTabPlot` for a plot tab. These fu
 will help you to **create the tab file**, store it to the *R* folder in your SPS project, and
 **register tab information** by adding records to *config/tabs.csv*.
 Most arguments are self-explanatory or can be 
-easily understood by reading the the help file. Here are some important points: 
-
-- `tab_id` must start with "data_" for a data tab and "plot_" for a plot tab.
-- Arguments with `xx_func` or `xx_expr` are expression arguments and they use [non-standard evaluation](http://adv-r.had.co.nz/Computing-on-the-language.html), please do not add quotes. If you want to use quotes, set `use_string = TRUE`
-- For expressions in SPS or Shiny, if you are expect to return an object, directly write the return object to the last line of the expression, instead of using `return(xxx)`. Expressions are not functions, you shouldn't use `return`.
-
-```{r eval=FALSE}
-# use
-{
-    a <- 1 + 1
-    a
-}
-# not 
-{
-    a <- 1 + 1
-    return(a)
-}
-```
-
-
-## New data tab
-
-To create a new data tab:
-
-```{r, eval=FALSE}
-newTabData(
-    app_path = sps_dir,
-    tab_id = "data_new", 
-    tab_displayname = "my first data tab",
-    prepro_methods = list(makePrepro(label = "do nothing",
-                                     plot_options = "plot_new"))
-)
-```
-
-### Add preprocess methods
-
-The `prepro_methods` argument controls how many different methods a data tab have 
-to preprocess the incoming data to meet the requirements of different plot tabs. 
-`prepro_methods` expect a list of `makePrepro` results. Each `makePrepro` result
-is one preprocess option. When the tab runs, it will look like this(if I have 3 methods),
-for example:
-
-```{r, eval=TRUE}
-pms <- list(
-    makePrepro(
-        method_id = "nothing", 
-        label = "Do nothing", 
-        vd_expr = spsValidate({if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")}), 
-        pre_expr = {data_filtered},
-        plot_options = "plot_new"
-    ),
-    makePrepro(
-        method_id = "md1", 
-        label = "Method 1", 
-        vd_expr = spsValidate({
-            if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
-            if(!nrow(data_filtered) < 1) stop("Data must have at least 1 row")
-        }, pass_msg = "method 1 validation pass"), 
-        pre_expr = {
-            if(is.numeric(data_filtered[, 1])) data_filtered[1, 1] = 1
-            data_filtered
-        },
-        plot_options = "plot_new"
-    ),
-    makePrepro(
-        method_id = "md2", 
-        label = "Method 2", 
-        vd_expr = spsValidate({
-            if(!is.data.frame(data_filtered)) stop("Incoming data is not a dataframe")
-            if(!ncol(data_filtered) < 2) stop("Data must have at least 2 columns")
-        }, pass_msg = "method 2 validation pass"), 
-        pre_expr = {
-            if(is.numeric(data_filtered[, 2])) data_filtered[2, 1] = 1
-            data_filtered
-        },
-        plot_options = "plot_new"
-    )
-)
-```
-
-<p style="color:var(--info)">Note: An object called `data_filtered` is created for you which contains the user filtered data table. You can directly use it in your expression like above.</p>
-
-```{r , eval=TRUE}
-newTabData(
-    app_path = sps_dir,
-    tab_id = "data_new", 
-    tab_displayname = "my first data tab",
-    prepro_methods = pms,
-    verbose = TRUE
-)
-```
-
-On UI side, when you run SPS, your options will be displayed like this:
-
-```{r , echo=FALSE, eval=TRUE}
-shiny::HTML('
-<div class="dropdown" style="display: inline; box-sizing: initial; padding-left: 60px">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px;">Do nothing</button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <label class="dropdown-item">Method 1</label>
-        <label class="dropdown-item">Method 2</label>
-    </div>
-</div>
-<button  class="btn btn-default">
-     <i class="fa fa-paper-plane"></i>
-     Preprocess
-</button>
-')
-```
-
-
-## New plot tab
-
-To create a new plot tab:
-
-```{r, eval=FALSE}
-newTabPlot(
-    app_path = sps_dir,
-    tab_id = "plot_new",
-    tab_displayname = "my first plot tab",
-    plot_data = list(makePlotData(dataset_label = "Data from my new tab",
-                                  receive_datatab_ids = "data_new",
-                                  app_path = sps_dir))
-)
-```
-
-### Add plot data
-
-The `plot_data`  argument in `newTabPlot` is very similar to `prepro_methods` in 
-`newTabData`. It controls how many different unique data sets a plot tab requires and 
-where(which data tabs) these data sets can come from. 
-`plot_data` expect a list of `makePlotData` results. Each `makePlotData` result
-specifies one unique input data set and source data tab options. For example, we want to 
-have a plot tab that needs 2 unique data set, one for metadata, one for some numeric 
-data, we can do:
-
-```{r, eval=TRUE}
-# We don't have the metadata tab, need to create one first.
-newTabData(tab_id = "data_meta", tab_displayname = "Meta Data", app_path = sps_dir)
-# now we can use `makePlotData` method for metadata
-pd <- list(
-    makePlotData(
-        dataset_id = "meta",
-        receive_datatab_ids = "data_meta",
-        dataset_label = "Meta data",
-        vd_expr = spsValidate({
-            if (is.data.frame(mydata$meta)) TRUE
-            else stop("Metadata needs to be a dataframe or tibble") 
-        }),
-        app_path = sps_dir
-    ),
-    makePlotData(
-        dataset_id = "data",
-        receive_datatab_ids = "data_new",
-        dataset_label = "Meta data",
-        vd_expr = spsValidate({
-            if (is.data.frame(mydata$data)) TRUE
-            else stop("Data needs to be a dataframe or tibble") 
-        }),
-        app_path = sps_dir
-    )
-)
-```
-
-<p style="color:var(--info)">Note: An object named `mydata$ + dataset_id` is created for you which contains the received data. You can directly use it in your expression like above.</p>
-
-```{r, eval=TRUE}
-newTabPlot(
-    app_path = sps_dir,
-    tab_id = "plot_new",
-    tab_displayname = "my first plot tab",
-    plot_data = pd
-)
-```
-
-You can specify more than one tab IDs in `receive_datatab_ids` argument, meaning 
-this type of input data can be prepared by more than one data type, `receive_datatab_ids = c("data_df1", "data_df2")`.
-
-The rendered UI will look similar to [Fig.6](#plot_data_prep) or you can check 
-the online [demo](https://tgirke.shinyapps.io/systemPipeShiny/).
-
-### Empty tab file
-
-If you don't like the structure of SPS template tabs or want to load data other than a 
-regular tabular data, like a *rds* file contains a `S4` object(you can only load 
-tabular data files with default templates), then you can create your own 
-tab structure, and it is totally supported in SPS. In `newTabData` or `newTabPlot`, change 
-`empty = TRUE` and specify `tab_id`, `display_name` and `author`. Leave all other arguments 
-as defaults. 
-
-```{r , eval=FALSE}
-newTabData(tab_id = "data_empty", tab_displayname = "an empty one", author = "me", empty = TRUE)
-```
-
-It will create an empty tab file with empty UI and server function. You can write 
-any legit shiny code inside. Again, SPS is built on [Shiny modules](#modular-isolation),
-so each tab is like a small sandbox with local variables, objects do not conflict with other tabs. 
-
-## Run new tabs
-
-There is one more final step before new tabs can be displayed on SPS. You need to 
-specify you want to add these custom new tabs in `sps()` function:
-
-```{r , eval=FALSE}
-sps_app <- sps(
-    vstabs = c("data_new", "data_meta", "plot_new"), # add new tab IDs here
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
-```
-
-
-## Remove a tab
-
-Use `removeSpsTab(tab_id = "tabID")` to remove a tab. You can check *config/tabs.csv* to 
-see what are the tabs and tab IDs you have. `tab_id` only allows one character string but allows 
-**regular expression** match. By default, if it matches more than one ID, function aborts,
-unless you change `multiple = TRUE`. The function will ask for your confirmation if 
-any match is found, and you can directly proceed without confirmation by `force = TRUE`, 
-in case you want to do it in a programmatic way or use it in a loop. Once the function 
-runs, it will remove both records in *config/tabs.csv* and tab files in *R* folder.
-
-```{r , eval=TRUE}
-# for example, to remove the new tab we just created
-removeSpsTab("data_new", force = TRUE, app_path = sps_dir)
-```
-
-There are 3 main types of tabs in current version of SPS: *core*, *wf* and *vs*. 
-*core* tabs are SPS framework essential tabs, *wf* tabs are  Workflow Management 
-components, and you are only allowed to modify *vs* tabs.
-
-## Build a Plugin
-
-If you want to create a plenty of tabs and would like to have other people to use 
-them. It is best to bundle your tabs as a SPS plugin. 
-To build a new plugin, use `spsNewPlugin()`. 
-
-```{r}
-spsNewPlugin(path = "PATH_OF_PLUGIN")
-```
-
-This will create a new directory with all plugin required files. 
-
-<pre>
-Plugin_root/  
-├── R                      Normal R functions you want to export as a package
-├── inst                     
-  ├── welcome.txt          Message/instructions that will show when users load the plugin(optional)
-  └── app
-    ├── R                  All plugin tab files and app helper functions
-    └── config
-      └── tabs.csv         Required tab registration metadata information. 
-</pre>
-
-Only the *Plugin_root/inst/app/config/tabs.csv* file is required, So one can easily move a SPS project 
-to a SPS plugin by copying all files into *Plygin_root/inst/app/*.
-
-Plugin tabs are the same as regular SPS VS tabs. You only need to add the plugin 
-information when you create a new tab. You can use `newTabData(plugin = "PLUGIN_NAME", ...)` 
-or `newTabPlot(plugin = "PLUGIN_NAME", ...)`
-to create them and tab meta information will automatically added to *tabs.csv*, so you don't 
-need to manually edit it. The text in `plugin` column of *tabs.csv* should be the same as your 
-plugin name. 
-
-In additional to tab files, all other files in *Plugin_root/inst/app/* will also be copied to 
-users' SPS project. 
-
-When you proceed to this point, it only gives you a very basic structure of a SPS plugin. To make it more publishable 
-like a normal R package, it is recommended to use `usethis::create_package("PLUGIN_ROOT_PATH")` and
-other functions come with `usethis` package to add additional files like *man*, *vignettes* that 
-are required by a formal R package. Please contact us if you want to have your plugin to 
-be "official", otherwise, you can use `spsAddPlugin(..., third_party = TRUE)` to load 
-your personal plugins.
-
-## Naming
-
-1. tabs:
-    - All should be named as `tab_xx.R`. If 
-    this tab is a sub tab, name it `tab_type_id.R`, e.g. a tab for 
-    visualization new data type will be `tab_vs_data_xxx.R`, a new plot tab will be 
-    `tab_vs_plot_xxx.R`.
-    
-2. functions:
-    - In each *tab* file, there should be one `UI` function and one `server` 
-    function and give both functions and name space the same ID as the file name: 
-    e.g. a file named `tab_vs_data_sub1.R`, UI function will be `data_sub1UI`, server will be 
-    `data_sub1Server`.
-
-## Cross-tab communication by `shared`
-
-"Shared" is first defined in the top level server as a shiny `ReactiveValues` object to hold data that can
-be passed around tabs(modules). This is very important if you want to transfer like a 
-dataframe from data tabs to plot tabs. 
-
-To access values in `shared`, use `$` or `[['name']]`, e.g. `shared$xxx$subxxx` or `shared[['xxx']][['subxxx']]`.
-
-### objects stored in `shared`
-
-If you are modifying the shared object, please do not change/overwrite following:
-
-- wf_flags: bool values to indicate required files status for the workflow
-    - targets_ready, wf_ready, wf_conf_ready: target file, workflow Rmd file, config yaml file
-    
-- targets: targets file
-    - df: dataframe, which will be used to display from top push bar
-    - file: string, the temp path of edited targets. When `add to task` is clicked and 
-    check passed, this file will be write to temp with **target header**
-    
-- wf: workflow file
-    - df, file: same as targets
-    
-- config: configuration yaml file
-    - file: same as targets
-    
-- snap_signal: snapshot creation signal, tells snapshot tab a new snapshot is created
-
-- data: plot snapshot data, including UI and server data.
-
-- canvas: some internal data storage to communicate with snapshot tab. 
-
-## Other useful developer features
-
-### Logging and error handling
-
-#### Simple logging
-
-The simplest logging is done by `msg` function. It prints out a message on console in 
-*[Level] + time + message* format. By default, if you only provide 
-the message, it uses `message` function; if you specify the level to be "warning" or 
-"error", it will use R base `warning` and `error` function; other levels uses `cat` method.
-Therefore, you can use `msg` to generate warnings or stop a function.
-```{r ,eval=TRUE, warning=TRUE}
-msg("message")
-msg("a warning", level = "warning")
-try(msg("an error", level = "error"))
-```
-
-If you set the SPS option `use_crayon = TRUE`, your message will be colorful.
-
-<p style="color: blue">[INFO] `r Sys.time()` message level</p>
-<p style="color: orange">[WARNING] `r Sys.time()` warning level</p>
-<p style="color: red">[ERROR] `r Sys.time()` error level</p>
-
-`spsinfo`, `spswarn`, and `spserror` are similar to `msg` but with *[SPS-]* prefix.
-
-#### Duel-end logging and error handling
-
-If you want to catch exceptions and display them to your users, SPS provides `shinyCatch` for 
-such purpose. Exceptions can by any *message*, *warning* or *error*. `shinyCatch` is good for:
-
-1. Catch any exceptions, log on server side console and displayed as a toast message on bottom-right corner on client UI. 
-2. Prevent shiny app to crash because of errors.
-3. Catch exceptions but continue other code.
-
-For example, if you have some Shiny expression and don't want the Shiny session to 
-crash because of errors, you can wrap your expression inside `shinyCatch`(use `shiny = TURE` for a real Shiny app). Once the exception happens, you can block the rest of your code from being executed in a function or 
-in the higher level expression. 
-
-```{r , eval=TRUE}
-# You should not see the message
-try({
-    shinyCatch(stop("error"), shiny = FALSE, blocking_level = "error")
-    cat("Blocked\n")
-})
-```
-
-Or you catch the exception but still allow other code to be executed. 
-
-```{r , eval=TRUE}
-# You should see the message
-try({
-    shinyCatch(stop("error"), shiny = FALSE)
-    cat("Not blocked\n")
-})
-```
-
-### SPS classes
-
-SPS classes are similar to other Shiny classes, which are R6 classes.
-
-#### SPS snapshots container
-
-To save the snapshots UI and server logic, SPS uses `plotContainer` class to store 
-the information. It should be saved in global environment `sps_plots <- plotContainer$new()`.
-By default, it is created in the *global.R* file and you don't need to change anything. 
-
-Adding the plot snapshot UI and server is usually operated on the plot tabs by 
-`plotContainer$addUI()` and `plotContainer$addServer()` functions. You can see 
-the example usage by running the example on help `?plotContainer` or check the usage 
-in a new plot tab by `newTabPlot()`.
-
-#### spsDb and SpsEncrytion
-
-You may have noticed there is a *sps.db* file in *config* folder. This file is a 
-SQLite database which on current version stores a table of meta information of 
-your SPS project, like project creation date, and a table of binary data which includes 
-the encryption key of snapshots. 
-
-`SpsEncrytion` inherits all methods from `spsDb`, so if there is any need to modify the 
-database, you can just use `SpsEncrytion`. By default, it needs to be save in global environment
-`sps_enc <- spsEncryption$new()`. This is written for you in the *global.R* file.
-
-- `spsDb` allows you to create database, query/modify/delete/add records.
-- `SpsEncrytion` enables you to view/change the encryption key, and encrypt/decrypt any file you desire.
-
-All downloaded SPS snapshot files are encrypted by `SpsEncrytion`. It uses *RSA256* key pair, so each
-SPS project will have its own key pair, which means uploading snapshot file from one project
-to another is not possible. If you want to have a snapshot running in another SPS project,
-use `spsEncryption$decrypt()` to decrypt the snapshot file and contact the owner of
-the other SPS project. Ask them to use their key to encrypt the file `spsEncryption$encrypt()` and
-the snapshot file can be uploaded as usual to that SPS app.
-
-<p style="color:var(--info)">Note: Encrypting the snapshot file is because the snapshot file contains server code which can be modified easily by any one and running arbitrary code uploaded by users can be dangerous.</p>
-
-### Change SPS options
-
-You can customize the default SPS options and alternative valid options by editing 
-*config/sps_options.yaml*. Please follow this format:
-
-```{r , eval=FALSE}
-new_option
-    default: xx
-    other: [xx, xx]
-```
-
-<strong>`*`</strong> character in "other" field tell SPS option parser that any value is allowed. 
-
-### Useful shiny compoents and functions
-
-We have made most functions in SPS very generic. In case you see some great SPS 
-components and want to use them in other Shiny apps other than under 
-the SPS framework, check the SPS help index `help(package = systemPipeShiny)` or 
-see the function classification on our [website](https://systempipe.org/systemPipeShiny/reference/index.html).
-Functions in "SPS framework functions" should only be used inside SPS project. Functions in 
-all other categories can be used in other Shiny apps.
+easily understood by reading the the help file. 
 
 # How to deploy the application
 
@@ -1167,6 +538,3 @@ is recommended to create -> test/run -> deploy a Shiny app from Rstudio and foll
 sessionInfo()
 ```
 
-# Funding
-
-# References

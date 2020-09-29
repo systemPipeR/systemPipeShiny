@@ -1,36 +1,23 @@
 ## UI
 
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinyjqui jqui_resizable
-#' @importFrom shinyWidgets pickerInput
-plot_exampleUI <- function(id){
+
+plot_example1UI <- function(id){
     ns <- NS(id)
     desc <- "
-    #### Some Description of this kind of plot
-    - you should ...
-        1. eg 1.
-        2. eg 2.
-        - **Notice**: ...`this` ...
-
-
-    ```
-    some code demo ...
-    ```
+    #### An exmaple plot tab to make a PCA plot from RPKM
+    This tab use R builtin functions to make a very simple PCA from if data is
+    prepared from 'Data tab example'.
     "
     tagList(
         pgPaneUI(ns("pg"),
                  titles = c("Package Requirements",
-                            # "Input Metadata" = "meta",
                             "Input Dataframe",
-                            # "Validate Meta",
                             "Validate Dataframe"),
                  pg_ids = c(ns("pkg"),
-                            # ns("meta"),
                             ns("data"),
-                            # ns("vd_meta"),
                             ns("vd_data"))
         ),
-        tabTitle("Title for this kind of plot"),
+        tabTitle("PCA Plot"),
         spsHr(), h3("Descrption"),
         hexPanel(ns("poweredby"), "POWERED BY:",
                  hex_imgs = c("img/sps.png"),
@@ -38,22 +25,15 @@ plot_exampleUI <- function(id){
         renderDesc(id = ns("desc"), desc),
         spsHr(), h3("Data preparation"),
         fluidRow(
-            column(6,
+            column(12,
                    genHrefTab(
                        c("data_example"),
-                       title = "You need to meta data from these tabs:")),
-            column(6,
-                   genHrefTab(
-                       c("data_example"),
-                       title = "You need to tabular data from these tabs:"))
+                       title = "You need have the count table from these tabs:"))
         ),
         h5("Once you have prepared the data,
            select which tab(s) your data is coming from:"),
-        column(6, shinyWidgets::pickerInput(ns("source_meta"), "Meta Data",
-                    choices = c("Meta Data" = "data_example"),
-                    options = list(style = "btn-primary"))),
-        column(6, shinyWidgets::pickerInput(ns("source_data"), "Tabular Data",
-                    choices = c("Template Data Tab" = "data_example"),
+        column(12, shinyWidgets::pickerInput(ns("source_data"), "Count Data",
+                    choices = c("Count table" = "data_example"),
                     options = list(style = "btn-primary"))), spsHr(),
         div(style = "text-align: center;",
             strong("Click the button below to start or reload data"), br(),
@@ -62,7 +42,19 @@ plot_exampleUI <- function(id){
         spsHr(), h3("Plotting"),
         div(
             id = ns("tab_main"), class = "shinyjs-hide",
-            uiExamples(ns), spsHr(),
+            shinydashboardPlus::boxPlus(width = 12,
+                title = "Some exmaple options to control the plot",
+                closable = FALSE,
+                clearableTextInput(ns("plot_title"),
+                                   label = "Plot title",
+                                   value = "Count Table PCA"),
+                shinyWidgets::pickerInput(
+                    ns("point_size"), "Point Size",
+                    choices = c(1, 2, 3, 4, 5),
+                    options = list(style = "btn-primary")
+                )
+            ),
+            spsHr(),
             fluidRow(
                 actionButton(ns("render"), label = "Render/Snapshot plot",
                              icon("paper-plane")),
@@ -78,13 +70,10 @@ plot_exampleUI <- function(id){
 }
 
 ## server
-#' @importFrom shinytoastr toastr_success toastr_info
-#' @importFrom plotly renderPlotly ggplotly
-#' @importFrom shinyjs show
-plot_exampleServer <- function(id, shared){
+plot_example1Server <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
-        tab_id <- "plot_example"
+        tab_id <- "plot_example1"
         # define data containers
         mydata <- reactiveValues()
         # start the tab by checking if required packages are installed
@@ -111,13 +100,12 @@ plot_exampleServer <- function(id, shared){
         })
         observeEvent(input$render, {
             output$plot <- sps_plots$addServer(plotly::renderPlotly, tab_id, {
+                samples <- rownames(mydata$data)
                 plotly::ggplotly(
-                    ggplot(mydata$data,
-                           aes_string(names(mydata$data)[1],
-                                      names(mydata$data)[2])) +
-                        geom_point(aes(
-                            color = seq_len(nrow(mydata$data))
-                        ))
+                   ggplot(mydata$data %>% as.data.frame()) +
+                       geom_point(aes(x= PC1, y = PC2, color = samples),
+                                  size = as.numeric(input$point_size)) +
+                       ggtitle(as.character(input$plot_title))
                 )
             })
             shared$snap_signal <- sps_plots$notifySnap(tab_id)

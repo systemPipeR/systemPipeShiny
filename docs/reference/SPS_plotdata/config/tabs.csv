@@ -14,7 +14,8 @@ wf_target,Workflow Metadata,wf,,,1,No file for core,core
 wf_wf,Workflow Steps,wf,,,1,No file for core,core
 vs_main,Visualization Main Page,vs,,,1,No file for core,core
 data_example,Data Tab Example,vs,data,,1,No file for core,core
-plot_example,Plot Tab Example,vs,plot,plot_list/plot_point.png,1,No file for core,core
+plot_example1,Plot PCA,vs,plot,plot_list/plot_pca.png,1,No file for core,core
+plot_example2,Plot Bar,vs,plot,plot_list/plot_bar.png,1,tab_vs_plot_example2.R,
 data_df1,df 1,vs,data,,1,tab_vs_data_df1.R,
 data_df2,df 2,vs,data,,1,tab_vs_data_df2.R,
 plot_test1,Plot Tab Title,vs,plot,,1,tab_vs_plot_test1.R,

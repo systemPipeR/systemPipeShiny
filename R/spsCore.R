@@ -3,6 +3,19 @@
 
 
 #' @import shiny assertthat stringr magrittr glue ggplot2 shinyTree
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinyjqui jqui_resizable
+#' @importFrom shinyWidgets pickerInput
+#' @importFrom shinytoastr toastr_success toastr_info
+#' @importFrom plotly renderPlotly ggplotly
+#' @importFrom shinyjs show
+#' @importFrom DT renderDT datatable
+#' @importFrom shiny validate
+#' @importFrom shinyjs show hide toggleState
+#' @importFrom shinytoastr toastr_success
+#' @importFrom methods is
+#' @importFrom DT DTOutput
+#' @importFrom shinyWidgets radioGroupButtons pickerInput
 NULL
 
 

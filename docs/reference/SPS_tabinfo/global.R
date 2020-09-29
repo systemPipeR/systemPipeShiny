@@ -25,16 +25,14 @@ library(systemPipeShiny)
 # loading_theme: loading screen themes, loading_screen need be TRUE - vhelix
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
-# eg_tab: show example visualization tabs? add 2 example tabs - TRUE, FALSE
 # admin_url: admin_page query url - admin
 options(sps = list(
     mode = "local",
-    warning_toast = TRUE,
+    warning_toast = FALSE,
     loading_screen = TRUE,
     loading_theme = "vhelix",
     use_crayon = TRUE,
     verbose = TRUE,
-    eg_tab = TRUE,
     admin_page = FALSE,
     admin_url = "admin"
 ))
@@ -63,7 +61,7 @@ sps_enc <- spsEncryption$new()
 ####### Main App Function Starts #########
 
 sps_app <- sps(
-    vstabs = "",
+    vstabs = c("data_example", "plot_example1", "plot_example2"),
     plugin = "",
     server_expr = {
         msg("Custom expression runs -- Hello World", "GREETING", "green")

@@ -165,13 +165,13 @@ img-gallery:hover {
 .desc a.collapsed:after  {
     content: '+ Show More Description';
 }
-.desc a:not(.collapsed):after {
+.desc > a:not(.collapsed):after {
     content: '- Collapse Description';
 }
-.desc a {
+.desc a:not(.desc-body) {
   font-size: 1.1em;
 }
-.desc a:link {
+.desc a:not(.desc-body):link {
   text-decoration: none;
 }
 

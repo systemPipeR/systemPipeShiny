@@ -35,7 +35,6 @@ spsServer <- function(tabs, server_expr) {
         # VS tabs
         spsinfo("Loading vs tabs server")
         vs_mainServer("vs_main", shared)
-        egComponents("server", shared = shared) # for templates
         # user modules
         mapply(function(module, name){
             spsinfo(glue("Loading server for {name}"))

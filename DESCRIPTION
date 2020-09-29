@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
 Version: 0.99.0
-Date: 2020-08-06
+Date: 2020-09-28
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danielac@ucr.edu"),
@@ -62,6 +62,7 @@ biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
+BugReports: https://github.com/systemPipeR/systemPipeShiny/issues
 URL: https://github.com/systemPipeR/systemPipeShiny
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)

@@ -1,24 +1,17 @@
 ########################## Template for data tab ###############################
 
 ## UI
-
-#' @importFrom DT DTOutput
-#' @importFrom shinyWidgets radioGroupButtons pickerInput
-#' @noRd
 data_exampleUI <- function(id){
     ns <- NS(id)
     # describe your tab in markdown format, this will go right under the title
     desc <- "
-    #### Some Description of this data
-    - you should ...
-        1. eg 1.
-        2. eg 2.
-        - **Notice**: ...`this` ...
+    #### Load RPKM count table for plotting
+    This is an exmaple data tab that loads a RPKM normalized count table so the
+    data can be tranferred to a plot tab to generate some very simple plots.
 
+    To use full (advanced) RNAseq visualization tabs, see
+    [spsBio](https://github.com/systemPipeR/spsBio) for more details.
 
-    ```
-    some code demo ...
-    ```
     "
     tagList(
         pgPaneUI(ns("pg"),
@@ -26,7 +19,7 @@ data_exampleUI <- function(id){
                             "Input Data Validation", "Preprocess"),
                  pg_ids = c(ns("pkg"), ns("data"), ns("vd_data"), ns("prepro"))
         ),
-        tabTitle("Title for this kind of dataframe"), spsHr(),
+        tabTitle("Example count table"), spsHr(),
         hexPanel(ns("poweredby"), "POWERED BY:",
                  hex_imgs = c("img/sps.png"),
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
@@ -72,8 +65,7 @@ data_exampleUI <- function(id){
                     shinyWidgets::pickerInput(
                         inputId = ns("select_prepro"),
                         choices = c(`Do Nothing`='nothing',
-                                    `Method 1`='md1',
-                                    `Method 2`='md2'),
+                                    `PCA`='PCA'),
                         options = list(style = "btn-primary")
                     )
                 ),
@@ -91,13 +83,6 @@ data_exampleUI <- function(id){
 }
 
 ## server
-
-#' @importFrom DT renderDT datatable
-#' @importFrom shiny validate
-#' @importFrom shinyjs show hide toggleState
-#' @importFrom shinytoastr toastr_success
-#' @importFrom methods is
-#' @noRd
 data_exampleServer <-function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -127,7 +112,7 @@ data_exampleServer <-function(id, shared){
             pgPaneUpdate('pg', 'data', 0) # set data progress to 0 every reload
             loadDF(choice = input$data_source, upload_path = data_path$datapath,
                    delim = input$delim, comment = input$comment,
-                   eg_path = "data/iris.csv")
+                   eg_path = "data/rpkmDFeByg.csv")
         })
         # display table
         output$df <- DT::renderDT({
@@ -163,30 +148,30 @@ data_exampleServer <-function(id, shared){
             # validate special requirements for different preprocess methods
             switch(
                 input$select_prepro,
-                'md1' = spsValidate({
+                'PCA' = spsValidate({
                     if (nrow(data_filtered) >= 1) TRUE
                     else stop("Data need to have at least one row")
+                    if(names(data_filtered)[1] == "Genes") TRUE
+                    else stop("First column must be 'Genes'")
+                    if(lapply(data_filtered, class) %>% unlist %>% .[-1] %>%
+                       unique() %>% {. %in% "numeric"} %>% all()) TRUE
+                    else stop("All columns except the first one must be numeric")
                 }, "Requirements for method 1"),
-                'md2' = spsValidate({
-                    if (nrow(data_filtered) < 1000) TRUE
-                    else stop("Data need to have at most 1000 rows")
-                }, "Requirements for method 2"),
-                msg('No addition validation required')
+                spsValidate({
+                    if(names(data_filtered)[1] == "Genes") TRUE
+                    else stop("First column must be 'Genes'")
+                })
             )
             pgPaneUpdate('pg', 'vd_data', 100)
             # if validation passed, start reprocess
             data_processed <- shinyCatch(
                 switch(input$select_prepro,
-                       'md1' = {
+                       'PCA' = {
                            # your preprocess function, e.g
-                           if(is.numeric(data_filtered[[1]]))
-                               data_filtered[, 1] = data_filtered[, 1] + 1
-                           data_filtered
-                       },
-                       'md2' = {
-                           if(is.numeric(data_filtered[[1]]))
-                               data_filtered[, 1] = log(data_filtered[, 1])
-                           data_filtered
+                           data_pca <- data_filtered[, -1] %>%
+                               {log2(. + 1)} %>%
+                               prcomp()
+                           data_pca$rotation[, c(1,2)]
                        },
                        data_filtered
             ), blocking_level = 'error')
@@ -203,9 +188,8 @@ data_exampleServer <-function(id, shared){
             shinyjs::show(id = "plot_option_row")
             gallery <- switch(
                 input$select_prepro,
-                'md1' = genGallery("plot_pca"),
-                'md2' = genGallery(c("plot_example", "plot_pca")),
-                genGallery(type = "plot")
+                'PCA' = genGallery("plot_example1"),
+                genGallery("plot_example2")
             )
             output$plot_option <- renderUI({
                 gallery
