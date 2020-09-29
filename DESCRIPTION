@@ -53,6 +53,7 @@ Imports:
     yaml
 Suggests:
     testthat,
+    BiocStyle,
     systemPipeR, 
     knitr, 
     rmarkdown, 
