@@ -14,6 +14,6 @@ docs/reference/SPS_20*
 docs/reference/config
 docs/reference/test*
 docs/reference/SPS_plotdata*
-docs/reference/SPS_plotdata/SPS_prepro*
-docs/reference/SPS_plotdata/SPS_tabinfo*
+docs/reference/SPS_prepro*
+docs/reference/SPS_tabinfo*
 SPS_20*
