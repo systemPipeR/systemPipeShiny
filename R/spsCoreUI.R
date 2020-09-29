@@ -84,13 +84,11 @@ spsUI <- function(tabs_df, tabs_plot){
                         shinydashboard::menuItem(
                             text = "Prepare dataset",
                             ## vs dfs add to sidebar
-                            egComponents("ui_menu_df"),
                             menu_df
                         ),
                         shinydashboard::menuItem(
                             text = "Collection of plots",
                             ## vs plots add to sidebar
-                            egComponents("ui_menu_plot"),
                             menu_plot
                         )
                     ),
@@ -120,8 +118,6 @@ spsUI <- function(tabs_df, tabs_plot){
         shinydashboard::tabItem(tabName = "wf_run", wf_runUI("wf_run")),
         # VS tabs
         shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
-        egComponents("ui_tab_df"),
-        egComponents("ui_tab_plot"),
         # core tabs
         shinydashboard::tabItem(tabName = "core_dashboard",
                                 core_dashboardUI("core_dashboard")),
@@ -259,44 +255,6 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
               text_color = text_color, item_titles = names(rows),
               item_labels = tab_list[2,], item_hrefs = tab_list[3,], ...)
 }
-
-
-#' Create template tabs and servers
-#' @description generate UI and server part for template components if `dev`
-#' option is TRUE. See ui.R and server.R for example. Normally there is no need
-#' to change code of this function ui or server scripts.
-#' @param element choose from "ui_menu_df", "ui_menu_plot","ui_tab_df",
-#' "ui_tab_plot", "server"
-#' @param shared use only when `element` is 'server'
-#'
-#' @return ui_xx returns html tags, server will return a server function
-#'
-#' @importFrom shinydashboard menuSubItem tabItem
-#' @noRd
-egComponents <- function(element, shared=NULL){
-    element <- match.arg(element, c("ui_menu_df", "ui_menu_plot",
-                                    "ui_tab_df", "ui_tab_plot", "server"))
-
-    if(spsOption('eg_tab')){
-        switch(element,
-                "ui_menu_df" = shinydashboard::menuSubItem(
-                    text = "Template data", tabName = "data_example"),
-                "ui_menu_plot" = shinydashboard::menuSubItem(
-                    text = "Template Plot", tabName = "plot_example"),
-                "ui_tab_df" = shinydashboard::tabItem(
-                    tabName = "data_example", data_exampleUI("data_example")),
-                "ui_tab_plot" = shinydashboard::tabItem(
-                    tabName = "plot_example",
-                    plot_exampleUI("plot_example")
-                ),
-                "server" = {
-                    data_exampleServer("data_example", shared)
-                    plot_exampleServer("plot_example", shared)
-                }
-        )
-    } else {shinydashboard::tabItem("")}
-}
-
 
 #' Workflow progress tracker UI
 #' @description call it on top level UI not inside a module. Call this function

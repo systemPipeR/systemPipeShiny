@@ -48,23 +48,25 @@ wf_configServer <- function(id, shared){
         ns <- session$ns
         down_clicked <- reactiveValues(flag = 0)
 
-        rmd_file_path <- reactive({
+        config_file_path <- reactive({
             if(input$config_source == "eg") "data/config.yaml"
             else input$config_upload$datapath
         })
-        observeEvent(rmd_file_path(), {
+        new_config_path <- tempfile(pattern = "config", fileext = ".yaml")
+
+        observeEvent(config_file_path(), {
             shinyAce::updateAceEditor(
                 session, editorId = "ace_config",
                 value = {
                     shinyCatch(
-                        readLines(rmd_file_path()) %>%
+                        readLines(config_file_path()) %>%
                             paste(collapse = "\n"), blocking_level = "error")
             })
         })
 
-        observeEvent(c(input$to_task_config, down_clicked$flag), {
-            shared$config$file <- tempfile(pattern = "target", fileext = ".txt")
-            writeLines(isolate(input$ace_config), shared$config$file)
+        observeEvent(input$to_task_config, {
+            shared$config$file <- new_config_path
+            writeLines(input$ace_config, shared$config$file)
         })
 
         observeEvent(input$to_task_config, {
@@ -78,13 +80,12 @@ wf_configServer <- function(id, shared){
                 )
             }
         })
-        output$down_targets <- downloadHandler(
+        output$down_config <- downloadHandler(
             filename <- function() {
-                "targets.txt"
+                "SPRconfig.yaml"
             },
             content <- function(filename) {
-                down_clicked$flag <- down_clicked$flag + 1
-                file.copy(from = shared$config$file, to = filename)
+                writeLines(input$ace_config, filename)
             })
     }
     moduleServer(id, module)

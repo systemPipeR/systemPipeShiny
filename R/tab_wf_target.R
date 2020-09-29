@@ -119,10 +119,10 @@ wf_targetServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         ace_target_header_init <-
-        "# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
-         # The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
-         # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
-         # <CMP> CMPset2: ALL"
+"# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
+# The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
+# <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
+# <CMP> CMPset2: ALL"
         data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
             tibble::as_tibble()
         ns <- session$ns
@@ -181,7 +181,7 @@ wf_targetServer <- function(id, shared){
                 shinyAce::updateAceEditor(
                     session,
                     editorId = "ace_target_header",
-                    value = header_lines
+                    value = header_lines,
                 )
                 # other server end updates
                 shinytoastr::toastr_info(

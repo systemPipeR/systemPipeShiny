@@ -15,7 +15,9 @@ core_dashboardUI <- function(id){
         h2("Vignette"),
         HTML('<p>There is a <a href="https://systempipe.org/systemPipeShiny/
              articles/systemPipeShiny.html">vignette</a> to provide more
-             details.</p>'),
+             details. If you are new to SPS, try our <a href="https://
+             tgirke.shinyapps.io/systemPipeShiny/">demo</a> and click on
+             the top right corner for interactive tutorials.</p>'),
         fluidRow(
             shinydashboardPlus::carousel(width = 12,
                 id = "dashcarousel",

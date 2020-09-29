@@ -1,7 +1,18 @@
-config1:
-    sub1: xx
-sub2: xx
-
-config2: [1, 2, 3]
-
-config3: "aaaaaa"
+project_path:
+  class: Directory
+  path: ./
+data_path:
+  class: Directory
+  path: ./data
+param_path:
+  class: Directory
+  path: ./param
+results_path:
+  class: Directory
+  path: ./results
+targets:
+  class: File
+  path: targets.txt
+Rmd:
+  class: File
+  path: systemPipeRNAseq.Rmd

@@ -149,7 +149,7 @@ core_canvasServer <- function(id, shared){
                                          '$("#@ui[[i]][2]@")',
                                          '.resizable()'))
                     )
-                }, simplify = FALSE) %>%{
+                }) %>%{
                     fluidRow(id = ns('plots'),
                              style = glue("background-color: {isolate(input$canvas_color)};"),
                              class = "sps-canvas",
