@@ -297,9 +297,9 @@ spsAddPlugin <- function(
                    glue_collapse(tab_ids[!bad_id], sep = " ")))
     }
     spsinfo("Checking plugin individual tab files")
-    tab_ids = tab_ids[-1:-2]
-    tab_files = tab_files[-1:-2]
-    for(i in seq_along(tab_files)[-1:-2]){
+    tab_ids = tab_ids[c(-1, -2)]
+    tab_files = tab_files[c(-1, -2)]
+    for(i in seq_along(tab_files)[c(-1, -2)]){
         if(!str_detect(tab_files[i], glue("^tab_vs_{tab_ids[i]}\\.R$"))) {
             spswarn(c("tab ",
                       tab_files[i],
