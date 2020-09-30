@@ -1,7 +1,11 @@
 pandoc: 2.7.3
-pkgdown: 1.5.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   systemPipeShiny: systemPipeShiny.html
+<<<<<<< HEAD
 last_built: 2020-09-29T22:12Z
+=======
+last_built: 2020-09-30T00:09Z
+>>>>>>> 0b1d43cf2d4d53733ee53af2745d3fc3d331f419
 

@@ -29,7 +29,6 @@ word-wrap: initial !important;
 ```
 
 ```{r style, echo = FALSE, results = 'asis', eval=TRUE}
-
 options(width=80, max.print=1000)
 knitr::opts_chunk$set(
     eval=as.logical(Sys.getenv("KNITR_EVAL", "TRUE")),
@@ -44,7 +43,6 @@ knitr::opts_chunk$set(
 suppressPackageStartupMessages({
     library(systemPipeShiny)
 })
-
 ```
 
 ```{r sps-css, results = 'asis', echo=FALSE, eval=TRUE}
@@ -53,34 +51,53 @@ cat(readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")),s
 cat("</style>")
 ```
 
-
-```{r logo, echo=FALSE, out.width='70%', fig.align='center', fig.width=12, eval=TRUE}
+```{r logo, echo=FALSE, out.width='70%', fig.align='center', eval=TRUE}
 knitr::include_graphics(path = "../inst/app/www/img/sps.png")
 ```
 
-
 # Introduction
 
-**<span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny**(SPS)
-is a [Shiny](https://shiny.rstudio.com/)-based R/Bioconductor package that has 
-a graphical user interface (GUI). SPS is able to:
+**<span style="color:#5DA7D6;">s</span>ystem<span
+style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny**
+(SPS)^[<font style="color:red">ThG: the text that was here before wasn't really 
+an introduction, nor did it describe the purpose of this package. Thus, I have 
+changed it mostly to the text of your recent poster. Make sure what is described
+here matches mostly what the package does or should do.</font>] extends the widely 
+used [systemPipeR](https://bioconductor.org/packages/systemPipeR/) (SPR) workflow
+environment with a versatile graphical user interface provided by a [Shiny
+App](https://shiny.rstudio.com). This allows non-R users, such as
+experimentalists, to run many systemPipeR's workflow designs, control, and
+visualization functionalities interactively without requiring knowledge of R.
+Most importantly, SPS has been designed as a general purpose framework for
+interacting with other R packages in an intuitive manner. Like most Shiny Apps,
+SPS can be used on both local computers as well as centralized server-based
+deployments that can be accessed remotely as a public web service for using
+SPR's functionalities with community and/or private data. The framework can
+integrate many core packages from the R/Bioconductor ecosystem. Examples of
+SPS' current functionalities include: (a) interactive creation of experimental
+designs and metadata using an easy to use tabular editor or file uploader; (b)
+visualization of workflow topologies combined with auto-generation of R
+Markdown preview for interactively designed workflows; (c) access to a wide
+range of data processing routines; (d) and an extendable set of visualization
+functionalities. Complex visual results can be managed on a 'Canvas Workbench'
+allowing users to organize and to compare plots in an efficient manner combined
+with a session snapshot feature to continue work at a later time. The present
+suite of pre-configured visualization examples include different methods to
+plot a count table: PCA, t-SNE and plots of other clustering methods; volcano
+plots, data mining plots including heatmaps, and more. The modular design of
+SPR makes it easy to design custom functions without any knowledge of Shiny, as
+well as extending the environment in the future with contributions from the
+community.
 
- 1. Help for researchers on data analysis workflow management and downstream data 
-visualizations in quick and user friendly manner. 
- 2. Provides an framework to be fast extended with more components and 
- an web app that is open-box-ready-to-deploy to any Shiny server.
- 
-You can try our demo at [here](https://tgirke.shinyapps.io/systemPipeShiny/). There are 5 
-different interactive tutorials embedded on the demo that you can follow(right upper corner). 
-Each tutorial covers a major topic of SPS and shows how you can interactive with app.
-
-This vignette illustrate the main concepts of SPS by using an RNAseq workflow as the 
-example.
-
+An example web instance for testing `SPS` online is available
+[here](https://tgirke.shinyapps.io/systemPipeShiny/){target="_blank"}. At the
+time of writing, there are five interactive tutorials embedded in this instance
+that users can access from the upper-right corner. Each tutorial introduces 
+major functionalities of `SPS.`
 
 # Installation
 
-To install SPS:
+The `systemPipeShiny` package can be installed from a user's R console as follows.
 
 ```{r, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly=TRUE))
@@ -88,43 +105,56 @@ if (!requireNamespace("BiocManager", quietly=TRUE))
 BiocManager::install("systemPipeShiny")
 ```
 
-If you are on Linux, you also need(use Ubuntu as example):
+If the user's OS is Linux then one may need to install the following dependencies.
+The following example applies to Ubuntu.
 
 ```{bash, eval=FALSE}
 sudo apt-get install libv8-dev
 sudo apt-get install libssl-dev
 sudo apt-get install libcurl4-openssl-dev
 ```
+
 *libcurl4-openssl-dev* may not be required for Ubuntu > 18.04.
 
-Depending on the Linux distributions, the command can be slightly different. 
+On other Linux distributions, the install commands may be slightly different. 
 
-# Main concept 
+# Main functionalities 
 
-The SPS is designed into two major categories, workflow management (WF) and 
-data visualization (VS) (*Fig 1*). WF part helps users to 
-prepare data analysis workflow files. 
-VS part helps users to make different types of plots, take interactive snapshot 
-of plots and combine/compare different plots on the "Canvas" workbench. 
+Currently, `SPS` includes two main functional categories: (1) a workbench for
+designing and configuring data analysis workflows (WF), and (2) a data
+visualization (VS) toolbox (*Fig 1*).^[<font style="color:red">ThG: I have changed
+this section significantly.</font>] The WF module allows to write and to
+modify configuration files required for running workflows in `systemPipeR`. The
+VS part provides a rich set of plotting tools to visualize the results of
+individual steps in `systemPipeR` workflow. The latter includes a Canvas
+functionality that allows to arrange many plots one page, save their configuration
+and revisit the saved page at a later time.
 
 <center id="sps_structure">
 ![SPS_structure](./img/sps_structure.png)
 **Figure 1. SPS Structure**
 </center>
 
-Inside the two major categories, there are small components. They are **SPS tabs**. 
-A SPS tab is similar to any other web dashboard tabs you see on the internet. Tabs 
-in SPS are built on top of [Shiny modules](https://shiny.rstudio.com/articles/modules.html) 
-as individual files. The modular structure makes it very easy to extend with more 
-SPS tabs. Functions and instructions are provided in the [developer section](#extend-sps). 
+Within the functional categories, SPS functions are modularized in
+sub-components, here referred to as **SPS tabs** that are similar to 
+menu tabs in other GUI applications that organize related and inter-connected 
+functionalies into groups. On the backend, SPS tabs are based on [Shiny modules](https://shiny.rstudio.com/articles/modules.html) 
+and stored in individual files. This modular structure is highly extensible 
+and greatly simplifies the design of new SPS tabs by both users and/or developers. 
+Details about extending existing tabs and designing new ones are provided in 
+an [advanced user section](#extend-sps). 
 
+# Example workflow with toy RNA-Seq data
 
-# Step-by-step instruction of with an example workflow
+The following sections illustrate the main functionalities SPS using an analysis 
+workflow for RNA-Seq data as an example.
 
-Let us use an **RNAseq** workflow as the example to demonstrate how to use SPS.
+## Load package
 
-## Create a SPS project
+Load the `systemPipeShiny` package in your R session.^[<font style="color:red">ThG: 
+note the package load was missing.</font>]
 
+<<<<<<< HEAD
 After installation and before launching SPS, the first thing you need to do is to create 
 a SPS project: 
 
@@ -140,11 +170,41 @@ spsInit(app_path = sps_tmp_dir, change_wd = FALSE, project_name = "SPSProject")
 sps_dir <- file.path(sps_tmp_dir, "SPSProject")
 ```
 
+=======
+```{r sps_load_package, eval=TRUE}
+library(systemPipeShiny)
+```
 
+## Initialize SPS project
 
-By default, you will have a folder created under your current working directory, 
-the name is `SPS_` + `today's date` in *ISO 8601* format, e.g. 
-`r glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")`. It looks like this:
+Before launching the SPS application, a project environment needs is created with the
+following command:
+
+```{r spsinit, eval=FALSE}
+spsInit()
+```
+>>>>>>> 0b1d43cf2d4d53733ee53af2745d3fc3d331f419
+
+By default, `spsInit` creates a project folder under the current working directory
+of a user's R session. The name of this directory is `SPS_` + `today's date` 
+in *ISO 8601* format, e.g. `r glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")`. 
+This project environment is populated with all the required files to run the application. 
+
+It is possible to choose a different location, as well build the environment in a temporary directory. By default, the function set the working directory to the project folder, and it can 
+turn off with the function option, as follows:
+
+```{r spsinit_details, eval=TRUE}
+spsInit(app_path = tempdir(), change_wd = FALSE, project_name = "SPSProject")
+sps_dir <- file.path(tempdir(), "SPSProject")
+```
+
+Note that in this example, the project directory structure is written to a temporary directory
+on a user's system. For a real project, it should be written to a defined and user 
+controlled location on a system rather than a temporary directory. 
+
+### Directory structure
+
+The file and directory structure is organized as follows:
 
 <pre>
 SPS_xx/  
@@ -179,7 +239,14 @@ SPS_xx/
 </pre>
 
 
-## Launch SPS 
+## Launch SPS interface
+
+The `runApp` function launches the application in our browser:
+
+```{r runAPP, eval=FALSE}
+shiny::runApp(app)
+```
+^[<font style="color:green">Dani: Maybe add a printscreen here with the main page of the pp.</font>]
 
 By default, your working directory should be set inside that project folder automatically. 
 If you are using Rstudio, *global.R* file will be opened for you. This is the only
@@ -203,7 +270,9 @@ tab information. Currently you can only load/unload visualization tabs, the key 
 The [developer section](#extend-sps) will teach you how to create your own tabs.
 
 For this vignette example, we will use as it is, so now you can run the SPS by typing 
-`shiny::runApp()` in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
+`shiny::runApp()`^[<font style="color:red">ThG: This is the most important command of 
+the entire vignette. Why is it burried in the text. I would move it up to the beginning and
+dedicate a code box to it.</font>] in console or click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
 button on top right corner in Rstudio. The app should be launched. Click on the 
 "Continue to app" button on the welcome screen and you should see SPS main dashboard like this one (Fig.2):
 
@@ -214,9 +283,9 @@ button on top right corner in Rstudio. The app should be launched. Click on the
 
 All SPS tabs are well classified into WF and VS part. We will start from WF management.
 
-## WF management
+## Workflow management
 
-WF management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
+Workflow^[<font style="color:red">ThG: I wouldn't abbreviate work throught the text.</font>] management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
 R package that runs a WF in "command line + R code" manner. To run a SPR WF, you 
 need to prepare three very important files: a metadata(targets) file that contains 
 sample information, a workflow step file(Rmarkdown format) that defines the WF steps 
@@ -230,7 +299,8 @@ in SPS will be supported in an upcomming release.
 
 ### Prepare a target file
 Read ["Structure of targets file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file) section in SPR vignette to better undertand the 
-structure of this file. 
+structure of this file. ^[<font style="color:red">ThG: describe here briefly what a targets
+file is and how it relates to the colData slot in an SummarizedExperiment object.</font>]
 
 Now let us follow the order below to prepare a target file for a RNAseq project (Fig.3 A):
 
