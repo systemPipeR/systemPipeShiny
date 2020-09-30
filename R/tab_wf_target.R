@@ -11,6 +11,35 @@ wf_targetUI <- function(id){
     ns <- NS(id)
     tagList(
         tabTitle("Targets"),
+        renderDesc(id = ns("desc"),
+        '
+        #### Targets file
+        The targets (metadata) file defines all input files\' path and other sample
+        information of an analysis workflow. Read "Structure of targets file"
+        section in
+        [SPR vignette](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file)
+        to better undertand the structure of this file.
+        This file is similar to the `colData` slot in an `SummarizedExperiment`
+        object which stores sample ID and other meta information.
+
+        #### Load examples
+        There are two example templates provided here, one for pair-end
+        sequencing (PE), and one for single-end (SE). See the instructions above
+        the table for what information is required in the targets file.
+
+        #### Statistics
+        If you are running SPS in ["local"](https://systempipe.org/systemPipeShiny/articles/systemPipeShiny.html#app-options)
+        mode, the boxes on the left will display targets sample statistics and if
+        you select a column from the left side dropdown menu, this tab will also
+        help you to check for file existence of all records in this column.
+
+        #### Check the format
+        "Add to task" button can help you to check if you have the required
+        targets file format, i.e. column names, headers. If anything is missing,
+        you will see the instruction in the pop-up box. It will also update the
+        progress bar in the top right panel. You need to click "-" to expand it.
+        '),
+        spsHr(),
         fluidRow(
             column(3,
                    fluidRow(

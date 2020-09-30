@@ -9,8 +9,44 @@ wf_wfUI <- function(id){shinyCheckPkg
     ns <- NS(id)
     tagList(
         tabTitle("Workflow"),
+        renderDesc(id = ns("desc"),
+        '
+        #### Workflow files
+        In SPR, workflows are defined as Rmarkdown files,
+        you can read details and obtain them
+        [here](https://systempipe.org/pages/pipelines_area/).
+
+        #### Workflow steps
+        The example is an RNAseq workflow. Loading the example or upload a new
+        Rmd file will be display on "Display workflow file" box below. Workflow
+        steps are defined by "#" hashtag levels, similar to the title level in
+        markdown files. For example, text and code under the single "#" belongs
+        to the heighest level step; code under double "##" is a sub-step under the
+        nearest single "#" step from the top, etc.
+
+        #### Select workflow steps
+        This box allows you to select workflow steps. You need to choose at lest
+        one step to enable other buttons in this box.
+
+        Clicking “Report preview” generates a preview of what the final report
+        will look like based on your step selection, but in the preview,
+        no code is evaluated. The report is displayed in the bottom of this tab.
+
+        Clicking on the “Plot steps” will show a flow chart on the right side
+        of what the step execution orders are when you run the actual workflow
+        in SPR.
+
+        #### Download
+        After step selection, you can download the new Rmarkdown file by
+        "Save New Rmd".
+
+        #### Check progress
+        Clicking on "Add to task" can update the workflow preparation progress.
+        Remember to open it up from the top right corner.
+        '),
+        spsHr(),
         fluidRow(
-            shinydashboardPlus::boxPlus(title = "Display Rmd", width = 12,
+            shinydashboardPlus::boxPlus(title = "Display workflow file", width = 12,
                     closable = FALSE,
                     shinyWidgets::radioGroupButtons(
                         inputId = ns("wf_source"),
@@ -34,7 +70,7 @@ wf_wfUI <- function(id){shinyCheckPkg
         fluidRow(
             column(5,
                    shinydashboardPlus::boxPlus(
-                       title = "Choose the steps you want",
+                       title = "Select workflow steps",
                        width = 12,
                        closable = FALSE,
                        column(width = 12, style = "padding-left: 0;",
@@ -60,7 +96,7 @@ wf_wfUI <- function(id){shinyCheckPkg
                    )
             ),
             column(7,
-                   shinydashboardPlus::boxPlus(title = "Workflow you selected",
+                   shinydashboardPlus::boxPlus(title = "Workflow steps selected",
                            width = 12,
                            closable  = FALSE,
                     uiOutput(ns("wf_plot_ui"))
@@ -69,7 +105,7 @@ wf_wfUI <- function(id){shinyCheckPkg
         ),
         fluidRow(
             shinydashboardPlus::boxPlus(
-                title = "Prevew your workflow report", width = 12,
+                title = "Preview of the workflow report", width = 12,
                 closable = FALSE,
                 uiOutput(ns("wf_md_ui"))
                     )

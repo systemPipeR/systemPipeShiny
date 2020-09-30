@@ -16,7 +16,7 @@ library(systemPipeShiny)
 # verbose: display some info during processing? - TRUE, FALSE
 # admin_url: admin_page query url - "admin"
 options(sps = list(
-    mode = "server",
+    mode = "local",
     warning_toast = FALSE,
     loading_screen = TRUE,
     loading_theme = "vhelix",
