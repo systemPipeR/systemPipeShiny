@@ -378,8 +378,8 @@ a.bttn-default {
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p><strong><span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny</strong> (SPS)<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> extends the widely used o<a href="https://bioconductor.org/packages/systemPipeR/">systemPipeR</a> (SPR) workflow environment with a versatile graphical user interface provided by a <a href="https://shiny.rstudio.com">oShiny App</a>. This allows non-R users, such as experimentalists, to run many systemPipeR’s workflow designs, control, and visualization functionalities interactively without requiring knowledge of R. Most importantly, SPS has been designed as a general purpose framework for interacting with other R packages in an intuitive manner. Like most Shiny Apps, SPS can be used on both local computers as well as centralized server-based deployments that can be accessed remotely as a public web service for using SPR’s functionalities with community and/or private data. The framework can integrate many core packages from the R/Bioconductor ecosystem. Examples of SPS’ current functionalities include: (a) interactive creation of experimental designs and metadata using an easy to use tabular editor or file uploader; (b) visualization of workflow topologies combined with auto-generation of R Markdown preview for interactively designed workflows; (d) access to a wide range of data processing routines; (e) and an extendable set of visualization functionalities. Complex visual results can be managed on a ‘Canvas Workbench’ allowing users to organize and to compare plots in an efficient manner combined with a session snapshot feature to continue work at a later time. The present suite of pre-configured visualization examples include different methods to plot a count table: PCA, t-SNE and plots of other clustering methods; volcano plots, data mining plots including heatmaps, and more. The modular design of SPR makes it easy to design custom functions without any knowledge of Shiny, as well as extending the environment in the future with contributions from the community.</p>
-<p>An example web instance for testing <code>SPS</code> online is available <a href="https://tgirke.shinyapps.io/systemPipeShiny/" target="_blank">here</a>. At the time of writing, there are five interactive tutorials embedded in this instance that users can access from the upper-right corner. Each tutorial introduces major functionalities of SPS.</p>
+<p><strong><span style="color:#5DA7D6;">s</span>ystem<span style="color:#5DA7D6;">P</span>ipe<span style="color:#5DA7D6;">S</span>hiny</strong> (SPS)<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> extends the widely used <a href="https://bioconductor.org/packages/systemPipeR/">systemPipeR</a> (SPR) workflow environment with a versatile graphical user interface provided by a <a href="https://shiny.rstudio.com">Shiny App</a>. This allows non-R users, such as experimentalists, to run many systemPipeR’s workflow designs, control, and visualization functionalities interactively without requiring knowledge of R. Most importantly, SPS has been designed as a general purpose framework for interacting with other R packages in an intuitive manner. Like most Shiny Apps, SPS can be used on both local computers as well as centralized server-based deployments that can be accessed remotely as a public web service for using SPR’s functionalities with community and/or private data. The framework can integrate many core packages from the R/Bioconductor ecosystem. Examples of SPS’ current functionalities include: (a) interactive creation of experimental designs and metadata using an easy to use tabular editor or file uploader; (b) visualization of workflow topologies combined with auto-generation of R Markdown preview for interactively designed workflows; (c) access to a wide range of data processing routines; (d) and an extendable set of visualization functionalities. Complex visual results can be managed on a ‘Canvas Workbench’ allowing users to organize and to compare plots in an efficient manner combined with a session snapshot feature to continue work at a later time. The present suite of pre-configured visualization examples include different methods to plot a count table: PCA, t-SNE and plots of other clustering methods; volcano plots, data mining plots including heatmaps, and more. The modular design of SPR makes it easy to design custom functions without any knowledge of Shiny, as well as extending the environment in the future with contributions from the community.</p>
+<p>An example web instance for testing <code>SPS</code> online is available <a href="https://tgirke.shinyapps.io/systemPipeShiny/" target="_blank">here</a>. At the time of writing, there are five interactive tutorials embedded in this instance that users can access from the upper-right corner. Each tutorial introduces major functionalities of <code>SPS.</code></p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -388,7 +388,7 @@ a.bttn-default {
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
 <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"systemPipeShiny"</span><span class="op">)</span></pre></div>
-<p>If the user’s OS is Linux then one may need to install the following dendencies. The following example applies to Ubuntu.</p>
+<p>If the user’s OS is Linux then one may need to install the following dependencies. The following example applies to Ubuntu.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">sudo</span> apt-get install libv8-dev</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="fu">sudo</span> apt-get install libssl-dev</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="fu">sudo</span> apt-get install libcurl4-openssl-dev</span></code></pre></div>
@@ -398,7 +398,7 @@ a.bttn-default {
 <div id="main-functionalities" class="section level1">
 <h1 class="hasAnchor">
 <a href="#main-functionalities" class="anchor"></a>Main functionalities</h1>
-<p>Currently, SPS includes two main functional categories: (1) a workbench for designing and configuring data analysis workflows (WF), and (2) a data visualization (VS) toolbox (<em>Fig 1</em>).<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> The WF module allows to write and to modify configuration files required for running workflows in <code>systemPipeR</code>. The VS part provides a rich set of plotting tools to visualize the results of individual steps in <code>systemPipeR</code> workflow. The latter includes a Canvas functionality that allows to arrange many plots one page, save their configuration and revisit the saved page at a later time.</p>
+<p>Currently, <code>SPS</code> includes two main functional categories: (1) a workbench for designing and configuring data analysis workflows (WF), and (2) a data visualization (VS) toolbox (<em>Fig 1</em>).<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> The WF module allows to write and to modify configuration files required for running workflows in <code>systemPipeR</code>. The VS part provides a rich set of plotting tools to visualize the results of individual steps in <code>systemPipeR</code> workflow. The latter includes a Canvas functionality that allows to arrange many plots one page, save their configuration and revisit the saved page at a later time.</p>
 <center id="sps_structure">
 <img src="img/sps_structure.png" alt="SPS_structure"><strong>Figure 1. SPS Structure</strong>
 </center>
@@ -418,25 +418,29 @@ a.bttn-default {
 <div id="initialize-sps-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initialize-sps-project" class="anchor"></a>Initialize SPS project</h2>
-<p>Before launching the SPS Shiny App, a project environment needs is created with the following commands.</p>
+<p>Before launching the SPS application, a project environment needs is created with the following command:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">sps_tmp_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="../reference/spsInit.html">spsInit</a></span><span class="op">(</span>app_path <span class="op">=</span> <span class="va">sps_tmp_dir</span>, change_wd <span class="op">=</span> <span class="cn">FALSE</span>, project_name <span class="op">=</span> <span class="st">"SPSProject"</span><span class="op">)</span></pre></div>
-<pre><code>## [SPS-INFO] 2020-09-29 16:30:12 Start to create a new SPS project</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 16:30:12 Create project under /tmp/Rtmp39Vq0j/SPSProject</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 16:30:12 Now copy files</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 16:30:12 Create SPS database</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 16:30:12 Created SPS database method container</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 16:30:12 Creating SPS db...</code></pre>
-<pre><code>## [SPS-DANGER] 2020-09-29 16:30:12 Db created at '/tmp/Rtmp39Vq0j/SPSProject/config/sps.db'. DO NOT share this file with others
-## [SPS-INFO] 2020-09-29 16:30:12 Key md5 73c77ebed14283e344ccf05671b2a130
-## [SPS-INFO] 2020-09-29 16:30:12 SPS project setup done!</code></pre>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="va">sps_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">sps_tmp_dir</span>, <span class="st">"SPSProject"</span><span class="op">)</span></pre></div>
-<p>For this toy example, the project directory structure is written to a temp directory on a user’s system. For a real project, it should be written to a defined and user controlled location on a system rather than a temp directory. The following <code>spsInit</code></p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="fu"><a href="../reference/spsInit.html">spsInit</a></span><span class="op">(</span><span class="op">)</span></pre></div>
-<p>By default, <code>spsInit</code> creates a folder under the current working directory of a user’s R session. The name of this directory is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g. SPS_20200929. The file and directory structure is organized as follows.</p>
+<p>By default, <code>spsInit</code> creates a project folder under the current working directory of a user’s R session. The name of this directory is <code>SPS_</code> + <code>today's date</code> in <em>ISO 8601</em> format, e.g. SPS_20200929. This project environment is populated with all the required files to run the application.</p>
+<p>It is possible to choose a different location, as well build the environment in a temporary directory. By default, the function set the working directory to the project folder, and it can turn off with the function option, as follows:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="fu"><a href="../reference/spsInit.html">spsInit</a></span><span class="op">(</span>app_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, change_wd <span class="op">=</span> <span class="cn">FALSE</span>, project_name <span class="op">=</span> <span class="st">"SPSProject"</span><span class="op">)</span></pre></div>
+<pre><code>## [SPS-INFO] 2020-09-29 17:07:46 Start to create a new SPS project</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:07:46 Create project under /tmp/RtmptxpRqX/SPSProject</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:07:46 Now copy files</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:07:46 Create SPS database</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:07:46 Created SPS database method container</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:07:46 Creating SPS db...</code></pre>
+<pre><code>## [SPS-DANGER] 2020-09-29 17:07:46 Db created at '/tmp/RtmptxpRqX/SPSProject/config/sps.db'. DO NOT share this file with others
+## [SPS-INFO] 2020-09-29 17:07:46 Key md5 4901bc5f053ca2622ca09ba19c51b5c1
+## [SPS-INFO] 2020-09-29 17:07:46 SPS project setup done!</code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="va">sps_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"SPSProject"</span><span class="op">)</span></pre></div>
+<p>Note that in this example, the project directory structure is written to a temporary directory on a user’s system. For a real project, it should be written to a defined and user controlled location on a system rather than a temporary directory.</p>
+<div id="directory-structure" class="section level3">
+<h3 class="hasAnchor">
+<a href="#directory-structure" class="anchor"></a>Directory structure</h3>
+<p>The file and directory structure is organized as follows:</p>
 <pre>
 SPS_xx/  
 ├── server.R               <span class="text-success">|</span> 
@@ -469,9 +473,10 @@ SPS_xx/
         └── plot_xx.jpg      
 </pre>
 </div>
-<div id="launch-sps" class="section level2">
+</div>
+<div id="launch-sps-interface" class="section level2">
 <h2 class="hasAnchor">
-<a href="#launch-sps" class="anchor"></a>Launch SPS</h2>
+<a href="#launch-sps-interface" class="anchor"></a>Launch SPS interface</h2>
 <p>By default, your working directory should be set inside that project folder automatically. If you are using Rstudio, <em>global.R</em> file will be opened for you. This is the only file that you need to make custom change if there is any.</p>
 <p>In your <em>global.R</em>, scroll down to the bottom, you should see:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit">
@@ -644,7 +649,7 @@ SPS_xx/
 <p>Using <code><a href="../reference/spsAddPlugin.html">spsAddPlugin()</a></code> without any argument will list all available plugins and instructions to install them.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit">
 <span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span><span class="op">(</span><span class="op">)</span></pre></div>
-<pre><code>## [SPS-INFO] 2020-09-29 16:30:12 Current SPS has following plugins</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:07:46 Current SPS has following plugins</code></pre>
 <pre><code>## spsBio               Biological plots
 ## BiocManager::install("systemPipeR/spsBio")</code></pre>
 <p>To load a specific plugin:</p>

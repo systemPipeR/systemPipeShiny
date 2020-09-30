@@ -1459,6 +1459,7 @@ pre code {
 background-color: inherit;
 display: block;
 padding: 10px 10px 10px 0px;
+white-space: pre;
 overflow-x: inherit;
 font-size: 100%;
 }
@@ -2236,8 +2237,8 @@ a.bttn-default {
 an introduction, nor did it describe the purpose of this package. Thus, I have
 changed it mostly to the text of your recent poster. Make sure what is described
 here matches mostly what the package does or should do.</font></span> extends the widely
-used o<a href="https://bioconductor.org/packages/systemPipeR/">systemPipeR</a> (SPR) workflow
-environment with a versatile graphical user interface provided by a <a href="https://shiny.rstudio.com">oShiny
+used <a href="https://bioconductor.org/packages/systemPipeR/">systemPipeR</a> (SPR) workflow
+environment with a versatile graphical user interface provided by a <a href="https://shiny.rstudio.com">Shiny
 App</a>. This allows non-R users, such as
 experimentalists, to run many systemPipeR’s workflow designs, control, and
 visualization functionalities interactively without requiring knowledge of R.
@@ -2250,8 +2251,8 @@ integrate many core packages from the R/Bioconductor ecosystem. Examples of
 SPS’ current functionalities include: (a) interactive creation of experimental
 designs and metadata using an easy to use tabular editor or file uploader; (b)
 visualization of workflow topologies combined with auto-generation of R
-Markdown preview for interactively designed workflows; (d) access to a wide
-range of data processing routines; (e) and an extendable set of visualization
+Markdown preview for interactively designed workflows; (c) access to a wide
+range of data processing routines; (d) and an extendable set of visualization
 functionalities. Complex visual results can be managed on a ‘Canvas Workbench’
 allowing users to organize and to compare plots in an efficient manner combined
 with a session snapshot feature to continue work at a later time. The present
@@ -2265,14 +2266,14 @@ community.</p>
 <a href="https://tgirke.shinyapps.io/systemPipeShiny/" target="_blank">here</a>. At the
 time of writing, there are five interactive tutorials embedded in this instance
 that users can access from the upper-right corner. Each tutorial introduces
-major functionalities of SPS.</p>
+major functionalities of <code>SPS.</code></p>
 </div>
 <div id="installation" class="section level1">
 <h1><span class="header-section-number">2</span> Installation</h1>
 <p>The <code>systemPipeShiny</code> package can be installed from a user’s R console as follows.</p>
 <pre class="r"><code>if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)) install.packages(&quot;BiocManager&quot;)
 BiocManager::install(&quot;systemPipeShiny&quot;)</code></pre>
-<p>If the user’s OS is Linux then one may need to install the following dendencies.
+<p>If the user’s OS is Linux then one may need to install the following dependencies.
 The following example applies to Ubuntu.</p>
 <pre class="bash"><code>sudo apt-get install libv8-dev
 sudo apt-get install libssl-dev
@@ -2282,7 +2283,7 @@ sudo apt-get install libcurl4-openssl-dev</code></pre>
 </div>
 <div id="main-functionalities" class="section level1">
 <h1><span class="header-section-number">3</span> Main functionalities</h1>
-<p>Currently, SPS includes two main functional categories: (1) a workbench for
+<p>Currently, <code>SPS</code> includes two main functional categories: (1) a workbench for
 designing and configuring data analysis workflows (WF), and (2) a data
 visualization (VS) toolbox (<em>Fig 1</em>).<label for="sidenote-2" class="sidenote-number">2</label><label for="sidenote-2" class="margin-toggle" onclick="toggle_visibility('sidenote-2')">2</label><span class="sidenote" id="sidenote-2"><span class="sidenote-number">2</span> <font style="color:red">ThG: I have changed
 this section significantly.</font></span> The WF module allows to write and to
@@ -2316,35 +2317,39 @@ note the package load was missing.</font></span></p>
 </div>
 <div id="initialize-sps-project" class="section level2">
 <h2><span class="header-section-number">4.2</span> Initialize SPS project</h2>
-<p>Before launching the SPS Shiny App, a project environment needs is created with the
-following commands.</p>
-<pre class="r"><code>sps_tmp_dir &lt;- tempdir()
-spsInit(app_path = sps_tmp_dir, change_wd = FALSE, project_name = &quot;SPSProject&quot;)</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 13:58:47 Start to create a new SPS project</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 13:58:47 Create project under /tmp/RtmpxIDxNX/SPSProject</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 13:58:47 Now copy files</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 13:58:47 Create SPS database</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 13:58:47 Created SPS database method container</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 13:58:47 Creating SPS db...</code></pre>
-<pre><code>## [SPS-DANGER] 2020-09-29 13:58:48 Db created at '/tmp/RtmpxIDxNX/SPSProject/config/sps.db'. DO NOT share this file with others
-## [SPS-INFO] 2020-09-29 13:58:48 Key md5 f4b897ef0114d42f428c1353affff7cb
-## [SPS-INFO] 2020-09-29 13:58:48 SPS project setup done!</code></pre>
-<pre class="r"><code>sps_dir &lt;- file.path(sps_tmp_dir, &quot;SPSProject&quot;)</code></pre>
-<p>For this toy example, the project directory structure is written to a temp directory
-on a user’s system. For a real project, it should be written to a defined and user
-controlled location on a system rather than a temp directory. The following <code>spsInit</code></p>
+<p>Before launching the SPS application, a project environment needs is created with the
+following command:</p>
 <pre class="r"><code>spsInit()</code></pre>
-<p>By default, <code>spsInit</code> creates a folder under the current working directory
-of a user’s R session. The name of this directory is <code>SPS_</code> + <code>today's date</code>
+<p>By default, <code>spsInit</code> creates a project folder under the current working directory
+of a user’s R session. The name of this directory is <code>SPS_</code> + <code>today&#39;s date</code>
 in <em>ISO 8601</em> format, e.g. SPS_20200929.
-The file and directory structure is organized as follows.</p>
+This project environment is populated with all the required files to run the application.</p>
+<p>It is possible to choose a different location, as well build the environment in a temporary directory. By default, the function set the working directory to the project folder, and it can
+turn off with the function option, as follows:</p>
+<pre class="r"><code>spsInit(app_path = tempdir(), change_wd = FALSE, project_name = &quot;SPSProject&quot;)</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:11:24 Start to create a new SPS project</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:11:24 Create project under /tmp/RtmpNoJYdM/SPSProject</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:11:24 Now copy files</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:11:24 Create SPS database</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:11:24 Created SPS database method container</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:11:24 Creating SPS db...</code></pre>
+<pre><code>## [SPS-DANGER] 2020-09-29 17:11:24 Db created at &#39;/tmp/RtmpNoJYdM/SPSProject/config/sps.db&#39;. DO NOT share this file with others
+## [SPS-INFO] 2020-09-29 17:11:24 Key md5 74acbb040ac0785d17672653cf87b3c7
+## [SPS-INFO] 2020-09-29 17:11:24 SPS project setup done!</code></pre>
+<pre class="r"><code>sps_dir &lt;- file.path(tempdir(), &quot;SPSProject&quot;)</code></pre>
+<p>Note that in this example, the project directory structure is written to a temporary directory
+on a user’s system. For a real project, it should be written to a defined and user
+controlled location on a system rather than a temporary directory.</p>
+<div id="directory-structure" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Directory structure</h3>
+<p>The file and directory structure is organized as follows:</p>
 <pre>
 SPS_xx/  
 ├── server.R               <span class="text-success">|</span> 
 ├── global.R               <span class="text-success">| Most important server, UI and global files, unless special needs, `global.R` is the only file you need to edit manually</span>   
 ├── ui.R                   <span class="text-success">|</span>  
 ├── deploy.R               <span class="text-info">| Deploy helper file</span>  
-├── config                 <span class="text-success">| Important app config files. Do not edit them if you don't know</span>  
+├── config                 <span class="text-success">| Important app config files. Do not edit them if you don&#39;t know</span>  
 │   ├── sps.db             <span class="text-gray">| SPS database</span> 
 │   ├── sps_options.yaml   <span class="text-gray">| SPS default option list</span> 
 │   └── tabs.csv           <span class="text-gray">| SPS tab information</span> 
@@ -2370,8 +2375,9 @@ SPS_xx/
         └── plot_xx.jpg      
 </pre>
 </div>
-<div id="launch-sps" class="section level2">
-<h2><span class="header-section-number">4.3</span> Launch SPS</h2>
+</div>
+<div id="launch-sps-interface" class="section level2">
+<h2><span class="header-section-number">4.3</span> Launch SPS interface</h2>
 <p>By default, your working directory should be set inside that project folder automatically.
 If you are using Rstudio, <em>global.R</em> file will be opened for you. This is the only
 file that you need to make custom change if there is any.</p>
@@ -2592,7 +2598,7 @@ are able to load them into SPS framework.</p>
 <p>Using <code>spsAddPlugin()</code> without any argument will list all available plugins and
 instructions to install them.</p>
 <pre class="r"><code>spsAddPlugin()</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 13:58:48 Current SPS has following plugins</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-29 17:11:24 Current SPS has following plugins</code></pre>
 <pre><code>## spsBio               Biological plots
 ## BiocManager::install(&quot;systemPipeR/spsBio&quot;)</code></pre>
 <p>To load a specific plugin:</p>
@@ -2701,7 +2707,7 @@ messages on console to tell you specifically what is wrong with your options.
 <li>warning_toast: A toast pop-up message when you are under some dangerous options when app starts.</li>
 <li>loading_theme: <code>loading_screen</code> must be <code>TRUE</code>. Only one theme for now, we will add more in future.</li>
 <li>verbose: Give you more information on debugging.</li>
-<li>admin_url: the admin page url , will be added in an upcoming version, a preview can be seen by adding “/?admin” to the end of app url, e.g. “<a href="https://tgirke.shinyapps.io/systemPipeShiny/?admin" class="uri">https://tgirke.shinyapps.io/systemPipeShiny/?admin</a>”.</li>
+<li>admin_url: the admin page url , will be added in an upcoming version, a preview can be seen by adding “/?admin” to the end of app url, e.g. “<a href="https://tgirke.shinyapps.io/systemPipeShiny/?admin">https://tgirke.shinyapps.io/systemPipeShiny/?admin</a>”.</li>
 </ul>
 </div>
 <div id="tab-configurations" class="section level3">
@@ -2745,13 +2751,13 @@ is recommended to create -&gt; test/run -&gt; deploy a Shiny app from Rstudio an
 <div id="version-information" class="section level1">
 <h1><span class="header-section-number">8</span> Version Information</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
+<pre><code>## R Under development (unstable) (2020-08-07 r78979)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Debian GNU/Linux 10 (buster)
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.8.0
-## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.8.0
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /home/dcassol/src/R-devel/lib/libRlapack.so
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -2767,11 +2773,11 @@ is recommended to create -&gt; test/run -&gt; deploy a Shiny app from Rstudio an
 ## other attached packages:
 ## [1] systemPipeShiny_0.99.0 shinyTree_0.2.7        ggplot2_3.3.2         
 ## [4] stringr_1.4.0          shiny_1.5.0            magrittr_1.5          
-## [7] glue_1.4.2             assertthat_0.2.1       BiocStyle_2.16.1      
+## [7] glue_1.4.2             assertthat_0.2.1       BiocStyle_2.17.1      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] httr_1.4.2               shinyFiles_0.8.0         tidyr_1.1.2             
-##  [4] vroom_1.3.1              bit64_4.0.5              jsonlite_1.7.1          
+##  [4] vroom_1.3.2              bit64_4.0.5              jsonlite_1.7.1          
 ##  [7] viridisLite_0.3.0        rhandsontable_0.3.7      askpass_1.1             
 ## [10] BiocManager_1.30.10      blob_1.2.1               yaml_2.2.1              
 ## [13] backports_1.1.10         pillar_1.4.6             RSQLite_2.2.0           
@@ -2785,11 +2791,11 @@ is recommended to create -&gt; test/run -&gt; deploy a Shiny app from Rstudio an
 ## [37] crayon_1.3.4             mime_0.9                 memoise_1.1.0           
 ## [40] evaluate_0.14            DOT_0.1                  shinytoastr_2.1.1       
 ## [43] fs_1.5.0                 shinydashboard_0.7.1     colourpicker_1.1.0      
-## [46] tools_4.0.2              data.table_1.13.0        formatR_1.7             
+## [46] tools_4.1.0              data.table_1.13.0        formatR_1.7             
 ## [49] lifecycle_0.2.0          plotly_4.9.2.1           V8_3.2.0                
 ## [52] munsell_0.5.0            networkD3_0.4            shinyAce_0.4.1          
-## [55] compiler_4.0.2           rlang_0.4.7              shinyjqui_0.3.3         
-## [58] grid_4.0.2               shinydashboardPlus_0.7.5 rstudioapi_0.11         
+## [55] compiler_4.1.0           rlang_0.4.7              shinyjqui_0.3.3         
+## [58] grid_4.1.0               shinydashboardPlus_0.7.5 rstudioapi_0.11         
 ## [61] rsvg_2.1                 htmlwidgets_1.5.1        igraph_1.2.5            
 ## [64] miniUI_0.1.1.1           rmarkdown_2.3            shinyWidgets_0.5.3      
 ## [67] codetools_0.2-16         gtable_0.3.0             DBI_1.1.0               
