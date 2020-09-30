@@ -81,7 +81,10 @@ allowing users to organize and to compare plots in an efficient manner combined
 with a session snapshot feature to continue work at a later time. The present
 suite of pre-configured visualization examples include different methods to
 plot a count table: PCA, t-SNE and plots of other clustering methods; volcano
-plots, data mining plots including heatmaps, and more. The modular design of
+plots, data mining plots including heatmaps, and more. 
+^[<font style="color:green">Dani:My opinion here is that if we mentioned some plot here, 
+we should provide the plots on the visualization tabs since we already have these plots organized.</font>]
+The modular design of
 SPR makes it easy to design custom functions without any knowledge of Shiny, as
 well as extending the environment in the future with contributions from the
 community.
@@ -110,13 +113,14 @@ sudo apt-get install libv8-dev
 sudo apt-get install libssl-dev
 sudo apt-get install libcurl4-openssl-dev
 ```
+
 *libcurl4-openssl-dev* may not be required for Ubuntu > 18.04.
 
 On other Linux distributions, the install commands may be slightly different. 
 
 # Main functionalities 
 
-Currently, SPS includes two main functional categories: (1) a workbench for
+Currently, `SPS` includes two main functional categories: (1) a workbench for
 designing and configuring data analysis workflows (WF), and (2) a data
 visualization (VS) toolbox (*Fig 1*) The WF module allows to write and to
 modify configuration files required for running workflows in `systemPipeR`. The
@@ -141,7 +145,7 @@ an [advanced user section](#extend-sps).
 
 # Example workflow with toy RNA-Seq data
 
-The following sections illustrate the main functionalities SPS using an analysis 
+The following sections illustrate the main functionalities `SPS` using an analysis 
 workflow for RNA-Seq data as an example.
 
 ## Load package
@@ -152,12 +156,12 @@ Load the `systemPipeShiny` package in your R session.
 library(systemPipeShiny)
 ```
 
-## Initialize SPS project
+## Initialize `SPS` project
 
-Before launching the SPS application, a project environment needs to be created with the
+Before launching the `SPS` application, a project environment needs to be created with the
 following commands.
 
-```{r , eval=FALSE}
+```{r spsinit, eval=FALSE}
 spsInit()
 ```
 
@@ -165,7 +169,7 @@ For this toy example, the project directory structure is written to a temp direc
 on a user's system. For a real project, it should be written to a defined and user 
 controlled location on a system rather than a temp directory.
 
-```{r spsinit, eval=TRUE}
+```{r spsinit_temp, eval=TRUE}
 sps_tmp_dir <- tempdir()
 spsInit(app_path = sps_tmp_dir, change_wd = FALSE, project_name = "SPSProject")
 sps_dir <- file.path(sps_tmp_dir, "SPSProject")
@@ -208,7 +212,7 @@ SPS_xx/
 ## Launch SPS 
 
 By default, your working directory should be set inside that project folder automatically. 
-Then, to launch the SPS app, run:
+Then, to launch the `SPS` application, run:
 
 ```{r, eval=FALSE}
 shiny::runApp()
@@ -217,54 +221,36 @@ shiny::runApp()
 Or you can click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
 button on top right corner in Rstudio.
 
-
 In addition, if you are using Rstudio, *global.R* file will be automatically open when 
-SPS project is created. Custom changes can be made inside this file before the app launches. 
-
-In your *global.R*, scroll down to the bottom, you should see:
-
-```{r, eval=FALSE}
-sps_app <- sps(
-    vstabs = c("data_example", "plot_example1", "plot_example2"),
-    plugin = "",
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
-```
-
-This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like 
-`c("tab1", "tab2)`. Open *config/tabs.csv* or use `spsTabInfo()` to see what tabs IDs can be load and other 
-tab information. Currently you can only load/unload visualization tabs, the key word `vs` under column "*type*"; 
-essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatically and these tabs cannot be modified.
-The [advanced section](#extend-sps) will teach you how to create your own tabs.
+`SPS` project is created. Custom changes can be made inside this file before the app launches. The [advanced section](#extend-sps) will teach you how to create your own tabs.
+^[<font style="color:green">Dani:I think this advanced information could be confusing in this stage of the documentation (discussing and showing details about the global.R file), so I believe we can add this to the advanced features section and just to link here.</font>]
 
 For this vignette example, we will use as it is, so no change is made.
 The app should be launched at this point. Click on the "Continue to app" button 
-on the welcome screen and you should see the SPS main dashboard like this one (Fig.2):
+on the welcome screen and you should see the `SPS` main dashboard like this one (Fig.2):
 
 <center id="sps_ui">
 ![sps_ui](./img/sps_ui_main.jpg)
 **Figure 2. SPS UI**
 </center>
 
-All SPS tabs are well classified into WF and VS part. We will start from WF.
+All `SPS` tabs are well classified into Workflow and Visualization modules. 
 
 ## Workflow management
 
-Workflow management in SPS helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
-R package that runs a workflow in "command line + R code" manner. To run a SPR workflow, you 
-need to prepare three very important files: a metadata(targets) file that contains 
-sample information, a workflow step file(Rmarkdown format) that defines the workflow steps 
+Workflow management in `SPS` helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
+R package that runs a workflow in "command line + R code" manner. To run a SPR workflow, you
+need to prepare three very important files: a metadata (targets) file that contains 
+sample information, a workflow step file (Rmarkdown format) that defines the workflow steps 
 and a workflow config file that helps the program to set up your directory. In SPS, one 
 can easily prepare all of these three files in SPS tabs under "Workflow Management" 
 section. You can find them at the left side navigation bar (Fig2 a-b). 
 
 Under current version of SPS, we only help you to prepare and check format of these 
-files. One should save these files and run a workflow in SPR. Directly running a SPR workflow 
-in SPS will be supported in an upcomming release.
+files. One should save these files and run a workflow in SPR. Directly running a SPR workflow in SPS will be supported in an upcoming release.
 
 ### Prepare a target file
+
 The targets file defines all input files' path and other sample information of 
 an analysis workflow. Read ["Structure of targets file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file) 
 section in SPR vignette to better undertand the structure of this file. 
@@ -499,7 +485,7 @@ but unlike *shiny* options are single values, SPS options are passed using the `
 function in `global.R` as a group. To view all options and their default, valid
 values('*' means any value is okay):
 
-```{r , eval=TRUE}
+```{r, eval=TRUE}
 viewSpsDefaults(app_path = sps_dir)
 ```
 
@@ -547,6 +533,24 @@ sps_app <- sps(vstabs = c("ID1", "ID2", ...))
 
 *tabs.csv* has all the tab IDs. Under current version of SPS, you can only load/unload 
 tabs in the "vs" type. Tabs under "core" and "wf" types are unable to change.
+
+<!-- In your *global.R*, scroll down to the bottom, you should see: -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- sps_app <- sps( -->
+<!--     vstabs = c("data_example", "plot_example1", "plot_example2"), -->
+<!--     plugin = "", -->
+<!--     server_expr = { -->
+<!--         msg("Custom expression runs -- Hello World", "GREETING", "green") -->
+<!--     } -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like  -->
+<!-- `c("tab1", "tab2)`. Open *config/tabs.csv* or use `spsTabInfo()` to see what tabs IDs can be load and other  -->
+<!-- tab information. Currently you can only load/unload visualization tabs, the key word `vs` under column "*type*";  -->
+<!-- essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatically and these tabs cannot be modified. -->
+
 
 ## A variety of additional shiny widgets 
 
