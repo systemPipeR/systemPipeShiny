@@ -51,7 +51,7 @@ cat(readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")),s
 cat("</style>")
 ```
 
-```{r logo, echo=FALSE, out.width='70%', fig.align='center', fig.width=12, eval=TRUE}
+```{r logo, echo=FALSE, out.width='70%', fig.align='center', eval=TRUE}
 knitr::include_graphics(path = "../inst/app/www/img/sps.png")
 ```
 

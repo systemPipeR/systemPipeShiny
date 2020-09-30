@@ -28,11 +28,11 @@ wf_wfUI <- function(id){shinyCheckPkg
         This box allows you to select workflow steps. You need to choose at lest
         one step to enable other buttons in this box.
 
-        Clicking “Report preview” generates a preview of what the final report
+        Clicking "Report preview" generates a preview of what the final report
         will look like based on your step selection, but in the preview,
         no code is evaluated. The report is displayed in the bottom of this tab.
 
-        Clicking on the “Plot steps” will show a flow chart on the right side
+        Clicking on the "Plot steps" will show a flow chart on the right side
         of what the step execution orders are when you run the actual workflow
         in SPR.
 

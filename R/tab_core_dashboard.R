@@ -9,13 +9,13 @@ core_dashboardUI <- function(id){
         p("systemPipeShiny (SPS) extends the widely used systemPipeR (SPR)
           workflow environment with a versatile graphical user interface
           provided by a Shiny App. This allows non-R users, such as
-          experimentalists, to run many systemPipeR’s workflow designs,
+          experimentalists, to run many systemPipeR's workflow designs,
           control, and visualization functionalities interactively without
           requiring knowledge of R. Most importantly, SPS has been designed
           as a general purpose framework for interacting with other R packages
           in an intuitive manner. Like most Shiny Apps, SPS can be used on both
           local computers as well as centralized server-based deployments that
-          can be accessed remotely as a public web service for using SPR’s
+          can be accessed remotely as a public web service for using SPR's
           functionalities with community and/or private data."),
         spsHr(),
         h2("To start"),

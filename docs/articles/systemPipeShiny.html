@@ -73,7 +73,7 @@
       <h1 data-toc-skip>systemPipeShiny</h1>
                         <h4 class="author">Author: Le Zhang, Daniela Cassol, Ponmathi Ramasamy, Jianhai Zhang, Gordon Mosher and Thomas Girke</h4>
             
-            <h4 class="date">Last update: 29 September, 2020</h4>
+            <h4 class="date">Last update: 30 September, 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/systemPipeR/systemPipeShiny/blob/master/vignettes/systemPipeShiny.Rmd"><code>vignettes/systemPipeShiny.Rmd</code></a></small>
       <div class="hidden name"><code>systemPipeShiny.Rmd</code></div>
@@ -385,8 +385,9 @@ a.bttn-default {
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>The <code>systemPipeShiny</code> package can be installed from a user’s R console as follows.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)) <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
-<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeShiny"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"systemPipeShiny"</span><span class="op">)</span></pre></div>
 <p>If the user’s OS is Linux then one may need to install the following dependencies. The following example applies to Ubuntu.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">sudo</span> apt-get install libv8-dev</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="fu">sudo</span> apt-get install libssl-dev</span>
@@ -411,26 +412,30 @@ a.bttn-default {
 <h2 class="hasAnchor">
 <a href="#load-package" class="anchor"></a>Load package</h2>
 <p>Load the <code>systemPipeShiny</code> package in your R session.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">systemPipeShiny</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/systemPipeR/systemPipeShiny">systemPipeShiny</a></span><span class="op">)</span></pre></div>
 </div>
 <div id="initialize-sps-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initialize-sps-project" class="anchor"></a>Initialize SPS project</h2>
 <p>Before launching the SPS application, a project environment needs to be created with the following commands.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="fu"><a href="../reference/spsInit.html">spsInit</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <p>For this toy example, the project directory structure is written to a temp directory on a user’s system. For a real project, it should be written to a defined and user controlled location on a system rather than a temp directory.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">sps_tmp_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span>()
-<span class="fu"><a href="../reference/spsInit.html">spsInit</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_tmp_dir</span>, <span class="kw">change_wd</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">project_name</span> <span class="kw">=</span> <span class="st">"SPSProject"</span>)</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-29 17:38:31 Start to create a new SPS project</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 17:38:31 Create project under /tmp/Rtmp0dfQX4/SPSProject</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 17:38:31 Now copy files</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 17:38:31 Create SPS database</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 17:38:31 Created SPS database method container</code></pre>
-<pre><code>## [SPS-INFO] 2020-09-29 17:38:31 Creating SPS db...</code></pre>
-<pre><code>## [SPS-DANGER] 2020-09-29 17:38:32 Db created at '/tmp/Rtmp0dfQX4/SPSProject/config/sps.db'. DO NOT share this file with others
-## [SPS-INFO] 2020-09-29 17:38:32 Key md5 400bde1fb68d1774e98a07dfafc555ae
-## [SPS-INFO] 2020-09-29 17:38:32 SPS project setup done!</code></pre>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">sps_dir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">sps_tmp_dir</span>, <span class="st">"SPSProject"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="va">sps_tmp_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/spsInit.html">spsInit</a></span><span class="op">(</span>app_path <span class="op">=</span> <span class="va">sps_tmp_dir</span>, change_wd <span class="op">=</span> <span class="cn">FALSE</span>, project_name <span class="op">=</span> <span class="st">"SPSProject"</span><span class="op">)</span></pre></div>
+<pre><code>## [SPS-INFO] 2020-09-30 10:10:46 Start to create a new SPS project</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-30 10:10:46 Create project under /tmp/RtmpEiJhEs/SPSProject</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-30 10:10:46 Now copy files</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-30 10:10:46 Create SPS database</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-30 10:10:46 Created SPS database method container</code></pre>
+<pre><code>## [SPS-INFO] 2020-09-30 10:10:46 Creating SPS db...</code></pre>
+<pre><code>## [SPS-DANGER] 2020-09-30 10:10:46 Db created at '/tmp/RtmpEiJhEs/SPSProject/config/sps.db'. DO NOT share this file with others
+## [SPS-INFO] 2020-09-30 10:10:46 Key md5 afbf224ae915305a221613b5df3e962e
+## [SPS-INFO] 2020-09-30 10:10:46 SPS project setup done!</code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="va">sps_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">sps_tmp_dir</span>, <span class="st">"SPSProject"</span><span class="op">)</span></pre></div>
 <p>The file and directory structure is organized as follows:</p>
 <pre>
 SPS_xx/  
@@ -468,15 +473,17 @@ SPS_xx/
 <h2 class="hasAnchor">
 <a href="#launch-sps" class="anchor"></a>Launch SPS</h2>
 <p>By default, your working directory should be set inside that project folder automatically. Then, to launch the SPS app, run:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="kw pkg">shiny</span><span class="kw ns">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">runApp</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">runApp</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <p>Or you can click on the <img src="img/app_start.png" style="display: inline; padding-left:0; width:10px; height:15px;"><code>Run App</code> button on top right corner in Rstudio.</p>
 <p>In addition, if you are using Rstudio, <em>global.R</em> file will be automatically open when SPS project is created. Custom changes can be made inside this file before the app launches.</p>
 <p>In your <em>global.R</em>, scroll down to the bottom, you should see:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data_example"</span>, <span class="st">"plot_example1"</span>, <span class="st">"plot_example2"</span>),
-    <span class="kw">plugin</span> <span class="kw">=</span> <span class="st">""</span>, <span class="kw">server_expr</span> <span class="kw">=</span> {
-        <span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>,
-            <span class="st">"green"</span>)
-    })</pre></body></html></div>
+<div class="sourceCode" id="cb15"><pre class="downlit">
+<span class="va">sps_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span><span class="op">(</span>vstabs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"data_example"</span>, <span class="st">"plot_example1"</span>, <span class="st">"plot_example2"</span><span class="op">)</span>, 
+    plugin <span class="op">=</span> <span class="st">""</span>, server_expr <span class="op">=</span> <span class="op">{</span>
+        <span class="fu"><a href="../reference/msg.html">msg</a></span><span class="op">(</span><span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>, 
+            <span class="st">"green"</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span></pre></div>
 <p>This is the SPS main function. You can load/unload tabs by providing tab IDs in <code>vstabs</code> argument, like <code>c("tab1", "tab2)</code>. Open <em>config/tabs.csv</em> or use <code><a href="../reference/spsTabInfo.html">spsTabInfo()</a></code> to see what tabs IDs can be load and other tab information. Currently you can only load/unload visualization tabs, the key word <code>vs</code> under column “<em>type</em>”; essential framework tabs(<em>core</em>) and workflow tabs (<em>wf</em>) are loaded automatically and these tabs cannot be modified. The <a href="#extend-sps">advanced section</a> will teach you how to create your own tabs.</p>
 <p>For this vignette example, we will use as it is, so no change is made. The app should be launched at this point. Click on the “Continue to app” button on the welcome screen and you should see the SPS main dashboard like this one (Fig.2):</p>
 <center id="sps_ui">
@@ -639,21 +646,25 @@ SPS_xx/
 <a href="#sps-plugins" class="anchor"></a>SPS plugins</h2>
 <p>We have created many more plots options and they are distributed as “SPS plugins”. A SPS plugin is a collection of SPS tabs that become small R packages. You need to install the plugin like you do with normal R packages by <code>install.packages</code>, <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> or <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>. The plugins(packages) come with SPS tabs, data, and other helper functions. Using <code><a href="../reference/spsAddPlugin.html">spsAddPlugin()</a></code> function, you are able to load them into SPS framework.</p>
 <p>Using <code><a href="../reference/spsAddPlugin.html">spsAddPlugin()</a></code> without any argument will list all available plugins and instructions to install them.</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span>()</pre></body></html></div>
-<pre><code>## [SPS-INFO] 2020-09-29 17:38:32 Current SPS has following plugins</code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+<pre><code>## [SPS-INFO] 2020-09-30 10:10:47 Current SPS has following plugins</code></pre>
 <pre><code>## spsBio               Biological plots
 ## BiocManager::install("systemPipeR/spsBio")</code></pre>
 <p>To load a specific plugin:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span>(<span class="kw">plugin</span> <span class="kw">=</span> <span class="st">"PLUGIN_NAME"</span>, <span class="kw">app_path</span> <span class="kw">=</span> <span class="st">"PATH_OF_SPS"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb19"><pre class="downlit">
+<span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span><span class="op">(</span>plugin <span class="op">=</span> <span class="st">"PLUGIN_NAME"</span>, app_path <span class="op">=</span> <span class="st">"PATH_OF_SPS"</span><span class="op">)</span></pre></div>
 <p>At this stage, there is only one plugin, the <em>spsBio</em>: plots for biological data visualization. It is <strong>under testing and please expect unstableness</strong>. Under your project directory:</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"systemPipeR/spsBio"</span>)
-<span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span>(<span class="kw">plugin</span> <span class="kw">=</span> <span class="st">"spsBio"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb20"><pre class="downlit">
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"systemPipeR/spsBio"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/spsAddPlugin.html">spsAddPlugin</a></span><span class="op">(</span>plugin <span class="op">=</span> <span class="st">"spsBio"</span><span class="op">)</span></pre></div>
 <p>Inside your SPS project root, in the <em>global.R</em> file, specify that you want to load the plugin to app and start the app like normal:</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data_example"</span>, <span class="st">"plot_example1"</span>, <span class="st">"plot_example2"</span>),
-    <span class="kw">plugin</span> <span class="kw">=</span> <span class="st">"spsBio"</span>, <span class="kw">server_expr</span> <span class="kw">=</span> {
-        <span class="fu"><a href="../reference/msg.html">msg</a></span>(<span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>,
-            <span class="st">"green"</span>)
-    })</pre></body></html></div>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="va">sps_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span><span class="op">(</span>vstabs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"data_example"</span>, <span class="st">"plot_example1"</span>, <span class="st">"plot_example2"</span><span class="op">)</span>, 
+    plugin <span class="op">=</span> <span class="st">"spsBio"</span>, server_expr <span class="op">=</span> <span class="op">{</span>
+        <span class="fu"><a href="../reference/msg.html">msg</a></span><span class="op">(</span><span class="st">"Custom expression runs -- Hello World"</span>, <span class="st">"GREETING"</span>, 
+            <span class="st">"green"</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span></pre></div>
 </div>
 <div id="configuration" class="section level2">
 <h2 class="hasAnchor">
@@ -662,8 +673,9 @@ SPS_xx/
 <h3 class="hasAnchor">
 <a href="#app-options" class="anchor"></a>App options</h3>
 <p>App options in SPS are controlled by “SPS options”. These options can change app appearance, debugging level, server server behaviors, <em>etc</em>. The valid options can be found and change on the <code>global.R</code> file. They are similar to <em>Shiny</em> options, but unlike <em>shiny</em> options are single values, SPS options are passed using the <code>Option(sps = list(...))</code> function in <code>global.R</code> as a group. To view all options and their default, valid values(’*’ means any value is okay):</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="../reference/viewSpsDefaults.html">viewSpsDefaults</a></span>(<span class="kw">app_path</span> <span class="kw">=</span> <span class="no">sps_dir</span>)</pre></body></html></div>
-<pre><code>## mode: list(default = "server", other = "local")
+<div class="sourceCode" id="cb22"><pre class="downlit">
+<span class="fu"><a href="../reference/viewSpsDefaults.html">viewSpsDefaults</a></span><span class="op">(</span>app_path <span class="op">=</span> <span class="va">sps_dir</span><span class="op">)</span></pre></div>
+<pre><code>## mode: list(default = "local", other = "server")
 ##  loading_screen: list(default = TRUE, other = FALSE)
 ##  loading_theme: list(default = "vhelix", other = "*")
 ##  use_crayon: list(default = TRUE, other = FALSE)
@@ -755,7 +767,8 @@ Note: Do not worry if you set some invalid values, on app start, <code><a href="
 <a href="#tab-configurations" class="anchor"></a>Tab configurations</h3>
 <p>Tabs are registered(defined) by the <em>tabs.csv</em> file under SPS project <em>config</em> folder. It contains information for all the tabs. Do not modify it if you don’t plan to build new tabs. See <a href="#extend-spsfor-developers">developer section</a> for how to operate this file.</p>
 <p>To control what tabs to appear(load/unload) on SPS, pass the tab IDs of tabs you want to see to <code>vstabs =</code> argument on <code><a href="../reference/sps.html">sps()</a></code></p>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">sps_app</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span>(<span class="kw">vstabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"ID1"</span>, <span class="st">"ID2"</span>, <span class="no">...</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb24"><pre class="downlit">
+<span class="va">sps_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sps.html">sps</a></span><span class="op">(</span>vstabs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ID1"</span>, <span class="st">"ID2"</span>, <span class="va">...</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><em>tabs.csv</em> has all the tab IDs. Under current version of SPS, you can only load/unload tabs in the “vs” type. Tabs under “core” and “wf” types are unable to change.</p>
 </div>
 </div>
@@ -778,14 +791,15 @@ Note: Do not worry if you set some invalid values, on app start, <code><a href="
 <div id="version-information" class="section level1">
 <h1 class="hasAnchor">
 <a href="#version-information" class="anchor"></a>Version Information</h1>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
-<pre><code>## R version 4.0.2 (2020-06-22)
+<div class="sourceCode" id="cb25"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+<pre><code>## R Under development (unstable) (2020-08-07 r78979)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 18.04.5 LTS
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.7.1
-## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.7.1
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /home/dcassol/src/R-devel/lib/libRlapack.so
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -801,39 +815,38 @@ Note: Do not worry if you set some invalid values, on app start, <code><a href="
 ## other attached packages:
 ## [1] systemPipeShiny_0.99.0 shinyTree_0.2.7        ggplot2_3.3.2         
 ## [4] stringr_1.4.0          shiny_1.5.0            magrittr_1.5          
-## [7] glue_1.4.1             assertthat_0.2.1       BiocStyle_2.17.1      
+## [7] glue_1.4.2             assertthat_0.2.1       BiocStyle_2.17.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] fs_1.4.2                 bit64_0.9-7.1            httr_1.4.2              
-##  [4] rprojroot_1.3-2          tools_4.0.2              backports_1.1.8         
-##  [7] R6_2.4.1                 DT_0.14                  DBI_1.1.0               
+##  [1] fs_1.5.0                 bit64_4.0.5              httr_1.4.2              
+##  [4] rprojroot_1.3-2          tools_4.1.0              backports_1.1.10        
+##  [7] R6_2.4.1                 DT_0.15                  DBI_1.1.0               
 ## [10] lazyeval_0.2.2           colorspace_1.4-1         pushbar_0.1.0           
-## [13] shinyjqui_0.3.3          withr_2.2.0              tidyselect_1.1.0        
-## [16] bit_1.1-15.2             curl_4.3                 compiler_4.0.2          
-## [19] formatR_1.7              shinyjs_1.1              desc_1.2.0              
-## [22] plotly_4.9.2.1           rhandsontable_0.3.7      colourpicker_1.0        
-## [25] bookdown_0.20            sass_0.2.0               scales_1.1.1            
-## [28] askpass_1.1              pkgdown_1.5.1            digest_0.6.25           
-## [31] shinydashboardPlus_0.7.5 rmarkdown_2.4.0          pkgconfig_2.0.3         
+## [13] shinyjqui_0.3.3          withr_2.3.0              tidyselect_1.1.0        
+## [16] bit_4.0.4                curl_4.3                 compiler_4.1.0          
+## [19] formatR_1.7              shinyjs_2.0.0            desc_1.2.0              
+## [22] plotly_4.9.2.1           rhandsontable_0.3.7      colourpicker_1.1.0      
+## [25] bookdown_0.20            scales_1.1.1             askpass_1.1             
+## [28] pkgdown_1.6.1            systemfonts_0.3.2        digest_0.6.25           
+## [31] shinydashboardPlus_0.7.5 rmarkdown_2.3            pkgconfig_2.0.3         
 ## [34] htmltools_0.5.0          DOT_0.1                  styler_1.3.2            
 ## [37] fastmap_1.0.1            htmlwidgets_1.5.1        rlang_0.4.7             
-## [40] rstudioapi_0.11          RSQLite_2.2.0            jquerylib_0.1.2         
-## [43] generics_0.0.2           jsonlite_1.7.0           vroom_1.3.1             
-## [46] dplyr_1.0.0              Rcpp_1.0.5               munsell_0.5.0           
-## [49] lifecycle_0.2.0          stringi_1.4.6            yaml_2.2.1              
-## [52] MASS_7.3-51.6            shinytoastr_2.1.1        bootstraplib_0.1.0.9000 
-## [55] grid_4.0.2               blob_1.2.1               shinyFiles_0.8.0        
-## [58] promises_1.1.1           shinydashboard_0.7.1     crayon_1.3.4            
-## [61] miniUI_0.1.1.1           knitr_1.30               pillar_1.4.6            
-## [64] igraph_1.2.5             markdown_1.1             codetools_0.2-16        
-## [67] evaluate_0.14            V8_3.2.0                 data.table_1.12.8       
-## [70] BiocManager_1.30.10      vctrs_0.3.2              httpuv_1.5.4            
-## [73] networkD3_0.4            gtable_0.3.0             openssl_1.4.2           
-## [76] purrr_0.3.4              tidyr_1.1.0              xfun_0.15               
-## [79] mime_0.9                 xtable_1.8-4             rsvg_2.1                
-## [82] later_1.1.0.1            viridisLite_0.3.0        tibble_3.0.3            
-## [85] memoise_1.1.0            shinyWidgets_0.5.3       ellipsis_0.3.1          
-## [88] shinyAce_0.4.1</code></pre>
+## [40] rstudioapi_0.11          RSQLite_2.2.0            generics_0.0.2          
+## [43] jsonlite_1.7.1           vroom_1.3.2              dplyr_1.0.2             
+## [46] Rcpp_1.0.5               munsell_0.5.0            lifecycle_0.2.0         
+## [49] stringi_1.5.3            yaml_2.2.1               shinytoastr_2.1.1       
+## [52] grid_4.1.0               blob_1.2.1               shinyFiles_0.8.0        
+## [55] promises_1.1.1           shinydashboard_0.7.1     crayon_1.3.4            
+## [58] miniUI_0.1.1.1           knitr_1.30               pillar_1.4.6            
+## [61] igraph_1.2.5             markdown_1.1             codetools_0.2-16        
+## [64] evaluate_0.14            V8_3.2.0                 data.table_1.13.0       
+## [67] BiocManager_1.30.10      vctrs_0.3.4              httpuv_1.5.4            
+## [70] networkD3_0.4            gtable_0.3.0             openssl_1.4.3           
+## [73] purrr_0.3.4              tidyr_1.1.2              xfun_0.18               
+## [76] mime_0.9                 xtable_1.8-4             rsvg_2.1                
+## [79] later_1.1.0.1            ragg_0.3.1               viridisLite_0.3.0       
+## [82] tibble_3.0.3             memoise_1.1.0            shinyWidgets_0.5.3      
+## [85] ellipsis_0.3.1           shinyAce_0.4.1</code></pre>
 </div>
   </div>
 
@@ -852,7 +865,7 @@ Note: Do not worry if you set some invalid values, on app start, <code><a href="
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

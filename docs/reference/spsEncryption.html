@@ -138,7 +138,7 @@ global level. This has already been written in <em>global.R</em> for you.</p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
-<h3>Public methods</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
 <li><p><a href='#method-new'><code>spsEncryption$new()</code></a></p></li>
@@ -160,42 +160,42 @@ global level. This has already been written in <em>global.R</em> for you.</p>
 </details>
 
 <hr>
-<a id="method-new"></a></p><h3>Method <code>new()</code></h3>
-<p>initialize a new class container</p><h3>Usage</h3>
-<p><div class="r"></p><pre><span class='no'>spsEncryption</span>$<span class='fu'>new</span>()</pre><p></div></p>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
+<p>initialize a new class container</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>spsEncryption</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-keyChange"></a></p><h3>Method <code>keyChange()</code></h3>
-<p>Change encryption key of a SPS project</p><h3>Usage</h3>
-<p><div class="r"></p><pre><span class='no'>spsEncryption</span>$<span class='fu'>keyChange</span>(<span class='kw'>db_name</span> <span class='kw'>=</span> <span class='st'>"config/sps.db"</span>)</pre><p></div></p>
+<a id="method-keyChange"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>keyChange()</code></h3>
+<p>Change encryption key of a SPS project</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>spsEncryption</span><span class='op'>$</span><span class='fu'>keyChange</span><span class='op'>(</span>db_name <span class='op'>=</span> <span class='st'>"config/sps.db"</span><span class='op'>)</span></pre><p></div></p>
 
-<h3>Arguments</h3>
-<p><div class="arguments"></p><dl'>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
 <dt><code>db_name</code></dt><dd><p>database path</p></dd>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-keyGet"></a></p><h3>Method <code>keyGet()</code></h3>
-<p>Get encryption key from db of a SPS project</p><h3>Usage</h3>
-<p><div class="r"></p><pre><span class='no'>spsEncryption</span>$<span class='fu'>keyGet</span>(<span class='kw'>db_name</span> <span class='kw'>=</span> <span class='st'>"config/sps.db"</span>)</pre><p></div></p>
+<a id="method-keyGet"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>keyGet()</code></h3>
+<p>Get encryption key from db of a SPS project</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>spsEncryption</span><span class='op'>$</span><span class='fu'>keyGet</span><span class='op'>(</span>db_name <span class='op'>=</span> <span class='st'>"config/sps.db"</span><span class='op'>)</span></pre><p></div></p>
 
-<h3>Arguments</h3>
-<p><div class="arguments"></p><dl'>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
 <dt><code>db_name</code></dt><dd><p>database path</p></dd>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-encrypt"></a></p><h3>Method <code>encrypt()</code></h3>
-<p>Encrypt raw data or a file with key from a SPS project</p><h3>Usage</h3>
-<p><div class="r"></p><pre><span class='no'>spsEncryption</span>$<span class='fu'>encrypt</span>(
-  <span class='no'>data</span>,
-  <span class='kw'>out_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>db_name</span> <span class='kw'>=</span> <span class='st'>"config/sps.db"</span>
-)</pre><p></div></p>
+<a id="method-encrypt"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>encrypt()</code></h3>
+<p>Encrypt raw data or a file with key from a SPS project</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>spsEncryption</span><span class='op'>$</span><span class='fu'>encrypt</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  out_path <span class='op'>=</span> <span class='cn'>NULL</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  db_name <span class='op'>=</span> <span class='st'>"config/sps.db"</span>
+<span class='op'>)</span></pre><p></div></p>
 
-<h3>Arguments</h3>
-<p><div class="arguments"></p><dl'>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
 <dt><code>data</code></dt><dd><p>raw vector or a file path</p></dd>
 
 <dt><code>out_path</code></dt><dd><p>if provided, encrypted data will be write to a file</p></dd>
@@ -206,17 +206,17 @@ global level. This has already been written in <em>global.R</em> for you.</p>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-decrypt"></a></p><h3>Method <code>decrypt()</code></h3>
-<p>Decrypt raw data or a file with key from a SPS project</p><h3>Usage</h3>
-<p><div class="r"></p><pre><span class='no'>spsEncryption</span>$<span class='fu'>decrypt</span>(
-  <span class='no'>data</span>,
-  <span class='kw'>out_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>db_name</span> <span class='kw'>=</span> <span class='st'>"config/sps.db"</span>
-)</pre><p></div></p>
+<a id="method-decrypt"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>decrypt()</code></h3>
+<p>Decrypt raw data or a file with key from a SPS project</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>spsEncryption</span><span class='op'>$</span><span class='fu'>decrypt</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  out_path <span class='op'>=</span> <span class='cn'>NULL</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  db_name <span class='op'>=</span> <span class='st'>"config/sps.db"</span>
+<span class='op'>)</span></pre><p></div></p>
 
-<h3>Arguments</h3>
-<p><div class="arguments"></p><dl'>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
 <dt><code>data</code></dt><dd><p>raw vector or a file path</p></dd>
 
 <dt><code>out_path</code></dt><dd><p>if provided, encrypted data will be write to a file</p></dd>
@@ -227,12 +227,12 @@ global level. This has already been written in <em>global.R</em> for you.</p>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-clone"></a></p><h3>Method <code>clone()</code></h3>
-<p>The objects of this class are cloneable with this method.</p><h3>Usage</h3>
-<p><div class="r"></p><pre><span class='no'>spsEncryption</span>$<span class='fu'>clone</span>(<span class='kw'>deep</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre><p></div></p>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>spsEncryption</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
-<h3>Arguments</h3>
-<p><div class="arguments"></p><dl'>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
 <dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
 
 </dl><p></div></p>
@@ -240,15 +240,21 @@ global level. This has already been written in <em>global.R</em> for you.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span>(<span class='st'>"config"</span>, <span class='kw'>showWarnings</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='spsOption.html'>spsOption</a></span>(<span class='st'>'verbose'</span>, <span class='fl'>TRUE</span>)
-<span class='no'>my_ecpt</span> <span class='kw'>&lt;-</span> <span class='no'>spsEncryption</span>$<span class='fu'>new</span>()</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Created SPS encryption method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 This container inherits all functions from spsDb class</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Default SPS-db found and is working</span><span></span></div><div class='input'><span class='no'>my_ecpt</span>$<span class='fu'>createDb</span>()</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Db write meta</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Key generated and stored in db</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-29 17:38:26 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Key md5 86f7a42171415f75dec38008a17eac65</span><span></div><div class='input'><span class='no'>my_ecpt</span>$<span class='fu'>keyChange</span>()</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 You new key has been generated and saved in db</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 md5 1b77197bdac84b51d77b10483fa10ac6</span><span></div><div class='input'><span class='co'># imagine a file has one line "test"</span>
-<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='st'>"test.txt"</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='st'>"config"</span>, showWarnings <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='spsOption.html'>spsOption</a></span><span class='op'>(</span><span class='st'>'verbose'</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>my_ecpt</span> <span class='op'>&lt;-</span> <span class='va'>spsEncryption</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:41 Created SPS encryption method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:41 This container inherits all functions from spsDb class</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:41 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:41 Default SPS-db found and is working</span><span></span></div><div class='input'><span class='va'>my_ecpt</span><span class='op'>$</span><span class='fu'>createDb</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:41 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:41 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:41 Db write meta</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Key generated and stored in db</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-30 10:10:42 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Key md5 6272e2776331aea631378e420c4b656c</span><span></div><div class='input'><span class='va'>my_ecpt</span><span class='op'>$</span><span class='fu'>keyChange</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 You new key has been generated and saved in db</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 md5 f6113948a84ca64a74afffdc2c4330c6</span><span></div><div class='input'><span class='co'># imagine a file has one line "test"</span>
+<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span>text <span class='op'>=</span> <span class='st'>"test"</span>, con <span class='op'>=</span> <span class='st'>"test.txt"</span><span class='op'>)</span>
 <span class='co'># encrypt the file</span>
-<span class='no'>my_ecpt</span>$<span class='fu'>encrypt</span>(<span class='st'>"test.txt"</span>, <span class='st'>"test.bin"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Query sent</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 OpenSSL key found md51b77197bdac84b51d77b10483fa10ac6</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Data encrypted</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 File write to /home/lz/Desktop/systemPipeShiny/docs/reference/test.bin</span><span></span></div><div class='input'><span class='co'># decrypt the file</span>
-<span class='no'>my_ecpt</span>$<span class='fu'>decrypt</span>(<span class='st'>"test.bin"</span>, <span class='st'>"test_decpt.txt"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 File read into memory</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Query sent</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 OpenSSL key found md51b77197bdac84b51d77b10483fa10ac6</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 Data decrypted</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:26 File write to /home/lz/Desktop/systemPipeShiny/docs/reference/test_decpt.txt</span><span></span></div><div class='input'><span class='co'># check the decrypted file content</span>
-<span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span>(<span class='st'>'test_decpt.txt'</span>)</div><div class='output co'>#&gt; [1] "test"</div></span></pre>
+<span class='va'>my_ecpt</span><span class='op'>$</span><span class='fu'>encrypt</span><span class='op'>(</span><span class='st'>"test.txt"</span>, <span class='st'>"test.bin"</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Query sent</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 OpenSSL key found md5f6113948a84ca64a74afffdc2c4330c6</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Data encrypted</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 File write to /home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/test.bin</span><span></span></div><div class='input'><span class='co'># decrypt the file</span>
+<span class='va'>my_ecpt</span><span class='op'>$</span><span class='fu'>decrypt</span><span class='op'>(</span><span class='st'>"test.bin"</span>, <span class='st'>"test_decpt.txt"</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 File read into memory</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Db connected</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Query sent</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 OpenSSL key found md5f6113948a84ca64a74afffdc2c4330c6</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 Data decrypted</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-30 10:10:42 File write to /home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/test_decpt.txt</span><span></span></div><div class='input'><span class='co'># check the decrypted file content</span>
+<span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='st'>'test_decpt.txt'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "test"</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -264,7 +270,7 @@ global level. This has already been written in <em>global.R</em> for you.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
