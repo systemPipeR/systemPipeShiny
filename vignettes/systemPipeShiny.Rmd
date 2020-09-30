@@ -252,8 +252,8 @@ customization stuff to the advanced section. </font>]
 The workflow management module in `SPS` allows to modify or create the
 configuration files required for running data analysis workflows in
 [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR). This includes
-three important files: a sample metadata (targets) file that contains, a
-workflow file (in R Markdown format) defining the workflow steps and a workflow
+three important files: a sample metadata (targets) file, a
+workflow file (in R Markdown format) defining the workflow steps, and a workflow
 config file organizing the workflow directory. In SPS, one can easily create
 these files under the "Workflow Management" module, located in navigation bar
 on the left of the dashboard (Fig2 a-b). 
@@ -264,22 +264,23 @@ release.
 
 ### Prepare a target file
 
-The targets file defines all input files' path and other sample information of
-an analysis workflow. Read ["Structure of targets
+The targets file defines all input file paths and other sample information of
+analysis workflows. To better undertand the structure of this file, one can
+consult the ["Structure of targets
 file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file)
-section in SPR vignette to better undertand the structure of this file. Essentially,
-this is the tabular file representation of the `colData` slot in an 
-`SummarizedExperiment` object which stores sample IDs and other meta information. 
+section in the SPR vignette. Essentially, this is the tabular file representation
+of the `colData` slot in an `SummarizedExperiment` object which stores sample
+IDs and other meta information. 
 
 The following step-by-step instructions explain how to create and/or modify targets 
 files using RNA-Seq as an example (Fig.3 A):
 
-1. Choose "Targets" from navigation bar;
+1. Choose "Targets" from navigation bar.
 2. Select either "Example PE" or "Example SE"" for using a pair-end/single-end target file, then choose "confirm" on the pop-up. You will see the example is loaded like Figure 3A. 
-3. You can edit, right click to add/remove rows/columns (The first row is treated as column names);
-4. SPR target file requires a header and you can edit it here. Headers should start with "#";
-5. The left section can help you to check sample statistics and file existence. Choose any column you want from the dropdown to check and watch the statistics bar change in this section;
-6. Clicking on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right;
+3. You can edit, right click to add/remove rows/columns (The first row is treated as column names).
+4. SPR target file includes a header block, that can also be edited in the SPS app. Each headers needs to start with a "#".
+5. The section on the left provides sample statistics and information whether files exist on a user's system. Choose any column you want from the dropdown to check and watch the statistics bar change in this section;
+6. Clicking on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right.
 7. Now your target file is ready and you can click "save" to download it and later use in a SPR project. 
 8. Click on the "-" button on the "Workflow Progress", you should see the "Targets file" becomes green. 
 
