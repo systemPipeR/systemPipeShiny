@@ -33,7 +33,7 @@ plot_example1UI <- function(id){
         h5("Once you have prepared the data,
            select which tab(s) your data is coming from:"),
         column(12, shinyWidgets::pickerInput(ns("source_data"), "Count Data",
-                    choices = c("Count table" = "data_example"),
+                    choices = c("Data Tab Example" = "data_example"),
                     options = list(style = "btn-primary"))), spsHr(),
         div(style = "text-align: center;",
             strong("Click the button below to start or reload data"), br(),

@@ -512,7 +512,7 @@ messages on console to tell you specifically what is wrong with your options.</p
 
 | Option          | Description                       | Default | Other     |
 |-----------------|-----------------------------------|---------|-----------|
-| mode            | running mode                      | "server"| "local"   |
+| mode            | running mode                      | "local" | "server"  |
 | warning_toast   | show security warnings?           | TRUE    | FALSE     |
 | loading_screen  | show loading screen?              | TRUE    | FALSE     |
 | loading_theme   | loading screen theme              | "vhelix"| any string|

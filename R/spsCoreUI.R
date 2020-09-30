@@ -65,8 +65,7 @@ spsUI <- function(tabs_df, tabs_plot){
                                              icon = icon("sitemap")
                     ),
                     shinydashboard::menuItem(id = 'wf-control',
-                             HTML('Workflow Mangement<small class="badge
-                                  pull-right bg-olive">Beta</small>'),
+                             "Workflow Mangement",
                              tabName = "wf_main",
                              shinydashboard::menuSubItem(text="Targets",
                                                          tabName="wf_targets"),
@@ -74,8 +73,10 @@ spsUI <- function(tabs_df, tabs_plot){
                                                          tabName="wf_wf"),
                              shinydashboard::menuSubItem(text="Workflow Config",
                                                          tabName="wf_config"),
-                             shinydashboard::menuSubItem(text="Run Workflow",
-                                                         tabName="wf_run")
+                             shinydashboard::menuSubItem(
+                                text= HTML('Run Workflow<small class="badge
+                                  pull-right bg-olive">Dev</small>'),
+                                tabName="wf_run")
                     ),
                     shinydashboard::menuItem(
                         "Visualization",
