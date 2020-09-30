@@ -65,7 +65,7 @@ environment with a versatile graphical user interface provided by a [Shiny
 App](https://shiny.rstudio.com). This allows non-R users, such as
 experimentalists, to run many systemPipeR's workflow designs, control, and
 visualization functionalities interactively without requiring knowledge of R.
-Most importantly, SPS has been designed as a general purpose framework for
+Most importantly, `SPS` has been designed as a general purpose framework for
 interacting with other R packages in an intuitive manner. Like most Shiny Apps,
 SPS can be used on both local computers as well as centralized server-based
 deployments that can be accessed remotely as a public web service for using
@@ -246,19 +246,18 @@ add this to the advanced features section and just to link here. </font>
 <font style="color:red">ThG: yes, just show some demo tabs and move the 
 customization stuff to the advanced section. </font>]
 
-
 ## Workflow management
 
 The workflow management module in `SPS` allows to modify or create the
 configuration files required for running data analysis workflows in
-[systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR). This includes
+[systemPipeR](https://systempipe.org/docs/systemPipeR/) (`SPR`). This includes
 three important files: a sample metadata (targets) file that contains, a
 workflow file (in R Markdown format) defining the workflow steps and a workflow
-config file organizing the workflow directory. In SPS, one can easily create
+config file organizing the workflow directory. In `SPS`, one can easily create
 these files under the "Workflow Management" module, located in navigation bar
 on the left of the dashboard (Fig2 a-b). 
 
-The current version of SPS allows to create and/or check the format of these 
+The current version of `SPS` allows to create and/or check the format of these 
 files. The execution of SPR workflows via SPS will be supported in the next
 release.
 
@@ -585,12 +584,14 @@ essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatical
 
 # How to deploy the application
 
-There is a *deploy.R* file in the SPS project root and you can use it to deploy the 
-app to [shinyapps.io](https://www.shinyapps.io/). You can use this file to set up 
-your account and deploy the app. SPS is a deploy-ready framework. If you set up your 
-account correctly, you can deploy it as soon as the project is created. It 
-is recommended to create -> test/run -> deploy a Shiny app from Rstudio and follows 
-[this instruction](https://shiny.rstudio.com/articles/shinyapps.html).
+Among several options of deployment of your `SPS` custom application, here you can find the example of [shinyapps.io](https://www.shinyapps.io/). 
+To get started, it is required to create a *shinyapps.io* account. Please follow this [tutorial](https://shiny.rstudio.com/articles/shinyapps.html) 
+with all the instructions to create an account. 
+`SPS` project provides a ready-to-use file, `deploy.R`, with the required information to configure ShinyApps account and deploy the application.
+
+Once the account is set correctly, you can deploy it as soon as the project is created. It 
+is recommended to create -> test/run -> deploy a Shiny app from Rstudio and follow 
+[this tutorial](https://shiny.rstudio.com/articles/shinyapps.html).
 
 # Version Information
 
