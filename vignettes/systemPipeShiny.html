@@ -2412,12 +2412,10 @@ files. The execution of SPR workflows via SPS will be supported in the next
 release.</p>
 <div id="prepare-a-target-file" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Prepare a target file</h3>
-<p>The targets file defines all input files’ path and other sample information of
-an analysis workflow. Read <a href="https://systempipe.org/docs/systemPipeR/#structure-of-targets-file">“Structure of targets
+<p>The targets file describe all input samples for the analysis workflow, defining all the input file path information, sample name and comparisons, and any additional metadata associated with the sample. More details can be found on <a href="https://systempipe.org/docs/systemPipeR/#structure-of-targets-file">“Structure of targets
 file”</a>
-section in SPR vignette to better undertand the structure of this file. Essentially,
-this is the tabular file representation of the <code>colData</code> slot in an
-<code>SummarizedExperiment</code> object which stores sample IDs and other meta information.</p>
+section in <code>systemPipeR</code> vignette.</p>
+<p><label for="sidenote-4" class="sidenote-number">4</label><label for="sidenote-4" class="margin-toggle" onclick="toggle_visibility('sidenote-4')">4</label><span class="sidenote" id="sidenote-4"><span class="sidenote-number">4</span> <font style="color:green">Dani: Should we load the targets file here to show an example on the vignette?</font></span></p>
 <p>The following step-by-step instructions explain how to create and/or modify targets
 files using RNA-Seq as an example (Fig.3 A):</p>
 <ol style="list-style-type: decimal">

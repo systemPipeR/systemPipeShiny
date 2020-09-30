@@ -263,12 +263,11 @@ release.
 
 ### Prepare a target file
 
-The targets file defines all input files' path and other sample information of
-an analysis workflow. Read ["Structure of targets
+The targets file describe all input samples for the analysis workflow, defining all the input file path information, sample name and comparisons, and any additional metadata associated with the sample. More details can be found on ["Structure of targets
 file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file)
-section in SPR vignette to better undertand the structure of this file. Essentially,
-this is the tabular file representation of the `colData` slot in an 
-`SummarizedExperiment` object which stores sample IDs and other meta information. 
+section in `systemPipeR` vignette.
+
+^[<font style="color:green">Dani: Should we load the targets file here to show an example on the vignette?</font>]
 
 The following step-by-step instructions explain how to create and/or modify targets 
 files using RNA-Seq as an example (Fig.3 A):
