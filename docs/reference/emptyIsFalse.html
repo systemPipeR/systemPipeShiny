@@ -120,7 +120,7 @@
     <p>judge if an object is empty or FALSE, and return FALSE if it is</p>
     </div>
 
-    <pre class="usage"><span class='fu'>emptyIsFalse</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>emptyIsFalse</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,13 +142,8 @@
 expression with <code>emptyIsFalse</code> can avoid this. See examples</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>emptyIsFalse</span><span class='op'>(</span><span class='cn'>NULL</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>emptyIsFalse</span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>emptyIsFalse</span><span class='op'>(</span><span class='st'>""</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='va'>`if(NULL) "not empty" else "empty"`</span><span class='op'>)</span> <span class='co'># will generate error</span>
-</div><div class='output co'>#&gt; Error in try(`if(NULL) "not empty" else "empty"`) : 
-#&gt;   object 'if(NULL) "not empty" else "empty"' not found</div><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'>emptyIsFalse</span><span class='op'>(</span><span class='cn'>NULL</span><span class='op'>)</span><span class='op'>)</span> <span class='st'>"not empty"</span> <span class='kw'>else</span> <span class='st'>"empty"</span> <span class='co'># this will work</span>
-</div><div class='output co'>#&gt; [1] "empty"</div><div class='input'><span class='co'># similar for `NA`, `""`, `character(0)` and more</span>
+    <pre class="examples"><div class='input'><span class='fu'>emptyIsFalse</span>(<span class='kw'>NULL</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>emptyIsFalse</span>(<span class='fl'>NA</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>emptyIsFalse</span>(<span class='st'>""</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='no'>`if(NULL) "not empty" else "empty"`</span>) <span class='co'># will generate error</span></div><div class='output co'>#&gt; Error in try(`if(NULL) "not empty" else "empty"`) : 
+#&gt;   object 'if(NULL) "not empty" else "empty"' not found</div><div class='input'><span class='kw'>if</span>(<span class='fu'>emptyIsFalse</span>(<span class='kw'>NULL</span>)) <span class='st'>"not empty"</span> <span class='kw'>else</span> <span class='st'>"empty"</span> <span class='co'># this will work</span></div><div class='output co'>#&gt; [1] "empty"</div><div class='input'># similar for `NA`, `""`, `character(0)` and more
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -165,7 +160,7 @@ expression with <code>emptyIsFalse</code> can avoid this. See examples</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

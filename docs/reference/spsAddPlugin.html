@@ -124,24 +124,24 @@ for developers to create a minimum plugin structure and required files." />
 for developers to create a minimum plugin structure and required files.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>spsAddPlugin</span><span class='op'>(</span>
-  plugin <span class='op'>=</span> <span class='st'>""</span>,
-  app_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span><span class='op'>(</span><span class='op'>)</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  third_party <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  overwrite <span class='op'>=</span> <span class='fl'>0</span>,
-  colorful <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span>
+    <pre class="usage"><span class='fu'>spsAddPlugin</span>(
+  <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>(),
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>third_party</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>colorful</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
-<span class='fu'>spsRemovePlugin</span><span class='op'>(</span>
-  plugin <span class='op'>=</span> <span class='st'>""</span>,
-  app_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span><span class='op'>(</span><span class='op'>)</span>,
-  force <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  colorful <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span>
+<span class='fu'>spsRemovePlugin</span>(
+  <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>(),
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>colorful</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
-<span class='fu'>spsNewPlugin</span><span class='op'>(</span><span class='va'>path</span>, readme <span class='op'>=</span> <span class='cn'>TRUE</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span>, colorful <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+<span class='fu'>spsNewPlugin</span>(<span class='no'>path</span>, <span class='kw'>readme</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>colorful</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -194,7 +194,7 @@ permission.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>General</h3>
+<h3>General</h3>
 
 <ul>
 <li><p>You can just use <code>spsAddPlugin()</code> without any argument to see
@@ -215,7 +215,7 @@ start, <a href='sps.html'>sps(..., plugin = "PLUGIN_NAME")</a>.</p></li>
 </ul>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>overwrite mode</h3>
+<h3>overwrite mode</h3>
 
 <ul>
 <li><p>0, if there is any conflict, abort</p></li>
@@ -224,7 +224,7 @@ start, <a href='sps.html'>sps(..., plugin = "PLUGIN_NAME")</a>.</p></li>
 </ul>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Building a plugin</h3>
+<h3>Building a plugin</h3>
 
 <ul>
 <li><p>When adding new tabs to a plugin, it will be better to set working
@@ -244,38 +244,32 @@ this file exists, content will be <code>cat</code> to console when plugin is loa
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># see what official plugins you can install:</span>
-<span class='fu'>spsAddPlugin</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Current SPS has following plugins</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>spsBio              </span><span> </span><span style='color: #00BB00;font-weight: bold;'>Biological plots</span><span>
+<span class='fu'>spsAddPlugin</span>()</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:24 Current SPS has following plugins</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>spsBio              </span><span> </span><span style='color: #00BB00;font-weight: bold;'>Biological plots</span><span>
 #&gt; BiocManager::install("systemPipeR/spsBio")</div><div class='input'><span class='co'># create a project</span>
-<span class='fu'><a href='spsInit.html'>spsInit</a></span><span class='op'>(</span>project_name <span class='op'>=</span> <span class='st'>"testProject"</span>,
-        change_wd <span class='op'>=</span> <span class='cn'>FALSE</span>,
-        open_files <span class='op'>=</span> <span class='cn'>TRUE</span>,
-        overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-09-29 17:10:06 Overwrite things in /home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/testProject</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-29 17:10:06 Db created at '/home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/testProject/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Key md5 72c71bec6b8794bdfe2e41f80fd237dd</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 SPS project setup done!</span><span></div><div class='input'><span class='co'># create a new plugin</span>
-<span class='fu'>spsNewPlugin</span><span class='op'>(</span>path <span class='op'>=</span> <span class='st'>"testPlugin"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:10:06 Plugin testPlugin created</span><span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Optional: To format the plugin folder to a more publishable structure, run following</span><span></span></div><div class='output co'>#&gt; usethis::create_package("testPlugin")</div><div class='input'><span class='co'># add some tabs to the plugin</span>
+<span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>project_name</span> <span class='kw'>=</span> <span class='st'>"testProject"</span>,
+        <span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+        <span class='kw'>open_files</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+        <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:24 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:24 Create project under /home/lz/Desktop/systemPipeShiny/docs/reference/testProject</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:24 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:24 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:24 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:24 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-29 17:38:25 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/testProject/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Key md5 71b242e0d6773e1d5524371245944494</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 SPS project setup done!</span><span></div><div class='input'><span class='co'># create a new plugin</span>
+<span class='fu'>spsNewPlugin</span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 testPlugindoes not exist, try to create</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:25 Plugin testPlugin created</span><span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Optional: To format the plugin folder to a more publishable structure, run following</span><span></span></div><div class='output co'>#&gt; usethis::create_package("testPlugin")</div><div class='input'><span class='co'># add some tabs to the plugin</span>
 <span class='co'># tabs</span>
-<span class='va'>plugin_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"testPlugin"</span>, <span class='st'>"inst"</span>, <span class='st'>"app"</span><span class='op'>)</span>
-<span class='fu'><a href='newTabPlot.html'>newTabData</a></span><span class='op'>(</span><span class='st'>"data_a"</span>,
-           app_path <span class='op'>=</span> <span class='va'>plugin_path</span>,
-           plugin <span class='op'>=</span> <span class='st'>"testPlugin"</span>,
-           reformat <span class='op'>=</span> <span class='cn'>FALSE</span>,
-           open_file <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-29 17:10:06 File testPlugin/inst/app/R/tab_vs_data_a.R exists.</span><span></span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabPlot</a></span><span class='op'>(</span><span class='st'>"plot_a"</span>,
-           app_path <span class='op'>=</span> <span class='va'>plugin_path</span>,
-           plot_data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='makePlotData.html'>makePlotData</a></span><span class='op'>(</span>receive_datatab_ids <span class='op'>=</span> <span class='st'>'data_a'</span>,
-                                    app_path <span class='op'>=</span> <span class='va'>plugin_path</span><span class='op'>)</span><span class='op'>)</span>,
-           plugin <span class='op'>=</span> <span class='st'>"testPlugin"</span>,
-           reformat <span class='op'>=</span> <span class='cn'>FALSE</span>,
-           open_file <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-29 17:10:06 File testPlugin/inst/app/R/tab_vs_plot_a.R exists.</span><span></span></div><div class='input'><span class='co'># load the plugin, the plugin is not published, so `third_party = TRUE`</span>
-<span class='fu'>spsAddPlugin</span><span class='op'>(</span>plugin <span class='op'>=</span> <span class='st'>"testPlugin"</span>,
-              app_path <span class='op'>=</span> <span class='st'>"testProject"</span>,
-              third_party <span class='op'>=</span> <span class='cn'>TRUE</span>,
-              overwrite <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>New directory will be:</span><span> 
+<span class='no'>plugin_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"testPlugin"</span>, <span class='st'>"inst"</span>, <span class='st'>"app"</span>)
+<span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_a"</span>,
+           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='no'>plugin_path</span>,
+           <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>,
+           <span class='kw'>reformat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+           <span class='kw'>open_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: path[1]="testPlugin/inst/app/data/iris.csv": No such file or directory</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Write to file testPlugin/inst/app/R/tab_vs_data_a.R</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:25 New tab created!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabPlot</a></span>(<span class='st'>"plot_a"</span>,
+           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='no'>plugin_path</span>,
+           <span class='kw'>plot_data</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='makePlotData.html'>makePlotData</a></span>(<span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='st'>'data_a'</span>,
+                                    <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='no'>plugin_path</span>)),
+           <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>,
+           <span class='kw'>reformat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+           <span class='kw'>open_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Write to file testPlugin/inst/app/R/tab_vs_plot_a.R</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:25 New tab created!</span><span></div><div class='input'><span class='co'># load the plugin, the plugin is not published, so `third_party = TRUE`</span>
+<span class='fu'>spsAddPlugin</span>(<span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>,
+              <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"testProject"</span>,
+              <span class='kw'>third_party</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+              <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;font-weight: bold;'>New directory will be:</span><span> 
 #&gt; +-- deploy.R
 #&gt; +-- global.R
 #&gt; +-- README.md
@@ -336,19 +330,18 @@ this file exists, content will be <code>cat</code> to console when plugin is loa
 #&gt;     +-- tab_vs_data_example.R
 #&gt;     +-- tab_vs_plot_example1.R
 #&gt;     +-- tab_vs_plot_example2.R
-#&gt;     +-- </span><span style='color: #FFAF00;font-weight: bold;'>**tab_vs_data_a.R</span><span>
-#&gt;     L-- </span><span style='color: #FFAF00;font-weight: bold;'>**tab_vs_plot_a.R</span><span>
+#&gt;     +-- </span><span style='color: #00BB00;font-weight: bold;'>*tab_vs_data_a.R</span><span>
+#&gt;     L-- </span><span style='color: #00BB00;font-weight: bold;'>*tab_vs_plot_a.R</span><span>
 #&gt; -- Old files </span><span style='color: #00BB00;font-weight: bold;'>-- *New files</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>-- **Overlapping files</span><span> </span><span style='color: #0000BB;font-weight: bold;'>Directory</span><span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-09-29 17:10:06 Overlapping files detected and will be overwritten</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:10:06 Plugin testPlugin added!</span><span>
-#&gt; Some message you want to show to users when plugin loads</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 If this third-party plugin is an R package </span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:10:06 Remember to load `library(testPlugin)` when you start SPS. Additional R functions maybe bundled with this plugin</span><span></span></div><div class='input'><span class='co'># check if the plugin is added</span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>-- **Overlapping files</span><span> </span><span style='color: #0000BB;font-weight: bold;'>Directory</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:25 Plugin testPlugin added!</span><span>
+#&gt; Some message you want to show to users when plugin loads</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 If this third-party plugin is an R package </span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Remember to load `library(testPlugin)` when you start SPS. Additional R functions maybe bundled with this plugin</span><span></span></div><div class='input'><span class='co'># check if the plugin is added</span>
 <span class='co'># You should see `tab_vs_data_a.R` and `tab_vs_plot_a.R`</span>
-<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"testProject"</span>, <span class='st'>"R"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "README.md"              "tab_vs_data_a.R"        "tab_vs_data_example.R" 
+<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"testProject"</span>, <span class='st'>"R"</span>))</div><div class='output co'>#&gt; [1] "README.md"              "tab_vs_data_a.R"        "tab_vs_data_example.R" 
 #&gt; [4] "tab_vs_plot_a.R"        "tab_vs_plot_example1.R" "tab_vs_plot_example2.R"</div><div class='input'><span class='co'># check if tab files are registered</span>
 <span class='co'># You should see the two new records</span>
-<span class='fu'>vroom</span><span class='fu'>::</span><span class='fu'><a href='https://vroom.r-lib.org/reference/vroom.html'>vroom</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"testProject"</span>, <span class='st'>"config"</span>, <span class='st'>"tabs.csv"</span><span class='op'>)</span>,
-             comment <span class='op'>=</span> <span class='st'>"#"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='font-weight: bold;'>Rows:</span><span> 14</span>
+<span class='kw pkg'>vroom</span><span class='kw ns'>::</span><span class='fu'><a href='https://vroom.r-lib.org/reference/vroom.html'>vroom</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"testProject"</span>, <span class='st'>"config"</span>, <span class='st'>"tabs.csv"</span>),
+             <span class='kw'>comment</span> <span class='kw'>=</span> <span class='st'>"#"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>()</div><div class='output co'>#&gt; <span class='message'></span><span style='font-weight: bold;'>Rows:</span><span> 16</span>
 #&gt; <span class='message'></span><span style='font-weight: bold;'>Columns:</span><span> 8</span>
 #&gt; <span class='message'></span><span style='font-weight: bold;'>Delimiter:</span><span> ","</span>
 #&gt; <span class='message'></span><span style='color: #BB0000;'>chr</span><span> [7]: tab_id, display_label, type, type_sub, image, tab_file_name, plugin</span>
@@ -358,23 +351,20 @@ this file exists, content will be <code>cat</code> to console when plugin is loa
 #&gt; <span class='message'></span><span style='color: #555555;'>Pass a specification to the `col_types` argument to quiet this message</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 6 x 8</span><span>
 #&gt;   tab_id  display_label   type  type_sub image   displayed tab_file_name  plugin
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> wf_tar… Workflow Metad… wf    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1 No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> wf_wf   Workflow Steps  wf    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1 No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> vs_main Visualization … vs    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1 No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> data_e… Data Tab Examp… vs    data     </span><span style='color: #BB0000;'>NA</span><span>              1 No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span> plot_e… Plot PCA        vs    plot     plot_l…         1 No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span> plot_e… Plot Bar        vs    plot     plot_l…         1 tab_vs_plot_e… </span><span style='color: #BB0000;'>NA</span><span>    </div><div class='input'><span class='co'># now remove the plugin</span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> vs_main Visualization … vs    </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1 No file for c… core  
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> data_e… Data Tab Examp… vs    data     </span><span style='color: #BB0000;'>NA</span><span>              1 No file for c… core  
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> plot_e… Plot PCA        vs    plot     plot_l…         1 No file for c… core  
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> plot_e… Plot Bar        vs    plot     plot_l…         1 tab_vs_plot_e… </span><span style='color: #BB0000;'>NA</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span> data_a  Data Tab Title  vs    data     </span><span style='color: #BB0000;'>NA</span><span>              1 tab_vs_data_a… testP…
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span> plot_a  Plot Tab Title  vs    plot     </span><span style='color: #BB0000;'>NA</span><span>              1 tab_vs_plot_a… testP…</div><div class='input'><span class='co'># now remove the plugin</span>
 <span class='co'># now remove the plugin</span>
 <span class='co'># Windows connection close is delayed, may cause problems, uncomment to run</span>
 <span class='co'># next line before remove a plugin and try again</span>
 <span class='co'># closeAllConnections(); quiet(gc())</span>
-<span class='fu'>spsRemovePlugin</span><span class='op'>(</span>plugin <span class='op'>=</span> <span class='st'>"testPlugin"</span>, app_path <span class='op'>=</span> <span class='st'>"testProject"</span>, force <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-09-29 17:10:06 No plugin matched</span><span></span></div><div class='input'><span class='co'># let's check these files again:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"testProject"</span>, <span class='st'>"R"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "README.md"              "tab_vs_data_a.R"        "tab_vs_data_example.R" 
-#&gt; [4] "tab_vs_plot_a.R"        "tab_vs_plot_example1.R" "tab_vs_plot_example2.R"</div><div class='input'><span class='fu'>vroom</span><span class='fu'>::</span><span class='fu'><a href='https://vroom.r-lib.org/reference/vroom.html'>vroom</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"testProject"</span>, <span class='st'>"config"</span>, <span class='st'>"tabs.csv"</span><span class='op'>)</span>,
-             comment <span class='op'>=</span> <span class='st'>"#"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='font-weight: bold;'>Rows:</span><span> 14</span>
+<span class='fu'>spsRemovePlugin</span>(<span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>"testPlugin"</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"testProject"</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:25 Matched plugin tab files(s): tab_vs_data_a.R, tab_vs_plot_a.R</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:25 Plugin testPlugin removed!</span><span></div><div class='input'><span class='co'># let's check these files again:</span>
+<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"testProject"</span>, <span class='st'>"R"</span>))</div><div class='output co'>#&gt; [1] "README.md"              "tab_vs_data_example.R"  "tab_vs_plot_example1.R"
+#&gt; [4] "tab_vs_plot_example2.R"</div><div class='input'><span class='kw pkg'>vroom</span><span class='kw ns'>::</span><span class='fu'><a href='https://vroom.r-lib.org/reference/vroom.html'>vroom</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"testProject"</span>, <span class='st'>"config"</span>, <span class='st'>"tabs.csv"</span>),
+             <span class='kw'>comment</span> <span class='kw'>=</span> <span class='st'>"#"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>()</div><div class='output co'>#&gt; <span class='message'></span><span style='font-weight: bold;'>Rows:</span><span> 14</span>
 #&gt; <span class='message'></span><span style='font-weight: bold;'>Columns:</span><span> 8</span>
 #&gt; <span class='message'></span><span style='font-weight: bold;'>Delimiter:</span><span> ","</span>
 #&gt; <span class='message'></span><span style='color: #BB0000;'>chr</span><span> [7]: tab_id, display_label, type, type_sub, image, tab_file_name, plugin</span>
@@ -405,7 +395,7 @@ this file exists, content will be <code>cat</code> to console when plugin is loa
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

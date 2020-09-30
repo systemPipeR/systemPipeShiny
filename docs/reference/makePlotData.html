@@ -130,15 +130,15 @@ To use this function, make sure there is a SPS project and
 
     </div>
 
-    <pre class="usage"><span class='fu'>makePlotData</span><span class='op'>(</span>
-  dataset_id <span class='op'>=</span> <span class='st'>"data"</span>,
-  dataset_label <span class='op'>=</span> <span class='st'>"Raw data"</span>,
-  receive_datatab_ids <span class='op'>=</span> <span class='st'>"data_example"</span>,
-  vd_expr <span class='op'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span><span class='op'>(</span><span class='op'>{</span>     <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span><span class='op'>(</span><span class='va'>mydata</span><span class='op'>$</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>          <span class='cn'>TRUE</span>     <span class='kw'>else</span>
-    <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"Data xx needs to be a dataframe or tibble"</span><span class='op'>)</span> <span class='op'>}</span><span class='op'>)</span>,
-  app_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span><span class='op'>(</span><span class='op'>)</span>,
-  use_string <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>makePlotData</span>(
+  <span class='kw'>dataset_id</span> <span class='kw'>=</span> <span class='st'>"data"</span>,
+  <span class='kw'>dataset_label</span> <span class='kw'>=</span> <span class='st'>"Raw data"</span>,
+  <span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='st'>"data_example"</span>,
+  <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({     <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata</span>$<span class='no'>data</span>))          <span class='fl'>TRUE</span>     <span class='kw'>else</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Data xx needs to be a dataframe or tibble"</span>) }),
+  <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>(),
+  <span class='kw'>use_string</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,35 +198,52 @@ file.</p>
     <div class='dont-index'><p><a href='newTabPlot.html'>newTabPlot</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span><span class='op'>(</span>change_wd <span class='op'>=</span> <span class='cn'>FALSE</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span>, project_name <span class='op'>=</span> <span class='st'>"SPS_plotdata"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:09:55 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-09-29 17:09:55 Overwrite things in /home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/SPS_plotdata</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:09:55 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:09:55 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:09:55 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:09:55 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-29 17:09:55 Db created at '/home/dcassol/danielac@ucr.edu/testing/systemPipeShiny/docs/reference/SPS_plotdata/config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:09:55 Key md5 5547649f8957e11659310ae45d9dda38</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:09:55 SPS project setup done!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span><span class='op'>(</span><span class='st'>"data_df1"</span>, <span class='st'>"df 1"</span>,
-           app_path <span class='op'>=</span> <span class='st'>"SPS_plotdata"</span>,
-           open_file <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-29 17:09:55 File SPS_plotdata/R/tab_vs_data_df1.R exists.</span><span></span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span><span class='op'>(</span><span class='st'>"data_df2"</span>, <span class='st'>"df 2"</span>,
-           app_path <span class='op'>=</span> <span class='st'>"SPS_plotdata"</span>,
-           open_file <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-29 17:09:55 File SPS_plotdata/R/tab_vs_data_df2.R exists.</span><span></span></div><div class='input'><span class='va'>plotdata_raw</span> <span class='op'>&lt;-</span> <span class='fu'>makePlotData</span><span class='op'>(</span><span class='st'>"raw"</span>, <span class='st'>"raw data"</span>,
-             receive_datatab_ids <span class='op'>=</span> <span class='st'>"data_df1"</span>,
-             vd_expr <span class='op'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span><span class='op'>(</span><span class='op'>{</span>
-                 <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span><span class='op'>(</span><span class='va'>mydata</span><span class='op'>$</span><span class='va'>raw</span><span class='op'>)</span><span class='op'>)</span>
-                     <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"Input raw data need to be a dataframe"</span><span class='op'>)</span>
-             <span class='op'>}</span>, vd_name <span class='op'>=</span> <span class='st'>"Validate raw data"</span><span class='op'>)</span>,
-             app_path <span class='op'>=</span> <span class='st'>"SPS_plotdata"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-29 17:09:55 Tab data_df1 is not in the tab list</span><span></span></div><div class='input'><span class='va'>plotdata_meta</span> <span class='op'>&lt;-</span> <span class='fu'>makePlotData</span><span class='op'>(</span><span class='st'>"meta"</span>, <span class='st'>"meta data"</span>,
-             receive_datatab_ids <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"data_df1"</span>, <span class='st'>"data_df2"</span><span class='op'>)</span>,
-             vd_expr <span class='op'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span><span class='op'>(</span><span class='op'>{</span>
-                 <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span><span class='op'>(</span><span class='va'>mydata</span><span class='op'>$</span><span class='va'>meta</span><span class='op'>)</span><span class='op'>)</span>
-                     <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"Input raw data need to be a dataframe"</span><span class='op'>)</span>
-                 <span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>mydata</span><span class='op'>$</span><span class='va'>meta</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='fl'>1</span><span class='op'>)</span>
-                     <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"Input raw data need to have at least one row"</span><span class='op'>)</span>
-             <span class='op'>}</span>, vd_name <span class='op'>=</span> <span class='st'>"Validate meta data"</span><span class='op'>)</span>,
-             app_path <span class='op'>=</span> <span class='st'>"SPS_plotdata"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-29 17:09:55 Tab data_df1 is not in the tab list</span><span></span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabPlot</a></span><span class='op'>(</span><span class='st'>"plot_test1"</span>,
-           app_path <span class='op'>=</span> <span class='st'>"SPS_plotdata"</span>,
-           plot_data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>plotdata_raw</span>, <span class='va'>plotdata_meta</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error: </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-09-29 17:09:55 File SPS_plotdata/R/tab_vs_plot_test1.R exists.</span><span></span></div></span></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span>(<span class='kw'>change_wd</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>project_name</span> <span class='kw'>=</span> <span class='st'>"SPS_plotdata"</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Create project under /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_plotdata</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Now copy files</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Create SPS database</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2020-09-29 17:37:58 Db created at '/home/lz/Desktop/systemPipeShiny/docs/reference/SPS_plotdata/config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Key md5 949469b0b902ae4f79e91045f0598245</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 SPS project setup done!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_df1"</span>, <span class='st'>"df 1"</span>,
+           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_plotdata"</span>,
+           <span class='kw'>open_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:37:58 Write to file SPS_plotdata/R/tab_vs_data_df1.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
+#&gt;  /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_plotdata/R/tab_vs_data_df1.R ℹ 
+#&gt; ────────────────────────────────────────────────────────────────────────────────
+#&gt; Status	Count	Legend 
+#&gt; ✓ 	0	File unchanged.
+#&gt; ℹ 	1	File changed.
+#&gt; x 	0	Styling threw an error.
+#&gt; ────────────────────────────────────────────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:01 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:01 New tab created!</span><span></div><div class='input'><span class='fu'><a href='newTabPlot.html'>newTabData</a></span>(<span class='st'>"data_df2"</span>, <span class='st'>"df 2"</span>,
+           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_plotdata"</span>,
+           <span class='kw'>open_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:01 Write to file SPS_plotdata/R/tab_vs_data_df2.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
+#&gt;  /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_plotdata/R/tab_vs_data_df2.R ℹ 
+#&gt; ────────────────────────────────────────────────────────────────────────────────
+#&gt; Status	Count	Legend 
+#&gt; ✓ 	0	File unchanged.
+#&gt; ℹ 	1	File changed.
+#&gt; x 	0	Styling threw an error.
+#&gt; ────────────────────────────────────────────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:05 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:05 New tab created!</span><span></div><div class='input'><span class='no'>plotdata_raw</span> <span class='kw'>&lt;-</span> <span class='fu'>makePlotData</span>(<span class='st'>"raw"</span>, <span class='st'>"raw data"</span>,
+             <span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='st'>"data_df1"</span>,
+             <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
+                 <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata</span>$<span class='no'>raw</span>))
+                     <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input raw data need to be a dataframe"</span>)
+             }, <span class='kw'>vd_name</span> <span class='kw'>=</span> <span class='st'>"Validate raw data"</span>),
+             <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_plotdata"</span>)
+<span class='no'>plotdata_meta</span> <span class='kw'>&lt;-</span> <span class='fu'>makePlotData</span>(<span class='st'>"meta"</span>, <span class='st'>"meta data"</span>,
+             <span class='kw'>receive_datatab_ids</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"data_df1"</span>, <span class='st'>"data_df2"</span>),
+             <span class='kw'>vd_expr</span> <span class='kw'>=</span> <span class='fu'><a href='spsValidate.html'>spsValidate</a></span>({
+                 <span class='kw'>if</span>(!<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>is.data.frame</a></span>(<span class='no'>mydata</span>$<span class='no'>meta</span>))
+                     <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input raw data need to be a dataframe"</span>)
+                 <span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>mydata</span>$<span class='no'>meta</span>) <span class='kw'>&lt;</span> <span class='fl'>1</span>)
+                     <span class='fu'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span>(<span class='st'>"Input raw data need to have at least one row"</span>)
+             }, <span class='kw'>vd_name</span> <span class='kw'>=</span> <span class='st'>"Validate meta data"</span>),
+             <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_plotdata"</span>)
+<span class='fu'><a href='newTabPlot.html'>newTabPlot</a></span>(<span class='st'>"plot_test1"</span>,
+           <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_plotdata"</span>,
+           <span class='kw'>plot_data</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>plotdata_raw</span>, <span class='no'>plotdata_meta</span>))</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:05 Write to file SPS_plotdata/R/tab_vs_plot_test1.R</span><span></span></div><div class='output co'>#&gt; Styling  1  files:
+#&gt;  /home/lz/Desktop/systemPipeShiny/docs/reference/SPS_plotdata/R/tab_vs_plot_test1.R ℹ 
+#&gt; ────────────────────────────────────────────────────────────────────────────────
+#&gt; Status	Count	Legend 
+#&gt; ✓ 	0	File unchanged.
+#&gt; ℹ 	1	File changed.
+#&gt; x 	0	Styling threw an error.
+#&gt; ────────────────────────────────────────────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-09-29 17:38:07 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2020-09-29 17:38:07 New tab created!</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -242,7 +259,7 @@ file.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

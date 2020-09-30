@@ -56,8 +56,7 @@ Suggests:
     BiocStyle,
     systemPipeR, 
     knitr, 
-    rmarkdown, 
-    htmltools
+    rmarkdown
 VignetteBuilder: knitr
 biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
 License: Artistic-2.0

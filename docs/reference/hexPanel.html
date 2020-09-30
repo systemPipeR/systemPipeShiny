@@ -124,28 +124,28 @@ generates a panel of hex logos" />
 generates a panel of hex logos</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hexLogo</span><span class='op'>(</span>
-  <span class='va'>id</span>,
-  title <span class='op'>=</span> <span class='st'>""</span>,
-  <span class='va'>hex_img</span>,
-  hex_link <span class='op'>=</span> <span class='st'>""</span>,
-  footer <span class='op'>=</span> <span class='st'>""</span>,
-  footer_link <span class='op'>=</span> <span class='st'>""</span>,
-  x <span class='op'>=</span> <span class='st'>"-10"</span>,
-  y <span class='op'>=</span> <span class='st'>"-20"</span>
-<span class='op'>)</span>
+    <pre class="usage"><span class='fu'>hexLogo</span>(
+  <span class='no'>id</span>,
+  <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='no'>hex_img</span>,
+  <span class='kw'>hex_link</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>footer</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>footer_link</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"-10"</span>,
+  <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"-20"</span>
+)
 
-<span class='fu'>hexPanel</span><span class='op'>(</span>
-  <span class='va'>id</span>,
-  <span class='va'>title</span>,
-  <span class='va'>hex_imgs</span>,
-  hex_links <span class='op'>=</span> <span class='cn'>NULL</span>,
-  hex_titles <span class='op'>=</span> <span class='cn'>NULL</span>,
-  footers <span class='op'>=</span> <span class='cn'>NULL</span>,
-  footer_links <span class='op'>=</span> <span class='cn'>NULL</span>,
-  xs <span class='op'>=</span> <span class='cn'>NULL</span>,
-  ys <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+<span class='fu'>hexPanel</span>(
+  <span class='no'>id</span>,
+  <span class='no'>title</span>,
+  <span class='no'>hex_imgs</span>,
+  <span class='kw'>hex_links</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>hex_titles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>footers</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>footer_links</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>xs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ys</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -226,7 +226,7 @@ default -10</p></td>
 and then enlarged 125%. You may want to use x, y offset value to change
 the image position.</p>
 <p>If your image source is local, you need to add your local directory to the
-shiny server, e.g. <code><a href='https://shiny.rstudio.com/reference/shiny/latest/resourcePaths.html'>addResourcePath("sps", "www")</a></code>. This example add <code>www</code>
+shiny server, e.g. <code>addResourcePath("sps", "www")</code>. This example add <code>www</code>
 folder under my current working directory as <code>sps</code> to the server. Then you
 can access my images by <code>hex_imgs = "sps/my_img.png"</code>.</p>
 <p>some args in <code>hexPanel</code> are character vectors, use <code>NULL</code> for the default
@@ -239,31 +239,30 @@ occupy space in the vector. e.g. I have 3 logos, but I only want to add
 <p><code><a href='useSps.html'>useSps()</a></code> must be called on Shiny UI to load the required css style.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
-    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
-        <span class='fu'><a href='useSps.html'>useSps</a></span><span class='op'>(</span><span class='op'>)</span>,
-        <span class='fu'>hexPanel</span><span class='op'>(</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
+        <span class='fu'><a href='useSps.html'>useSps</a></span>(),
+        <span class='fu'>hexPanel</span>(
             <span class='st'>"demo1"</span>, <span class='st'>"DEMO 1:"</span> ,
-            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>"https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg"</span>, <span class='fl'>2</span><span class='op'>)</span>
-        <span class='op'>)</span>,
-        <span class='fu'>hexPanel</span><span class='op'>(</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg"</span>, <span class='fl'>2</span>)
+        ),
+        <span class='fu'>hexPanel</span>(
             <span class='st'>"demo2"</span>, <span class='st'>"DEMO 2:"</span> ,
-            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>"https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg"</span>, <span class='fl'>2</span><span class='op'>)</span>,
-            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>"https://www.google.com"</span>, <span class='fl'>2</span><span class='op'>)</span>,
-                 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hex1"</span>, <span class='st'>"hex2"</span><span class='op'>)</span>
-        <span class='op'>)</span>,
-        <span class='fu'>hexPanel</span><span class='op'>(</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg"</span>, <span class='fl'>2</span>),
+            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"https://www.google.com"</span>, <span class='fl'>2</span>),
+                 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hex1"</span>, <span class='st'>"hex2"</span>)
+        ),
+        <span class='fu'>hexPanel</span>(
             <span class='st'>"demo3"</span>, <span class='st'>"DEMO 3:"</span> ,
-            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>"https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg"</span>, <span class='fl'>2</span><span class='op'>)</span>,
-            footers <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hex1"</span>, <span class='st'>"hex2"</span><span class='op'>)</span>,
-            footer_links <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>"https://www.google.com"</span>, <span class='fl'>2</span><span class='op'>)</span>
-        <span class='op'>)</span>
-    <span class='op'>)</span>
-    <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='op'>}</span>
-    <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+            <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"https://live.staticflickr.com/7875/46106952034_954b8775fa_b.jpg"</span>, <span class='fl'>2</span>),
+            <span class='kw'>footers</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hex1"</span>, <span class='st'>"hex2"</span>),
+            <span class='kw'>footer_links</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"https://www.google.com"</span>, <span class='fl'>2</span>)
+        )
+    )
+    <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>, <span class='no'>output</span>, <span class='no'>session</span>) {
+    }
+    <span class='fu'>shinyApp</span>(<span class='no'>ui</span>, <span class='no'>server</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -279,7 +278,7 @@ occupy space in the vector. e.g. I have 3 logos, but I only want to add
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
