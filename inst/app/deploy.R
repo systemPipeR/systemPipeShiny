@@ -1,12 +1,23 @@
-# If you use some bioconductor package:
+#########################################
+## If you use some bioconductor package:
+########################################
 
 # options(repos = BiocManager::repositories())
 
+########################
 ## Set up your account:
+########################
 
-# setAccountInfo("user", "token", "secret")
+## Replace the following arguments:
+## - name: Name of account to save or remove
+## - token: User token for the account
+## - secret: User secret for the account
 
+# setAccountInfo(name="username", token="token", secret="secret")
+
+##########
 ## Deploy:
+##########
 
 # getOption("repos")
 # rsconnect::deployApp(
