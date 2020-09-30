@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • systemPipeShiny</title>
+<title>Empty objects and FALSE will return FALSE — emptyIsFalse • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Empty objects and FALSE will return FALSE — emptyIsFalse" />
+<meta property="og:description" content="judge if an object is empty or FALSE, and return FALSE if it is" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,18 +111,45 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Empty objects and FALSE will return FALSE</h1>
+    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsUti.R'><code>R/spsUti.R</code></a></small>
+    <div class="hidden name"><code>emptyIsFalse.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="systemPipeShiny.html">systemPipeShiny</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>judge if an object is empty or FALSE, and return FALSE if it is</p>
     </div>
+
+    <pre class="usage"><span class='fu'>emptyIsFalse</span>(<span class='no'>x</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>any R object</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>NA</code>, <code>""</code>, <code>NULL</code>, <code><a href='https://rdrr.io/r/base/length.html'>length(0)</a></code>, <code>nchar == 0</code> and <code>FALSE</code> will return
+<code>FALSE</code>, otherwise <code>TRUE</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>not working on S4 class objects.</p>
+<p>Useful for if statement. Normal empty object in if will spawn error. Wrap the
+expression with <code>emptyIsFalse</code> can avoid this. See examples</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>emptyIsFalse</span>(<span class='kw'>NULL</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>emptyIsFalse</span>(<span class='fl'>NA</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>emptyIsFalse</span>(<span class='st'>""</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='no'>`if(NULL) "not empty" else "empty"`</span>) <span class='co'># will generate error</span></div><div class='output co'>#&gt; Error in try(`if(NULL) "not empty" else "empty"`) : 
+#&gt;   object 'if(NULL) "not empty" else "empty"' not found</div><div class='input'><span class='kw'>if</span>(<span class='fu'>emptyIsFalse</span>(<span class='kw'>NULL</span>)) <span class='st'>"not empty"</span> <span class='kw'>else</span> <span class='st'>"empty"</span> <span class='co'># this will work</span></div><div class='output co'>#&gt; [1] "empty"</div><div class='input'># similar for `NA`, `""`, `character(0)` and more
+</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

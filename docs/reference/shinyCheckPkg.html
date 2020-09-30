@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • systemPipeShiny</title>
+<title>Shiny package checker — shinyCheckPkg • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,12 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Shiny package checker — shinyCheckPkg" />
+<meta property="og:description" content="check package name space for some required packages and pop up
+warnings in shiny telling users how to install the missing packages.
+This is useful when some of packages are required by a shiny app. Before
+running into that part of code, using this function to check the required
+pakcage and pop up warnings will prevent app to crash." />
 
 
 
@@ -58,7 +63,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,18 +115,72 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Shiny package checker</h1>
+    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsServerCollections.R'><code>R/spsServerCollections.R</code></a></small>
+    <div class="hidden name"><code>shinyCheckPkg.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="systemPipeShiny.html">systemPipeShiny</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>check package name space for some required packages and pop up
+warnings in shiny telling users how to install the missing packages.</p>
+<p>This is useful when some of packages are required by a shiny app. Before
+running into that part of code, using this function to check the required
+pakcage and pop up warnings will prevent app to crash.</p>
     </div>
+
+    <pre class="usage"><span class='fu'>shinyCheckPkg</span>(
+  <span class='no'>session</span>,
+  <span class='kw'>cran_pkg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>bioc_pkg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>github</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>session</th>
+      <td><p>shiny session</p></td>
+    </tr>
+    <tr>
+      <th>cran_pkg</th>
+      <td><p>vector of package names</p></td>
+    </tr>
+    <tr>
+      <th>bioc_pkg</th>
+      <td><p>vector of package names</p></td>
+    </tr>
+    <tr>
+      <th>github</th>
+      <td><p>vector of github packages, github package must use the format of
+"github user name/ repository name", eg. c("user1/pkg1", "user2/pkg2")</p></td>
+    </tr>
+    <tr>
+      <th>quietly</th>
+      <td><p>bool, should warning messages be suppressed?</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>TRUE if pass, sweet alert massage and FALSE if fail</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <span class='fu'>shinyApp</span>(<span class='kw'>ui</span> <span class='kw'>=</span> <span class='fu'>shinyUI</span>(
+        <span class='fu'>fluidPage</span>(<span class='fu'>actionButton</span>(<span class='st'>"haha"</span>, <span class='st'>"haha"</span>))
+    ), <span class='kw'>server</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>input</span>, <span class='no'>output</span>, <span class='no'>session</span>){
+        <span class='fu'>observeEvent</span>(<span class='no'>input</span>$<span class='no'>haha</span>,
+            <span class='fu'>shinyCheckPkg</span>(<span class='no'>session</span>, <span class='kw'>cran_pkg</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pkg1"</span>, <span class='st'>"pkg2"</span>),
+                          <span class='kw'>bioc_pkg</span> <span class='kw'>=</span> <span class='st'>"haha"</span>, <span class='kw'>github</span> <span class='kw'>=</span> <span class='st'>"sdasdd/asdsad"</span>))
+    })
+}</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

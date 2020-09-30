@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • systemPipeShiny</title>
+<title>SystemPipeShiny app main function — sps • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="SystemPipeShiny app main function — sps" />
+<meta property="og:description" content="SystemPipeShiny app main function" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,18 +111,70 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>SystemPipeShiny app main function</h1>
+    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsCore.R'><code>R/spsCore.R</code></a></small>
+    <div class="hidden name"><code>sps.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="systemPipeShiny.html">systemPipeShiny</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>SystemPipeShiny app main function</p>
     </div>
+
+    <pre class="usage"><span class='fu'>sps</span>(<span class='kw'>vstabs</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>server_expr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>())</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>vstabs</th>
+      <td><p>custom visualization tab IDs that you want to display, in a character
+vector. Use <code><a href='spsTabInfo.html'>spsTabInfo()</a></code> to see what tab IDs you can load</p></td>
+    </tr>
+    <tr>
+      <th>plugin</th>
+      <td><p>If you have loaded some SPS plugins by <code><a href='spsAddPlugin.html'>spsAddPlugin()</a></code>,
+you can specify here as a character vector, and it will load all tabs that
+belong to that plugin to SPS. If you only want
+certain tabs from a plugin, specify in <code>vstabs</code> argument.</p></td>
+    </tr>
+    <tr>
+      <th>server_expr</th>
+      <td><p>additional top level sever expression you want
+to run. This will run after the default server expressions. It means you can
+have access to internal server expression objects, like the
+<code><a href='https://shiny.rstudio.com/reference/shiny/latest/reactiveValues.html'>shiny::reactiveValues()</a></code>
+object <code>shared</code>. You can also overwrite other values. Read "shared object" in
+vignette.</p></td>
+    </tr>
+    <tr>
+      <th>app_path</th>
+      <td><p>SPS project path</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a list contains the UI and  server</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>You must set the project root as working directory for this
+function to find required files.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <span class='fu'><a href='spsInit.html'>spsInit</a></span>()
+    <span class='no'>sps_app</span> <span class='kw'>&lt;-</span> <span class='fu'>sps</span>(
+        <span class='kw'>vstabs</span> <span class='kw'>=</span> <span class='st'>""</span>,
+        <span class='kw'>server_expr</span> <span class='kw'>=</span> {
+            <span class='fu'><a href='msg.html'>msg</a></span>(<span class='st'>"Hello World"</span>, <span class='st'>"GREETING"</span>, <span class='st'>"green"</span>)
+        }
+    )
+}</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

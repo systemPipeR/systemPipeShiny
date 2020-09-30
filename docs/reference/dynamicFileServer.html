@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • systemPipeShiny</title>
+<title>Server side function for dynamicFile — dynamicFileServer • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Server side function for dynamicFile — dynamicFileServer" />
+<meta property="og:description" content="Server side function for dynamicFile to parse the uploaded
+file path" />
 
 
 
@@ -58,7 +60,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,18 +112,65 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Server side function for dynamicFile</h1>
+    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsServerCollections.R'><code>R/spsServerCollections.R</code></a></small>
+    <div class="hidden name"><code>dynamicFileServer.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="systemPipeShiny.html">systemPipeShiny</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Server side function for <a href='dynamicFile.html'>dynamicFile</a> to parse the uploaded
+file path</p>
     </div>
+
+    <pre class="usage"><span class='fu'>dynamicFileServer</span>(<span class='no'>input</span>, <span class='no'>session</span>, <span class='no'>id</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>input</th>
+      <td><p>shiny server input</p></td>
+    </tr>
+    <tr>
+      <th>session</th>
+      <td><p>shiny server session</p></td>
+    </tr>
+    <tr>
+      <th>id</th>
+      <td><p>input file element ID.
+Do not us <code>ns()</code> to wrap the id on server side if inside module</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>reactive dataframe, need to extract the value inside reactive
+expression, observe, or inside <code>isolate</code></p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>shinyjs</span>)
+    <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(<span class='kw'>sps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>mode</span><span class='kw'>=</span><span class='st'>'server'</span>)) <span class='co'># Change the mode to 'local' to see difference</span>
+    <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
+        <span class='fu'><a href='https://rdrr.io/pkg/shinyjs/man/useShinyjs.html'>useShinyjs</a></span>(),
+        <span class='fu'><a href='dynamicFile.html'>dynamicFile</a></span>(<span class='st'>"getFile"</span>),
+        <span class='fu'>textOutput</span>(<span class='st'>"txt_file"</span>)
+    )
+
+    <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>,<span class='no'>output</span>,<span class='no'>session</span>){
+        <span class='fu'><a href='https://rdrr.io/pkg/shinyjs/man/runjs.html'>runjs</a></span>(<span class='st'>'$(".sps-file input").attr("readonly", true)'</span>)
+        <span class='no'>myfile</span> <span class='kw'>&lt;-</span> <span class='fu'>dynamicFileServer</span>(<span class='no'>input</span>, <span class='no'>session</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"getFile"</span>)
+        <span class='fu'>observe</span>({
+            <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>myfile</span>()) <span class='co'># remember to use `()` for reactive value</span>
+        })
+    }
+    <span class='fu'>shinyApp</span>(<span class='kw'>ui</span> <span class='kw'>=</span> <span class='no'>ui</span>, <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>server</span>)
+}</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

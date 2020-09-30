@@ -82,7 +82,6 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>To install the package, please use the <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> command:</p>
-<<<<<<< HEAD
 <div class="sourceCode" id="cb1"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span><span class="kw">=</span><span class="fl">TRUE</span>))
     <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
 <span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeShiny"</span>, <span class="kw">build_vignettes</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">dependencies</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></div>
@@ -90,17 +89,6 @@
 <div class="sourceCode" id="cb2"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span><span class="kw">=</span><span class="fl">TRUE</span>))
     <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
 <span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeR/systemPipeShiny"</span>, <span class="kw">build_vignettes</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">dependencies</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></div>
-=======
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"systemPipeShiny"</span>, build_vignettes<span class="op">=</span><span class="cn">TRUE</span>, dependencies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></pre></div>
-<p>To obtain the most recent updates immediately, one can install it directly from <a href="https://github.com/systemPipeR/systemPipeShiny">GitHub</a> as follow:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"systemPipeR/systemPipeShiny"</span>, build_vignettes<span class="op">=</span><span class="cn">TRUE</span>, dependencies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></pre></div>
->>>>>>> 0b1d43cf2d4d53733ee53af2745d3fc3d331f419
 <p>If you are on Linux, you may also need the following libraries. Different distributions may have different commands, but the following commands are examples for Ubuntu:</p>
 <pre><code>sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libv8-dev
@@ -111,7 +99,6 @@ sudo apt-get install libssl-dev</code></pre>
 <h2 class="hasAnchor">
 <a href="#quick-start" class="anchor"></a>Quick start</h2>
 <p>This is a basic example which shows how to use <code>systempipeShiny</code> package:</p>
-<<<<<<< HEAD
 <div class="sourceCode" id="cb4"><pre class="r"><span class="co">## Imports the library</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">systemPipeShiny</span>)
 <span class="co">## Creates the project directory</span>
@@ -119,17 +106,6 @@ sudo apt-get install libssl-dev</code></pre>
 <p>By default, a project folder is created and named as <code>SPS_</code>+<code>DATE</code>. This project folder provides all the necessary files to launch the application. If you are using Rstudio, <code>global.R</code> file will be opened automatically and this is the only file you may need to make custom changes if there is any.</p>
 <div class="sourceCode" id="cb5"><pre class="r"><span class="co">## Launching the interface</span>
 <span class="kw pkg">shiny</span><span class="kw ns">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">runApp</a></span>()</pre></div>
-=======
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co">## Imports the library</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/systemPipeR/systemPipeShiny">systemPipeShiny</a></span><span class="op">)</span>
-<span class="co">## Creates the project directory</span>
-<span class="fu"><a href="reference/spsInit.html">spsInit</a></span><span class="op">(</span><span class="op">)</span></pre></div>
-<p>By default, a project folder is created and named as <code>SPS_</code>+<code>DATE</code>. This project folder provides all the necessary files to launch the application. If you are using Rstudio, <code>global.R</code> file will be opened automatically and this is the only file you may need to make custom changes if there is any.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co">## Launching the interface</span>
-<span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">runApp</a></span><span class="op">(</span><span class="op">)</span></pre></div>
->>>>>>> 0b1d43cf2d4d53733ee53af2745d3fc3d331f419
 </div>
 </div>
 <div id="contact" class="section level1">
@@ -144,22 +120,12 @@ sudo apt-get install libssl-dev</code></pre>
 <div id="run-to-update-the-website-docs-folder" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-to-update-the-website-docs-folder" class="anchor"></a>Run to update the website (./docs/ folder)</h3>
-<<<<<<< HEAD
 <div class="sourceCode" id="cb6"><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></div>
-=======
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span><span class="op">(</span><span class="op">)</span></pre></div>
->>>>>>> 0b1d43cf2d4d53733ee53af2745d3fc3d331f419
 </div>
 <div id="running-roxygen" class="section level3">
 <h3 class="hasAnchor">
 <a href="#running-roxygen" class="anchor"></a>Running roxygen</h3>
-<<<<<<< HEAD
 <div class="sourceCode" id="cb7"><pre class="r"><span class="kw pkg">roxygen2</span><span class="kw ns">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span>()</pre></div>
-=======
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span><span class="op">(</span><span class="op">)</span></pre></div>
->>>>>>> 0b1d43cf2d4d53733ee53af2745d3fc3d331f419
 </div>
 <div id="todo" class="section level3">
 <h3 class="hasAnchor">
@@ -228,7 +194,7 @@ sudo apt-get install libssl-dev</code></pre>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
