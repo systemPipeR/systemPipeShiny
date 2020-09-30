@@ -81,13 +81,14 @@ allowing users to organize and to compare plots in an efficient manner combined
 with a session snapshot feature to continue work at a later time. The present
 suite of pre-configured visualization examples include different methods to
 plot a count table: PCA, t-SNE and plots of other clustering methods; volcano
-plots, data mining plots including heatmaps, and more. 
-^[<font style="color:green">Dani:My opinion here is that if we mentioned some plot here, 
-we should provide the plots on the visualization tabs since we already have these plots organized.</font>]
-The modular design of
-SPR makes it easy to design custom functions without any knowledge of Shiny, as
-well as extending the environment in the future with contributions from the
-community.
+plots, data mining plots including heatmaps, and more.  ^[<font
+style="color:green">Dani: My opinion here is that if we mentioned some plot
+here, we should provide the plots on the visualization tabs since we already
+have these plots organized.</font> <font style="color:red">ThG: so why are 
+they not shown by default for demo purposes? </font>] The modular design of 
+SPR makes it easy to design custom functions without any knowledge of Shiny, 
+as well as extending the environment in the future with contributions from 
+the community.
 
 An example web instance for testing `SPS` online is available
 [here](https://tgirke.shinyapps.io/systemPipeShiny/){target="_blank"}. At the
@@ -131,21 +132,22 @@ and revisit the saved plots at a later time.
 
 <center id="sps_structure">
 ![SPS_structure](./img/sps_structure.png)
-**Figure 1. Design of `systemPipeShiny.` The framework provides an interactive web interface for workflow management and data visualization.**
 </center>
+**Figure 1.** Design of `systemPipeShiny.` The framework provides an
+interactive web interface for workflow management and data visualization.
 
 Within the functional categories, `SPS` functions are modularized in
 sub-components, here referred to as **SPS tabs** that are similar to 
 menu tabs in other GUI applications that organize related and inter-connected 
-functionalies into groups. On the backend, **SPS tabs** are based on [Shiny modules](https://shiny.rstudio.com/articles/modules.html) 
-and stored in individual files. This modular structure is highly extensible 
+functionalies into groups. On the backend, **SPS tabs** are based on [Shiny modules](https://shiny.rstudio.com/articles/modules.html), 
+that are stored in separate files. This modular structure is highly extensible 
 and greatly simplifies the design of new `SPS` tabs by both users and/or developers. 
 Details about extending existing tabs and designing new ones are provided in 
 an [advanced user section](#extend-sps). 
 
 # Example workflow with toy RNA-Seq data
 
-The following sections illustrate the main functionalities `SPS` using an analysis 
+The following sections illustrate the main functionalities of `SPS` using an analysis 
 workflow for RNA-Seq data as an example.
 
 ## Load package
@@ -159,15 +161,16 @@ library(systemPipeShiny)
 ## Initialize `SPS` project
 
 Before launching the `SPS` application, a project environment needs to be created with the
-following commands.
+following command.
 
 ```{r spsinit, eval=FALSE}
 spsInit()
 ```
 
-For this toy example, the project directory structure is written to a temporary directory
-on a user's system. For a real project, it should be written to a defined and user 
-controlled location on a system rather than a temporary directory.
+For this toy example, the project directory structure is written to a temporary
+directory on a user's system. For a real project, it should be written to a
+defined and user controlled location on a system rather than a temporary
+directory.
 
 ```{r spsinit_temp, eval=TRUE}
 sps_tmp_dir <- tempdir()
@@ -175,7 +178,9 @@ spsInit(app_path = sps_tmp_dir, change_wd = FALSE, project_name = "SPSProject")
 sps_dir <- file.path(sps_tmp_dir, "SPSProject")
 ```
 
-The file and directory structure is organized as follows:^[<font style="color:green">Dani:Should we have a dedicated section to the directory structure?.</font>]
+### SPS project structure
+
+The file and directory structure of an SPS project is organized as follows. 
 
 <pre>
 SPS_xx/  
@@ -211,54 +216,63 @@ SPS_xx/
 
 ## Launch `SPS` 
 
-By default, your working directory should be set inside that project folder automatically. 
-Then, to launch the `SPS` application, run:
+By default, the working directory will be set inside the project folder automatically. 
+To launch the `SPS` Shiny application, one only needs to execute the following command.
 
 ```{r, eval=FALSE}
 shiny::runApp()
 ```
 
-Or you can click on the <img src=img/app_start.png style="display: inline; padding-left:0; width:10px; height:15px;">`Run App`
-button on top right corner in Rstudio.
-
-In addition, if you are using Rstudio, *global.R* file will be automatically open when 
-`SPS` project is created. Custom changes can be made inside this file before the app launches. The [advanced section](#extend-sps) will teach you how to create your own tabs.
-^[<font style="color:green">Dani:I think this advanced information could be confusing in this stage of the documentation (discussing and showing details about the global.R file), so I believe we can add this to the advanced features section and just to link here.</font>]
-
-For this vignette example, we will use as it is, so no change is made.
-The app should be launched at this point. Click on the "Continue to app" button 
-on the welcome screen and you should see the `SPS` main dashboard like this one (Fig.2):
+After the SPS app has been launched, clicking the "Continue to app" button
+on the welcome screen will open the main dashboard (Fig.2).
 
 <center id="sps_ui">
 ![sps_ui](./img/sps_ui_main.jpg)
-**Figure 2. SPS UI**
 </center>
+**Figure 2:** Snapshot of SPS' UI.^[<font style="color:red">ThG: note don't center
+the legend of figures, and only the Figure xyz part should be in bold. The actual
+legend text is in non-bold.</font>]
 
-All `SPS` tabs are well classified into Workflow and Visualization modules. 
+Alternatively, when using RStudio one can click the <img src=img/app_start.png style="display: inline;
+padding-left:0; width:10px; height:15px;">`Run App` button in the top right corner.
+
+In addition, in Rstudio the *global.R* file will be automatically
+opened when the `SPS` project is created. Custom changes can be made inside this file
+before the app launches. The [advanced section](#extend-sps) explains how
+to create custom tabs.  ^[<font style="color:green">Dani:I think this
+advanced information could be confusing in this stage of the documentation
+(discussing and showing details about the global.R file), so I believe we can
+add this to the advanced features section and just to link here. </font>
+<font style="color:red">ThG: yes, just show some demo tabs and move the 
+customization stuff to the advanced section. </font>]
+
 
 ## Workflow management
 
-Workflow management in `SPS` helps you to prepare a data analysis workflow files in [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR) format. SPR is another 
-R package that runs a workflow in "command line + R code" manner. To run a SPR workflow, you
-need to prepare three very important files: a metadata (targets) file that contains 
-sample information, a workflow step file (Rmarkdown format) that defines the workflow steps 
-and a workflow config file that helps the program to set up your directory. In SPS, one 
-can easily prepare all of these three files in SPS tabs under "Workflow Management" 
-section. You can find them at the left side navigation bar (Fig2 a-b). 
+The workflow management module in `SPS` allows to modify or create the
+configuration files required for running data analysis workflows in
+[systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR). This includes
+three important files: a sample metadata (targets) file that contains, a
+workflow file (in R Markdown format) defining the workflow steps and a workflow
+config file organizing the workflow directory. In SPS, one can easily create
+these files under the "Workflow Management" module, located in navigation bar
+on the left of the dashboard (Fig2 a-b). 
 
-Under current version of SPS, we only help you to prepare and check format of these 
-files. One should save these files and run a workflow in SPR. Directly running a SPR workflow in SPS will be supported in an upcoming release.
+The current version of SPS allows to create and/or check the format of these 
+files. The execution of SPR workflows via SPS will be supported in the next
+release.
 
 ### Prepare a target file
 
-The targets file defines all input files' path and other sample information of 
-an analysis workflow. Read ["Structure of targets file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file) 
-section in SPR vignette to better undertand the structure of this file. 
-This file is similar to the `colData` slot in an `SummarizedExperiment` object 
-which stores sample ID and other meta information. 
+The targets file defines all input files' path and other sample information of
+an analysis workflow. Read ["Structure of targets
+file"](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file)
+section in SPR vignette to better undertand the structure of this file. Essentially,
+this is the tabular file representation of the `colData` slot in an 
+`SummarizedExperiment` object which stores sample IDs and other meta information. 
 
-
-Now let us follow the order below to prepare a targets file for a RNAseq project (Fig.3 A):
+The following step-by-step instructions explain how to create and/or modify targets 
+files using RNA-Seq as an example (Fig.3 A):
 
 1. Choose "Targets" from navigation bar;
 2. Select either "Example PE" or "Example SE"" for using a pair-end/single-end target file, then choose "confirm" on the pop-up. You will see the example is loaded like Figure 3A. 
