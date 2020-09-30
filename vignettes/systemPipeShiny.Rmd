@@ -81,9 +81,15 @@ allowing users to organize and to compare plots in an efficient manner combined
 with a session snapshot feature to continue work at a later time. The present
 suite of pre-configured visualization examples include different methods to
 plot a count table: PCA, t-SNE and plots of other clustering methods; volcano
-plots, data mining plots including heatmaps, and more. 
-^[<font style="color:green">Dani:My opinion here is that if we mentioned some plot here, 
-we should provide the plots on the visualization tabs since we already have these plots organized.</font>]
+plots, data mining plots including heatmaps, and more.^[<font style="color:green">
+Dani:My opinion here is that if we mentioned some plot here, 
+we should provide the plots on the visualization tabs since we already have these plots organized.</font>
+LZ: these tabs have been moved to the *spsBio* plugin (a sub repo) to reduce the complexity
+of the main package. Introducing these tabs back will dramatically increase the 
+package complexity and another ~100 package dependencies (89 for now, ~170 after).
+For the submission, I think we want to keep it as simple as possible. I suggest we 
+either remove this sentence or only say "The present suite of pre-configured 
+visualization examples include different methods to plot a count table and more."]
 The modular design of
 SPR makes it easy to design custom functions without any knowledge of Shiny, as
 well as extending the environment in the future with contributions from the
@@ -265,7 +271,7 @@ Now let us follow the order below to prepare a targets file for a RNAseq project
 3. You can edit, right click to add/remove rows/columns (The first row is treated as column names);
 4. SPR target file requires a header and you can edit it here. Headers should start with "#";
 5. The left section can help you to check sample statistics and file existence. Choose any column you want from the dropdown to check and watch the statistics bar change in this section;
-6. Click on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right;
+6. Clicking on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right;
 7. Now your target file is ready and you can click "save" to download it and later use in a SPR project. 
 8. Click on the "-" button on the "Workflow Progress", you should see the "Targets file" becomes green. 
 
@@ -284,8 +290,8 @@ Now let us follow the order below to see how SPS helps you to prepare a workflow
 2. Choose "Example Rmd" to load an RNAseq workflow;
 3. You can see the workflow steps are displayed like a tree structure;
 4. Check all steps in the workflow that you want to include. You can skip (leave blank) some steps but it may cause the workflow to fail. Read more SPR instructions before do so. 
-5. Click on the "Plot steps" will show a flow chart of what the step execution orders will be when you run the workflow in SPR. 
-6. Click "Report preview" generates a preview of what the final report will look like for current RNAseq workflow, but in the preview, no code is evaluated.
+5. Clicking on the "Plot steps" will show a flow chart of what the step execution orders will be when you run the workflow in SPR. 
+6. Clicking "Report preview" generates a preview of what the final report will look like for current RNAseq workflow, but in the preview, no code is evaluated.
 7. If you are satisfied with your workflow file, click "Add to task" to update the workflow preparation progress just like it is for "targets file".
 8. Now choose "Save New Rmd" to save this new workflow file to later be used a SPR RNAseq project running. 
 
