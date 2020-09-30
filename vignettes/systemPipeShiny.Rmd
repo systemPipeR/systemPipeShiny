@@ -223,6 +223,13 @@ SPS_xx/
 
 ## Launch SPS interface
 
+The `runApp` function launches the application in our browser:
+
+```{r runAPP, eval=FALSE}
+shiny::runApp(app)
+```
+^[<font style="color:green">Dani: Maybe add a printscreen here with the main page of the pp.</font>]
+
 By default, your working directory should be set inside that project folder automatically. 
 If you are using Rstudio, *global.R* file will be opened for you. This is the only
 file that you need to make custom change if there is any. 

@@ -2378,6 +2378,9 @@ SPS_xx/
 </div>
 <div id="launch-sps-interface" class="section level2">
 <h2><span class="header-section-number">4.3</span> Launch SPS interface</h2>
+<p>The <code>runApp</code> function launches the application in our browser:</p>
+<pre class="r"><code>shiny::runApp(app)</code></pre>
+<p><label for="sidenote-4" class="sidenote-number">4</label><label for="sidenote-4" class="margin-toggle" onclick="toggle_visibility('sidenote-4')">4</label><span class="sidenote" id="sidenote-4"><span class="sidenote-number">4</span> <font style="color:green">Dani: Maybe add a printscreen here with the main page of the pp.</font></span></p>
 <p>By default, your working directory should be set inside that project folder automatically.
 If you are using Rstudio, <em>global.R</em> file will be opened for you. This is the only
 file that you need to make custom change if there is any.</p>
@@ -2392,7 +2395,7 @@ file that you need to make custom change if there is any.</p>
 tab information. Currently you can only load/unload visualization tabs, the key word <code>vs</code> under column “<em>type</em>”; essential framework tabs(<em>core</em>) and workflow tabs (<em>wf</em>) are loaded automatically and these tabs cannot be modified.
 The <a href="#extend-sps">developer section</a> will teach you how to create your own tabs.</p>
 <p>For this vignette example, we will use as it is, so now you can run the SPS by typing
-<code>shiny::runApp()</code><label for="sidenote-4" class="sidenote-number">4</label><label for="sidenote-4" class="margin-toggle" onclick="toggle_visibility('sidenote-4')">4</label><span class="sidenote" id="sidenote-4"><span class="sidenote-number">4</span> <font style="color:red">ThG: This is the most important command of
+<code>shiny::runApp()</code><label for="sidenote-5" class="sidenote-number">5</label><label for="sidenote-5" class="margin-toggle" onclick="toggle_visibility('sidenote-5')">5</label><span class="sidenote" id="sidenote-5"><span class="sidenote-number">5</span> <font style="color:red">ThG: This is the most important command of
 the entire vignette. Why is it burried in the text. I would move it up to the beginning and
 dedicate a code box to it.</font></span> in console or click on the <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAaCAYAAABsONZfAAAABHNCSVQICAgIfAhkiAAAAQ9JREFUOI2V0ElOAkEUxvF/t14FaJvhCO6dCArB6RQIGhBiHFtRMB6iDcGVAacdXgGF0IA38BCwMJ2ANm29b/eq6pfvpWDDPEaYOYqLLTRNp/f9rop0ANYXjkiFz2QIIGGUVKE+NSWMEunwhQwBxI1D0hFLhgDioQKbkUsZAlgL5dmKlmUIYDV44AX9kQu3ozcyBLASzLETq8gQwHIgy26sCjCvjACWAntomq7eNBEZevu6w25n1NHr8Ba7nVFvehlWuf/IuuP/H/E8qFD73J888m96Glz/Bv5NzX6ZeifvdeXd1OxfzQLeqOFY1DuFmRv8QQ3H4qFb9APT6NE5VwE/sZMjUuap2mM3SfNEBmAMdOpGDr1Lf3MAAAAASUVORK5CYII=" style="display: inline; padding-left:0; width:10px; height:15px;"><code>Run App</code>
 button on top right corner in Rstudio. The app should be launched. Click on the
@@ -2405,7 +2408,7 @@ button on top right corner in Rstudio. The app should be launched. Click on the
 </div>
 <div id="workflow-management" class="section level2">
 <h2><span class="header-section-number">4.4</span> Workflow management</h2>
-<p>Workflow<label for="sidenote-5" class="sidenote-number">5</label><label for="sidenote-5" class="margin-toggle" onclick="toggle_visibility('sidenote-5')">5</label><span class="sidenote" id="sidenote-5"><span class="sidenote-number">5</span> <font style="color:red">ThG: I wouldn’t abbreviate work throught the text.</font></span> management in SPS helps you to prepare a data analysis workflow files in <a href="https://systempipe.org/docs/systemPipeR/">systemPipeR</a> (SPR) format. SPR is another
+<p>Workflow<label for="sidenote-6" class="sidenote-number">6</label><label for="sidenote-6" class="margin-toggle" onclick="toggle_visibility('sidenote-6')">6</label><span class="sidenote" id="sidenote-6"><span class="sidenote-number">6</span> <font style="color:red">ThG: I wouldn’t abbreviate work throught the text.</font></span> management in SPS helps you to prepare a data analysis workflow files in <a href="https://systempipe.org/docs/systemPipeR/">systemPipeR</a> (SPR) format. SPR is another
 R package that runs a WF in “command line + R code” manner. To run a SPR WF, you
 need to prepare three very important files: a metadata(targets) file that contains
 sample information, a workflow step file(Rmarkdown format) that defines the WF steps
@@ -2418,7 +2421,7 @@ in SPS will be supported in an upcomming release.</p>
 <div id="prepare-a-target-file" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Prepare a target file</h3>
 <p>Read <a href="https://systempipe.org/docs/systemPipeR/#structure-of-targets-file">“Structure of targets file”</a> section in SPR vignette to better undertand the
-structure of this file.<label for="sidenote-6" class="sidenote-number">6</label><label for="sidenote-6" class="margin-toggle" onclick="toggle_visibility('sidenote-6')">6</label><span class="sidenote" id="sidenote-6"><span class="sidenote-number">6</span> <font style="color:red">ThG: describe here briefly what a targets
+structure of this file.<label for="sidenote-7" class="sidenote-number">7</label><label for="sidenote-7" class="margin-toggle" onclick="toggle_visibility('sidenote-7')">7</label><span class="sidenote" id="sidenote-7"><span class="sidenote-number">7</span> <font style="color:red">ThG: describe here briefly what a targets
 file is and how it relates to the colData slot in an SummarizedExperiment object.</font></span></p>
 <p>Now let us follow the order below to prepare a target file for a RNAseq project (Fig.3 A):</p>
 <ol style="list-style-type: decimal">
