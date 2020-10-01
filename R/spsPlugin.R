@@ -88,8 +88,8 @@
 #' list.files(file.path("testProject", "R"))
 #' # check if tab files are registered
 #' # You should see the two new records
-#' vroom::vroom(file.path("testProject", "config", "tabs.csv"),
-#'              comment = "#") %>% tail()
+#' tail(vroom::vroom(file.path("testProject", "config", "tabs.csv"),
+#'              comment = "#"))
 #' # now remove the plugin
 #' # now remove the plugin
 #' # Windows connection close is delayed, may cause problems, uncomment to run
@@ -98,8 +98,8 @@
 #' spsRemovePlugin(plugin = "testPlugin", app_path = "testProject", force = TRUE)
 #' # let's check these files again:
 #' list.files(file.path("testProject", "R"))
-#' vroom::vroom(file.path("testProject", "config", "tabs.csv"),
-#'              comment = "#") %>% tail()
+#' tail(vroom::vroom(file.path("testProject", "config", "tabs.csv"),
+#'              comment = "#"))
 spsAddPlugin <- function(
     plugin = "",
     app_path = getwd(),

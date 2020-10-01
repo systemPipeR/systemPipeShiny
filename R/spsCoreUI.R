@@ -247,11 +247,11 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
 #' }
 genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
                          text_color = "#0275d8", ...) {
-    tab_list <- sapply(rows, function(x) {
+    tab_list <- mapply(rows, FUN = function(x) {
         if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
             findTabInfo(type = x)
         } else {findTabInfo(x)}
-    }, simplify = TRUE)
+    }, SIMPLIFY = TRUE)
     hrefTable(Id = Id, title = title,
               text_color = text_color, item_titles = names(rows),
               item_labels = tab_list[2,], item_hrefs = tab_list[3,], ...)

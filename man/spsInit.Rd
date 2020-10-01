@@ -6,7 +6,7 @@
 \usage{
 spsInit(
   app_path = getwd(),
-  project_name = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
+  project_name = glue::glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"),
   database_name = "sps.db",
   overwrite = FALSE,
   change_wd = TRUE,

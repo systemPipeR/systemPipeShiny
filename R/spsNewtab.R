@@ -158,7 +158,7 @@
 #'     tab_displayname = "my first data tab",
 #'     prepro_methods = list(makePrepro(label = "do nothing",
 #'                                      plot_options = "plot_new")),
-#'     app_path = glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
 #' )
 #' newTabPlot(
 #'     tab_id = "plot_new1",
@@ -166,21 +166,21 @@
 #'     plot_data = list(
 #'         makePlotData(dataset_label = "Data from my new tab",
 #'                      receive_datatab_ids = "data_new",
-#'                      app_path = glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+#'                      app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
 #'     ),
-#'     app_path = glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
 #' )
 #' newTabData(
 #'     tab_id = "data_empty",
 #'     tab_displayname = "my first empty data tab",
 #'     empty = TRUE,
-#'     app_path = glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
 #' )
 #' newTabPlot(
 #'     tab_id = "plot_empty",
 #'     tab_displayname = "my first empty plot tab",
 #'     empty = TRUE,
-#'     app_path = glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
 #' )
 newTabPlot <- function(tab_id = "plot_id1",
                        tab_displayname = "Plot Tab Title",
@@ -672,10 +672,10 @@ makePrepro <- function(method_id = "md1",
 #'     tab_displayname = "my first data tab",
 #'     prepro_methods = list(makePrepro(label = "do nothing",
 #'                                      plot_options = "plot_new")),
-#'     app_path = glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
 #' )
 #' removeSpsTab("data_new_remove", force = TRUE,
-#'              app_path = glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+#'              app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
 removeSpsTab <- function(tab_id="none", force = FALSE,
                          app_path = getwd(), multiple = FALSE,
                          verbose = spsOption('verbose'),
