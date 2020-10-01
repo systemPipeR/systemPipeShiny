@@ -3,8 +3,8 @@ Title: systemPipeShiny: An Interactive Framework for Workflow Management and Vis
 Version: 0.99.0
 Date: 2020-09-28
 Authors@R: c(
-    person(given = "Le", family = "Zhang", role = c("aut"), email = "le.zhang001@email.ucr.edu"),
-    person(given = "Daniela", family = "Cassol", role = c("aut", "cre"), email = "danicassol@gmail.com"),
+    person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
+    person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danicassol@gmail.com"),
     person(given = "Ponmathi", family = "Ramasamy", role = c("aut"), email = "prama008@ucr.edu"),
     person(given = "Jianhai", family = "Zhang", role = c("aut"), email = "jzhan067@ucr.edu"),
     person(given = "Gordon", family = "Mosher", role = c("aut"), email = "gmosh001@ucr.edu"),
