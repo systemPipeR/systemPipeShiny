@@ -42,8 +42,8 @@ newTabData(
     tab_displayname = "my first data tab",
     prepro_methods = list(makePrepro(label = "do nothing",
                                      plot_options = "plot_new")),
-    app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}")
+    app_path = glue::glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}")
 )
 removeSpsTab("data_new_remove", force = TRUE,
-             app_path = glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
+             app_path = glue::glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
 }

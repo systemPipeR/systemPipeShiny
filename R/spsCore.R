@@ -16,6 +16,13 @@
 #' @importFrom methods is
 #' @importFrom DT DTOutput
 #' @importFrom shinyWidgets radioGroupButtons pickerInput
+#' @importFrom stringr str_split str_remove_all str_replace_all str_which
+#' @importFrom stringr str_remove str_which str_extract str_replace str_sort
+#' @importFrom stringr str_detect
+#' @importFrom magrittr %>%
+#' @importFrom glue glue glue_collapse
+#' @importFrom assertthat assert_that not_empty is.writeable
+#' @importFrom ggplot2 ggplot geom_point ggtitle aes geom_bar coord_flip
 NULL
 
 
@@ -117,7 +124,7 @@ sps <- function(vstabs = "", plugin = "", server_expr=NULL, app_path = getwd()){
 #'     spsInit(change_wd = FALSE)
 #' }
 spsInit <- function(app_path=getwd(),
-                    project_name = glue("SPS_{format(Sys.time(), '%Y%m%d')}"),
+                    project_name = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"),
                     database_name = "sps.db",
                     overwrite = FALSE,
                     change_wd = TRUE,
