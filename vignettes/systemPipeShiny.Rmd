@@ -80,12 +80,7 @@ functionalities. Complex visual results can be managed on a 'Canvas Workbench'
 allowing users to organize and to compare plots in an efficient manner combined
 with a session snapshot feature to continue work at a later time. The present
 suite of pre-configured visualization examples include different methods to
-plot a count table: PCA, t-SNE and plots of other clustering methods; volcano
-plots, data mining plots including heatmaps, and more.  ^[<font style="color:green">
-Dani: My opinion here is that if we mentioned some plot
-here, we should provide the plots on the visualization tabs since we already
-have these plots organized.</font> <font style="color:red">ThG: so why are 
-they not shown by default for demo purposes? </font>] The modular design of 
+plot a count table. The modular design of 
 SPR makes it easy to design custom functions without any knowledge of Shiny, 
 as well as extending the environment in the future with contributions from 
 the community.
@@ -133,7 +128,9 @@ and revisit the saved plots at a later time.
 <center id="sps_structure">
 ![SPS_structure](./img/sps_structure.png)
 </center>
-**Figure 1.** Design of `systemPipeShiny.` The framework provides an
+**Figure 1.** Design of `systemPipeShiny.` 
+
+The framework provides an
 interactive web interface for workflow management and data visualization.
 
 Within the functional categories, `SPS` functions are modularized in
@@ -229,9 +226,7 @@ on the welcome screen will open the main dashboard (Fig.2).
 <center id="sps_ui">
 ![sps_ui](./img/sps_ui_main.jpg)
 </center>
-**Figure 2:** Snapshot of SPS' UI.^[<font style="color:red">ThG: note don't center
-the legend of figures, and only the Figure xyz part should be in bold. The actual
-legend text is in non-bold.</font>]
+**Figure 2:** Snapshot of SPS' UI.
 
 Alternatively, when using RStudio one can click the <img src=img/app_start.png style="display: inline;
 padding-left:0; width:10px; height:15px;">`Run App` button in the top right corner.
@@ -239,12 +234,7 @@ padding-left:0; width:10px; height:15px;">`Run App` button in the top right corn
 In addition, in Rstudio the *global.R* file will be automatically
 opened when the `SPS` project is created. Custom changes can be made inside this file
 before the app launches. The [advanced section](#extend-sps) explains how
-to create custom tabs.  ^[<font style="color:green">Dani:I think this
-advanced information could be confusing in this stage of the documentation
-(discussing and showing details about the global.R file), so I believe we can
-add this to the advanced features section and just to link here. </font>
-<font style="color:red">ThG: yes, just show some demo tabs and move the 
-customization stuff to the advanced section. </font>]
+to change and create new custom tabs. 
 
 ## Workflow management
 
@@ -285,8 +275,8 @@ files using RNA-Seq as an example (Fig.3 A):
 
 <center>
 ![wf_targets](./img/sps_ui_targets.png)
-**Figure 3. A. Workflow Management - Targets File**
 </center>
+**Figure 3. A.** Workflow Management - Targets File
 
 ### Prepare a workflow file
 
@@ -305,8 +295,8 @@ Now let us follow the order below to see how SPS helps you to prepare a workflow
 
 <center>
 ![wf_wf](./img/sps_ui_wf.png)
-**Figure 3. B. Workflow Management - Workflow File**
 </center>
+**Figure 3. B.** Workflow Management - Workflow File
 
 ### Prepare a configuration file
 
@@ -323,8 +313,8 @@ one needs to update this config file. For example, like we are now using SPS to 
 
 <center>
 ![wf_config](./img/sps_ui_config.png)
-**Figure 3. C. Workflow Management - Config File**
 </center>
+**Figure 3. C.** Workflow Management - Config File
 
 ###  Finish workflow management
 
@@ -363,8 +353,8 @@ for a bar plot. Click on the plot image will redirect you to the corresponding t
 
 <center>
 ![data_tab](./img/sps_ui_data_tab.png)
-**Figure 4 A. VS - data tab**
 </center>
+**Figure 4 A.** VS - data tab
 
 ### Create a plot
 
@@ -383,8 +373,8 @@ right;
 
 <center>
 ![plot_tab](./img/sps_ui_plot_tab.png)
-**Figure 4 B. VS - plot tab**
 </center>
+**Figure 4 B.** VS - plot tab
 
 ## Snap shots and Canvas
 
@@ -407,8 +397,8 @@ Canvas. Move your mouse on the plots, you can see they are still interactive. Th
 
 <center>
 ![plot_tab](./img/sps_ui_canvas.png)
-**Figure 5 A. Canvas**
 </center>
+**Figure 5 A.** Canvas
 
 Now go back to [Load raw count data](#load-raw-count-data) section and select 
 "PCA" option in step 6 to reprocess and then go to PCA plot tab and repeat
@@ -436,9 +426,8 @@ a different SPS project.
 
 <center>
 ![plot_tab](./img/sps_ui_snap.png)
-**Figure 5 B. snapshot management**
 </center>
-
+**Figure 5 B.** snapshot management
 
 
 # Advanced features
