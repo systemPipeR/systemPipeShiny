@@ -5,11 +5,11 @@
 ^packrat/
 ^\.Rprofile$
 ^rsconnect/
-^.git/
+^.git$
 ^.github/
 ^\.idea/
 ^docs/
-manifest.json
-_pkgdown.yml
+manifest\.json
+_pkgdown\.yml
 ^TODO
 ^vignettes/systemPipeShiny_cache/*
