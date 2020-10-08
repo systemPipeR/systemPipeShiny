@@ -14,6 +14,7 @@
 # TRUE in 'selected' column in df_wf
 
 #' @importFrom DOT dot
+#' @importFrom assertthat is.count
 # @importFrom rsvg rsvg_svg rsvg_png
 #' @noRd
 .plotWF <- function(df_wf, plot_style="detect", out_type='html',
