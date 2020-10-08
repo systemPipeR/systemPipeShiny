@@ -116,7 +116,7 @@ plot_example1Server <- function(id, shared){
             shared$snap_signal <- sps_plots$notifySnap(tab_id)
             req(shared$snap_signal)
             shinytoastr::toastr_info(
-                glue("Snapshot {glue_collapse(shared$snap_signal, '-')}",
+                glue::glue("Snapshot {glue::glue_collapse(shared$snap_signal, '-')}",
                      "added to canvas"),
                 position = "bottom-right")
         })

@@ -33,7 +33,7 @@ core_canvasUI <- function(id){
         spsHr(), renderDesc(id = ns("desc"), desc), spsHr(),
         boxPlus(
             width = 12,
-            collapsed = TRUE,
+            collapsed = TRUE, closable = FALSE,
             h3("Manage snapshots", class="text-center"),
             p(
                 "At least one snapshot required to display managing boxes",
@@ -61,7 +61,7 @@ core_canvasUI <- function(id){
         boxPlus(
             title = "Canvas settings",
             width = 12,
-            collapsible = TRUE,
+            collapsible = TRUE, closable = FALSE,
             column(6,
                 h5("Number of plots per row to initiate canvas:"),
                 shinyWidgets::sliderTextInput(inputId = ns("ncols"),

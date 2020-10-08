@@ -10,8 +10,9 @@ newTabPlot(
   tab_displayname = "Plot Tab Title",
   desc = "default",
   img = "",
-  plot_expr = plotly::ggplotly(ggplot(mydata$data, aes_string(names(mydata$data)[1],
-    names(mydata$data)[2])) + geom_point(aes(color = seq_len(nrow(mydata$data))))),
+  plot_expr = plotly::ggplotly(ggplot2::ggplot(mydata$data,
+    ggplot2::aes_string(names(mydata$data)[1], names(mydata$data)[2])) +
+    ggplot2::geom_point(ggplot2::aes(color = seq_len(nrow(mydata$data))))),
   pkgs = list(cran_pkg = c("base"), bioc_pkg = c(""), github = c("")),
   plot_data = list(makePlotData(app_path = app_path)),
   plot_out_func = plotly::plotlyOutput,
@@ -80,11 +81,11 @@ link here is "plot_list/plot.png". Only needed for plot tabs.}
 \item{plot_expr}{the plot expression, like all other expression in other
 shiny reactive expressions. e.g for more than one line use \emph{{}}. Only to be
 used for plot tabs. default is\preformatted{plotly::ggplotly(
-    ggplot(mydata$data,
-           aes_string(names(mydata$data)[1],
+    ggplot2::ggplot(mydata$data,
+           ggplot2::aes_string(names(mydata$data)[1],
                       names(mydata$data)[2])
     ) +
-    geom_point(aes(
+    ggplot2::geom_point(aes(
             color = seq_len(nrow(mydata$data))
     ))
 )
@@ -159,10 +160,10 @@ escape or use alternative of single/double quotes.\preformatted{newTabPlot(
     ",
     plot_expr = "
     plotly::ggplotly(
-        ggplot(mydata$data,
-               aes_string(names(mydata$data)[1],
+        ggplot2::ggplot(mydata$data,
+               ggplot2::aes_string(names(mydata$data)[1],
                           names(mydata$data)[2])) +
-            geom_point(aes(
+            ggplot2::geom_point(aes(
                 color = seq_len(nrow(mydata$data))
             ))
     )
