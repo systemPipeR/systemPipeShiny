@@ -63,7 +63,7 @@ plot_example1UI <- function(id){
                 shinyjqui::jqui_resizable(
                     sps_plots$addUI(plotly::plotlyOutput(ns("plot")), id)
                 ),
-                tags$script(glue('stretchPlotTab("{ns("plot")}")'))
+                tags$script(glue::glue('stretchPlotTab("{ns("plot")}")'))
             )
         )
     )

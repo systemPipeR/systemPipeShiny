@@ -63,7 +63,7 @@
                     sps_plots$addUI(#@p_out_func@#(ns("plot")), id)
                     #####
                 ),
-                tags$script(glue('stretchPlotTab("{ns("plot")}")'))
+                tags$script(glue::glue('stretchPlotTab("{ns("plot")}")'))
             )
         )
     )

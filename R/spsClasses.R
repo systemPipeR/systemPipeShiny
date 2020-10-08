@@ -10,6 +10,7 @@
 #'
 #' @importFrom R6 R6Class
 #' @importFrom rlang eval_tidy parse_expr
+#' @importFrom assertthat is.number
 #' @export
 #' @examples
 #' # a simple example to show how the snapshots communicates with Canvas
@@ -177,16 +178,17 @@ plotContainer <- R6::R6Class("plot_container",
         #' @param plot_DOM Plotting output function, like `plotOutput`
         #' @param tab_id unique ID, usually use in a module and use the tab ID
         addUI = function(plot_DOM, tab_id){
+            force(tab_id)
             if(!inherits(plot_DOM, c("shiny.tag", "shiny.tag.list")))
                 msg("plot UI is not shinytag or shiny.taglist", "error")
             DOM_id <- private$tagAttrib(plot_DOM, 'id')
             if (length(DOM_id) < 1)
-                spswarn(
-                    c("Can't find ID for this plot UI output function. If you ",
-                      "are sure you have use the right function, then this ",
-                      "plotting UI function is an exception.\n",
+                spserror(
+                    c("Can't find ID for this plot UI output function. All ",
+                      "Shiny UI ouput function has an ID. If you believe this ",
+                      "plotting UI function is an exception,\n",
                       "Please open an issue on our Github page.",
-                      "https://github.com/systemPipeR/systemPipeShiny"))
+                      "https://github.com/systemPipeR/systemPipeShiny/issues"))
             if(not_empty(self$plot_ui[[tab_id]]))
                 spsinfo(glue("Plot UI for this tab `{tab_id}` already exists ",
                          "in the container, overwrite"))
@@ -227,7 +229,7 @@ plotContainer <- R6::R6Class("plot_container",
                              env = parent.frame(), quoted = FALSE, ...){
             expr_func <- exprToFunction(expr, env, quoted)
             if(!inherits(render_func, "function"))
-                stop("plot server is not a tab_id")
+                stop("render_func is not a function")
             if(not_empty(self$plot_server[[tab_id]])){
                 msg(glue("Plot server with id {tab_id} already exists ",
                          "in the container, overwrite"))}
@@ -295,8 +297,10 @@ plotContainer <- R6::R6Class("plot_container",
                     }
                 }
             }
-            if(is.null(attr_value))
+            if(is.null(attr_value)){
                 msg(glue("Can't find attribute `{attrib}`"), "warning")
+                return(NULL)
+            }
         },
         notify_list = list()
     )

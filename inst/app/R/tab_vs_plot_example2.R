@@ -90,7 +90,7 @@ plot_example2UI <- function(id) {
                     sps_plots$addUI(plotly::plotlyOutput(ns("plot")), id)
                     #####
                 ),
-                tags$script(glue('stretchPlotTab("{ns("plot")}")'))
+                tags$script(glue::glue('stretchPlotTab("{ns("plot")}")'))
             )
         )
     )

@@ -37,7 +37,7 @@ if(interactive()){
     )
     server <- function(input, output, session) {
         shared <- reactiveValues()
-        data <- tibble::tibble(this = 123)
+        data <- dplyr::tibble(this = 123)
         cat('before adding\n')
         print(shared)
         observeEvent(input$add, {

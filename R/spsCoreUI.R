@@ -50,8 +50,8 @@ spsUI <- function(tabs_df, tabs_plot){
             img(src = "img/sps_small.png")
         ),
         enable_rightsidebar = FALSE,
-        rightSidebarIcon = "clipboard-check",
-        left_menu = core_topUI("core_top")
+        rightSidebarIcon = "clipboard-check"
+        # left_menu = core_topUI("core_top")
     )
     # side bar
     spsinfo("Create UI sidebar menu ...")
@@ -170,7 +170,7 @@ spsUI <- function(tabs_df, tabs_plot){
 #' @param type If this value is not `NULL`, filter by tab type, and tab_ids
 #' will be ignored. One of c("core", "wf", "data", "vs"). use [spsTabInfo()]
 #' to see tab information
-#'
+#' @param app_path app path, default current working directory
 #' @export
 #' @return gallery div
 #' @details require a SPS project and the config/tabs.csv file. If you want to
@@ -179,7 +179,7 @@ spsUI <- function(tabs_df, tabs_plot){
 #' if(interactive()){
 #'     spsInit()
 #'     ui <- fluidPage(
-#'         genGallery(c("plot_example")),
+#'         genGallery(c("plot_example1")),
 #'         genGallery(type = "plot")
 #'     )
 #'     server <- function(input, output, session) {
@@ -188,8 +188,16 @@ spsUI <- function(tabs_df, tabs_plot){
 #'     shinyApp(ui, server)
 #' }
 genGallery <- function(tab_ids=NULL, Id = NULL, title = "Gallery", type = NULL,
-                       title_color = "#0275d8", image_frame_size = 3) {
-    tabs <- findTabInfo(tab_ids, type)
+                       title_color = "#0275d8", image_frame_size = 3,
+                       app_path = NULL) {
+    # use user input path > project setting > default
+    if(!emptyIsFalse(app_path)){
+        app_path <- spsOption("app_path")
+        if(!emptyIsFalse(app_path)) app_path <- getwd()
+    }
+    tabs <- findTabInfo(
+        tab_ids, type,
+        tab_file = file.path(app_path, "config", "tabs.csv"))
     if (is.null(tabs)) return(div("Nothing to display in gallery"))
     tabs$images[tabs$images == ""] <- "img/noimg.png"
     gallery(Id = Id, title = title, title_color = title_color,
@@ -201,10 +209,17 @@ genGallery <- function(tab_ids=NULL, Id = NULL, title = "Gallery", type = NULL,
 #' @rdname hrefTab
 #' @param tab_ids tab names, must have the \code{tab_info} dataframe
 #' @param text_color Table text color
+#' @param app_path app path, default is current working directory
 #' @export
 genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
-                       text_color = "#0275d8", ...) {
-    tabs <- findTabInfo(tab_ids)
+                       text_color = "#0275d8", app_path = NULL, ...) {
+    # use user input path > project setting > default
+    if(!emptyIsFalse(app_path)){
+        app_path <- spsOption("app_path")
+        if(!emptyIsFalse(app_path)) app_path <- getwd()
+    }
+    tabs <- findTabInfo(
+        tab_ids, tab_file = file.path(app_path, "config", "tabs.csv"))
     hrefTab(Id = Id, title = title, text_color = text_color,
             label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
 }
@@ -221,6 +236,7 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
 #' @param title table title
 #' @param text_color text color for table
 #' @param ... any additional arguments to the html element, like class, style...
+#' @param app_path app path, default is current working directory
 #' @details For `rows`, there are some specially reserved characters
 #' for type and sub-types, one of c('core', 'wf', 'vs', 'data', 'plot').
 #' If indicated, it will return a list of tabs matching
@@ -246,11 +262,18 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
 #'     shinyApp(ui, server)
 #' }
 genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
-                         text_color = "#0275d8", ...) {
+                         text_color = "#0275d8", app_path = NULL, ...) {
+    # use user input path > project setting > default
+    if(!emptyIsFalse(app_path)){
+        app_path <- spsOption("app_path")
+        if(!emptyIsFalse(app_path)) app_path <- getwd()
+    }
     tab_list <- mapply(rows, FUN = function(x) {
         if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
-            findTabInfo(type = x)
-        } else {findTabInfo(x)}
+            findTabInfo(type = x, tab_file = file.path(app_path, "config", "tabs.csv"))
+        } else {
+            findTabInfo(x, tab_file = file.path(app_path, "config", "tabs.csv"))
+        }
     }, SIMPLIFY = TRUE)
     hrefTable(Id = Id, title = title,
               text_color = text_color, item_titles = names(rows),

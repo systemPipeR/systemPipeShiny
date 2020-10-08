@@ -10,7 +10,8 @@ genGallery(
   title = "Gallery",
   type = NULL,
   title_color = "#0275d8",
-  image_frame_size = 3
+  image_frame_size = 3,
+  app_path = NULL
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ to see tab information}
 \item{title_color}{title color, common colors or hex code}
 
 \item{image_frame_size}{integer, 1-12}
+
+\item{app_path}{app path, default current working directory}
 }
 \value{
 gallery div
@@ -43,7 +46,7 @@ use gallery outside a SPS project, use \code{\link[=gallery]{gallery()}}
 if(interactive()){
     spsInit()
     ui <- fluidPage(
-        genGallery(c("plot_example")),
+        genGallery(c("plot_example1")),
         genGallery(type = "plot")
     )
     server <- function(input, output, session) {

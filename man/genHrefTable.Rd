@@ -9,6 +9,7 @@ genHrefTable(
   Id = NULL,
   title = "A Table to list tabs",
   text_color = "#0275d8",
+  app_path = NULL,
   ...
 )
 }
@@ -25,6 +26,8 @@ type info.}
 \item{title}{table title}
 
 \item{text_color}{text color for table}
+
+\item{app_path}{app path, default is current working directory}
 
 \item{...}{any additional arguments to the html element, like class, style...}
 }

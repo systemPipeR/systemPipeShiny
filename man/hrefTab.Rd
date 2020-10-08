@@ -10,6 +10,7 @@ genHrefTab(
   Id = NULL,
   title = "A bar to list tabs",
   text_color = "#0275d8",
+  app_path = NULL,
   ...
 )
 
@@ -30,6 +31,8 @@ hrefTab(
 \item{title}{Item title}
 
 \item{text_color}{Table text color}
+
+\item{app_path}{app path, default is current working directory}
 
 \item{...}{other arguments to be passed to the html element}
 

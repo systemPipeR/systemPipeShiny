@@ -139,7 +139,7 @@ wf_targetUI <- function(id){
 #' @importFrom shinytoastr toastr_info
 #' @importFrom shinyWidgets confirmSweetAlert updateRadioGroupButtons
 #' @importFrom shinyWidgets sendSweetAlert
-#' @importFrom tibble as_tibble
+#' @importFrom dplyr as_tibble
 #' @importFrom vroom vroom cols
 #' @importFrom shinyAce is.empty
 #' @importFrom shinyjs disable enable
@@ -153,7 +153,7 @@ wf_targetServer <- function(id, shared){
 # <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
 # <CMP> CMPset2: ALL"
         data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
-            tibble::as_tibble()
+            dplyr::as_tibble()
         ns <- session$ns
         # some reactive values to pass around observe
         selected_old <- reactiveVal("upload")

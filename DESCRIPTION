@@ -31,10 +31,8 @@ Imports:
     networkD3,
     openssl,
     plotly,
-    pushbar,
     rhandsontable,
     rlang,
-    rsvg,
     rstudioapi,
     shinyAce,
     shinyFiles,
@@ -47,7 +45,6 @@ Imports:
     stringr,
     stats,
     styler,
-    tibble,
     utils,
     vroom (>= 1.3.1),
     yaml
