@@ -72,10 +72,18 @@ test_that("colourInput funcs", {
 
 context("import crayon")
 test_that("blue  green  make_style  red funcs", {
-    expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
-    expect_equal(crayon::green$bold("a"), "\033[32m\033[1ma\033[22m\033[39m")
-    expect_equal(crayon::red$bold("a"), "\033[31m\033[1ma\033[22m\033[39m")
-    expect_equal(crayon::make_style("orange")$bold("a"), "\033[38;5;214m\033[1ma\033[22m\033[39m")
+    if(interactive()){
+        expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
+        expect_equal(crayon::green$bold("a"),  "\033[32m\033[1ma\033[22m\033[39m")
+        expect_equal(crayon::red$bold("a"), "\033[31m\033[1ma\033[22m\033[39m")
+        expect_equal(crayon::make_style("orange")$bold("a"), "\033[38;5;214m\033[1ma\033[22m\033[39m")
+
+    } else {
+        expect_equal(crayon::blue$bold("a"), remove_ANSI("\033[34m\033[1ma\033[22m\033[39m"))
+        expect_equal(crayon::green$bold("a"),  remove_ANSI("\033[32m\033[1ma\033[22m\033[39m"))
+        expect_equal(crayon::red$bold("a"), remove_ANSI("\033[31m\033[1ma\033[22m\033[39m"))
+        expect_equal(crayon::make_style("orange")$bold("a"), remove_ANSI("\033[38;5;214m\033[1ma\033[22m\033[39m"))
+    }
 })
 
 
