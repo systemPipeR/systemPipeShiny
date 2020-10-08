@@ -76,7 +76,7 @@ pakcage and pop up warnings will prevent app to crash." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
       </span>
     </div>
 
@@ -128,13 +128,13 @@ running into that part of code, using this function to check the required
 pakcage and pop up warnings will prevent app to crash.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>shinyCheckPkg</span><span class='op'>(</span>
-  <span class='va'>session</span>,
-  cran_pkg <span class='op'>=</span> <span class='cn'>NULL</span>,
-  bioc_pkg <span class='op'>=</span> <span class='cn'>NULL</span>,
-  github <span class='op'>=</span> <span class='cn'>NULL</span>,
-  quietly <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>shinyCheckPkg</span>(
+  <span class='no'>session</span>,
+  <span class='kw'>cran_pkg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>bioc_pkg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>github</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,16 +167,15 @@ pakcage and pop up warnings will prevent app to crash.</p>
     <p>TRUE if pass, sweet alert massage and FALSE if fail</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
-    <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html'>shinyApp</a></span><span class='op'>(</span>ui <span class='op'>=</span> <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/shinyUI.html'>shinyUI</a></span><span class='op'>(</span>
-        <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html'>fluidPage</a></span><span class='op'>(</span><span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/actionButton.html'>actionButton</a></span><span class='op'>(</span><span class='st'>"haha"</span>, <span class='st'>"haha"</span><span class='op'>)</span><span class='op'>)</span>
-    <span class='op'>)</span>, server <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span><span class='op'>{</span>
-        <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/observeEvent.html'>observeEvent</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>$</span><span class='va'>haha</span>,
-            <span class='fu'>shinyCheckPkg</span><span class='op'>(</span><span class='va'>session</span>, cran_pkg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pkg1"</span>, <span class='st'>"pkg2"</span><span class='op'>)</span>,
-                          bioc_pkg <span class='op'>=</span> <span class='st'>"haha"</span>, github <span class='op'>=</span> <span class='st'>"sdasdd/asdsad"</span><span class='op'>)</span><span class='op'>)</span>
-    <span class='op'>}</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <span class='fu'>shinyApp</span>(<span class='kw'>ui</span> <span class='kw'>=</span> <span class='fu'>shinyUI</span>(
+        <span class='fu'>fluidPage</span>(<span class='fu'>actionButton</span>(<span class='st'>"haha"</span>, <span class='st'>"haha"</span>))
+    ), <span class='kw'>server</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>input</span>, <span class='no'>output</span>, <span class='no'>session</span>){
+        <span class='fu'>observeEvent</span>(<span class='no'>input</span>$<span class='no'>haha</span>,
+            <span class='fu'>shinyCheckPkg</span>(<span class='no'>session</span>, <span class='kw'>cran_pkg</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pkg1"</span>, <span class='st'>"pkg2"</span>),
+                          <span class='kw'>bioc_pkg</span> <span class='kw'>=</span> <span class='st'>"haha"</span>, <span class='kw'>github</span> <span class='kw'>=</span> <span class='st'>"sdasdd/asdsad"</span>))
+    })
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -192,7 +191,7 @@ pakcage and pop up warnings will prevent app to crash.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

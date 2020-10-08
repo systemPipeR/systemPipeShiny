@@ -72,7 +72,7 @@ test_that("colourInput funcs", {
 
 context("import crayon")
 test_that("blue  green  make_style  red funcs", {
-    if(interactive()){
+    if(crayon::has_color()){
         expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
         expect_equal(crayon::green$bold("a"),  "\033[32m\033[1ma\033[22m\033[39m")
         expect_equal(crayon::red$bold("a"), "\033[31m\033[1ma\033[22m\033[39m")

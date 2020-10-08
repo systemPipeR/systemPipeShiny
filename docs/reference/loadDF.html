@@ -78,7 +78,7 @@ tabular data, use vroom::vroom() internally." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
       </span>
     </div>
 
@@ -132,16 +132,16 @@ read the file into R. This loading function only works for parsing
 tabular data, use <code><a href='https://vroom.r-lib.org/reference/vroom.html'>vroom::vroom()</a></code> internally.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>loadDF</span><span class='op'>(</span>
-  <span class='va'>choice</span>,
-  data_init <span class='op'>=</span> <span class='cn'>NULL</span>,
-  upload_path <span class='op'>=</span> <span class='cn'>NULL</span>,
-  eg_path <span class='op'>=</span> <span class='cn'>NULL</span>,
-  comment <span class='op'>=</span> <span class='st'>"#"</span>,
-  delim <span class='op'>=</span> <span class='st'>"\t"</span>,
-  col_types <span class='op'>=</span> <span class='fu'>vroom</span><span class='fu'>::</span><span class='fu'><a href='https://vroom.r-lib.org/reference/cols.html'>cols</a></span><span class='op'>(</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>loadDF</span>(
+  <span class='no'>choice</span>,
+  <span class='kw'>data_init</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>upload_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>eg_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>comment</span> <span class='kw'>=</span> <span class='st'>"#"</span>,
+  <span class='kw'>delim</span> <span class='kw'>=</span> <span class='st'>"\t"</span>,
+  <span class='kw'>col_types</span> <span class='kw'>=</span> <span class='kw pkg'>vroom</span><span class='kw ns'>::</span><span class='fu'><a href='https://vroom.r-lib.org/reference/cols.html'>cols</a></span>(),
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -197,36 +197,35 @@ crash the app. To show message on UI, <code><a href='useSps.html'>useSps()</a></
 function, see examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
-    <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dreamRs/shinyWidgets'>shinyWidgets</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>shinyWidgets</span>)
     <span class='co'># change value to 'local' to see the difference</span>
-    <span class='fu'><a href='spsOption.html'>spsOption</a></span><span class='op'>(</span><span class='st'>"mode"</span>, value <span class='op'>=</span> <span class='st'>"server"</span><span class='op'>)</span>
-    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
-        <span class='fu'><a href='useSps.html'>useSps</a></span><span class='op'>(</span><span class='op'>)</span>,
-        <span class='fu'>shinyWidgets</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shinyWidgets/man/radioGroupButtons.html'>radioGroupButtons</a></span><span class='op'>(</span>
-            inputId <span class='op'>=</span> <span class='st'>"data_source"</span>, label <span class='op'>=</span> <span class='st'>"Choose your data file source:"</span>,
-            selected <span class='op'>=</span> <span class='st'>"upload"</span>,
-            choiceNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Upload"</span>, <span class='st'>"Example"</span><span class='op'>)</span>,
-            choiceValues <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"upload"</span>, <span class='st'>"eg"</span><span class='op'>)</span>
-        <span class='op'>)</span>,
-        <span class='fu'><a href='dynamicFile.html'>dynamicFile</a></span><span class='op'>(</span><span class='st'>"data_path"</span>, label <span class='op'>=</span> <span class='st'>"input file"</span><span class='op'>)</span>,
-        <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/tableOutput.html'>dataTableOutput</a></span><span class='op'>(</span><span class='st'>"df"</span><span class='op'>)</span>
-    <span class='op'>)</span>
+    <span class='fu'><a href='spsOption.html'>spsOption</a></span>(<span class='st'>"mode"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"server"</span>)
+    <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
+        <span class='fu'><a href='useSps.html'>useSps</a></span>(),
+        <span class='kw pkg'>shinyWidgets</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shinyWidgets/man/radioGroupButtons.html'>radioGroupButtons</a></span>(
+            <span class='kw'>inputId</span> <span class='kw'>=</span> <span class='st'>"data_source"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"Choose your data file source:"</span>,
+            <span class='kw'>selected</span> <span class='kw'>=</span> <span class='st'>"upload"</span>,
+            <span class='kw'>choiceNames</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Upload"</span>, <span class='st'>"Example"</span>),
+            <span class='kw'>choiceValues</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"upload"</span>, <span class='st'>"eg"</span>)
+        ),
+        <span class='fu'><a href='dynamicFile.html'>dynamicFile</a></span>(<span class='st'>"data_path"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"input file"</span>),
+        <span class='fu'>dataTableOutput</span>(<span class='st'>"df"</span>)
+    )
 
-    <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
-        <span class='va'>tmp_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>fileext <span class='op'>=</span> <span class='st'>".csv"</span><span class='op'>)</span>
-        <span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='va'>iris</span>, file <span class='op'>=</span> <span class='va'>tmp_file</span><span class='op'>)</span>
-        <span class='va'>upload_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dynamicFileServer.html'>dynamicFileServer</a></span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>session</span>, <span class='st'>"data_path"</span><span class='op'>)</span>
-        <span class='va'>data_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/reactive.html'>reactive</a></span><span class='op'>(</span><span class='op'>{</span>
-            <span class='fu'>loadDF</span><span class='op'>(</span>choice <span class='op'>=</span> <span class='va'>input</span><span class='op'>$</span><span class='va'>data_source</span>,
-                   upload_path <span class='op'>=</span> <span class='fu'>upload_path</span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>datapath</span>,
-                   delim <span class='op'>=</span> <span class='st'>","</span>, eg_path <span class='op'>=</span> <span class='va'>tmp_file</span><span class='op'>)</span>
-        <span class='op'>}</span><span class='op'>)</span>
-        <span class='va'>output</span><span class='op'>$</span><span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/renderDataTable.html'>renderDataTable</a></span><span class='op'>(</span><span class='fu'>data_df</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-    <span class='op'>}</span>
-    <span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>, <span class='no'>output</span>, <span class='no'>session</span>) {
+        <span class='no'>tmp_file</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".csv"</span>)
+        <span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span>(<span class='no'>iris</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='no'>tmp_file</span>)
+        <span class='no'>upload_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dynamicFileServer.html'>dynamicFileServer</a></span>(<span class='no'>input</span>, <span class='no'>session</span>, <span class='st'>"data_path"</span>)
+        <span class='no'>data_df</span> <span class='kw'>&lt;-</span> <span class='fu'>reactive</span>({
+            <span class='fu'>loadDF</span>(<span class='kw'>choice</span> <span class='kw'>=</span> <span class='no'>input</span>$<span class='no'>data_source</span>,
+                   <span class='kw'>upload_path</span> <span class='kw'>=</span> <span class='fu'>upload_path</span>()$<span class='no'>datapath</span>,
+                   <span class='kw'>delim</span> <span class='kw'>=</span> <span class='st'>","</span>, <span class='kw'>eg_path</span> <span class='kw'>=</span> <span class='no'>tmp_file</span>)
+        })
+        <span class='no'>output</span>$<span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'>renderDataTable</span>(<span class='fu'>data_df</span>())
+    }
+    <span class='fu'>shinyApp</span>(<span class='no'>ui</span>, <span class='no'>server</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -242,7 +241,7 @@ function, see examples.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
