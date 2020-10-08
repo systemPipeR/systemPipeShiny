@@ -111,7 +111,7 @@
         # display table
         output$df <- DT::renderDT({
             shiny::validate(
-                need(not_empty(data_df()), message = "Data file is not loaded")
+                need(emptyIsFalse(data_df()), message = "Data file is not loaded")
             )
             pgPaneUpdate('pg', 'data', 100)
             DT::datatable(
@@ -145,7 +145,7 @@
                 switch(input$select_prepro,
                        #@pre@#
             ), blocking_level = 'error')
-            spsValidate(not_empty(data_processed), "Final data is not empty")
+            spsValidate(emptyIsFalse(data_processed), "Final data is not empty")
             pgPaneUpdate('pg', 'prepro', 100)
             # add data to task
             addData(data_processed, shared, tab_id)

@@ -76,7 +76,7 @@ shiny::testServer(shinyApp(sps$ui, sps$server), {
 
 context("test SPS options")
 test_that("SPS options", {
-    expect_equal(normalizePath(app_path), spsOption("app_path"))
+    expect_equal(normalizePath(app_path, winslash = "/"), spsOption("app_path"))
     expect_length(getOption("sps"), 9)
     expect_invisible(quiet(viewSpsDefaults()))
 })
