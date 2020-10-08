@@ -4,6 +4,7 @@
 
 time_start <- Sys.time()
 library(systemPipeShiny)
+library(magrittr) # load pipes
 # load additional libraries that you want to use here
 
 

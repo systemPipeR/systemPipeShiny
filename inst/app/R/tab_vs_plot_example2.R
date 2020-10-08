@@ -135,11 +135,11 @@ plot_example2Server <- function(id, shared) {
                 reads_df <- data.frame(samples = names(reads),
                                        reads = reads)
                 plotly::ggplotly({
-                    ggplot(reads_df) +
-                    geom_bar(aes(x = samples, y = reads, fill = samples),
+                    ggplot2::ggplot(reads_df) +
+                        ggplot2::geom_bar(ggplot2::aes(x = samples, y = reads, fill = samples),
                              stat = "identity")+
-                    coord_flip()+
-                    ggtitle(as.character(input$plot_title))
+                        ggplot2:: coord_flip()+
+                        ggplot2::ggtitle(as.character(input$plot_title))
 
                 })
             })
@@ -147,8 +147,8 @@ plot_example2Server <- function(id, shared) {
             shared$snap_signal <- sps_plots$notifySnap(tab_id)
             req(shared$snap_signal)
             shinytoastr::toastr_info(
-                glue(
-                    "Snapshot {glue_collapse(shared$snap_signal, '-')}",
+                glue::glue(
+                    "Snapshot {glue::glue_collapse(shared$snap_signal, '-')}",
                     "added to canvas"
                 ),
                 position = "bottom-right"

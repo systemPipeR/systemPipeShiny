@@ -107,10 +107,10 @@ plot_example1Server <- function(id, shared){
             output$plot <- sps_plots$addServer(plotly::renderPlotly, tab_id, {
                 samples <- rownames(mydata$data)
                 plotly::ggplotly(
-                   ggplot(mydata$data %>% as.data.frame()) +
-                       geom_point(aes(x= PC1, y = PC2, color = samples),
+                    ggplot2::ggplot(mydata$data %>% as.data.frame()) +
+                        ggplot2::geom_point(ggplot2::aes(x= PC1, y = PC2, color = samples),
                                   size = as.numeric(input$point_size)) +
-                       ggtitle(as.character(input$plot_title))
+                        ggplot2::ggtitle(as.character(input$plot_title))
                 )
             })
             shared$snap_signal <- sps_plots$notifySnap(tab_id)

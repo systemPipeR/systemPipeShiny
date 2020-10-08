@@ -34,11 +34,11 @@
 #' used for plot tabs. default is
 #' ```
 #' plotly::ggplotly(
-#'     ggplot(mydata$data,
-#'            aes_string(names(mydata$data)[1],
+#'     ggplot2::ggplot(mydata$data,
+#'            ggplot2::aes_string(names(mydata$data)[1],
 #'                       names(mydata$data)[2])
 #'     ) +
-#'     geom_point(aes(
+#'     ggplot2::geom_point(aes(
 #'             color = seq_len(nrow(mydata$data))
 #'     ))
 #' )
@@ -104,10 +104,10 @@
 #'     ",
 #'     plot_expr = "
 #'     plotly::ggplotly(
-#'         ggplot(mydata$data,
-#'                aes_string(names(mydata$data)[1],
+#'         ggplot2::ggplot(mydata$data,
+#'                ggplot2::aes_string(names(mydata$data)[1],
 #'                           names(mydata$data)[2])) +
-#'             geom_point(aes(
+#'             ggplot2::geom_point(aes(
 #'                 color = seq_len(nrow(mydata$data))
 #'             ))
 #'     )
@@ -187,10 +187,10 @@ newTabPlot <- function(tab_id = "plot_id1",
                        desc = "default",
                        img = "",
                        plot_expr = plotly::ggplotly(
-                           ggplot(mydata$data,
-                                  aes_string(names(mydata$data)[1],
-                                             names(mydata$data)[2])) +
-                               geom_point(aes(
+                           ggplot2::ggplot(
+                               mydata$data,
+                               ggplot2::aes_string(names(mydata$data)[1], names(mydata$data)[2])) +
+                               ggplot2::geom_point(ggplot2::aes(
                                    color = seq_len(nrow(mydata$data))
                                ))
                        ),
