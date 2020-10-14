@@ -30,7 +30,7 @@ spsServer <- function(tabs, server_expr) {
         wf_mainServer("wf_main", shared)
         wf_targetServer("wf_targets", shared)
         wf_wfServer("wf_wf", shared)
-        wf_configServer("wf_config", shared)
+        wf_cwlServer("wf_cwl", shared)
         wf_runServer("wf_run", shared)
         # VS tabs
         spsinfo("Loading vs tabs server")

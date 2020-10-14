@@ -67,12 +67,12 @@ spsUI <- function(tabs_df, tabs_plot){
                     shinydashboard::menuItem(id = 'wf-control',
                              "Workflow Mangement",
                              tabName = "wf_main",
-                             shinydashboard::menuSubItem(text="Targets",
+                             shinydashboard::menuSubItem(text="Targets File",
                                                          tabName="wf_targets"),
                              shinydashboard::menuSubItem(text="Workflow File",
                                                          tabName="wf_wf"),
-                             shinydashboard::menuSubItem(text="Workflow Config",
-                                                         tabName="wf_config"),
+                             shinydashboard::menuSubItem(text="CWL File (optional)",
+                                                         tabName="wf_cwl"),
                              shinydashboard::menuSubItem(
                                 text= HTML('Run Workflow<small class="badge
                                   pull-right bg-olive">Dev</small>'),
@@ -84,13 +84,20 @@ spsUI <- function(tabs_df, tabs_plot){
                         tabName = "vs_main",
                         shinydashboard::menuItem(
                             text = "Prepare dataset",
-                            ## vs dfs add to sidebar
-                            menu_df
+                            menu_df ## vs dfs add to sidebar
                         ),
                         shinydashboard::menuItem(
                             text = "Collection of plots",
-                            ## vs plots add to sidebar
-                            menu_plot
+                            menu_plot ## vs plots add to sidebar
+                        )
+                    ),
+                    shinydashboard::menuItem(
+                        text = "Visualization",
+                        icon = icon("images"),
+                        tabName = "vs_main",
+                        shinydashboard::menuSubItem(
+                            text = "RNA-Seq",
+                            tabName = "vs_rnaseq"
                         )
                     ),
                     shinydashboard::menuItem(
@@ -114,8 +121,8 @@ spsUI <- function(tabs_df, tabs_plot){
         shinydashboard::tabItem(tabName = "wf_targets",
                                 wf_targetUI("wf_targets")),
         shinydashboard::tabItem(tabName = "wf_wf", wf_wfUI("wf_wf")),
-        shinydashboard::tabItem(tabName = "wf_config",
-                                wf_configUI("wf_config")),
+        shinydashboard::tabItem(tabName = "wf_cwl",
+                                wf_cwlUI("wf_cwl")),
         shinydashboard::tabItem(tabName = "wf_run", wf_runUI("wf_run")),
         # VS tabs
         shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
@@ -125,7 +132,9 @@ spsUI <- function(tabs_df, tabs_plot){
         shinydashboard::tabItem(tabName = "core_canvas",
                                 core_canvasUI("core_canvas")),
         shinydashboard::tabItem(tabName = "core_about",
-                                core_aboutUI("core_about"))
+                                core_aboutUI("core_about")),
+        shinydashboard::tabItem(tabName = "vs_rnaseq",
+                                vs_rnaseqUI("vs_rnaseq"))
     )
     sps_tabs$children <- append(sps_tabs$children, tab_items)
     spsinfo("Add tab content to body ...")

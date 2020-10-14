@@ -312,7 +312,7 @@ one needs to update this config file. For example, like we are now using SPS to 
 6. The progress tracker should all become green, which means you are ready to run the RNAseq workflow in SPR. 
 
 <center>
-![wf_config](./img/sps_ui_config.png)
+![wf_cwl](./img/sps_ui_config.png)
 </center>
 **Figure 3. C.** Workflow Management - Config File
 

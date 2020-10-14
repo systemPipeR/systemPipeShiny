@@ -175,6 +175,10 @@ img-gallery:hover {
   text-decoration: none;
 }
 
+.desc hr {
+    border-top: 1px solid #3c8dbc;
+}
+
 /* sps control-panel*/
 .control-panel {
     opacity: 0.7;

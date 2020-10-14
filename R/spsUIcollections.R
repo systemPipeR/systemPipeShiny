@@ -550,8 +550,9 @@ spsHr <- function() {
 #' @param title_main If not specified and pane_id contains 'plot', title will be
 #' 'Plot Prepare'; has 'df' will be 'Data Prepare', if neither will be
 #' "Progress"
+#' @param opened bool, if this panel is opened at start
 #' @export
-pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
+pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL, opened = FALSE){
     if(is.null(title_main)) {
         title_main <- pane_id %>% {
             if(str_detect(., "plot")) "Plot Prepare"
@@ -595,7 +596,7 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
     } %>% {
         div(class = "tab-pane", id = glue("{pane_id}-pg-container"),
             absolutePanel(
-                top = "5%", right = "2%", draggable = TRUE, width = "310",
+                top = "3%", right = "2%", draggable = TRUE, width = "310",
                 height = "auto", class = "control-panel", cursor = "inherit",
                 style = "background-color: white; z-index:999;",
                 fluidRow(
@@ -609,7 +610,8 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
                                      ' data-toggle="collapse">',
                                      '<i class="fa fa-minus"></i></button>')))
                 ),
-                div(class = "collapse", id = glue("{pane_id}-pg-collapse"), .)
+                div(class = if(opened) "collapse in" else "collapse",
+                    id = glue("{pane_id}-pg-collapse"), .)
             )
         )
     }

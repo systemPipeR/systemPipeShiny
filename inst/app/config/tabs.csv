@@ -1,5 +1,5 @@
-# List of SPS tabs,,,,,,,
-# Editing by hand is not recommended ,,,,,,,
+# List of SPS tabs. Use spsTabInfo() from R to read info from this file,,,,,,,
+# Editing by hand is not recommended. ,,,,,,,
 # image paths use `www` folder as root,,,,,,,
 tab_id,display_label,type,type_sub,image,displayed,tab_file_name,plugin
 core_about,About this App,core,,,1,No file for core,core
@@ -8,11 +8,11 @@ core_dashboard,Home,core,,,1,No file for core,core
 core_right,Right side menu,core,,,1,No file for core,core
 core_top,Top push bars,core,,,1,No file for core,core
 wf_main,Workflow Main Page,wf,,,1,No file for core,core
-wf_config,Workflow Config,wf,,,1,No file for core,core
+wf_cwl,Workflow Config,wf,,,1,No file for core,core
 wf_run,Workflow Run,wf,,,1,No file for core,core
 wf_target,Workflow Metadata,wf,,,1,No file for core,core
 wf_wf,Workflow Steps,wf,,,1,No file for core,core
 vs_main,Visualization Main Page,vs,,,1,No file for core,core
-data_example,Data Tab Example,vs,data,,1,No file for core,core
-plot_example1,Plot PCA,vs,plot,plot_list/plot_pca.png,1,No file for core,core
+data_example,Data Tab Example,vs,data,,1,tab_vs_data_example.R,
+plot_example1,Plot PCA,vs,plot,plot_list/plot_pca.png,1,tab_vs_plot_example1.R,
 plot_example2,Plot Bar,vs,plot,plot_list/plot_bar.png,1,tab_vs_plot_example2.R,
