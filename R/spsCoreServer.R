@@ -27,11 +27,7 @@ spsServer <- function(tabs, server_expr) {
         core_aboutServer("core_about", shared)
         # WF tabs server
         spsinfo("Loading core workflow tabs server")
-        wf_mainServer("wf_main", shared)
-        wf_targetServer("wf_targets", shared)
-        wf_wfServer("wf_wf", shared)
-        wf_cwlServer("wf_cwl", shared)
-        wf_runServer("wf_run", shared)
+        wfServer("wf", shared)
         # VS tabs
         spsinfo("Loading vs tabs server")
         vs_mainServer("vs_main", shared)

@@ -8,18 +8,21 @@
 #' using SPS widgets outside of SPS framework. No need to load this function
 #' again if you are working within SPS framework.
 #' @importFrom shinytoastr useToastr
+#' @importFrom bsplus use_bs_popover use_bs_tooltip
 #' @export
 #' @return HTML head
 #' @examples
 #' useSps()
 useSps <- function(){
-    addResourcePath("sps", system.file("app/www", package = "systemPipeShiny"))
+    addResourcePath("sps", "www")
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css",
                             href = "sps/css/sps.css"),
         tags$script(src = "sps/js/sps.js"),
         tags$script(src="sps/js/sps_update_pg.js"),
-        shinytoastr::useToastr()
+        shinytoastr::useToastr(),
+        bsplus::use_bs_popover(),
+        bsplus::use_bs_tooltip()
     )
 }
 
@@ -768,4 +771,45 @@ hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
 #' tabTitle("This title")
 tabTitle <- function(title, ...){
     h2(title, style = "color:#17a2b8;", ...)
+}
+
+
+
+#' Bootstrap popover trigger on hover instead of click
+#' @description enhanced Bootstrap 3 popover by hovering, see
+#' [bsplus::bs_embed_popover] for details. Everything is the same but has
+#' additional trigger method, default "hover"
+#' @param tag [htmltools::tag],generally <button/> or <a/>, into which
+#' to embed the popover
+#' @param title character, title for the popover, generally text
+#' @param content character, content for the popover body, can be HTML
+#' @param placement character, placement of the popover with respect to `tag`
+#' @param trigger trigger method, default "hover", one of click | hover |
+#' focus | manual.
+#' @param ... other named arguments, passed to [bsplus::bs_set_data()]
+#' @importFrom bsplus bs_embed_popover
+#' @return shiny element
+#' @export
+#'
+#' @examples
+#' if(interactive()){
+#'     library(shiny)
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         actionButton('a', 'a') %>%
+#'             bsHoverPopover(title = "title a", content = "a", placement = "bottom"),
+#'         tags$a("b") %>%
+#'             bsHoverPopover(title = "title b", content = "b", placement = "bottom")
+#'     )
+#'     server <- function(input, output, session) {}
+#'     shinyApp(ui, server)
+#' }
+bsHoverPopover <- function(
+    tag, title = NULL, content = NULL, placement = "top", trigger="hover", ...){
+    bsplus::bs_embed_popover(
+        tag, title = title, content = content, placement = placement, ...) %>%{
+            if(trigger == "hover")
+                tagAppendAttributes(., `pop-toggle` = trigger)
+            else tagAppendAttributes(., `data-trigger` = trigger)
+        }
 }

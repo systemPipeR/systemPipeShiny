@@ -285,3 +285,11 @@ a.bttn-default {
 .sps-warning h4::before{
     content: "\2022 ";
 }
+
+
+
+
+/* background color of boxplus inside bt3 accordion*/
+.panel-collapse .panel-body .box {
+    background-color: #f6f6f6;
+}

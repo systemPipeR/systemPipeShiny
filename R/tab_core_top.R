@@ -25,7 +25,14 @@ df"
                                                  label = "Close this workflow session",
                                                  icon = icon("times"),
                                                  color = "danger",
-                                                 size = "sm"))
+                                                 size = "sm")) %>%
+                        bsHoverPopover(
+                            "Close this session",
+                            "Clicking here will set your working directory back
+                            to the app directory and may cause the workflow
+                            fail to run.",
+                            "bottom"
+                        )
                 ),
                 fluidRow(
                     column(

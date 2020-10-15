@@ -1,24 +1,40 @@
 # UI
-wf_runUI <- function(id){
+wf_setupUI <- function(id){
     ns <- NS(id)
     tagList(
-        tabTitle("Run Workflow"),
         renderDesc(id = ns("desc"),
         '
-        #### Running the workflow
-        Directly running the prepared workflow from SPS will be supported soon.
-        At this point, you should have prepared all the three very important
-        files for SPR workflow running. Open up the progress tracking panel
-        from top right corner and you should see everything is green. That
-        means you are ready to go.
+        #### Set up a workflow environment
+        To run a SPR workflow, a workflow environment is required. The
+        environment is a directory containing all required files, like the targets
+        file, the workflow file, and all other
+        [parameter files](https://systempipe.org/docs/systemPipeR/#directory-structure).
 
-        Copy these files to your SPR workflow project root and follow SPR
-        instructions.
+        The directory structure looks like this image below:
 
-        When you are done with workflow running and obtained some results,
-        come back to SPS to make some beautiful plots in the "Visualization".
+        ![spr-structure](https://systempipe.org/assets/images/doc/SYSdir.png)
 
-        **This module needs to run in *Unix-like* system. Windows will fail to run even with the example workflow**
+        Read more about this [workflow structure](https://systempipe.org/docs/systemPipeR/#directory-structure).
+
+        #### Template workflows
+        SPR has some preconfigured workflows that you can generate in SPS with
+        one click. Supported template workflows are: **1**. *RNASeq*, **2**. *VarSeq*, **3**. *RiboSeq*,
+        **4**. *ChipSeq*. You can also choose an **5**. *existing* SPR workflow directory or create
+        an **6**. *empty* SPR workflow directory.
+
+        - All choices except "existing" will directly use the targets file and workflow
+        file inside the SPR project folder as default or you can upload a new one.
+        When you "Add to task" targets or workflow file, these files in the project
+        directory will be overwritten back to the same file.
+
+        - If you choose the "*existing*" option, we cannot guess the targets file name
+        and workflow file name. You can only upload the file. App will not detect and
+        open the files for you. When you click "Add to task" in targets preparation step,
+        a file with "*targets.txt*" will be written to the workflow directory. So
+        make sure to **rename your targets file if you do not want it be overwritten**.
+        The same applies to workflow file preparation step, a file named "*workflow.Rmd*"
+        will be written to the directory you have chosen.
+
         '),
         spsHr(),
         boxPlus(
@@ -36,18 +52,6 @@ wf_runUI <- function(id){
                                     Riboseq="riboseq", Chipseq="chipseq", Existing="exist"),
                         options = list(style = "btn-primary")
                     )
-                ),
-                column(
-                    6,
-                    actionButton(ns("gen_env"), "Gen workflow", style = "margin-top: 25px;") %>%
-                        bsHoverPopover(
-                            "Start a workflow environment",
-                            "Clicking here will direct you to a workflow running
-                            session and set the working directory to the workflow
-                            project. Once the session starts, you cannot interact
-                            with other part of SPS.",
-                            "bottom"
-                        )
                 )
             ),
             fluidRow(
@@ -98,7 +102,7 @@ wf_runUI <- function(id){
 }
 
 # server
-wf_runServer <- function(id, shared){
+wf_setupServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         tab_id <- "wf_run"
@@ -149,14 +153,3 @@ wf_runServer <- function(id, shared){
     }
     moduleServer(id, module)
 }
-#
-# r_out <- list()
-# r_cmd <- rlang::parse_exprs('print(1)\nSys.sleep(1)\nprint(2)')
-#
-# capture.output( %>% {
-#     for(i in seq_along(r_cmd)){
-#         r_out[[i]] <-
-#         eval_tidy(i)
-#     }
-# })
-#

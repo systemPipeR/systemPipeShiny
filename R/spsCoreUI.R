@@ -64,22 +64,12 @@ spsUI <- function(tabs_df, tabs_plot){
                                              tabName = "core_dashboard",
                                              icon = icon("sitemap")
                     ),
-                    shinydashboard::menuItem(id = 'wf-control',
+                    shinydashboard::menuItem(id = 'wf',
                              "Workflow Mangement",
-                             tabName = "wf_main",
-                             shinydashboard::menuSubItem(text="Targets File",
-                                                         tabName="wf_targets"),
-                             shinydashboard::menuSubItem(text="Workflow File",
-                                                         tabName="wf_wf"),
-                             shinydashboard::menuSubItem(text="CWL File (optional)",
-                                                         tabName="wf_cwl"),
-                             shinydashboard::menuSubItem(
-                                text= HTML('Run Workflow<small class="badge
-                                  pull-right bg-olive">Dev</small>'),
-                                tabName="wf_run")
+                             tabName = "wf"
                     ),
                     shinydashboard::menuItem(
-                        "Visualization",
+                        "Custom tabs",
                         icon = icon("images"),
                         tabName = "vs_main",
                         shinydashboard::menuItem(
@@ -92,7 +82,7 @@ spsUI <- function(tabs_df, tabs_plot){
                         )
                     ),
                     shinydashboard::menuItem(
-                        text = "Visualization",
+                        text = "Visualization Modules",
                         icon = icon("images"),
                         tabName = "vs_main",
                         shinydashboard::menuSubItem(
@@ -116,14 +106,8 @@ spsUI <- function(tabs_df, tabs_plot){
     spsinfo("Create UI tab content ...")
     sps_tabs <- shinydashboard::tabItems(
         # WF tabs
-        shinydashboard::tabItem(tabName = "wf_main", wf_mainUI("wf_main")),
+        shinydashboard::tabItem(tabName = "wf", wfUI("wf")),
         wfPanel(),
-        shinydashboard::tabItem(tabName = "wf_targets",
-                                wf_targetUI("wf_targets")),
-        shinydashboard::tabItem(tabName = "wf_wf", wf_wfUI("wf_wf")),
-        shinydashboard::tabItem(tabName = "wf_cwl",
-                                wf_cwlUI("wf_cwl")),
-        shinydashboard::tabItem(tabName = "wf_run", wf_runUI("wf_run")),
         # VS tabs
         shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         # core tabs
