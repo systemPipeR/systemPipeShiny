@@ -18,9 +18,13 @@ wf_setupUI <- function(id){
 
         #### Template workflows
         SPR has some preconfigured workflows that you can generate in SPS with
-        one click. Supported template workflows are: **1**. *RNASeq*, **2**. *VarSeq*, **3**. *RiboSeq*,
-        **4**. *ChipSeq*. You can also choose an **5**. *existing* SPR workflow directory or create
-        an **6**. *empty* SPR workflow directory.
+        one click. Supported template workflows are: **2**. *RNASeq*, **3**. *VarSeq*, **4**. *RiboSeq*,
+        **5**. *ChipSeq*. You can also choose an **6**. *existing* SPR workflow directory or create
+        an **7**. *empty* SPR workflow directory.
+
+        **1**. Example is a very tiny workflow with only 2 steps, one commandline
+        step, one R step. You need to have a default terminal which has `echo`
+        to work, bash for Linux and cmd or powershell for Windows for example.
 
         - All choices except "existing" will directly use the targets file and workflow
         file inside the SPR project folder as default or you can upload a new one.
@@ -37,8 +41,9 @@ wf_setupUI <- function(id){
 
         '),
         spsHr(),
+        column(1),
         boxPlus(
-            width = 8,
+            width = 10,
             collapsible = FALSE,
             closable = FALSE,
             title = "Initiate a workflow environment",
@@ -49,54 +54,66 @@ wf_setupUI <- function(id){
                         inputId = ns("choose_wf"),
                         label = "Choose a workflow template",
                         choices = c(Example="eg", RNAseq="rnaseq", Varseq="varseq",
-                                    Riboseq="riboseq", Chipseq="chipseq", Existing="exist"),
+                                    Riboseq="riboseq", Chipseq="chipseq", Existing="exist",
+                                    Empty="empty"),
                         options = list(style = "btn-primary")
                     )
+                ),
+                column(
+                    6,
+                    actionButton(ns("gen_env"), "Gen workflow", style = "margin-top: 25px;") %>%
+                        bsHoverPopover(
+                            "Start a workflow environment",
+                            "Clicking here will create a workflow environment folder for you.",
+                            "bottom"
+                        )
                 )
             ),
             fluidRow(
                 class = "form-group shiny-input-container sps-file center-block",
-                id = ns("exist_browse"),
-                tags$label(class="control-label", `for`=ns("exist_wf"), "Select existing workflow folder"),
+                tags$label(class="control-label", `for`=ns("exist_wf"),
+                           "Select where you want to create a new workflow or an existing workflow directory"),
+                p("Default is current directory."),
                 div(class="input-group",
                     tags$label(class="input-group-btn input-group-prepend",
-                               shinyFiles::shinyFilesButton(
-                                   ns("exist_wf"), "Browse", multiple = FALSE,
+                               shinyFiles::shinyDirButton(
+                                   ns("wf_path"), "Browse",
                                    title = "",
                                    buttonType = "btn btn-primary",
                                    icon = NULL)
                     ),
                     textInput(inputId = ns("exist_show"), label = NULL,
-                              placeholder="No path yet", width = "100%")
+                              placeholder=getwd(), width = "100%")
                 )
             ),
+            if(Sys.info()['sysname'] == "Windows"){
+                tags$ul(
+                    class = "text-danger",
+                    HTML("<li>Your host system is Windows, Most bioinformatics command
+                     line tools <strong>DO NOT</strong> work on Windows.
+                     Only the example workflow will work.</li>")
+                )
+            } else div(),
             tags$ul(
-                id = ns("example_tip"),
-                HTML("<li>If you have submitted .</li>")
-            ),
-            tags$ul(
-                class = "text-danger", id = ns("gen_warning"),
+                class = "text-danger", id = ns("warn_noneg"),
                 tags$li("This will run a non-example workflow.
                 If the required command
                 line tools are not installed, the workflow will fail."),
-                HTML("<li>Most other default template workflows like RNAseq,
+                HTML("<li>Most other pre-configed template workflows like RNAseq,
                 Varseq provide more than one alignment, calling, and other methods. You
                 only need to choose one method on certain steps. Make sure to select
-                the desired method steps in the <strong>Workflow File tab</strong>.
+                the desired method steps in the step <strong>3. Workflow File</strong>.
                 Using the defualt workflow file without
                 any custom selection is not recommended.</li>")
+            ),
+            tags$ul(
+                class = "text-danger", id = ns("warn_empty"),
+                tags$li("This option will generate an empty workflow folder.
+                        The workflow file only has a header. You need to write
+                        your own code.")
             )
         ),
-        boxPlus(
-            title = "Required files in task",
-            width = 4,
-            closable = FALSE,
-            collapsible = FALSE,
-            strong(id = ns("intask_targets_title"), "Targets file:"),
-            p(id = ns("intask_targets"), "No file submitted"),
-            strong(id = ns("intask_wf_title"),"Workflow file:"),
-            p(id = ns("intask_wf"), "No file submitted")
-        )
+        column(1)
     )
 
 }
@@ -105,27 +122,27 @@ wf_setupUI <- function(id){
 wf_setupServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
-        tab_id <- "wf_run"
-        # toggle elements in wf init panel
+        tab_id <- "wf_setup"
+        # toggle elements in for warning
         observeEvent(input$choose_wf, {
             shinyjs::toggleElement(
-                id = "exist_browse", anim = TRUE,
-                condition = input$choose_wf == "exist")
-            shinyjs::toggleElement(
-                id = "gen_warning", anim = TRUE,
+                id = "warn_noneg", anim = TRUE,
                 condition = input$choose_wf != "eg")
+            shinyjs::toggleElement(
+                id = "warn_empty", anim = TRUE,
+                condition = input$choose_wf == "empty")
         })
         # resolve dir path input
-        roots <- c(current=getwd(), shinyFiles::getVolumes()())
-        shinyFiles::shinyFileChoose(input, 'exist_wf', roots = roots, session = session)
-        wf_exist_path <- reactive(NULL)
-        observeEvent(input[['exist_wf']], {
-            req(is.list(input[['exist_wf']]))
-            file_selected <- shinyFiles::parseFilePaths(roots, input[['exist_wf']])
+        roots <- c(current=getwd(), Home = normalizePath("~", mustWork = FALSE), shinyFiles::getVolumes()())
+        shinyFiles::shinyDirChoose(input, 'wf_path', roots = roots, session = session)
+        wf_path <- reactive(getwd())
+        observeEvent(input[['wf_path']], {
+            req(is.list(input[['wf_path']]))
+            dir_selected <- shinyFiles::parseDirPath(roots, input[['wf_path']])
             updateTextInput(inputId = 'exist_show',
                             session = session,
-                            placeholder = unname(file_selected$datapath))
-            wf_exist_path({as.data.frame(file_selected)})
+                            placeholder = unname(dir_selected))
+            wf_path(file_selected)
         })
         # right side display in task files
         observeEvent(shared$targets$file, {

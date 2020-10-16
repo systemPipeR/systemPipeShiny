@@ -39,7 +39,20 @@ wfUI <- function(id){
         renderDesc(ns("desc"), desc),
         spsHr(),
         br(),
-        h3("Follow steps below:", class = "text-center"),
+        h3("Track workflow status", class = "text-center text-info"),
+        spsTimeline(
+            ns("wf_status"),
+            up_labels = c("1", "2", "3", "4 Optional", "5"),
+            down_labels = c("Gen WF", "Targets", "WF file", "CWL files", "Ready to run"),
+            icons = list(
+                icon("play"),
+                icon("table"),
+                icon("list-ol"),
+                icon("file-code"),
+                icon("check")
+            ),
+            completes = c(FALSE, FALSE, FALSE, TRUE, FALSE)
+        ),
         bsplus::bs_accordion(id = ns("wf_panel")) %>%
             bsplus::bs_append("1. Create a workflow environment", wf_setupUI(ns("wf_setup"))) %>%
             bsplus::bs_append("2. Prepare the targets file", wf_targetUI(ns("wf_targets"))) %>%

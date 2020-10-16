@@ -125,7 +125,6 @@ spsUI <- function(tabs_df, tabs_plot){
     dashboardBody <- shinydashboard::dashboardBody(
         tags$head(
             tags$link(rel="shortcut icon", href="img/sps_small.png"),
-            shinyjs::useShinyjs(),
             shinyWidgets::useSweetAlert(),
             useSps(),
         ),
