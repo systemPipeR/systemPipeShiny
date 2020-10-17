@@ -24,7 +24,7 @@ wf_setupUI <- function(id){
 
         **1**. Example is a very tiny workflow with only 2 steps, one commandline
         step, one R step. You need to have a default terminal which has `echo`
-        to work, bash for Linux and cmd or powershell for Windows for example.
+        to work, bash for Linux or Mac and powershell for Windows for example.
 
         - All choices except "existing" will directly use the targets file and workflow
         file inside the SPR project folder as default or you can upload a new one.
@@ -55,7 +55,7 @@ wf_setupUI <- function(id){
                         label = "Choose a workflow template",
                         choices = c(Example="eg", RNAseq="rnaseq", Varseq="varseq",
                                     Riboseq="riboseq", Chipseq="chipseq", Existing="exist",
-                                    Empty="empty"),
+                                    Empty="new"),
                         options = list(style = "btn-primary")
                     )
                 ),
@@ -71,8 +71,8 @@ wf_setupUI <- function(id){
             ),
             fluidRow(
                 class = "form-group shiny-input-container sps-file center-block",
-                tags$label(class="control-label", `for`=ns("exist_wf"),
-                           "Select where you want to create a new workflow or an existing workflow directory"),
+                tags$label(class="control-label",
+                           "Select where you want to create a new workflow or use an existing workflow directory"),
                 p("Default is current directory."),
                 div(class="input-group",
                     tags$label(class="input-group-btn input-group-prepend",
@@ -111,14 +111,36 @@ wf_setupUI <- function(id){
                 tags$li("This option will generate an empty workflow folder.
                         The workflow file only has a header. You need to write
                         your own code.")
+            ),
+            tags$ul(
+                class = "text-danger", id = ns("warn_exist"),
+                tags$li("You are selecting an existing SPR workflow project
+                        directory. Make sure you have the project folder's
+                        writing permission and it has subfolders:
+                        'data', 'param', and 'results'")
             )
         ),
-        column(1)
+        column(1),
+        absolutePanel(
+            id = ns("gen_wf_pg_panel"),
+            style = "background-color: #ecf0f5; border: 2px solid #d2d6de; border-radius: 5%; display: none;",
+            top = "40%",
+            left = "45%",
+            width = "400px",
+            height = "100px",
+            fixed = FALSE,
+            cursor = "default",
+            h4("Workflow Generation Progress", style="text-align: center"), br(),
+            progressBar(
+                id = ns("gen_wf_pg"), value = 0,
+                title = "", total = 6
+            )
+        )
     )
-
 }
 
 # server
+#' @importFrom systemPipeRdata genWorkenvir
 wf_setupServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -130,42 +152,131 @@ wf_setupServer <- function(id, shared){
                 condition = input$choose_wf != "eg")
             shinyjs::toggleElement(
                 id = "warn_empty", anim = TRUE,
-                condition = input$choose_wf == "empty")
+                condition = input$choose_wf == "new")
+            shinyjs::toggleElement(
+                id = "warn_exist", anim = TRUE,
+                condition = input$choose_wf == "exist")
         })
         # resolve dir path input
         roots <- c(current=getwd(), Home = normalizePath("~", mustWork = FALSE), shinyFiles::getVolumes()())
         shinyFiles::shinyDirChoose(input, 'wf_path', roots = roots, session = session)
-        wf_path <- reactive(getwd())
+        wf_path <- reactiveVal(getwd())
         observeEvent(input[['wf_path']], {
             req(is.list(input[['wf_path']]))
             dir_selected <- shinyFiles::parseDirPath(roots, input[['wf_path']])
             updateTextInput(inputId = 'exist_show',
                             session = session,
                             placeholder = unname(dir_selected))
-            wf_path(file_selected)
+            wf_path(dir_selected)
         })
-        # right side display in task files
-        observeEvent(shared$targets$file, {
-            req(shared$wf_flags$targets_ready)
-            req(shared$targets$file)
-            shinyjs::html("intask_targets", shared$targets$file)
-            shinyjs::html("intask_targets_title", "Targets file (Ready):")
-            shinyjs::addCssClass("intask_targets_title", "text-success")
+
+        ### action when gen WF clicked
+        observeEvent(input$gen_env, {
+            on.exit({shinyjs::hideElement('gen_wf_pg_panel', anim = TRUE)})
+            # clear everything on start
+            shared$wf$env_option <- NULL
+            shared$wf$env_path <- NULL
+            shared$wf$targets_path <- NULL
+            shared$wf$wf_path <- NULL
+            shared$wf$flags$env_ready <- FALSE
+            # assertions
+            updateProgressBar(session, "gen_wf_pg", 0, 6, title = "Checking path permission", status = "danger")
+            shinyjs::showElement('gen_wf_pg_panel', anim = TRUE, time = 0.2)
+            Sys.sleep(0.5)
+            shinyCatch({
+                if(!is.writeable(wf_path()))
+                   stop("Path ", wf_path(), " is not writeable, check your permissions")
+            }, blocking_level = "error")
+            updateProgressBar(session, "gen_wf_pg", 1, 6, title = "check if the directory exists")
+            Sys.sleep(0.5)
+            final_env_path <- switch(
+                    input$choose_wf,
+                    "eg" = "spr_example_wf",
+                    "exist" = "",
+                    input$choose_wf
+            ) %>% {file.path(isolate(wf_path()), .)}
+            shinyCatch({
+                if(dir.exists(final_env_path) & input$choose_wf != "exist")
+                    stop("Folder ", final_env_path, " is already there, cannot ",
+                         "create the workflow. Use 'Existing' option or rename it.")
+            }, blocking_level = "error")
+            updateProgressBar(session, "gen_wf_pg", 2, 6, title = "start to create files or check files for existing WF")
+            Sys.sleep(0.5)
+            # gen env
+            shinyCatch({
+                switch(input$choose_wf,
+                    "exist" = {
+                        lapply(c("data", "param", "results") %>% {paste0(final_env_path, .)}, function(x){
+                            if(!dir.exists(x)){
+                                stop("Required folder '", x, "' for an existing workflow is not there")
+                            }
+                        })
+                    },
+                    "eg" = {
+                        dir.create(file.path(final_env_path, "data"), recursive = TRUE)
+                        dir.create(file.path(final_env_path, "param", "cwl"), recursive = TRUE)
+                        dir.create(file.path(final_env_path, "results"), recursive = TRUE)
+                        file.copy(system.file("app", "data", "targetsPE.txt", package = "systemPipeShiny"),
+                                  file.path(final_env_path, "targetsPE.txt"))
+                        file.copy(system.file("app", "data", "example_wf.md", package = "systemPipeShiny"),
+                                  file.path(final_env_path, "systemPipeExample.Rmd"))
+                    },
+                    systemPipeRdata::genWorkenvir(input$choose_wf, mydirname = final_env_path)
+                )
+            },
+            blocking_level = "error")
+            updateProgressBar(session, "gen_wf_pg", 3, 6, title = "update project info - targets", status = "warning")
+            Sys.sleep(0.1)
+            # post updates
+            targes_path <- shinyCatch(switch(input$choose_wf,
+                "chipseq" = normalizePath(file.path(final_env_path, "targetsPE_chip.txt")),
+                "empty" = normalizePath(file.path(final_env_path, "targets.txt")),
+                "exist" = "upload_required",
+                normalizePath(file.path(final_env_path, "targetsPE.txt"))
+            ), blocking_level = "error")
+            updateProgressBar(session, "gen_wf_pg", 4, 6, title = "update project info - workflow file")
+            Sys.sleep(0.1)
+            wf_file_path <- shinyCatch(switch(input$choose_wf,
+                "rnaseq" = normalizePath(file.path(final_env_path, "systemPipeRNAseq.Rmd")),
+                "varseq" = normalizePath(file.path(final_env_path, "systemPipeVARseq.Rmd")),
+                "riboseq" = normalizePath(file.path(final_env_path, "systemPipeRIBOseq.Rmd")),
+                "chipseq" = normalizePath(file.path(final_env_path, "systemPipeChIPseq.Rmd")),
+                "exist" = "upload_required",
+                "eg" = normalizePath(file.path(final_env_path, "systemPipeExample.Rmd")),
+                "empty" = normalizePath(file.path(final_env_path, "new.Rmd"))
+            ), blocking_level = "error")
+            updateProgressBar(session, "gen_wf_pg", 5, 6, title = "update project info - shiny server")
+            Sys.sleep(0.1)
+            shared$wf$env_option <- input$choose_wf
+            shared$wf$env_path <- final_env_path
+            shared$wf$targets_path <- targes_path
+            shared$wf$wf_path <- wf_file_path
+            shared$wf$flags$env_ready <- TRUE
+            updateProgressBar(session, "gen_wf_pg", 6, 6, title = "All done", status = "success")
+            Sys.sleep(0.5)
+            # jump to next step
+            shinyWidgets::confirmSweetAlert(
+                session = session,
+                inputId = ns("confirm_next"),
+                title = "Workflow environment setup done!",
+                closeOnClickOutside = FALSE,
+                html = TRUE,
+                type = "success",
+                text = HTML(glue(
+                    "
+                    <ul class='text-left'>
+                      <li>The workflow environment is located at: {shared$wf$env_path}</li>
+                      <li>The targets file is located at: {shared$wf$targets_path}</li>
+                      <li>The workflow file is located at: {shared$wf$wf_path}</li>
+                    </ul>
+                    <h3>Do you want to proceed to the next step?</h3>
+                    "
+                ))
+            )
         })
-        observeEvent(shared$wf$file, {
-            req(shared$wf_flags$wf_ready)
-            req(shared$wf$file)
-            shinyjs::html("intask_wf", shared$wf$file)
-            shinyjs::html("intask_wf_title", "Workflow file (Ready):")
-            shinyjs::addCssClass("intask_wf_title", "text-success")
-        })
-        ## open close wf push bar
-        pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
-        observeEvent(input$gen_env, ignoreInit = TRUE, {
-            pushbar::pushbar_open(id = "core_top-wf_push")
-            shared$wf$wd_old <- spsOption("app_path")
-            setwd("new")
-            print(getwd())
+        observeEvent(input$confirm_next, {
+            req(input$confirm_next)
+            shinyjs::runjs("$('#wf-wf_panel-1-heading > h4 > a').trigger('click');")
         })
     }
     moduleServer(id, module)

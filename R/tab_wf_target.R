@@ -10,124 +10,166 @@
 wf_targetUI <- function(id){
     ns <- NS(id)
     tagList(
-        tabTitle("Targets"),
-        renderDesc(id = ns("desc"),
-        '
-        #### Targets file
-        The targets (metadata) file defines all input files\' path and other sample
-        information of an analysis workflow. Read "Structure of targets file"
-        section in
-        [SPR vignette](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file)
-        to better undertand the structure of this file.
-        This file is similar to the `colData` slot in an `SummarizedExperiment`
-        object which stores sample ID and other meta information.
+        div(
+            id = "wf_targets_displayed",
+            style = "display:none",
+            tabTitle("Targets"),
+            renderDesc(id = ns("desc"),
+            '
+            #### Targets file
+            The targets (metadata) file defines all input files\' path and other sample
+            information of an analysis workflow. Read "Structure of targets file"
+            section in
+            [SPR vignette](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file)
+            to better undertand the structure of this file.
+            This file is similar to the `colData` slot in an `SummarizedExperiment`
+            object which stores sample ID and other meta information.
 
-        #### Load examples
-        There are two example templates provided here, one for pair-end
-        sequencing (PE), and one for single-end (SE). See the instructions above
-        the table for what information is required in the targets file.
+            #### Using template workflow targets
+            If the workflow environment has been set up correctly in the previous step,
+            by default SPS loads the targets file that is been used in the workflow file.
 
-        #### Statistics
-        If you are running SPS in ["local"](https://systempipe.org/systemPipeShiny/articles/systemPipeShiny.html#app-options)
-        mode, the boxes on the left will display targets sample statistics and if
-        you select a column from the left side dropdown menu, this tab will also
-        help you to check for file existence of all records in this column.
+            Note: most template workflows comes with two targets files: *targets.txt*
+            and *targetsPE.txt*, one for single-end one for pair-end. Here SPS loads
+            the one that is been used in the workflow R markdown file, in most cases
+            the "*targetsPE.txt*". If you want to use the single-end targets file,
+            you can upload it. **SPS will replace the default file with this newly uploaded file.**
 
-        #### Check the format
-        "Add to task" button can help you to check if you have the required
-        targets file format, i.e. column names, headers. If anything is missing,
-        you will see the instruction in the pop-up box. It will also update the
-        progress bar in the top right panel. You need to click "-" to expand it.
-        '),
-        spsHr(),
-        fluidRow(
-            column(3,
-                   fluidRow(
-                       shinydashboard::valueBox(
+            #### Using existing targets
+            If you have selected to use an existing workflow in the previous step,
+            it is required that you manually select (upload) the targets file you want to use.
+            SPS cannot guess the file name of your existing targets file name.
+
+            #### Sample statistics
+            The boxes on the left display targets sample statistics and if
+            you select a column from the left side dropdown menu, it will also
+            help you to check for file existence of the column you choose.
+
+            The file existence function assumes the workflow environment directory as
+            the root to check for files. You could specify another place as root by
+            typing the path in the input box.
+
+            #### Check the format
+            "Add to task" button can help you to check if you have the required
+            targets file format, i.e. column names, headers. If anything is missing,
+            you will see the instruction in the pop-up box.
+            '),
+            spsHr(),
+            boxPlus(
+                title = "Confirm to use this targets file",
+                closable = FALSE, collapsible = TRUE,
+                width = 12,
+                class = "center-block",
+                HTML(
+                "
+                <ul>
+                  <li>
+                    When you have finished editing your targets table and
+                    targets header below, clicking on the <b>Add to task</b>
+                    will check the targets format for you.
+                  </li>
+                  <li>
+                    If everthing is correct, this targets file will be write
+                    back to the workflow environment folder to be used in step <b>5</b>.
+                  </li>
+                  <li>
+                    If format is correct, you can also <b>Save</b> it as
+                    an individual file from the browser.</p>
+                  </li>
+                </ul>
+                "),
+                fluidRow(style = "padding: 0;",
+                       downloadButton(ns("down_targets"), "Save"),
+                       actionButton(ns("to_task_target"),
+                                    label = "Add to task",
+                                    icon("paper-plane"))
+                ),
+            fluidRow(
+                column(3,
+                       fluidRow(
+                           shinydashboard::valueBox(
+                               width = 12,
+                               textOutput(ns("box_samples")),
+                               "Number of Samples",
+                               icon = icon("vials"))
+                       ),
+                       fluidRow(
+                           shinydashboard::valueBox(
+                               width = 12,
+                               textOutput(ns("box_ncol")),
+                               "Number of columns",
+                               icon = icon("columns"),
+                               color = "purple")
+                       ),
+                       fluidRow(
+                           uiOutput(ns("box_missing_ui"))
+                       ),
+                       shinydashboardPlus::boxPlus(
+                           "Missing files (first row is treated as column names)",
                            width = 12,
-                           textOutput(ns("box_samples")),
-                           "Number of Samples",
-                           icon = icon("vials"))
-                   ),
-                   fluidRow(
-                       shinydashboard::valueBox(
-                           width = 12,
-                           textOutput(ns("box_ncol")),
-                           "Number of columns",
-                           icon = icon("columns"),
-                           color = "purple")
-                   ),
-                   fluidRow(
-                       uiOutput(ns("box_missing_ui"))
-                   ),
-                   shinydashboardPlus::boxPlus(
-                       "Missing files (first row is treated as column names)",
-                       width = 12,
-                       p("Write down your path prefix if
-                         you use relative path in targets"),
-                       clearableTextInput(ns("target_data_path"),
-                                          label = "Add path prefix",
-                                          placeholder = "long path"),
-                       if(spsOption('mode') == 'server') {
-                           h5("File checking is disabled on 'server' mode")
-                        } else {
-                            tagList(
-                                selectInput(ns("column_check"),
-                                            "Choose a column to check files:",
-                                            choices = "Disabled before uploading targets"),
-                                verbatimTextOutput(ns("missing_files"))
+                           p("Write down the root path if you are not using workflow environment default root to store data."),
+                           clearableTextInput(ns("target_data_path"),
+                                              label = "Add path prefix",
+                                              placeholder = "long path"),
+                           if(spsOption('mode') == 'server') {
+                               h5("File checking is disabled on 'server' mode")
+                           } else {
+                               tagList(
+                                   selectInput(ns("column_check"),
+                                               "Choose a column to check files:",
+                                               choices = "Disabled before uploading targets"),
+                                   verbatimTextOutput(ns("missing_files"))
                                )
                            }
-
-                   ),
-                   tags$style(
-                       glue(
-                           '#@{ns("missing_files")}@{
+                       ),
+                       tags$style(
+                           glue(
+                               '#@{ns("missing_files")}@{
                             height: 800px;
                           }',
-                           .open = "@{", .close = "}@"
+                               .open = "@{", .close = "}@"
+                           )
                        )
-                   )
-            ),
-            column(9,
-                   shinyWidgets::radioGroupButtons(
-                       inputId = ns("target_source"),
-                       label = "Choose target source:",
-                       selected = "upload",
-                       choiceNames = c("Upload", "Example PE", "Example SE"),
-                       choiceValues = c("upload", "pe", "se"),
-                       justified = TRUE, status = "primary",
-                       checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                        no = icon(""))
-                   ),
-                   dynamicFile(ns("target_upload"),
-                               "If upload, choose your target file here:",
-                               multiple = FALSE),
-                   column(12, style = "padding: 0;",
-                          downloadButton(ns("down_targets"), "Save"),
-                          actionButton(ns("to_task_target"),
-                                       label = "Add to task",
-                                       icon("paper-plane"))
-                   ),
-                   h4("Targets header"),
-                   p("You can edit your target file header below.
+                ),
+                column(9,
+                       shinyWidgets::radioGroupButtons(
+                           inputId = ns("target_source"),
+                           label = "Choose target source:",
+                           selected = "default",
+                           choiceNames = c("Default", "Upload"),
+                           choiceValues = c("default", "upload"),
+                           justified = TRUE, status = "primary",
+                           checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+                                            no = icon(""))
+                       ),
+                       dynamicFile(ns("target_upload"),
+                                   "If upload, choose your target file here:",
+                                   multiple = FALSE)
+                       ),
+                       h4("Targets header"),
+                       p("You can edit your target file header below.
                      All lines should start with #, a line of # <CMP>
                      xxx is required."),
-                   shinyAce::aceEditor(
-                       outputId = ns("ace_target_header"),
-                       theme = "Chrome",
-                       value = "",
-                       placeholder = "Target header lines", height = "100px"
-                   ),
-                   p("You can edit your targets (metadata) below."),
-                   p("Columns of 'FileName1', 'FileName2' are required
+                       shinyAce::aceEditor(
+                           outputId = ns("ace_target_header"),
+                           theme = "Chrome",
+                           value = "",
+                           placeholder = "Target header lines", height = "100px"
+                       ),
+                       p("You can edit your targets (metadata) below."),
+                       p("Columns of 'FileName1', 'FileName2' are required
                      for pair-end or 'FileName' for single-end.
                      'SampleName', 'Factor' are required for both."),
-                   p("Columns names should be on the first row."),
-                   rhandsontable::rHandsontableOutput(ns("targets_df"),
-                                                      height = "800px")
-            )
+                       p("Columns names should be on the first row."),
+                       rhandsontable::rHandsontableOutput(ns("targets_df"),
+                                                          height = "800px")
+                )
 
+            )
+        ),
+        div(
+            id = "wf_targets_disable",
+            h3("Generate a workflow environment first", style = "text-center text-warning")
         )
     )
 }
@@ -147,13 +189,16 @@ wf_targetUI <- function(id){
 wf_targetServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
-        ace_target_header_init <-
-"# Project ID: Arabidopsis - Pseudomonas alternative splicing study (SRA: SRP010938; PMID: 24098335)
-# The following line(s) allow to specify the contrasts needed for comparative analyses, such as DEG identification. All possible comparisons can be specified with 'CMPset: ALL'.
-# <CMP> CMPset1: M1-A1, M1-V1, A1-V1, M6-A6, M6-V6, A6-V6, M12-A12, M12-V12, A12-V12
-# <CMP> CMPset2: ALL"
-        data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
-            tibble::as_tibble()
+        ace_target_header_init <- ""
+        data_init <- reactive({
+            req(shared$wf$flags$env_ready)
+            req(shared$wf$targets_path)
+            shinyCatch(vroom::vroom(
+                targets_p,  delim = "\t",
+                comment = "#", altrep = FALSE,
+                col_names = FALSE, col_types = vroom::cols()
+            ))
+        })
         ns <- session$ns
         # some reactive values to pass around observe
         selected_old <- reactiveVal("upload")

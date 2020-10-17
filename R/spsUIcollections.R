@@ -916,7 +916,6 @@ updateSpsTimeline <- function(session, id, item_no, complete = TRUE){
     assert_that(item_no > 0)
     item_no <- as.integer(item_no)
     if (inherits(session, "session_proxy")) {
-        if (!starts_with(id, session$ns("")))
             id <- session$ns(id)
     }
     if(complete){

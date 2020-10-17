@@ -160,3 +160,5 @@ wf_runServer <- function(id, shared){
 #     }
 # })
 #
+
+# echo "string" | out-file -encoding ASCII file.txt
