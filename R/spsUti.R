@@ -421,4 +421,19 @@ reactiveStop <- function(message = "\r              ", class = NULL){
     stop(cond)
 }
 
-
+## check and time out when opening a online file
+checkUrl <- function(url, timeout = 5){
+    if(!stringr::str_detect(url, "^http")) stop("url need to start with 'http(s)'")
+    if(!is.numeric(timeout)) stop("timeout need to a number")
+    tryCatch({
+        httr::GET(url, httr::timeout(timeout)) %>%
+            httr::stop_for_status()
+        TRUE
+            },
+        error = function(e){
+            spswarn(glue("Bad url {url}"))
+            spswarn(e$message)
+            return(FALSE)
+        }
+    )
+}
