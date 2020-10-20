@@ -79,7 +79,6 @@ wfServer <- function(id, shared){
         wf_wfServer("wf_wf", shared)
         wf_cwlServer("wf_cwl", shared)
         wf_runServer("wf_run", shared)
-
         # init wf env
         shared$wf <- list(
             env_option = NULL,
@@ -103,7 +102,6 @@ wfServer <- function(id, shared){
             shinyjs::toggleCssClass("wf-wf_panel-2", "panel-success", asis = TRUE, shared$wf$flags$wf_ready)
 
         }, ignoreInit = TRUE)
-
         observeEvent(shared$wf$flags$env_ready, {
             shinyjs::toggleElement(
                 "wf_targets_displayed", asis = TRUE,
@@ -115,7 +113,7 @@ wfServer <- function(id, shared){
                 anim = TRUE, animType = "fade",
                 condition = !shared$wf$flags$env_ready
             )
-        }, ignoreInit = TRUE)
+        }, ignoreInit = FALSE)
 
         observeEvent(shared$wf$all_ready, {
             updateSpsTimeline(session, "wf_status", 5, shared$wf$all_ready)

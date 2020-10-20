@@ -179,6 +179,10 @@ wf_setupServer <- function(id, shared){
             shared$wf$targets_path <- NULL
             shared$wf$wf_path <- NULL
             shared$wf$flags$env_ready <- FALSE
+            shared$wf$flags$targets_ready <- FALSE
+            shared$wf$flags$wf_ready <- FALSE
+            shared$wf$all_ready <- FALSE
+
             # assertions
             updateProgressBar(session, "gen_wf_pg", 0, 6, title = "Checking path permission", status = "danger")
             shinyjs::showElement('gen_wf_pg_panel', anim = TRUE, time = 0.2)
@@ -230,7 +234,7 @@ wf_setupServer <- function(id, shared){
             # post updates
             targes_path <- shinyCatch(switch(input$choose_wf,
                 "chipseq" = normalizePath(file.path(final_env_path, "targetsPE_chip.txt")),
-                "empty" = normalizePath(file.path(final_env_path, "targets.txt")),
+                "new" = normalizePath(file.path(final_env_path, "targets.txt")),
                 "exist" = "upload_required",
                 normalizePath(file.path(final_env_path, "targetsPE.txt"))
             ), blocking_level = "error")
@@ -243,7 +247,7 @@ wf_setupServer <- function(id, shared){
                 "chipseq" = normalizePath(file.path(final_env_path, "systemPipeChIPseq.Rmd")),
                 "exist" = "upload_required",
                 "eg" = normalizePath(file.path(final_env_path, "systemPipeExample.Rmd")),
-                "empty" = normalizePath(file.path(final_env_path, "new.Rmd"))
+                "new" = normalizePath(file.path(final_env_path, "new.Rmd"))
             ), blocking_level = "error")
             updateProgressBar(session, "gen_wf_pg", 5, 6, title = "update project info - shiny server")
             Sys.sleep(0.1)

@@ -27,44 +27,15 @@ wf_runUI <- function(id){
             closable = FALSE,
             title = "Initiate a workflow environment",
             fluidRow(
-                column(
-                    6,
-                    shinyWidgets::pickerInput(
-                        inputId = ns("choose_wf"),
-                        label = "Choose a workflow template",
-                        choices = c(Example="eg", RNAseq="rnaseq", Varseq="varseq",
-                                    Riboseq="riboseq", Chipseq="chipseq", Existing="exist"),
-                        options = list(style = "btn-primary")
-                    )
-                ),
-                column(
-                    6,
-                    actionButton(ns("gen_env"), "Gen workflow", style = "margin-top: 25px;") %>%
+                    actionButton(ns("gen_env"), "Run workflow", style = "margin-top: 25px;") %>%
                         bsHoverPopover(
-                            "Start a workflow environment",
+                            "Start a workflow running",
                             "Clicking here will direct you to a workflow running
                             session and set the working directory to the workflow
                             project. Once the session starts, you cannot interact
                             with other part of SPS.",
                             "bottom"
                         )
-                )
-            ),
-            fluidRow(
-                class = "form-group shiny-input-container sps-file center-block",
-                id = ns("exist_browse"),
-                tags$label(class="control-label", `for`=ns("exist_wf"), "Select existing workflow folder"),
-                div(class="input-group",
-                    tags$label(class="input-group-btn input-group-prepend",
-                               shinyFiles::shinyFilesButton(
-                                   ns("exist_wf"), "Browse", multiple = FALSE,
-                                   title = "",
-                                   buttonType = "btn btn-primary",
-                                   icon = NULL)
-                    ),
-                    textInput(inputId = ns("exist_show"), label = NULL,
-                              placeholder="No path yet", width = "100%")
-                )
             ),
             tags$ul(
                 id = ns("example_tip"),

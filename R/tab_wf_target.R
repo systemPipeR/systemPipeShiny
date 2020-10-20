@@ -10,6 +10,7 @@
 wf_targetUI <- function(id){
     ns <- NS(id)
     tagList(
+        actionButton(ns("set"), "set"),
         div(
             id = "wf_targets_displayed",
             style = "display:none",
@@ -70,20 +71,36 @@ wf_targetUI <- function(id){
                   </li>
                   <li>
                     If everthing is correct, this targets file will be write
-                    back to the workflow environment folder to be used in step <b>5</b>.
+                    back to the workflow environment folder and will be used in step <b>5</b>.
                   </li>
                   <li>
-                    If format is correct, you can also <b>Save</b> it as
+                    You can also <b>Save</b> it as
                     an individual file from the browser.</p>
                   </li>
                 </ul>
                 "),
-                fluidRow(style = "padding: 0;",
-                       downloadButton(ns("down_targets"), "Save"),
-                       actionButton(ns("to_task_target"),
-                                    label = "Add to task",
-                                    icon("paper-plane"))
-                ),
+                fluidRow(
+                    style = "padding-left: 40%",
+                    actionButton(ns("to_task_target"),
+                                 label = "Add to task",
+                                 icon("paper-plane")) %>%
+                        bsHoverPopover(
+                            "Check targets format and add to workflow task",
+                            "When you have finished editing your targets table
+                               and targets header below, clicking on the Add to
+                               task will check the targets format for you",
+                            "bottom"
+                        ),
+                    downloadButton(ns("down_targets"), "Save") %>%
+                        bsHoverPopover(
+                            "Download current targets",
+                            "You can download current targets file from the
+                               browser. It is recommended to click 'Add to task'
+                               first to check the format before downloading",
+                            "bottom"
+                        )
+                )
+            ),
             fluidRow(
                 column(3,
                        fluidRow(
@@ -108,7 +125,7 @@ wf_targetUI <- function(id){
                            "Missing files (first row is treated as column names)",
                            width = 12,
                            p("Write down the root path if you are not using workflow environment default root to store data."),
-                           clearableTextInput(ns("target_data_path"),
+                           textInput(ns("target_data_path"),
                                               label = "Add path prefix",
                                               placeholder = "long path"),
                            if(spsOption('mode') == 'server') {
@@ -144,8 +161,7 @@ wf_targetUI <- function(id){
                        ),
                        dynamicFile(ns("target_upload"),
                                    "If upload, choose your target file here:",
-                                   multiple = FALSE)
-                       ),
+                                   multiple = FALSE),
                        h4("Targets header"),
                        p("You can edit your target file header below.
                      All lines should start with #, a line of # <CMP>
@@ -164,7 +180,6 @@ wf_targetUI <- function(id){
                        rhandsontable::rHandsontableOutput(ns("targets_df"),
                                                           height = "800px")
                 )
-
             )
         ),
         div(
@@ -190,22 +205,43 @@ wf_targetServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         ace_target_header_init <- ""
-        data_init <- reactive({
-            req(shared$wf$flags$env_ready)
-            req(shared$wf$targets_path)
-            shinyCatch(vroom::vroom(
-                targets_p,  delim = "\t",
-                comment = "#", altrep = FALSE,
-                col_names = FALSE, col_types = vroom::cols()
-            ))
-        })
-        ns <- session$ns
+        data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
+            dplyr::as_tibble()
         # some reactive values to pass around observe
         selected_old <- reactiveVal("upload")
         selected_flag <- reactiveVal(TRUE)
         targets_p_old <- reactiveVal("")
         t.df <- reactiveVal(data_init)
         target_upload <- dynamicFileServer(input, session, id = "target_upload")
+        # load table is wf env is ready
+        #######
+        observeEvent(input$set, {
+            shared$wf$flags$env_ready = T
+            shared$wf$targets_path = "riboseq/targetsPE.txt"
+            shared$wf$env_path = normalizePath("riboseq")
+        })
+        #####
+        observeEvent(shared$wf$flags$env_ready, {
+            print(shared$wf$flags$env_ready)
+            print(shared$wf$targets_path)
+            req(shared$wf$flags$env_ready)
+            req(shared$wf$targets_path)
+            t.df(shinyCatch(vroom::vroom(
+                shared$wf$targets_path,  delim = "\t",
+                comment = "#", altrep = FALSE,
+                col_names = FALSE, col_types = vroom::cols()
+            ),
+            blocking_level = "error"))
+            updateAceEditor(
+                session, "ace_target_header",
+                value = shinyCatch(
+                    readLines(shared$wf$targets_path, warn = FALSE) %>%
+                    .[str_detect(.,"^#")] %>% paste(collapse = "\n"),
+                    blocking_level = "error"
+                )
+            )
+            updateTextInput(session, "target_data_path", value = shared$wf$env_path)
+        })
         # update table
         output$targets_df <- rhandsontable::renderRHandsontable({
             rhandsontable::rhandsontable(t.df(),
@@ -272,7 +308,7 @@ wf_targetServer <- function(id, shared){
                 else shinyjs::enable("target_upload")
                 selected_old(input$target_source)
             } else {
-                #if cancelled alert
+                #if canceled alert
                 shinyWidgets::updateRadioGroupButtons(
                     session, "target_source",
                     selected = selected_old(),
@@ -283,7 +319,8 @@ wf_targetServer <- function(id, shared){
             }
         })
         # left side checkers behaviors
-        observeEvent({input$targets_df; input$column_check}, {
+        observeEvent({input$targets_df; input$column_check}, ignoreInit = TRUE, {
+            req(t.df())
             if (!is.null(input$targets_df)) {
                 t.df(rhandsontable::hot_to_r(input$targets_df))
             }
@@ -353,12 +390,20 @@ wf_targetServer <- function(id, shared){
             check_results <- check_target(col_names = t.df()[1, ],
                                           headerlines = header_lines)
             if (all(check_results)) {
-                shinyWidgets::sendSweetAlert(
+                # jump to next step
+                shared$wf$flags$targets_ready <- TRUE
+                shinyWidgets::confirmSweetAlert(
                     session = session,
-                    title = "Added to Task",
-                    text = "All target check passed, target added to task\n
-                            You can see workflow status by clicking top right",
-                    type = "success"
+                    inputId = ns("confirm_next"),
+                    title = "Workflow environment setup done!",
+                    closeOnClickOutside = FALSE,
+                    html = TRUE,
+                    type = "success",
+                    text = HTML(glue(
+                    "
+                    Targets setup done. Go to the next step?
+                    "
+                    ))
                 )
                 shared$targets$df <- t.df()
                 writeLines(c(header_lines,
@@ -383,6 +428,11 @@ wf_targetServer <- function(id, shared){
                     type = "error"
                 )
             }
+        })
+
+        observeEvent(input$confirm_next, {
+            req(input$confirm_next)
+            shinyjs::runjs("$('#wf-wf_panel-2-heading > h4 > a').trigger('click');")
         })
     }
     # load target file

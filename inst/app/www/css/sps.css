@@ -30,6 +30,7 @@
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+
 /*
 systemPipeShiny CSS Styles
 */
@@ -168,15 +169,29 @@ img-gallery:hover {
 .desc > a:not(.collapsed):after {
     content: '- Collapse Description';
 }
-.desc a:not(.desc-body) {
-  font-size: 1.1em;
-}
+
 .desc a:not(.desc-body):link {
   text-decoration: none;
 }
 
+
 .desc hr {
     border-top: 1px solid #3c8dbc;
+}
+
+/* sps description link*/
+.desc  a {
+  margin: 0 var(--spacing, 0px);
+  font-size: var(--a_size, 1em);
+  -webkit-transition: margin 0.25s;
+  transition: margin 0.25s;
+  -webkit-transition: font-size 0.25s;
+  transition: font-size 0.25s;
+}
+
+.desc  a:hover {
+  --spacing: 4px;
+  --a_size: 1.5em;
 }
 
 /* sps control-panel*/
@@ -285,8 +300,6 @@ a.bttn-default {
 .sps-warning h4::before{
     content: "\2022 ";
 }
-
-
 
 
 /* background color of boxplus inside bt3 accordion*/
