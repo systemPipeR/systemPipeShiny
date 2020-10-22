@@ -54,6 +54,7 @@ wfUI <- function(id){
             completes = c(FALSE, FALSE, FALSE, TRUE, FALSE)
         ),
         bsplus::bs_accordion(id = ns("wf_panel")) %>%
+            bsplus::bs_set_opts(panel_type = "default") %>%
             bsplus::bs_append("1. Create a workflow environment", wf_setupUI(ns("wf_setup")), panel_type = "success") %>%
             bsplus::bs_append("2. Prepare the targets file", wf_targetUI(ns("wf_targets"))) %>%
             bsplus::bs_append("3. Prepare the workflow file", wf_wfUI(ns("wf_wf"))) %>%
@@ -102,6 +103,7 @@ wfServer <- function(id, shared){
             shinyjs::toggleCssClass("wf-wf_panel-2", "panel-success", asis = TRUE, shared$wf$flags$wf_ready)
 
         }, ignoreInit = TRUE)
+        # hide step 2,3,5 if 1 is not ready
         observeEvent(shared$wf$flags$env_ready, {
             shinyjs::toggleElement(
                 "wf_targets_displayed", asis = TRUE,
@@ -113,11 +115,40 @@ wfServer <- function(id, shared){
                 anim = TRUE, animType = "fade",
                 condition = !shared$wf$flags$env_ready
             )
-        }, ignoreInit = FALSE)
+            shinyjs::toggleElement(
+                "wf_wf_displayed", asis = TRUE,
+                anim = TRUE, animType = "fade",
+                condition = shared$wf$flags$env_ready
+            )
+            shinyjs::toggleElement(
+                "wf_wf_disable", asis = TRUE,
+                anim = TRUE, animType = "fade",
+                condition = !shared$wf$flags$env_ready
+            )
+        })
+        observeEvent(shared$wf$flags, {
+            req(all(shared$wf$flags %>% unlist()))
+            shared$wf$all_ready <- TRUE
+            shinytoastr::toastr_success(
+                "Workflow preparation done!",
+                position = "bottom-right",
+                showDuration = 3000
+            )
+        })
 
         observeEvent(shared$wf$all_ready, {
             updateSpsTimeline(session, "wf_status", 5, shared$wf$all_ready)
             shinyjs::toggleCssClass("wf-wf_panel-4", "panel-success", asis = TRUE, shared$wf$all_ready)
+            shinyjs::toggleElement(
+                "wf_run_displayed", asis = TRUE,
+                anim = TRUE, animType = "fade",
+                condition = shared$wf$flags$env_ready
+            )
+            shinyjs::toggleElement(
+                "wf_run_disable", asis = TRUE,
+                anim = TRUE, animType = "fade",
+                condition = !shared$wf$flags$env_ready
+            )
         }, ignoreInit = TRUE)
     }
     moduleServer(id, module)

@@ -269,9 +269,9 @@ wf_setupServer <- function(id, shared){
                 text = HTML(glue(
                     "
                     <ul class='text-left'>
-                      <li>The workflow environment is located at: {shared$wf$env_path}</li>
-                      <li>The targets file is located at: {shared$wf$targets_path}</li>
-                      <li>The workflow file is located at: {shared$wf$wf_path}</li>
+                      <li><b>The workflow environment is located at</b>: {shared$wf$env_path}</li>
+                      <li><b>The targets file is located at</b>: {shared$wf$targets_path}</li>
+                      <li><b>The workflow file is located at</b>: {shared$wf$wf_path}</li>
                     </ul>
                     <h3>Do you want to proceed to the next step?</h3>
                     "
@@ -280,7 +280,7 @@ wf_setupServer <- function(id, shared){
         })
         observeEvent(input$confirm_next, {
             req(input$confirm_next)
-            shinyjs::runjs("$('#wf-wf_panel-1-heading > h4 > a').trigger('click');")
+            shinyjs::runjs("$('#wf-wf_panel-1-heading > h4').trigger('click');")
         })
     }
     moduleServer(id, module)

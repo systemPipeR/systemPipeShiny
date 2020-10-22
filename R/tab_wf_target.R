@@ -79,6 +79,23 @@ wf_targetUI <- function(id){
                   </li>
                 </ul>
                 "),
+                div(class = "text-danger",
+                    tags$ul(
+                        id = ns("warn_exist"),
+                        HTML(
+                            "<li>You have chosen an <b>'Existing'</b> workflow. Upon passing
+                            'Add to task' checks, a file named <b>targetsPE.txt</b> will
+                            be written to the workflow folder. Rename/back up it if you already
+                            have one with the same name.</li>"
+                        )),
+                    tags$ul(
+                        id = ns("warn_other"),
+                        HTML(
+                            "<li>Upon passing 'Add to task' checks, the original targets file
+                            in the workflow folder will be overwritten. Rename/back up it if you do
+                            not wish it to be replaced.</li>"
+                        ))
+                ),
                 fluidRow(
                     style = "padding-left: 40%",
                     actionButton(ns("to_task_target"),
@@ -87,16 +104,17 @@ wf_targetUI <- function(id){
                         bsHoverPopover(
                             "Check targets format and add to workflow task",
                             "When you have finished editing your targets table
-                               and targets header below, clicking on the Add to
-                               task will check the targets format for you",
+                            and targets header below, clicking on the Add to
+                            task will check the targets format for you",
                             "bottom"
                         ),
                     downloadButton(ns("down_targets"), "Save") %>%
                         bsHoverPopover(
                             "Download current targets",
                             "You can download current targets file from the
-                               browser. It is recommended to click 'Add to task'
-                               first to check the format before downloading",
+                            browser. It is the best to use 'Add to task'
+                            to check the format first then come back to this
+                            page to download the file.",
                             "bottom"
                         )
                 )
@@ -184,7 +202,8 @@ wf_targetUI <- function(id){
         ),
         div(
             id = "wf_targets_disable",
-            h3("Generate a workflow environment first", style = "text-center text-warning")
+            h3("Generate a workflow environment at Step 1 first",
+               style = "text-center text-warning")
         )
     )
 }
@@ -203,10 +222,28 @@ wf_targetUI <- function(id){
 #' @noRd
 wf_targetServer <- function(id, shared){
     module <- function(input, output, session){
+        # set up
         ns <- session$ns
         ace_target_header_init <- ""
         data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
             dplyr::as_tibble()
+        # toggle elements based on options
+        observeEvent(shared$wf$env_option, {
+            shinyjs::toggleElement("warn_exist", anim = TRUE, condition = shared$wf$env_option == "exist")
+            shinyjs::toggleElement("warn_other", anim = TRUE, condition = shared$wf$env_option != "exist")
+            if(shared$wf$env_option == "exist"){
+                shinyWidgets::updateRadioGroupButtons(
+                    session,
+                    "target_source",
+                    label = "Existing option selected, no default file, please upload targets",
+                    choiceNames = "Upload",
+                    choiceValues = "upload"
+                )
+            }
+        })
+        observeEvent(input$target_source, {
+            shinyjs::toggleElement("target_upload", anim = TRUE, condition = input$target_source == "upload")
+        })
         # some reactive values to pass around observe
         selected_old <- reactiveVal("upload")
         selected_flag <- reactiveVal(TRUE)
@@ -217,15 +254,15 @@ wf_targetServer <- function(id, shared){
         #######
         observeEvent(input$set, {
             shared$wf$flags$env_ready = T
-            shared$wf$targets_path = "riboseq/targetsPE.txt"
+            shared$wf$targets_path = "upload_required"
             shared$wf$env_path = normalizePath("riboseq")
+            shared$wf$env_option = "exist"
         })
         #####
-        observeEvent(shared$wf$flags$env_ready, {
-            print(shared$wf$flags$env_ready)
-            print(shared$wf$targets_path)
+        observeEvent(c(shared$wf$flags$env_ready), {
             req(shared$wf$flags$env_ready)
             req(shared$wf$targets_path)
+            req(shared$wf$targets_path != "upload_required")
             t.df(shinyCatch(vroom::vroom(
                 shared$wf$targets_path,  delim = "\t",
                 comment = "#", altrep = FALSE,
@@ -240,6 +277,9 @@ wf_targetServer <- function(id, shared){
                     blocking_level = "error"
                 )
             )
+
+        })
+        observeEvent(shared$wf$env_path, {
             updateTextInput(session, "target_data_path", value = shared$wf$env_path)
         })
         # update table
@@ -250,16 +290,15 @@ wf_targetServer <- function(id, shared){
                 rhandsontable::hot_context_menu(allowRowEdit = TRUE,
                                                 allowColEdit = TRUE)
         })
-
         observeEvent(c(input$target_source, not_empty(target_upload())),
                      ignoreInit = TRUE, ignoreNULL = TRUE, {
+            req(shared$wf$targets_path != "upload_required" | not_empty(target_upload()))
             if (selected_flag() == TRUE) {
                 shinyWidgets::confirmSweetAlert(
                     session,inputId = "sweet_changetarget_confirm",
                     title = "Do you want to change target Source?",
                     text = "If you change target source or load new file,
-                            target data will be reset in this tab and
-                            'Task' tab. You will LOSE unsaved data",
+                            target data will be reset. You will LOSE unsaved data",
                     type = "warning"
                 )
             } else {
@@ -272,6 +311,7 @@ wf_targetServer <- function(id, shared){
                 t.df(
                     hot_target(targets_df = input$targets_df,
                                targets_p = target_upload()$datapath,
+                               default_p = shared$wf$targets_path,
                                targets_p_old = targets_p_old(),
                                choice = input$target_source,
                                choice_old = selected_old(),
@@ -287,7 +327,9 @@ wf_targetServer <- function(id, shared){
                     targets_p_old(target_upload()$datapath)
                 }
                 if (input$target_source != "upload")
-                    header_lines <- ace_target_header_init
+                    header_lines <-
+                    readLines(shared$wf$targets_path, warn = FALSE) %>%
+                    .[str_detect(.,"^#")] %>% paste(collapse = "\n")
                 shinyAce::updateAceEditor(
                     session,
                     editorId = "ace_target_header",
@@ -303,9 +345,6 @@ wf_targetServer <- function(id, shared){
                     timeOut = 2000
                 )
                 shared$wf_flags$targets_ready = FALSE
-                if (input$target_source != "upload")
-                    shinyjs::disable("target_upload")
-                else shinyjs::enable("target_upload")
                 selected_old(input$target_source)
             } else {
                 #if canceled alert
@@ -372,7 +411,7 @@ wf_targetServer <- function(id, shared){
         # download button
         output$down_targets <- downloadHandler(
             filename <- function() {
-                "targets.txt"
+                "targetsPE.txt"
             },
             content <- function(filename) {
                 writeLines(
@@ -381,37 +420,60 @@ wf_targetServer <- function(id, shared){
                             1, paste,
                             collapse = "\t")),
                     filename)
-            })
+        })
         # add to task
         observeEvent(input$to_task_target, {
-            shared$targets$file <- tempfile(pattern = "target", fileext = ".txt")
             # check col_names, header lines
             header_lines <- isolate(input$ace_target_header)
             check_results <- check_target(col_names = t.df()[1, ],
                                           headerlines = header_lines)
             if (all(check_results)) {
-                # jump to next step
+                shinyCatch({
+                    # fix path for existing option
+                    if(shared$wf$targets_path == "upload_required")
+                        shared$wf$targets_path <- file.path(shared$wf$env_path, "targetsPE.txt")
+                    old_mtime <- file.mtime(shared$wf$targets_path)
+                    # create back up folder
+                    dir.create(file.path(shared$wf$env_path, "backup"), recursive = TRUE, showWarnings = FALSE)
+                    # if targets file exists, back it up
+                    if(file.exists(shared$wf$targets_path))
+                        file.copy(
+                            shared$wf$targets_path,
+                            file.path(
+                                shared$wf$env_path,
+                                "backup",
+                                paste0(
+                                    glue("bk{Sys.time() %>% format('%Y%m%d%H%M%S')}"),
+                                    basename(shared$wf$targets_path))
+                            ),
+                            overwrite = TRUE
+                        )
+                    # overwrite current file
+                    writeLines(
+                        c(header_lines, apply(t.df(), 1, paste, collapse = "\t")),
+                        shared$wf$targets_path
+                    )
+                    if(identical(old_mtime, file.mtime(shared$wf$targets_path)))
+                        stop("File ", shared$wf$targets_path, " can not be created or not modified")
+                    shared$wf$targets_path <- normalizePath(shared$wf$targets_path)
+                }, blocking_level = "error")
                 shared$wf$flags$targets_ready <- TRUE
                 shinyWidgets::confirmSweetAlert(
                     session = session,
                     inputId = ns("confirm_next"),
-                    title = "Workflow environment setup done!",
+                    title = "Targets file setup done!",
                     closeOnClickOutside = FALSE,
                     html = TRUE,
                     type = "success",
                     text = HTML(glue(
                     "
-                    Targets setup done. Go to the next step?
+                    <ul class='text-left'>
+                      <li><b>The targets file is located at</b>: {shared$wf$targets_path}</li>
+                    </ul>
+                    <h3>Do you want to proceed to the next step?</h3>
                     "
                     ))
                 )
-                shared$targets$df <- t.df()
-                writeLines(c(header_lines,
-                             apply(shared$targets$df,
-                                   1, paste,
-                                   collapse = "\t")),
-                           shared$targets$file)
-                shared$wf_flags$targets_ready = TRUE
             } else {
                 sendSweetAlert(
                     session = session,
@@ -429,21 +491,21 @@ wf_targetServer <- function(id, shared){
                 )
             }
         })
-
+        # going to next tab
         observeEvent(input$confirm_next, {
             req(input$confirm_next)
-            shinyjs::runjs("$('#wf-wf_panel-2-heading > h4 > a').trigger('click');")
+            shinyjs::runjs("$('#wf-wf_panel-2-heading > h4').trigger('click');")
         })
     }
     # load target file
-    hot_target <- function(targets_df, targets_p=NULL, targets_p_old=NULL,
+    hot_target <- function(targets_df, targets_p=NULL, default_p = NULL, targets_p_old=NULL,
                            choice, choice_old, data_init){
         targets_p <- switch(choice,
                             "upload" = targets_p,
-                            "pe" = "data/targetsPE.txt",
-                            "se" = "data/targets.txt"
+                            "default" = "data/targetsPE.txt"
         )
         if(is.null(targets_p)) return(data_init)
+        if(is.null(default_p)) return(data_init)
         if((choice != choice_old) | (targets_p != targets_p_old)) {
             df.t <- shinyCatch(vroom::vroom(
                 targets_p,  delim = "\t",

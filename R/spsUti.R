@@ -422,9 +422,10 @@ reactiveStop <- function(message = "\r              ", class = NULL){
 }
 
 ## check and time out when opening a online file
+#' @importFrom httr GET timeout stop_for_status
 checkUrl <- function(url, timeout = 5){
     if(!stringr::str_detect(url, "^http")) stop("url need to start with 'http(s)'")
-    if(!is.numeric(timeout)) stop("timeout need to a number")
+    if(!is.numeric(timeout) | timeout < 0) stop("timeout need to a > 0 number")
     tryCatch({
         httr::GET(url, httr::timeout(timeout)) %>%
             httr::stop_for_status()

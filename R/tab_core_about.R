@@ -5,12 +5,16 @@ core_aboutUI <- function(id){
     ns <- NS(id)
     tags$div(
         tabTitle("About this app"),
-        fluidRow(
+        boxPlus(
+            closable = FALSE,
+            collapsible = TRUE,
+            width = 12,
+            style = "height: 500px; overflow-Y: auto;",
             if(checkUrl("https://raw.githubusercontent.com/lz100/systemPipeShiny/master/NEWS.md")){
                 includeMarkdown("https://raw.githubusercontent.com/lz100/systemPipeShiny/master/NEWS.md")
             } else {
                 div(
-                    h3("Cannot get SPS updates"),
+                    h3("Cannot download SPS updates"),
                     p("Visit here:"),
                     tags$a(href="https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md",
                            "https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md")
@@ -20,7 +24,7 @@ core_aboutUI <- function(id){
         h3("Developers"),
         fluidRow(
             shinydashboardPlus::widgetUserBox(
-                title = HTML('<a href="mailto:le.zhang001@email.ucr.edu">Le Zhang</a>'),
+                title = HTML('<a href="https://github.com/lz100">Le Zhang</a>'),
                 subtitle = "Student",
                 type = 2,
                 width = 3,
@@ -29,7 +33,7 @@ core_aboutUI <- function(id){
                 collapsible = FALSE
             ),
             shinydashboardPlus::widgetUserBox(
-                title = HTML('<a href="mailto:danielac@ucr.edu">Daniela Cassol</a>'),
+                title = HTML('<a href="https://github.com/dcassol">Daniela Cassol</a>'),
                 subtitle = "Postdoc",
                 type = 2,
                 width = 3,
@@ -38,7 +42,7 @@ core_aboutUI <- function(id){
                 collapsible = FALSE
             ),
             shinydashboardPlus::widgetUserBox(
-                title =  HTML('<a href="mailto:prama008@ucr.edu">Ponmathi Ramasamy</a>'),
+                title =  HTML('<a href="https://github.com/mathrj">Ponmathi Ramasamy</a>'),
                 subtitle = "Student",
                 width = 3,
                 type = 2,
@@ -47,7 +51,7 @@ core_aboutUI <- function(id){
                 collapsible = FALSE
             ),
             shinydashboardPlus::widgetUserBox(
-                title = HTML('<a href="mailto:jzhan067@ucr.edu">Jianhai Zhang</a>'),
+                title = HTML('<a href="https://github.com/jianhaizhang">Jianhai Zhang</a>'),
                 subtitle = "Student",
                 type = 2,
                 width = 3,
@@ -56,7 +60,7 @@ core_aboutUI <- function(id){
                 collapsible = FALSE
             ),
             shinydashboardPlus::widgetUserBox(
-                title = HTML('<a href="mailto:gmosh001@ucr.edu ">Gordon Mosher</a>'),
+                title = HTML('<a href="https://github.com/gdmosher">Gordon Mosher</a>'),
                 subtitle = "Student",
                 type = 2,
                 width = 3,
@@ -65,7 +69,7 @@ core_aboutUI <- function(id){
                 collapsible = FALSE
             ),
             shinydashboardPlus::widgetUserBox(
-                title = HTML('<a href="mailto:tgirke@ucr.edu">Thomas Girke</a>'),
+                title = HTML('<a href="https://girke.bioinformatics.ucr.edu">Thomas Girke</a>'),
                 subtitle = "PI",
                 type = 2,
                 width = 3,

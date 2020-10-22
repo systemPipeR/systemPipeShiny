@@ -22,9 +22,17 @@
 
 -   A new UI component `spsTimeline` : horizontal timeline UI unit, has status, can be updated on server by `updateSpsTimeline`.
 
+-   A new UI `bsHoverPopover`: enhanced high level function of `bsPlus::HoverPopover`, additional JS used to make the popover work on buttons as well.
+
 -   Fixed some link problems in `renderDesc`. Better links in `renderDesc`, enlarged and spacing animation for links.
 
--   The news is now rendered on *about* tab in the app, also reduced developer content on about page.
+-   Change on about page
+
+    -   The news is now rendered on *about* tab in the app
+
+    -   reduced developer content on about page.
+
+    -   changed developer emails to github links.
 
 ## 2020.10.09
 
@@ -32,4 +40,4 @@
 
 -   RNAseq part is now only in one tab as big module: users upload the targets file and a raw count table, and make different plots in subtabs.
 
--   This introduced a lot of dependencies, will decide later if keep as it is or separate it to *spsBio.*
+    -   This introduced a lot of dependencies, will decide later if we keep as it is or separate it to *spsBio.*
