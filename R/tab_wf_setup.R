@@ -41,12 +41,36 @@ wf_setupUI <- function(id){
 
         '),
         spsHr(),
-        column(1),
+        tags$script(src="sps/js/sps_setup_box_img.js"),
+        # column(1),
         boxPlus(
-            width = 10,
+            width = 12,
             collapsible = FALSE,
             closable = FALSE,
             title = "Initiate a workflow environment",
+            id = "wf-setup_box",
+            tags$img(id = "setup-box-img", src = 'sps/img/sps.png'),
+            tags$style("
+            #wf-setup_box {
+              height: 500px;
+              position: relative;
+            }
+           #setup-box-img {
+              position: absolute;
+              display: inline-block;
+              height: 250px;
+              width: 300px;
+              align-items: center;
+              text-align: center;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, 0);
+              opacity: 0.25;
+            }
+            #wf-setup_box.box-body::before  {
+              display: block !important;
+            }
+            "),
             fluidRow(
                 column(
                     6,
@@ -120,7 +144,7 @@ wf_setupUI <- function(id){
                         'data', 'param', and 'results'")
             )
         ),
-        column(1),
+        # column(1),
         absolutePanel(
             id = ns("gen_wf_pg_panel"),
             style = "background-color: #ecf0f5; border: 2px solid #d2d6de; border-radius: 5%; display: none;",
