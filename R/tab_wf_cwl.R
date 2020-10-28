@@ -102,36 +102,38 @@ wf_cwlUI <- function(id){
                 "
                 <ul>
                   <li>
-                    When you have finished editing your targets table and
-                    targets header below, clicking on the <b>Add to task</b>
-                    will check the targets format for you.
-                  </li>
-                  <li>
-                    If everthing is correct, this targets file will be write
-                    back to the workflow environment folder and will be used in step <b>5</b>.
-                  </li>
-                  <li>
-                    You can also <b>Save</b> it as
-                    an individual file from the browser.</p>
+                    Choose which targets columns to replace CWL input variables from
+                    the box below and hit <b>Parse</b>.
                   </li>
                 </ul>
                 "),
             fluidRow(
-                class = "center-block",
-                actionButton(ns("Parse"),
+                class = "center-block text-center",
+                actionButton(ns("parse"),
                              label = "Parse CWL",
                              icon("angle-right")) %>%
                     bsHoverPopover(
                         "Parse the CWL file",
                         "When you have loaded all 3 files by using examples or uploads,
-                        select which variables ",
+                        select which variables you want to replace and parse.",
                         "bottom"
-                    ),
+                    )
             )
+        ),
+        boxPlus(
+            title = "Choose which targets columns to replace CWL input variables:",
+            class = "center-block", width = 12, closable = FALSE, collapsible = TRUE,
+            fluidRow(id = ns("replace-box"))
+        ),
+        boxPlus(
+            class = "center-block",
+            closable = FALSE, width = 12, collapsible = TRUE,
+            title = "Parse Results",
+            verbatimTextOutput(ns("parse_out"))
         ),
         spsHr(),
         bsplus::bs_accordion(id = ns("cwl_panel")) %>%
-            bsplus::bs_set_opts(panel_type = "default") %>%
+            bsplus::bs_set_opts(panel_type = "info") %>%
             bsplus::bs_append(
                 "1. Targets file",
                 fluidRow(
@@ -144,8 +146,8 @@ wf_cwlUI <- function(id){
                         ),
                         tags$li(
                             id = ns("targets_default"),
-                            class = "text-warning",
-                            "Loaded the default targets file"
+                            class = "text-success",
+                            "Workflow folder detected, loaded the default targets file for you."
                         )
                     ),
                     column(
@@ -207,7 +209,8 @@ wf_cwlUI <- function(id){
                         theme = "Chrome",
                         value = "",
                         placeholder = "yaml format",
-                        mode = "yaml"
+                        mode = "yaml",
+                        readOnly = TRUE
                     )
                 )
             ) %>%
@@ -237,23 +240,11 @@ wf_cwlUI <- function(id){
                         theme = "Chrome",
                         value = "",
                         placeholder = "yaml format",
-                        mode = "yaml"
+                        mode = "yaml",
+                        readOnly = TRUE
                     )
                 )
-            ),
-        fluidRow(style = "background-color: #f5f5f5; margin: 5px;",
-                 h3("Parse the command"),
-                 boxPlus(
-                     closable = FALSE, width = 12,
-                     actionButton(ns("parse"), "Parse CWL"),
-                     clearableTextInput(
-                         ns("parse_replace"),
-                         label = "Specify replacing variables",
-                         value = 'c(FileName = "_FASTQ_PATH1_", SampleName = "_SampleName_")'
-                     ),
-                     verbatimTextOutput(ns("parse_out"))
-                 )
-        )
+            )
     )
 }
 
@@ -263,41 +254,51 @@ wf_cwlUI <- function(id){
 wf_cwlServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
+        # setup
+        temp_folder <- tempdir()
         ## targets file
-        targets_path <- dynamicFileServer(input, session, id = "targets_upload")
+        observe({
+            shinyjs::toggleElement(
+                "targets_eg",  anim = TRUE, animType = "fade",
+                condition = !as.logical(shared$wf$flags$env_ready)
+            )
+            shinyjs::toggleElement(
+                "targets_default",  anim = TRUE, animType = "fade",
+                condition = shared$wf$flags$env_ready
+            )
+        })
         observeEvent(input$source_targets, {
             shinyjs::toggleElement(id = "targets_upload", anim = TRUE)
         })
-        observeEvent(c(targets_path(), input$source_targets), {
-            if(input$source_targets == "eg"){
-                targets_path <- file.path("data", "targetsPE.txt")
-            } else targets_path <- targets_path()$datapath
+        # path resolve
+        targets_path <- reactiveVal(NULL)
+        observeEvent(c(shared$wf$targets_path, shared$wf$flags$targets_ready,
+                       input$source_targets), {
+            if(emptyIsFalse(shared$wf$targets_path)){
+                targets_path(shared$wf$targets_path)
+            } else {
+                targets_path(file.path("data", "targetsPE.txt"))
+            }
+            if(input$source_targets == "upload") targets_path(targets_upload_path()$datapath)
         })
+        targets_upload_path <- dynamicFileServer(input, session, id = "targets_upload")
+        # load
         data_targets <- reactive({
-            data_path <- targets_path()
             loadDF(
                 choice = input$source_targets,
-                upload_path = data_path$datapath,
+                upload_path = targets_upload_path()$datapath,
                 delim = input$targets_delim,
                 comment = input$targets_comment,
-                eg_path = file.path("data", "targetsPE.txt")
+                eg_path = targets_path()
             )
         })
         output$targets <- DT::renderDT({
             data_targets <- data_targets()
+            targets_columns(names(data_targets)) # get col names for parsing
             DT::datatable(
                 data_targets,
                 style = "bootstrap",
-                class = "compact",  filter = "top",
-                extensions = c( 'Scroller','Buttons'),
-                options = list(
-                    dom = 'lBfrtip',
-                    buttons = c('copy', 'csv', 'excel'),
-                    deferRender = TRUE,
-                    scrollY = 200, scrollX = TRUE, scroller = TRUE,
-                    columnDefs = list(list(className = 'dt-center',
-                                           targets = "_all"))
-                )
+                class = "compact"
             )
         })
         ## cwl file
@@ -344,18 +345,56 @@ wf_cwlServer <- function(id, shared){
                         readLines(data_cwl_input$path) %>%
                             paste(collapse = "\n"), blocking_level = "error")
                 })
+            cwl_input_vars(
+                readLines(data_cwl_input$path) %>%
+                    {.[str_detect(., ".*:")]} %>%
+                    {.[str_detect(., ":\\s{0,}_[a-zA-Z0-9_]+_\\s{0,}$")]} %>%
+                    str_extract("_[a-zA-Z0-9_]+_")
+            )
         })
-
+        # setup for parsing
+        cwl_input_vars <- reactiveVal("")
+        targets_columns <- reactiveVal("")
+        observeEvent(c(cwl_input_vars(), targets_columns()), {
+            req(emptyIsFalse(targets_columns()))
+            removeUI(
+                selector = glue('#{ns("replace-box")} div'),
+                multiple = TRUE
+            )
+            for(i in seq_along(cwl_input_vars())){
+                insertUI(
+                    glue('#{ns("replace-box")}'),
+                    where = "beforeEnd",
+                    ui =  column(3, shinyWidgets::pickerInput(
+                        inputId = ns(paste0("replace-", i)),
+                        label = cwl_input_vars()[i],
+                        choices = targets_columns(),
+                        options = list(style = "btn-primary")
+                    ))
+                )
+            }
+        })
         ## parsing
         observeEvent(input$parse, {
-            eval(parse(text = input$parse_replace)) %>% print()
+            cwl_file <- file.path(temp_folder, "wf.cwl")
+            cwl_input <- file.path(temp_folder, "input.yml")
+            targets <- targets_path()
+            file.copy(data_cwl$path, cwl_file, overwrite = TRUE)
+            file.copy(data_cwl_input$path, cwl_input, overwrite = TRUE)
+
+            args <- shinyCatch({
+                # parse replacement
+                replace_cols <- lapply(seq_along(cwl_input_vars()), function(i){
+                    input[[paste0("replace-", i)]]
+                }) %>% unlist()
+                inputvars <- cwl_input_vars()
+                names(inputvars) <- replace_cols
+                # parsing
+                args <- systemPipeR::loadWorkflow(targets = targets, wf_file = "wf.cwl",
+                                                  input_file = "input.yml", dir_path = temp_folder)
+                systemPipeR::renderWF(args, inputvars = inputvars)
+            }, blocking_level = "error")
             output$parse_out <- renderPrint({
-                targetspath <- system.file("extdata", "targets.txt", package = "systemPipeR")
-                dir_path <- system.file("extdata/cwl/hisat2/hisat2-se", package = "systemPipeR")
-                args <- systemPipeR::loadWorkflow(targets = targetspath, wf_file = "hisat2-mapping-se.cwl",
-                                                  input_file = "hisat2-mapping-se.yml", dir_path = dir_path)
-                args <- systemPipeR::renderWF(args, inputvars = c(FileName = "_FASTQ_PATH1_",
-                                                                  SampleName = "_SampleName_"))
                 systemPipeR::cmdlist(args) %>% unlist() %>% unname()
             })
         })

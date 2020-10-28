@@ -4,6 +4,12 @@
 
 ## 2020.10.27
 
+### Workflow module CWL tab
+
+-   Now this tab has a dynamically rendered dropdown panel which allows users to choose which column for the targets table to map to the variables in CWL input file.
+
+## 2020.10.27
+
 ### Workflow module fully functioning
 
 -   Now you can run a full example workflow in SPS by choosing the "Example" option on workflow setup step.
