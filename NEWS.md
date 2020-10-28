@@ -2,6 +2,14 @@
 
 <!--#   YYYY.MM.DD -->
 
+## 2020.10.27
+
+### Workflow module fully functioning
+
+-   Now you can run a full example workflow in SPS by choosing the "Example" option on workflow setup step.
+
+-   Other systemPipeR preconfiged workflows will cause problems because formatting issues that will cause errors in `systemPipeR::runWF` function, not introduced by SPS. Please wait the updates on systemPipeR to fix this. You can still use SPS to prepare files for all workflows. That means, step 1-4 will work, step 5 will give you errors if you choose a workflow which is not "Example".
+
 ## 2020.10.22
 
 ### Rework on the workflow part

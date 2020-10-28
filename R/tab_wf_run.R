@@ -2,9 +2,13 @@
 wf_runUI <- function(id){
     ns <- NS(id)
     tagList(
-        tabTitle("Run Workflow"),
-        renderDesc(id = ns("desc"),
-        '
+        actionButton(ns("set"), "set"),
+        div(
+            id = "wf_run_displayed",
+            style = "display:none",
+            tabTitle("Run Workflow"),
+            renderDesc(id = ns("desc"),
+                       '
         #### Running the workflow
         Directly running the prepared workflow from SPS will be supported soon.
         At this point, you should have prepared all the three very important
@@ -15,19 +19,20 @@ wf_runUI <- function(id){
         Copy these files to your SPR workflow project root and follow SPR
         instructions.
 
-        When you are done with workflow running and obtained some results,
+        When you are done with workflow running and have obtained some results,
         come back to SPS to make some beautiful plots in the "Visualization".
 
-        **This module needs to run in *Unix-like* system. Windows will fail to run even with the example workflow**
+        **Most SPR workflows needs to run in *Unix-like* system. Windows will fail to run except the example workflow**
         '),
-        spsHr(),
-        boxPlus(
-            width = 8,
-            collapsible = FALSE,
-            closable = FALSE,
-            title = "Initiate a workflow environment",
-            fluidRow(
-                    actionButton(ns("gen_env"), "Run workflow", style = "margin-top: 25px;") %>%
+            spsHr(),
+            boxPlus(
+                width = 8,
+                collapsible = FALSE,
+                closable = FALSE,
+                title = "Initiate a workflow environment",
+                fluidRow(
+                    class = "text-center",
+                    actionButton(ns("run_session"), "Run workflow", style = "margin-top: 25px;") %>%
                         bsHoverPopover(
                             "Start a workflow running",
                             "Clicking here will direct you to a workflow running
@@ -36,33 +41,27 @@ wf_runUI <- function(id){
                             with other part of SPS.",
                             "bottom"
                         )
+                ),
+                tags$ul(
+                    id = ns("example_tip"),
+                    HTML("<li>A workflow is ready to run.</li>")
+                )
             ),
-            tags$ul(
-                id = ns("example_tip"),
-                HTML("<li>If you have submitted .</li>")
-            ),
-            tags$ul(
-                class = "text-danger", id = ns("gen_warning"),
-                tags$li("This will run a non-example workflow.
-                If the required command
-                line tools are not installed, the workflow will fail."),
-                HTML("<li>Most other default template workflows like RNAseq,
-                Varseq provide more than one alignment, calling, and other methods. You
-                only need to choose one method on certain steps. Make sure to select
-                the desired method steps in the <strong>Workflow File tab</strong>.
-                Using the defualt workflow file without
-                any custom selection is not recommended.</li>")
+            boxPlus(
+                title = "Required files in task",
+                width = 4,
+                closable = FALSE,
+                collapsible = FALSE,
+                strong(id = ns("intask_targets_title"), "Targets file:"),
+                p(id = ns("intask_targets"), "No file submitted"),
+                strong(id = ns("intask_wf_title"),"Workflow file:"),
+                p(id = ns("intask_wf"), "No file submitted")
             )
         ),
-        boxPlus(
-            title = "Required files in task",
-            width = 4,
-            closable = FALSE,
-            collapsible = FALSE,
-            strong(id = ns("intask_targets_title"), "Targets file:"),
-            p(id = ns("intask_targets"), "No file submitted"),
-            strong(id = ns("intask_wf_title"),"Workflow file:"),
-            p(id = ns("intask_wf"), "No file submitted")
+        div(
+            id = "wf_run_disable",
+            h3("Complete step 1-3 first.",
+               style = "text-center text-warning")
         )
     )
 
@@ -82,41 +81,28 @@ wf_runServer <- function(id, shared){
                 id = "gen_warning", anim = TRUE,
                 condition = input$choose_wf != "eg")
         })
-        # resolve dir path input
-        roots <- c(current=getwd(), shinyFiles::getVolumes()())
-        shinyFiles::shinyFileChoose(input, 'exist_wf', roots = roots, session = session)
-        wf_exist_path <- reactive(NULL)
-        observeEvent(input[['exist_wf']], {
-            req(is.list(input[['exist_wf']]))
-            file_selected <- shinyFiles::parseFilePaths(roots, input[['exist_wf']])
-            updateTextInput(inputId = 'exist_show',
-                            session = session,
-                            placeholder = unname(file_selected$datapath))
-            wf_exist_path({as.data.frame(file_selected)})
+        observeEvent(input$set, {
+            shared$wf$all_ready <- TRUE
         })
         # right side display in task files
-        observeEvent(shared$targets$file, {
-            req(shared$wf_flags$targets_ready)
-            req(shared$targets$file)
-            shinyjs::html("intask_targets", shared$targets$file)
+        observeEvent(shared$wf$all_ready, {
+            shinyjs::html("intask_targets", shared$wf$targets_path)
             shinyjs::html("intask_targets_title", "Targets file (Ready):")
             shinyjs::addCssClass("intask_targets_title", "text-success")
-        })
-        observeEvent(shared$wf$file, {
-            req(shared$wf_flags$wf_ready)
-            req(shared$wf$file)
-            shinyjs::html("intask_wf", shared$wf$file)
+            shinyjs::html("intask_wf", shared$wf$wf_path)
             shinyjs::html("intask_wf_title", "Workflow file (Ready):")
             shinyjs::addCssClass("intask_wf_title", "text-success")
         })
         ## open close wf push bar
-        pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
-        observeEvent(input$gen_env, ignoreInit = TRUE, {
+        observeEvent(input$run_session, ignoreInit = TRUE, {
             pushbar::pushbar_open(id = "core_top-wf_push")
+            shared$wf$wf_session_open <- TRUE
             shared$wf$wd_old <- spsOption("app_path")
-            setwd("new")
+            setwd(shared$wf$env_path)
             print(getwd())
         })
+
+        # listen to log change
     }
     moduleServer(id, module)
 }

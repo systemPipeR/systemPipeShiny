@@ -92,96 +92,155 @@ wf_cwlUI <- function(id){
         ```
         '),
         spsHr(),
-        fluidRow(style = "background-color: #f5f5f5; margin: 5px;",
-                 h3("Load targets table"),
-                 column(
-                     3,
-                     boxPlus(
-                         closable = FALSE, width = 12,
-                         radioGroupButtons(
-                             inputId = ns("source_targets"),
-                             label = "Choose your targets file source:",
-                             selected = "eg",
-                             choiceNames = c("Upload", "Example"),
-                             choiceValues = c("upload", "eg"),
-                             justified = TRUE, status = "primary",
-                             checkIcon = list(
-                                 yes = icon("ok", lib = "glyphicon"),
-                                 no = icon(""))
-                         ),
-                         dynamicFile(id = ns("targets_upload")),
-                         shinyWidgets::pickerInput(
-                             inputId = ns("targets_delim"),
-                             label = "File delimiter",
-                             choices = c(Tab="\t", `,`=",", space=" ",
-                                         `|`="|", `:`=":", `;`=";"),
-                             options = list(style = "btn-primary")
-                         ),
-                         clearableTextInput(
-                             ns("targets_comment"), "File comments", value = "#")
-                     )
-                 ),
-                 boxPlus(
-                     closable = FALSE, width = 9,
-                     DT::DTOutput(ns("targets"))
-                 )
-        ), spsHr(),
-        fluidRow(style = "background-color: #f5f5f5; margin: 5px;",
-                 h3("Load CWL running file"),
-                 column(
-                     3,
-                     boxPlus(
-                         closable = FALSE, width = 12,
-                         radioGroupButtons(
-                             inputId = ns("source_cwl"),
-                             label = "Choose your CWL file source:",
-                             selected = "eg",
-                             choiceNames = c("Upload", "Example"),
-                             choiceValues = c("upload", "eg"),
-                             justified = TRUE, status = "primary",
-                             checkIcon = list(
-                                 yes = icon("ok", lib = "glyphicon"),
-                                 no = icon(""))
-                         ),
-                         dynamicFile(id = ns("cwl_upload"))
-                     )
-                 ),
-                 shinyAce::aceEditor(
-                     outputId = ns("ace_cwl"),
-                     theme = "Chrome",
-                     value = "",
-                     placeholder = "yaml format",
-                     mode = "yaml"
-                 )
-        ), spsHr(),
-        fluidRow(style = "background-color: #f5f5f5; margin: 5px;",
-                 h3("Load CWL input file"),
-                 column(
-                     3,
-                     boxPlus(
-                         closable = FALSE, width = 12,
-                         radioGroupButtons(
-                             inputId = ns("source_cwl_input"),
-                             label = "Choose your CWL input file source:",
-                             selected = "eg",
-                             choiceNames = c("Upload", "Example"),
-                             choiceValues = c("upload", "eg"),
-                             justified = TRUE, status = "primary",
-                             checkIcon = list(
-                                 yes = icon("ok", lib = "glyphicon"),
-                                 no = icon(""))
-                         ),
-                         dynamicFile(id = ns("cwl_input_upload"))
-                     )
-                 ),
-                 shinyAce::aceEditor(
-                     outputId = ns("ace_cwl_input"),
-                     theme = "Chrome",
-                     value = "",
-                     placeholder = "yaml format",
-                     mode = "yaml"
-                 )
-        ), spsHr(),
+        boxPlus(
+            title = "Parse CWL files",
+            closable = FALSE, collapsible = FALSE,
+            status = "teal",
+            width = 12,
+            class = "center-block",
+            HTML(
+                "
+                <ul>
+                  <li>
+                    When you have finished editing your targets table and
+                    targets header below, clicking on the <b>Add to task</b>
+                    will check the targets format for you.
+                  </li>
+                  <li>
+                    If everthing is correct, this targets file will be write
+                    back to the workflow environment folder and will be used in step <b>5</b>.
+                  </li>
+                  <li>
+                    You can also <b>Save</b> it as
+                    an individual file from the browser.</p>
+                  </li>
+                </ul>
+                "),
+            fluidRow(
+                class = "center-block",
+                actionButton(ns("Parse"),
+                             label = "Parse CWL",
+                             icon("angle-right")) %>%
+                    bsHoverPopover(
+                        "Parse the CWL file",
+                        "When you have loaded all 3 files by using examples or uploads,
+                        select which variables ",
+                        "bottom"
+                    ),
+            )
+        ),
+        spsHr(),
+        bsplus::bs_accordion(id = ns("cwl_panel")) %>%
+            bsplus::bs_set_opts(panel_type = "default") %>%
+            bsplus::bs_append(
+                "1. Targets file",
+                fluidRow(
+                    h3("Load targets table"),
+                    tags$ul(
+                        tags$li(
+                            id = ns("targets_eg"),
+                            class = "text-warning",
+                            "You have not setup a workflow environment, loaded an external example for you."
+                        ),
+                        tags$li(
+                            id = ns("targets_default"),
+                            class = "text-warning",
+                            "Loaded the default targets file"
+                        )
+                    ),
+                    column(
+                        3,
+                        boxPlus(
+                            closable = FALSE, width = 12,
+                            radioGroupButtons(
+                                inputId = ns("source_targets"),
+                                label = "Choose your targets file source:",
+                                selected = "eg",
+                                choiceNames = c("Upload", "Default/Example"),
+                                choiceValues = c("upload", "eg"),
+                                justified = TRUE, status = "primary",
+                                checkIcon = list(
+                                    yes = icon("ok", lib = "glyphicon"),
+                                    no = icon(""))
+                            ),
+                            dynamicFile(id = ns("targets_upload")),
+                            shinyWidgets::pickerInput(
+                                inputId = ns("targets_delim"),
+                                label = "File delimiter",
+                                choices = c(Tab="\t", `,`=",", space=" ",
+                                            `|`="|", `:`=":", `;`=";"),
+                                options = list(style = "btn-primary")
+                            ),
+                            clearableTextInput(
+                                ns("targets_comment"), "File comments", value = "#")
+                        )
+                    ),
+                    boxPlus(
+                        closable = FALSE, width = 9,
+                        DT::DTOutput(ns("targets"))
+                    )
+                )
+            ) %>%
+            bsplus::bs_append(
+                "2. CWL running file",
+                fluidRow(
+                    column(
+                        3,
+                        boxPlus(
+                            closable = FALSE, width = 12,
+                            radioGroupButtons(
+                                inputId = ns("source_cwl"),
+                                label = "Choose your CWL file source:",
+                                selected = "eg",
+                                choiceNames = c("Upload", "Example"),
+                                choiceValues = c("upload", "eg"),
+                                justified = TRUE, status = "primary",
+                                checkIcon = list(
+                                    yes = icon("ok", lib = "glyphicon"),
+                                    no = icon(""))
+                            ),
+                            dynamicFile(id = ns("cwl_upload"))
+                        )
+                    ),
+                    shinyAce::aceEditor(
+                        outputId = ns("ace_cwl"),
+                        theme = "Chrome",
+                        value = "",
+                        placeholder = "yaml format",
+                        mode = "yaml"
+                    )
+                )
+            ) %>%
+            bsplus::bs_append(
+                "3. CWL input file",
+                fluidRow(
+                    column(
+                        3,
+                        boxPlus(
+                            closable = FALSE, width = 12,
+                            radioGroupButtons(
+                                inputId = ns("source_cwl_input"),
+                                label = "Choose your CWL input file source:",
+                                selected = "eg",
+                                choiceNames = c("Upload", "Example"),
+                                choiceValues = c("upload", "eg"),
+                                justified = TRUE, status = "primary",
+                                checkIcon = list(
+                                    yes = icon("ok", lib = "glyphicon"),
+                                    no = icon(""))
+                            ),
+                            dynamicFile(id = ns("cwl_input_upload"))
+                        )
+                    ),
+                    shinyAce::aceEditor(
+                        outputId = ns("ace_cwl_input"),
+                        theme = "Chrome",
+                        value = "",
+                        placeholder = "yaml format",
+                        mode = "yaml"
+                    )
+                )
+            ),
         fluidRow(style = "background-color: #f5f5f5; margin: 5px;",
                  h3("Parse the command"),
                  boxPlus(

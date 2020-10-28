@@ -36,7 +36,8 @@ wf_wfUI <- function(id){
             #### Add to task
             Clicking this button will add the workflow file to the running task, will
             be used in **step 5**. You need to select at least one step to enable
-            this button.
+            this button. A new R markdown file will **REPLACE** the old one. The old
+            file is backed up in the **backup** folder.
 
             This is the last workflow preparation step (step 4 is optional). If you
             have followed the order so far, after this step, you should see all status
@@ -80,19 +81,11 @@ wf_wfUI <- function(id){
                 "),
                 div(class = "text-danger",
                     tags$ul(
-                        id = ns("warn_exist"),
-                        HTML(
-                            "<li>You have chosen an <b>'Existing'</b> workflow. Upon passing
-                            'Add to task' checks, a file named <b>workflow.Rmd</b> will
-                            be written to the workflow folder. Rename/back up it if you already
-                            have one with the same name.</li>"
-                        )),
-                    tags$ul(
                         id = ns("warn_other"),
                         HTML(
                             "<li>Upon passing 'Add to task' checks, the original workflow file
-                            in the workflow folder will be overwritten. Rename/back up it if you do
-                            not wish it to be replaced.</li>"
+                            in the workflow folder will be overwritten. A backup of the old Rmd
+                            can be found in the <b>'backup'</b> folder.</li>"
                         ))
                 ),
                 fluidRow(
@@ -212,26 +205,12 @@ wf_wfServer <- function(id, shared){
         rmd_file_temp <-  reactiveVal(NULL)
         #######
         observeEvent(input$set, {
-            shared$wf$flags$env_ready = T
+            shared$wf$flags$env_ready = 1
             shared$wf$targets_path = "upload_required"
             shared$wf$env_path = normalizePath("riboseq")
             shared$wf$env_option = "exist"
         })
         #####
-        # toggle elements based on options
-        observeEvent(shared$wf$env_option, {
-            shinyjs::toggleElement("warn_exist", anim = TRUE, condition = shared$wf$env_option == "exist")
-            shinyjs::toggleElement("warn_other", anim = TRUE, condition = shared$wf$env_option != "exist")
-            if(shared$wf$env_option == "exist"){
-                shinyWidgets::updateRadioGroupButtons(
-                    session,
-                    "wf_source",
-                    label = "Existing option selected, no default file displayed, please upload workflow file",
-                    choiceNames = "Upload",
-                    choiceValues = "upload"
-                )
-            }
-        })
         observeEvent(input$wf_source, {
             shinyjs::toggleElement("rmd_file", anim = TRUE, condition = input$wf_source == "upload")
         })
@@ -348,9 +327,6 @@ wf_wfServer <- function(id, shared){
         observeEvent(input$to_task_wf, {
             req(file.exists(rmd_file_temp()))
             shinyCatch({
-                # fix path for existing option
-                if(shared$wf$wf_path == "upload_required")
-                    shared$wf$wf_path <- file.path(shared$wf$env_path, "workflow.Rmd")
                 # create back up folder
                 dir.create(file.path(shared$wf$env_path, "backup"), recursive = TRUE, showWarnings = FALSE)
                 # if wf file exists, back it up
@@ -363,14 +339,14 @@ wf_wfServer <- function(id, shared){
                             paste0(
                                 glue("bk{Sys.time() %>% format('%Y%m%d%H%M%S')}"),
                                 basename(shared$wf$wf_path))
-                            ),
+                        ),
                         overwrite = TRUE
                     )
                 # overwrite wf file
                 if(!file.copy(rmd_file_temp(), shared$wf$wf_path, overwrite = TRUE))
-                    stop("File ", shared$wf$wfpath, " can not be created or not modified")
+                    stop("File ", shared$wf$wf_path, " can not be created or not modified")
             }, blocking_level = "error")
-            shared$wf$flags$wf_ready = TRUE
+            shared$wf$flags$wf_ready = isolate(shared$wf$flags$wf_ready) + 1
             # jump to next step
             shinyWidgets::confirmSweetAlert(
                 session = session,

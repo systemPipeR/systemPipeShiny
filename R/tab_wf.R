@@ -35,6 +35,7 @@ wfUI <- function(id){
     [vignette](https://systempipe.org/systemPipeShiny/articles/systemPipeShiny.html#workflow-management)
     '
     tagList(
+        tags$script(src="sps/js/sps_wf.js"),
         tabTitle("WF main"),
         renderDesc(ns("desc"), desc),
         spsHr(),
@@ -53,6 +54,7 @@ wfUI <- function(id){
             ),
             completes = c(FALSE, FALSE, FALSE, TRUE, FALSE)
         ),
+        actionButton(ns("set"), "set"),
         bsplus::bs_accordion(id = ns("wf_panel")) %>%
             bsplus::bs_set_opts(panel_type = "default") %>%
             bsplus::bs_append("1. Create a workflow environment", wf_setupUI(ns("wf_setup")), panel_type = "success") %>%
@@ -64,10 +66,18 @@ wfUI <- function(id){
             bsplus::bs_append("5. Run workflow", wf_runUI(ns("wf_run"))),
         hexPanel(ns("poweredby"), "THIS TAB IS POWERED BY:",
                  hex_imgs = c(
-                     "img/sps.png",
-                     "https://github.com/tgirke/systemPipeR/blob/gh-pages/images/systemPipeR_site.png?raw=true"),
-                 hex_titles = c("SystemPipeShiny", "SystemPipeR"),
-                 ys = c("-10", "-10")
+                     "img/sps_small.png",
+                     "https://github.com/tgirke/systemPipeR/blob/gh-pages/images/systemPipeR_site.png?raw=true",
+                     "img/cwl.png"
+                 ),
+                 hex_titles = c("SystemPipeShiny", "SystemPipeR", "Common Workflow Language"),
+                 hex_links = c(
+                     "https://github.com/systemPipeR/systemPipeShiny/",
+                     "https://systempipe.org/",
+                     "https://www.commonwl.org/"
+                 ),
+                 ys = c("-20", "-10", "-20"),
+                 xs = c("-10", "-10", "35")
         )
     )
 }
@@ -80,19 +90,24 @@ wfServer <- function(id, shared){
         wf_wfServer("wf_wf", shared)
         wf_cwlServer("wf_cwl", shared)
         wf_runServer("wf_run", shared)
+        observeEvent(input$set, {
+            pushbar::pushbar_open(id = "core_top-wf_push")
+        })
         # init wf env
-        shared$wf <- list(
-            env_option = NULL,
-            env_path = NULL,
-            targets_path = NULL,
-            wf_path = NULL,
-            flags = list(
-                env_ready = FALSE,
-                targets_ready = FALSE,
-                wf_ready = FALSE
-            ),
-            all_ready = FALSE
-        )
+        observeEvent(1, {
+            shared$wf$env_option = NULL
+            shared$wf$env_path = NULL
+            shared$wf$targets_path = NULL
+            shared$wf$wf_path = NULL
+            shared$wf$flags = list(
+                env_ready = 0,
+                targets_ready = 0,
+                wf_ready = 0
+            )
+            shared$wf$all_ready = FALSE
+            shared$wf$wf_session_open = FALSE
+            shared$wf$spr_loaded = if("systemPipeR" %in% (.packages())) TRUE else FALSE
+        }, once = TRUE)
         # status change
         observeEvent(shared$wf$flags, {
             updateSpsTimeline(session, "wf_status", 1, shared$wf$flags$env_ready)
@@ -127,14 +142,9 @@ wfServer <- function(id, shared){
             )
         })
         observeEvent(shared$wf$flags, {
-            req(all(shared$wf$flags %>% unlist()))
+            req(all(shared$wf$flags %>% unlist() %>% as.logical()))
             shared$wf$all_ready <- TRUE
-            shinytoastr::toastr_success(
-                "Workflow preparation done!",
-                position = "bottom-right",
-                showDuration = 3000
-            )
-        })
+        }, ignoreInit = TRUE)
 
         observeEvent(shared$wf$all_ready, {
             updateSpsTimeline(session, "wf_status", 5, shared$wf$all_ready)
@@ -142,14 +152,19 @@ wfServer <- function(id, shared){
             shinyjs::toggleElement(
                 "wf_run_displayed", asis = TRUE,
                 anim = TRUE, animType = "fade",
-                condition = shared$wf$flags$env_ready
+                condition = shared$wf$all_ready
             )
             shinyjs::toggleElement(
                 "wf_run_disable", asis = TRUE,
                 anim = TRUE, animType = "fade",
-                condition = !shared$wf$flags$env_ready
+                condition = !shared$wf$all_ready
             )
         }, ignoreInit = TRUE)
+        # session end call back
+        session$onEnded(function(){
+            setwd(spsOption("app_path"))
+            if(!isolate(shared$wf$spr_loaded)) try(detach("package:systemPipeR", unload = TRUE), silent = TRUE)
+        })
     }
     moduleServer(id, module)
 }

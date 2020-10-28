@@ -81,14 +81,6 @@ wf_targetUI <- function(id){
                 "),
                 div(class = "text-danger",
                     tags$ul(
-                        id = ns("warn_exist"),
-                        HTML(
-                            "<li>You have chosen an <b>'Existing'</b> workflow. Upon passing
-                            'Add to task' checks, a file named <b>targetsPE.txt</b> will
-                            be written to the workflow folder. Rename/back up it if you already
-                            have one with the same name.</li>"
-                        )),
-                    tags$ul(
                         id = ns("warn_other"),
                         HTML(
                             "<li>Upon passing 'Add to task' checks, the original targets file
@@ -160,7 +152,7 @@ wf_targetUI <- function(id){
                        tags$style(
                            glue(
                                '#@{ns("missing_files")}@{
-                            height: 800px;
+                            height: 400px;
                           }',
                                .open = "@{", .close = "}@"
                            )
@@ -196,7 +188,7 @@ wf_targetUI <- function(id){
                      'SampleName', 'Factor' are required for both."),
                        p("Columns names should be on the first row."),
                        rhandsontable::rHandsontableOutput(ns("targets_df"),
-                                                          height = "800px")
+                                                          height = "500px")
                 )
             )
         ),
@@ -227,20 +219,6 @@ wf_targetServer <- function(id, shared){
         ace_target_header_init <- ""
         data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
             dplyr::as_tibble()
-        # toggle elements based on options
-        observeEvent(shared$wf$env_option, {
-            shinyjs::toggleElement("warn_exist", anim = TRUE, condition = shared$wf$env_option == "exist")
-            shinyjs::toggleElement("warn_other", anim = TRUE, condition = shared$wf$env_option != "exist")
-            if(shared$wf$env_option == "exist"){
-                shinyWidgets::updateRadioGroupButtons(
-                    session,
-                    "target_source",
-                    label = "Existing option selected, no default file, please upload targets",
-                    choiceNames = "Upload",
-                    choiceValues = "upload"
-                )
-            }
-        })
         observeEvent(input$target_source, {
             shinyjs::toggleElement("target_upload", anim = TRUE, condition = input$target_source == "upload")
         })
@@ -262,7 +240,6 @@ wf_targetServer <- function(id, shared){
         observeEvent(c(shared$wf$flags$env_ready), {
             req(shared$wf$flags$env_ready)
             req(shared$wf$targets_path)
-            req(shared$wf$targets_path != "upload_required")
             t.df(shinyCatch(vroom::vroom(
                 shared$wf$targets_path,  delim = "\t",
                 comment = "#", altrep = FALSE,
@@ -273,7 +250,7 @@ wf_targetServer <- function(id, shared){
                 session, "ace_target_header",
                 value = shinyCatch(
                     readLines(shared$wf$targets_path, warn = FALSE) %>%
-                    .[str_detect(.,"^#")] %>% paste(collapse = "\n"),
+                        .[str_detect(.,"^#")] %>% paste(collapse = "\n"),
                     blocking_level = "error"
                 )
             )
@@ -292,7 +269,7 @@ wf_targetServer <- function(id, shared){
         })
         observeEvent(c(input$target_source, not_empty(target_upload())),
                      ignoreInit = TRUE, ignoreNULL = TRUE, {
-            req(shared$wf$targets_path != "upload_required" | not_empty(target_upload()))
+            req(not_empty(target_upload()))
             if (selected_flag() == TRUE) {
                 shinyWidgets::confirmSweetAlert(
                     session,inputId = "sweet_changetarget_confirm",
@@ -429,9 +406,6 @@ wf_targetServer <- function(id, shared){
                                           headerlines = header_lines)
             if (all(check_results)) {
                 shinyCatch({
-                    # fix path for existing option
-                    if(shared$wf$targets_path == "upload_required")
-                        shared$wf$targets_path <- file.path(shared$wf$env_path, "targetsPE.txt")
                     old_mtime <- file.mtime(shared$wf$targets_path)
                     # create back up folder
                     dir.create(file.path(shared$wf$env_path, "backup"), recursive = TRUE, showWarnings = FALSE)
@@ -457,7 +431,7 @@ wf_targetServer <- function(id, shared){
                         stop("File ", shared$wf$targets_path, " can not be created or not modified")
                     shared$wf$targets_path <- normalizePath(shared$wf$targets_path)
                 }, blocking_level = "error")
-                shared$wf$flags$targets_ready <- TRUE
+                shared$wf$flags$targets_ready <- isolate(shared$wf$flags$targets_ready) + 1
                 shinyWidgets::confirmSweetAlert(
                     session = session,
                     inputId = ns("confirm_next"),
