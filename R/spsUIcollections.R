@@ -20,6 +20,7 @@ useSps <- function(){
                             href = "sps/css/sps.css"),
         tags$script(src = "sps/js/sps.js"),
         tags$script(src="sps/js/sps_update_pg.js"),
+        tags$script(src = "sps/js/sps_gotop.js"),
         shinytoastr::useToastr(),
         shinyjs::useShinyjs(),
         bsplus::use_bs_popover(),
@@ -931,5 +932,86 @@ updateSpsTimeline <- function(session, id, item_no, complete = TRUE){
     }
 }
 
+# internal css loader unit
+spsLoader <- function(id=NULL){
+    if(is.null(id)) id = paste0("loader", sample(1000000, 1))
+    tagList(
+        singleton(
+            tags$style('
+            .sps-loader {
+              height: auto;
+              display: inline-block;
+              align-items: center;
+              justify-content: center;
+            }
+            .sps-loader .container {
+              width: 80px;
+              height: 60px;
+              text-align: center;
+              font-size: 10px;
+            }
+            .sps-loader .container .boxLoading {
+              background-color: #3c8dbc;
+              height: 100%;
+              width: 6px;
+              display: inline-block;
+              -webkit-animation: sps-loading 1.2s infinite ease-in-out;
+              animation: sps-loading 1.2s infinite ease-in-out;
+            }
+            .sps-loader .container .boxLoading2 {
+              -webkit-animation-delay: -1.1s;
+              animation-delay: -1.1s;
+            }
+            .sps-loader .container .boxLoading3 {
+              -webkit-animation-delay: -1s;
+              animation-delay: -1s;
+            }
+            .sps-loader .container .boxLoading4 {
+              -webkit-animation-delay: -0.9s;
+              animation-delay: -0.9s;
+            }
+            .sps-loader .container .boxLoading5 {
+              -webkit-animation-delay: -0.8s;
+              animation-delay: -0.8s;
+            }
+
+            @-webkit-keyframes sps-loading {
+              0%,
+              40%,
+              100% {
+                -webkit-transform: scaleY(0.4);
+              }
+              20% {
+                -webkit-transform: scaleY(1);
+              }
+            }
+            @keyframes sps-loading {
+              0%,
+              40%,
+              100% {
+                transform: scaleY(0.4);
+                -webkit-transform: scaleY(0.4);
+              }
+              20% {
+                transform: scaleY(1);
+                -webkit-transform: scaleY(1);
+              }
+            }
+          ')
+        ),
+        tags$div(
+            id = id, class = "sps-loader",
+            HTML('
+            <div class="container">
+                <div class="boxLoading boxLoading1"></div>
+                <div class="boxLoading boxLoading2"></div>
+                <div class="boxLoading boxLoading3"></div>
+                <div class="boxLoading boxLoading4"></div>
+                <div class="boxLoading boxLoading5"></div>
+            </div>
+           ')
+        )
+    )
+}
 
 

@@ -35,7 +35,11 @@ wfUI <- function(id){
     [vignette](https://systempipe.org/systemPipeShiny/articles/systemPipeShiny.html#workflow-management)
     '
     tagList(
-        tags$script(src="sps/js/sps_wf.js"),
+        tags$head(
+            tags$script(src = "sps/js/split1.6.0.js"),
+            tags$script(type="module", src = "sps/js/sps_wf.js"),
+            tags$link(rel="stylesheet", href = "sps/css/sps_wf.css")
+        ),
         tabTitle("WF main"),
         renderDesc(ns("desc"), desc),
         spsHr(),
@@ -54,7 +58,7 @@ wfUI <- function(id){
             ),
             completes = c(FALSE, FALSE, FALSE, TRUE, FALSE)
         ),
-        actionButton(ns("set"), "set"),
+        # actionButton(ns("set"), "set"),
         bsplus::bs_accordion(id = ns("wf_panel")) %>%
             bsplus::bs_set_opts(panel_type = "default") %>%
             bsplus::bs_append("1. Create a workflow environment", wf_setupUI(ns("wf_setup")), panel_type = "success") %>%
@@ -90,9 +94,9 @@ wfServer <- function(id, shared){
         wf_wfServer("wf_wf", shared)
         wf_cwlServer("wf_cwl", shared)
         wf_runServer("wf_run", shared)
-        observeEvent(input$set, {
-            pushbar::pushbar_open(id = "core_top-wf_push")
-        })
+        # observeEvent(input$set, {
+        #     pushbar::pushbar_open(id = "core_top-wf_push")
+        # })
         # init wf env
         observeEvent(1, {
             shared$wf$env_option = NULL
@@ -107,6 +111,12 @@ wfServer <- function(id, shared){
             shared$wf$all_ready = FALSE
             shared$wf$wf_session_open = FALSE
             shared$wf$spr_loaded = if("systemPipeR" %in% (.packages())) TRUE else FALSE
+            shared$wf$rs <- NULL
+            shared$wf$rs_info$log_name <- NULL
+            shared$wf$rs_info$log_path <- NULL
+            shared$wf$rs_info$created <- FALSE
+            shared$wf$rs_info$pid <- NULL
+            shared$wf$rs_info$rs_dir <- NULL
         }, once = TRUE)
         # status change
         observeEvent(shared$wf$flags, {

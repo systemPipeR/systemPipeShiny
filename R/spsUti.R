@@ -172,9 +172,6 @@ quiet <- function(x) {
 checkNameSpace <- function(packages, quietly = FALSE, from = "") {
     if (shinyAce::is.empty(packages)) return(NULL)
     missing_pkgs <- lapply(packages, function(pkg) {
-        if (!requireNamespace(pkg, quietly = TRUE)) pkg
-    })
-    missing_pkgs <- lapply(packages, function(pkg) {
         if (!eval(parse(text = "requireNamespace(pkg, quietly = TRUE)"))) pkg
     }) %>% unlist()
     if (!quietly & not_empty(missing_pkgs)) {
@@ -438,3 +435,4 @@ checkUrl <- function(url, timeout = 5){
         }
     )
 }
+

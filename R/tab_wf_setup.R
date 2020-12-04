@@ -89,7 +89,8 @@ wf_setupUI <- function(id){
                             "Start a workflow environment",
                             "Clicking here will create a workflow environment folder for you.",
                             "bottom"
-                        )
+                        ),
+                    div(id = ns("loading_env"), style = "display:none", spsLoader())
                 )
             ),
             fluidRow(
@@ -180,7 +181,6 @@ wf_setupUI <- function(id){
                 </li>")
             )
         ),
-        # column(1),
         absolutePanel(
             id = ns("gen_wf_pg_panel"),
             style = "background-color: #ecf0f5; border: 2px solid #d2d6de; border-radius: 5%; display: none;",
@@ -235,7 +235,7 @@ wf_setupServer <- function(id, shared){
                             placeholder = unname(dir_selected))
             wf_path(dir_selected)
         })
-        # resolve path for choose targets and wf on existing option
+        # resolve path for choose targets and wf an existing option
         observeEvent(c(input$choose_wf, wf_path()), {
             req(input$choose_wf == "exist")
             req(!is.null(wf_path()))
@@ -270,7 +270,14 @@ wf_setupServer <- function(id, shared){
         })
         ### action when gen WF clicked
         observeEvent(input$gen_env, {
-            on.exit({shinyjs::hideElement('gen_wf_pg_panel', anim = TRUE)})
+            on.exit({
+                shinyjs::hideElement('gen_wf_pg_panel', anim = TRUE)
+                shinyjs::showElement("gen_env")
+                shinyjs::hideElement("loading_env")
+            })
+            shinyjs::hideElement("gen_env")
+            shinyjs::showElement("loading_env")
+
             # clear everything on start
             shared$wf$env_option <- shared$wf$env_path <- shared$wf$targets_path <- shared$wf$wf_path <- NULL
             shared$wf$flags$env_ready <- shared$wf$flags$targets_ready <-  shared$wf$flags$wf_ready <- 0
@@ -308,15 +315,20 @@ wf_setupServer <- function(id, shared){
                                 stop("Required folder '", x, "' for an existing workflow is not there")
                             }
                         })
+                        if(!emptyIsFalse(wf_targets_path())) stop("Targets file is empty")
+                        if(!emptyIsFalse(wf_wf_path())) stop("Workflow file is empty")
                     },
                     "eg" = {
+                        res <- list()
                         dir.create(file.path(final_env_path, "data"), recursive = TRUE)
                         dir.create(file.path(final_env_path, "param", "cwl"), recursive = TRUE)
                         dir.create(file.path(final_env_path, "results"), recursive = TRUE)
-                        file.copy(system.file("app", "data", "targetsPE.txt", package = "systemPipeShiny"),
+                        # file.copy(system.file("app", "data", "targetsPE.txt", package = "systemPipeShiny"),
+                        res[['1']] <- file.copy(system.file("extdata", "workflows", "new", "targetsPE.txt", package = "systemPipeRdata"),
                                   file.path(final_env_path, "targetsPE.txt"))
-                        file.copy(system.file("app", "data", "example_wf.md", package = "systemPipeShiny"),
+                        res[['2']] <- file.copy(system.file("extdata", "workflows", "new", "new.Rmd", package = "systemPipeRdata"),
                                   file.path(final_env_path, "systemPipeExample.Rmd"))
+                        if(!unlist(res) %>% all()) stop("Files not copied, see warnings")
                     },
                     systemPipeRdata::genWorkenvir(input$choose_wf, mydirname = final_env_path)
                 )
@@ -346,8 +358,8 @@ wf_setupServer <- function(id, shared){
             Sys.sleep(0.1)
             shared$wf$env_option <- input$choose_wf
             shared$wf$env_path <- final_env_path
-            shared$wf$targets_path <- targes_path
-            shared$wf$wf_path <- wf_file_path
+            shared$wf$targets_path <- targes_path %>% unname()
+            shared$wf$wf_path <- wf_file_path %>% unname()
             shared$wf$flags$env_ready <- isolate(shared$wf$flags$env_ready) + 1
             updateProgressBar(session, "gen_wf_pg", 6, 6, title = "All done", status = "success")
             Sys.sleep(0.3)

@@ -10,7 +10,7 @@
 wf_targetUI <- function(id){
     ns <- NS(id)
     tagList(
-        actionButton(ns("set"), "set"),
+        # actionButton(ns("set"), "set"),
         div(
             id = "wf_targets_displayed",
             style = "display:none",
@@ -138,16 +138,10 @@ wf_targetUI <- function(id){
                            textInput(ns("target_data_path"),
                                               label = "Add path prefix",
                                               placeholder = "long path"),
-                           if(spsOption('mode') == 'server') {
-                               h5("File checking is disabled on 'server' mode")
-                           } else {
-                               tagList(
-                                   selectInput(ns("column_check"),
-                                               "Choose a column to check files:",
-                                               choices = "Disabled before uploading targets"),
-                                   verbatimTextOutput(ns("missing_files"))
-                               )
-                           }
+                           selectInput(ns("column_check"),
+                                       "Choose a column to check files:",
+                                       choices = "Disabled before uploading targets"),
+                           verbatimTextOutput(ns("missing_files"))
                        ),
                        tags$style(
                            glue(
@@ -169,7 +163,7 @@ wf_targetUI <- function(id){
                            checkIcon = list(yes = icon("ok", lib = "glyphicon"),
                                             no = icon(""))
                        ),
-                       dynamicFile(ns("target_upload"),
+                       fileInput(ns("targets_upload"),
                                    "If upload, choose your target file here:",
                                    multiple = FALSE),
                        h4("Targets header"),
@@ -220,22 +214,21 @@ wf_targetServer <- function(id, shared){
         data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
             dplyr::as_tibble()
         observeEvent(input$target_source, {
-            shinyjs::toggleElement("target_upload", anim = TRUE, condition = input$target_source == "upload")
+            shinyjs::toggleElement("targets_upload", anim = TRUE, condition = input$target_source == "upload")
         })
         # some reactive values to pass around observe
         selected_old <- reactiveVal("upload")
         selected_flag <- reactiveVal(TRUE)
         targets_p_old <- reactiveVal("")
         t.df <- reactiveVal(data_init)
-        target_upload <- dynamicFileServer(input, session, id = "target_upload")
         # load table is wf env is ready
         #######
-        observeEvent(input$set, {
-            shared$wf$flags$env_ready = T
-            shared$wf$targets_path = "upload_required"
-            shared$wf$env_path = normalizePath("riboseq")
-            shared$wf$env_option = "exist"
-        })
+        # observeEvent(input$set, {
+        #     shared$wf$flags$env_ready = T
+        #     shared$wf$targets_path = "upload_required"
+        #     shared$wf$env_path = normalizePath("riboseq")
+        #     shared$wf$env_option = "exist"
+        # })
         #####
         observeEvent(c(shared$wf$flags$env_ready), {
             req(shared$wf$flags$env_ready)
@@ -256,9 +249,6 @@ wf_targetServer <- function(id, shared){
             )
 
         })
-        observeEvent(shared$wf$env_path, {
-            updateTextInput(session, "target_data_path", value = shared$wf$env_path)
-        })
         # update table
         output$targets_df <- rhandsontable::renderRHandsontable({
             rhandsontable::rhandsontable(t.df(),
@@ -267,9 +257,9 @@ wf_targetServer <- function(id, shared){
                 rhandsontable::hot_context_menu(allowRowEdit = TRUE,
                                                 allowColEdit = TRUE)
         })
-        observeEvent(c(input$target_source, not_empty(target_upload())),
+        observeEvent(c(input$target_source, not_empty(input$targets_upload)),
                      ignoreInit = TRUE, ignoreNULL = TRUE, {
-            req(not_empty(target_upload()))
+            req(not_empty(input$targets_upload))
             if (selected_flag() == TRUE) {
                 shinyWidgets::confirmSweetAlert(
                     session,inputId = "sweet_changetarget_confirm",
@@ -284,24 +274,30 @@ wf_targetServer <- function(id, shared){
         })
         observeEvent(input$sweet_changetarget_confirm, ignoreNULL = TRUE,{
             if (isTRUE(input$sweet_changetarget_confirm)) {
-                # update df
-                t.df(
-                    hot_target(targets_df = input$targets_df,
-                               targets_p = target_upload()$datapath,
-                               default_p = shared$wf$targets_path,
-                               targets_p_old = targets_p_old(),
-                               choice = input$target_source,
-                               choice_old = selected_old(),
-                               data_init = data_init)
-                )
+                # load target file
+                t.df(shinyCatch({
+                    targets_path <- if(input$target_source == "default") shared$wf$targets_path else input$targets_upload$datapath
+                    if(is.null(targets_path)){
+                        df <- data_init
+                    } else {
+                        df <- vroom::vroom(
+                            targets_path,  delim = "\t",
+                            comment = "#", n_max = 10000,
+                            col_names = FALSE, col_types = vroom::cols()
+                        )
+                    }
+                    if(is.null(df)) {warning("Can't read file, return empty"); df <- data_init}
+                    names(df) <- paste0("X", seq_len(ncol(df)))
+                    df
+                }, blocking_level = "error"))
                 # header
                 header_lines <- ""
-                if (!is.null(target_upload()$datapath)) {
-                    header_lines <- readLines(target_upload()$datapath,
+                if (!is.null(input$targets_upload$datapath)) {
+                    header_lines <- readLines(input$targets_upload$datapath,
                                               warn = FALSE) %>%
                         .[str_detect(.,"^#")] %>% paste(collapse = "\n")
                     if (length(header_lines) == 0) header_lines <- ""
-                    targets_p_old(target_upload()$datapath)
+                    targets_p_old(input$targets_upload$datapath)
                 }
                 if (input$target_source != "upload")
                     header_lines <-
@@ -333,6 +329,11 @@ wf_targetServer <- function(id, shared){
                 )
                 selected_flag(FALSE)
             }
+        })
+        # update left side long path
+        observeEvent(shared$wf$env_path, {
+            req(emptyIsFalse(shared$wf$env_path))
+            updateTextInput(session, "target_data_path", value = file.path(shared$wf$env_path))
         })
         # left side checkers behaviors
         observeEvent({input$targets_df; input$column_check}, ignoreInit = TRUE, {
@@ -401,6 +402,8 @@ wf_targetServer <- function(id, shared){
         # add to task
         observeEvent(input$to_task_target, {
             # check col_names, header lines
+            req(t.df())
+            t.df(rhandsontable::hot_to_r(input$targets_df))
             header_lines <- isolate(input$ace_target_header)
             check_results <- check_target(col_names = t.df()[1, ],
                                           headerlines = header_lines)
@@ -471,28 +474,6 @@ wf_targetServer <- function(id, shared){
             shinyjs::runjs("$('#wf-wf_panel-2-heading > h4').trigger('click');")
         })
     }
-    # load target file
-    hot_target <- function(targets_df, targets_p=NULL, default_p = NULL, targets_p_old=NULL,
-                           choice, choice_old, data_init){
-        targets_p <- switch(choice,
-                            "upload" = targets_p,
-                            "default" = "data/targetsPE.txt"
-        )
-        if(is.null(targets_p)) return(data_init)
-        if(is.null(default_p)) return(data_init)
-        if((choice != choice_old) | (targets_p != targets_p_old)) {
-            df.t <- shinyCatch(vroom::vroom(
-                targets_p,  delim = "\t",
-                comment = "#", n_max = 10000,
-                col_names = FALSE, col_types = vroom::cols()
-            ))
-            if(is.null(df.t)){
-                warning("Can't read file, return empty"); return(data_init)}
-        }
-        names(df.t) <- paste0("X", seq_len(ncol(df.t)))
-        return(df.t)
-    }
-
     # target checkers
     check_target <- function(col_names, headerlines) {
         checker1 <- function(col_names) {
@@ -502,7 +483,7 @@ wf_targetServer <- function(id, shared){
         checker2 <- function(col_names)  "SampleName" %in% col_names
         checker3 <- function(col_names)  "Factor" %in% col_names
         checker4 <- function(headerlines) {
-            any(str_detect(headerlines, "#.?<CMP>"))}
+            any(str_detect(headerlines, "#\\s{0,}<CMP>"))}
         check_results <- vapply(c(checker1, checker2, checker3),
                                 function(x) x(col_names),
                                 logical(1)) %>%

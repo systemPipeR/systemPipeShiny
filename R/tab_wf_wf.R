@@ -8,7 +8,6 @@
 wf_wfUI <- function(id){
     ns <- NS(id)
     tagList(
-        actionButton(ns("set"), "set"),
         div(
             id = "wf_wf_displayed",
             style = "display:none",
@@ -203,14 +202,6 @@ wf_wfServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         rmd_file_temp <-  reactiveVal(NULL)
-        #######
-        observeEvent(input$set, {
-            shared$wf$flags$env_ready = 1
-            shared$wf$targets_path = "upload_required"
-            shared$wf$env_path = normalizePath("riboseq")
-            shared$wf$env_option = "exist"
-        })
-        #####
         observeEvent(input$wf_source, {
             shinyjs::toggleElement("rmd_file", anim = TRUE, condition = input$wf_source == "upload")
         })
@@ -266,20 +257,14 @@ wf_wfServer <- function(id, shared){
             }
 
         })
-        # default to select all steps
-        # rmd_old <- reactiveVal("")
-        # observeEvent(!identical(rmd(), rmd_old), {
-        #     runjs('setTimeout(function(){$("[id*=rmd_tree]").jstree("select_all");}, 1000)')
-        #     rmd_old(rmd())
-        # })
 
         output$wf_D3 <- renderDiagonalNetwork({
             diagonalNetwork(
                 step2listD3(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text)),
                 fontSize = 15)
         })
-        output$rmd_tree <- renderTree({
-            runjs('setTimeout(function(){$("[id*=rmd_tree]").jstree("select_all");}, 2000)')
+        output$rmd_tree <- shinyTree::renderTree({
+            # on.exit(runjs('setTimeout(function(){$("[id*=rmd_tree]").jstree("select_all");}, 100)'))
             step2listTree(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text))
 
         })
@@ -307,11 +292,18 @@ wf_wfServer <- function(id, shared){
                 "workflow.Rmd"
             },
             content <- function(file){
-                file.copy(rmd_file_temp(), filename)
+                file.copy(from = rmd_file_temp(), to = file)
             }
         )
-
-        observeEvent(c(input$wf_render_md, input$to_task_wf, input$down_rmd),
+        # listen to download button so it can be trigger in next observe
+        observeEvent(1, {
+            shinyjs::runjs("
+                var click = 0;
+                var dwnldBtn = document.getElementById('wf-wf_wf-down_rmd');
+                dwnldBtn.onclick = function() {click += 1; Shiny.setInputValue('wf-wf_wf-saveRmd', click);}
+            ")
+        }, once = TRUE)
+        observeEvent(c(input$wf_render_md, input$to_task_wf, input$saveRmd),
                      ignoreInit = TRUE, {
             rmd_file_temp(tempfile(pattern = "wf", fileext = ".Rmd"))
             shinyCatch({

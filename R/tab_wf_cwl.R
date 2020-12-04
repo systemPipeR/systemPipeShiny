@@ -135,7 +135,7 @@ wf_cwlUI <- function(id){
         bsplus::bs_accordion(id = ns("cwl_panel")) %>%
             bsplus::bs_set_opts(panel_type = "info") %>%
             bsplus::bs_append(
-                "1. Targets file",
+                "Targets file",
                 fluidRow(
                     h3("Load targets table"),
                     tags$ul(
@@ -148,6 +148,12 @@ wf_cwlUI <- function(id){
                             id = ns("targets_default"),
                             class = "text-success",
                             "Workflow folder detected, loaded the default targets file for you."
+                        ),
+                        HTML(
+                        '<li>If you would like to change the targets table content, please use
+                        step <span class="text-info">2. Prepare the targets file</span>.
+                        Remember to click on <b>Add to task</b> to submit the change.
+                        </li>'
                         )
                     ),
                     column(
@@ -184,7 +190,7 @@ wf_cwlUI <- function(id){
                 )
             ) %>%
             bsplus::bs_append(
-                "2. CWL running file",
+                "CWL running file",
                 fluidRow(
                     column(
                         3,
@@ -209,13 +215,12 @@ wf_cwlUI <- function(id){
                         theme = "Chrome",
                         value = "",
                         placeholder = "yaml format",
-                        mode = "yaml",
-                        readOnly = TRUE
+                        mode = "yaml"
                     )
                 )
             ) %>%
             bsplus::bs_append(
-                "3. CWL input file",
+                "CWL input file",
                 fluidRow(
                     column(
                         3,
@@ -240,8 +245,7 @@ wf_cwlUI <- function(id){
                         theme = "Chrome",
                         value = "",
                         placeholder = "yaml format",
-                        mode = "yaml",
-                        readOnly = TRUE
+                        mode = "yaml"
                     )
                 )
             )
@@ -345,15 +349,18 @@ wf_cwlServer <- function(id, shared){
                         readLines(data_cwl_input$path) %>%
                             paste(collapse = "\n"), blocking_level = "error")
                 })
-            cwl_input_vars(
-                readLines(data_cwl_input$path) %>%
-                    {.[str_detect(., ".*:")]} %>%
-                    {.[str_detect(., ":\\s{0,}_[a-zA-Z0-9_]+_\\s{0,}$")]} %>%
-                    str_extract("_[a-zA-Z0-9_]+_")
-            )
         })
+        # get real time updates on cwl input file
+        cwl_input_vars <- reactive({
+            input$ace_cwl_input %>%
+                str_split("\n") %>%
+                unlist() %>%
+                {.[str_detect(., ".*:")]} %>%
+                {.[str_detect(., ":\\s{0,}_[a-zA-Z0-9_]+_\\s{0,}$")]} %>%
+                str_extract("_[a-zA-Z0-9_]+_")
+        }) %>% debounce(1000)
+
         # setup for parsing
-        cwl_input_vars <- reactiveVal("")
         targets_columns <- reactiveVal("")
         observeEvent(c(cwl_input_vars(), targets_columns()), {
             req(emptyIsFalse(targets_columns()))
@@ -379,8 +386,8 @@ wf_cwlServer <- function(id, shared){
             cwl_file <- file.path(temp_folder, "wf.cwl")
             cwl_input <- file.path(temp_folder, "input.yml")
             targets <- targets_path()
-            file.copy(data_cwl$path, cwl_file, overwrite = TRUE)
-            file.copy(data_cwl_input$path, cwl_input, overwrite = TRUE)
+            writeLines(input$ace_cwl, cwl_file)
+            writeLines(input$ace_cwl_input, cwl_input)
 
             args <- shinyCatch({
                 # parse replacement

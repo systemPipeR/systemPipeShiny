@@ -1,6 +1,36 @@
-## systemPipeShiny Updates
+# systemPipeShiny Updates
 
 <!--#   YYYY.MM.DD -->
+
+## 2020.11.24
+
+### Workflow module R session
+
+-   Now workflow module R session uses a background child R process, which runs independently to the parent R session which runs shiny.
+-   So the shiny will be not blocked while code is running in the background (you can still click other buttons when the child session is busy) -- synchronous and non-blocking. A child indicator is also placed in the UI, updates every second.
+-   The UI design of R session is similar to Rstudio. Four panels, source code, console, log (specific to SPR), and plots.
+-   Standard out/error and plots are captured in the workflow folder. Users can download them in the bundle on step 5 *Workflow Run.*
+-   Plots will be displayed on the plots panel. Now supports plots that opens R `device` (base and ggplot), html widget plots are not supported as this moment.
+
+### General UI
+
+-   A new shiny disconnection popup for SPS. Besides the gray layer on shiny disconnection, a panel will be displayed to users to indicate the problem. Similar to what shows on a shiny server, but more informative and also works locally.
+
+### RNAseq module
+
+-   redesigned the UI and server logic. Plots for DEG analysis and Canvas connections will be added soon.
+
+## 2020.10.30
+
+### General UI
+
+-   Added a "Go Top" button on the right bottom corner, clicking on this button will automatically scroll to the top of the page. This button only shows up when client has \> 50px scroll height.
+
+## 2020.10.30
+
+### Workflow module CWL tab
+
+-   Now the CWL file and CWL input file can be be edited. The edits will be imported to CWL parser every one second. Now this is a very useful place to test or write new CWL scripts.
 
 ## 2020.10.27
 

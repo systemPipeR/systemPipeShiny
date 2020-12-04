@@ -50,11 +50,15 @@ Imports:
     tibble,
     utils,
     vroom (>= 1.3.1),
-    yaml
+    yaml,
+    DESeq2,
+    systemPipeR,
+    zip,
+    SummarizedExperiment,
+    R.utils
 Suggests:
     testthat,
     BiocStyle,
-    systemPipeR, 
     knitr, 
     rmarkdown
 VignetteBuilder: knitr

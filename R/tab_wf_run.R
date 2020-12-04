@@ -30,6 +30,11 @@ wf_runUI <- function(id){
                 collapsible = FALSE,
                 closable = FALSE,
                 title = "Initiate a workflow environment",
+                tags$ul(
+                    id = ns("example_tip"),
+                    HTML("<li>A workflow is ready to run.</li>
+                         <li>Or you can download all prepared files to run at other places.</li>")
+                ),
                 fluidRow(
                     class = "text-center",
                     actionButton(ns("run_session"), "Run workflow", style = "margin-top: 25px;") %>%
@@ -39,12 +44,19 @@ wf_runUI <- function(id){
                             session and set the working directory to the workflow
                             project. Once the session starts, you cannot interact
                             with other part of SPS.",
-                            "bottom"
-                        )
-                ),
-                tags$ul(
-                    id = ns("example_tip"),
-                    HTML("<li>A workflow is ready to run.</li>")
+                            "top"
+                        ),
+                    downloadButton(ns("download"), "Download Bundle", style = "margin-top: 25px;") %>%
+                        bsHoverPopover(
+                            "Download Workflow Bundle",
+                            "Clicking here zips everything in current workflow folder and allow you
+                            to run the workflow elsewhere. You can even run the workflow here to produce
+                            some simple results and then quit the session and come to here to download
+                            everything including results. Current limit is 300Mb.",
+                            "top"
+                        ),
+                    div(id = ns("loading_down"), style = "display: none;",
+                        spsLoader())
                 )
             ),
             boxPlus(
@@ -81,11 +93,54 @@ wf_runServer <- function(id, shared){
                 id = "gen_warning", anim = TRUE,
                 condition = input$choose_wf != "eg")
         })
-        observeEvent(input$set, {
+        ####### run page shortcut
+        observeEvent(input$set, ignoreInit = TRUE, {
+            stop()
             shared$wf$all_ready <- TRUE
+            shared$wf$env_path <- "."
+            shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
+            shared$wf$rs$supervise(TRUE)
+            shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
+            shared$wf$rs_info$created <- TRUE
+            shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
+            shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SYSproject", shared$wf$rs_info$log_name)
+            shared$wf$rs_info$rs_dir <- file.path(shared$wf$env_path, "results", paste0("rs", shared$wf$rs_info$pid))
+            spsOption("console_width",  getOption("width"))
+            options(width = 80)
+            dir.create(dirname(shared$wf$rs_info$log_path), recursive = TRUE, showWarnings = FALSE)
+            dir.create(shared$wf$rs_info$rs_dir, recursive = TRUE, showWarnings = FALSE)
+            if(!file.exists(shared$wf$rs_info$log_path)) file.create(shared$wf$rs_info$log_path)
+            addResourcePath("rs", shared$wf$rs_info$rs_dir)
+            # init r session settings
+            shared$wf$rs$call(function(log_path, rs_dir) {
+                options(device = function(){
+                    png(file.path(.rs_dir, paste0("plot", stringr::str_pad(.plot_num, 3, pad = "0"), "_%03d.png")))
+                    if(dev.cur() == 1) dev.new()
+                    dev.control("enable")
+                    .plot_num <<- .plot_num + 1
+                })
+                .rs_dir <<- rs_dir
+                .plot_num <<- 1
+                .cur_plot <<- NULL
+                log_file <- file(log_path, "awt")
+                sink(log_file, append = TRUE, type = "o")
+                sink(log_file, append = TRUE, type = "m")
+            }, args = list(
+                log_path = shared$wf$rs_info$log_path,
+                rs_dir = shared$wf$rs_info$rs_dir
+            ))
+            while(shared$wf$rs$poll_process(1000) == "timeout") next
+            shared$wf$rs$read()
+            # everything done, open session
+            shinyjs::runjs('pushbar.__proto__.handleKeyEvent = function(){return false};') # disable ESC key
+            pushbar::pushbar_open(id = "core_top-wf_push")
+            shared$wf$wd_old <- spsOption("app_path")
+            setwd(shared$wf$env_path)
         })
+        ########
         # right side display in task files
-        observeEvent(shared$wf$all_ready, {
+        observeEvent(shared$wf$all_ready,{
+            req(shared$wf$all_ready)
             shinyjs::html("intask_targets", shared$wf$targets_path)
             shinyjs::html("intask_targets_title", "Targets file (Ready):")
             shinyjs::addCssClass("intask_targets_title", "text-success")
@@ -93,16 +148,63 @@ wf_runServer <- function(id, shared){
             shinyjs::html("intask_wf_title", "Workflow file (Ready):")
             shinyjs::addCssClass("intask_wf_title", "text-success")
         })
-        ## open close wf push bar
-        observeEvent(input$run_session, ignoreInit = TRUE, {
-            pushbar::pushbar_open(id = "core_top-wf_push")
-            shared$wf$wf_session_open <- TRUE
-            shared$wf$wd_old <- spsOption("app_path")
-            setwd(shared$wf$env_path)
-            print(getwd())
-        })
-
-        # listen to log change
+        ## open  wf push bar and r session
+        # observeEvent(input$run_session, ignoreInit = TRUE, {
+        #     shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
+        #     shared$wf$rs$supervise(TRUE)
+        #     shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
+        #     shared$wf$rs_info$created <- TRUE
+        #     shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
+        #     shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SYSproject",
+        #                                             shared$wf$rs_info$log_name)
+        #     dir.create(dirname(shared$wf$rs_info$log_path), recursive = TRUE, showWarnings = FALSE)
+        #     if(!file.exists(shared$wf$rs_info$log_path)) file.create(shared$wf$rs_info$log_path)
+        #     shinyjs::runjs('pushbar.__proto__.handleKeyEvent = function(){return false};')
+        #     pushbar::pushbar_open(id = "core_top-wf_push")
+        #     shared$wf$wf_session_open <- TRUE
+        #     shared$wf$wd_old <- spsOption("app_path")
+        #     shared$wf$rs$call(function(log_path, env_option, pid) {
+        #         # on.exit({while(sink.number() > 0) sink()})
+        #         options(device = function(){png(); if(dev.cur() == 1) dev.new(); dev.control("enable")})
+        #         log_file <- file(log_path, "awt")
+        #         sink(log_file, append = TRUE, type = "o")
+        #         sink(log_file, append = TRUE, type = "m")
+        #         print(glue("{env_option} workflow session {pid} started"))
+        #     }, args = list(
+        #         log_path = shared$wf$rs_info$log_path,
+        #         env_option = shared$wf$env_option,
+        #         pid = shared$wf$rs_info$pid))
+        #     setwd(shared$wf$env_path)
+        #     print(getwd())
+        # })
+        # download bundle
+        output$download <- downloadHandler(
+            filename = function() {
+                "SPR_workflow_by_SPS.zip"
+            },
+            content = function(filename) {
+                on.exit({
+                    shinyjs::hide(ns("loading_down"))
+                    shinyjs::show(ns("download"))
+                    pg$close()
+                })
+                shinyjs::hide(ns("download"))
+                shinyjs::show(ns("loading_down"))
+                pg <- shiny::Progress$new()
+                pg$set(0)
+                pg$set(message = "Checking folder size")
+                shinyCatch({
+                    all_size <- fs::dir_ls(shared$wf$env_path, all = TRUE, recurse = TRUE) %>%
+                        fs::file_size() %>% sum()
+                    if(all_size > 5e+8) stop("Workflow folder toooooooooo large")
+                    if(all_size > 3e+8) stop("Workflow folder too large")
+                }, blocking_level = "error")
+                pg$set(10)
+                pg$set(message = "Start to zip, please wait")
+                zip::zip(zipfile=filename, files=shared$wf$env_path)
+            },
+            contentType = "application/zip"
+        )
     }
     moduleServer(id, module)
 }
