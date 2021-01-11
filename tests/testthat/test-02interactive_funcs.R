@@ -232,30 +232,10 @@ expect_equal(
 # </div>
 # <script>clearText('input1')</script>
 
-context("textInputGroup func")
-expect_equal(
-    openssl::md5(textInputGroup("id1", "id2") %>% as.character()) %>%
-        as.character(),
-    "61676e7c8d92fac43caf6554b832163c"
-)
-# <div class="row">
-#     <div class="col-sm-9" style="padding-right: 0; bottom: 10px">
-#       <div>
-#         <label for="id1"></label>
-#         <span class="text-input-clearable" style="background-color: #f5f5f5;">
-#           <input id="id1" type="text" value="" placeholder=""/>
-#           <span id="clear_input" class="glyphicon glyphicon-remove"></span>
-#         </span>
-#       </div>
-#       <script>clearText('id1')</script>
-#     </div>
-#     <div class="col-sm-3" style="padding-left: 10px; bottom: 10px">
-#       <br/>
-#       <button id="id2" type="button" class="btn btn-default action-button">
-#           <i class="fa fa-paper-plane"></i>
-#       </button>
-#     </div>
-# </div>
+test_that("textInputGroup func", {
+    local_edition(3)
+    expect_snapshot_output(textInputGroup("id1", "id2"))
+})
 
 context("tabTitle func")
 expect_equal(
