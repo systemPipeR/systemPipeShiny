@@ -54,7 +54,9 @@ Suggests:
     systemPipeR, 
     knitr, 
     rmarkdown
-Remotes: rstudio/shiny
+Remotes:
+    rstudio/htmltools, 
+    rstudio/shiny
 VignetteBuilder: knitr
 biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
 License: Artistic-2.0
