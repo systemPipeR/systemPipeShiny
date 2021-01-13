@@ -1,9 +1,7 @@
 ########## Test import functions behave as we want
 
-
-context("import DT")
 test_that("DT funcs", {
-    expect_is(DT::renderDT({}) , "shiny.render.function")
+    expect_s3_class(DT::renderDT({}) , "shiny.render.function")
     df <- DT::datatable(
         iris,
         style = "bootstrap",
@@ -17,17 +15,15 @@ test_that("DT funcs", {
             columnDefs = list(list(className = 'dt-center',
                                    targets = "_all"))
         ))
-    expect_is(df, "datatables")
-    expect_equal(
-        openssl::md5(
-            DT::DTOutput("") %>% as.character()
-        ) %>%
-            as.character(),
-        "44fe7ed329633fb8a1e965813edb6b03"
-    )
+    expect_s3_class(df, "datatables")
 })
 
-context("import R6")
+test_that("DT snap", {
+    skip_on_bioc()
+    expect_snapshot_output(DT::DTOutput(""))
+})
+
+
 test_that("R6 class", {
     testR6 <- R6::R6Class(
         classname = "testR6",
@@ -48,30 +44,22 @@ test_that("R6 class", {
     )
     expect_message(testR6$new())
     newR6 <- testR6$new()
-    expect_is(newR6$showList(), "list")
+    expect_type(newR6$showList(), "list")
     newR6$addList(5)
     newR6$addList(5)
     expect_length(newR6$showList(), 2)
 })
 
 
-context("import colourpicker")
-test_that("colourInput funcs", {
-    expect_equal(
-        openssl::md5(
-            colourpicker::colourInput("a", "a") %>% as.character()
-        ) %>%
-            as.character(),
-        "185b48a21dea1373c38d6deafd7245e8"
-    )
+test_that("colourInput", {
+    skip_on_bioc()
+    expect_snapshot_output(colourpicker::colourInput("a", "a"))
 })
-# <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#     <label for="a">a</label>
-#     <input id="a" type="text" class="form-control shiny-colour-input" data-init-value="white" data-show-colour="both" data-palette="square"/>
-# </div>
 
-context("import crayon")
+
+
 test_that("blue  green  make_style  red funcs", {
+    skip_on_bioc()
     if(crayon::has_color()){
         expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
         expect_equal(crayon::green$bold("a"),  "\033[32m\033[1ma\033[22m\033[39m")
@@ -86,11 +74,9 @@ test_that("blue  green  make_style  red funcs", {
     }
 })
 
-
-context("import dplyr")
 test_that("dplyr funcs", {
     df <- dplyr::as_tibble(iris)
-    expect_is(df, "tbl")
+    expect_s3_class(df, "tbl")
     expect_equal(nrow(df %>% dplyr::add_row(df[1,])), 151)
     remote <- df %>%
         dplyr::filter(Sepal.Length < 5) %>%
@@ -111,51 +97,43 @@ test_that("dplyr funcs", {
 })
 
 
-context("import ggplot2")
 test_that("ggplot2 funcs", {
     p <- ggplot(iris, aes(x =  Sepal.Length, y = Species)) +
         geom_bar(stat = "identity") +
         geom_point() +
         coord_flip() +
         ggtitle("test")
-    expect_is(p, "ggplot")
+    expect_s3_class(p, "ggplot")
 })
 
 
-context("import glue")
 test_that("glue funcs", {
     a <- c("abc", "def")
-    expect_equal(glue("a{a[1]}b"), "aabcb")
-    expect_equal(glue_collapse(a, sep = ""), "abcdef")
+    expect_equal(glue("a{a[1]}b"), "aabcb", ignore_attr = TRUE)
+    expect_equal(glue_collapse(a, sep = ""), "abcdef", ignore_attr = TRUE)
 })
 
 
-context("import markdown")
 test_that("renderMarkdown funcs", {
     expect_equal(renderMarkdown(text = "# abc"), "<h1>abc</h1>\n")
     expect_equal(renderMarkdown(text = "- abc"), "<ul>\n<li>abc</li>\n</ul>\n")
 })
 
 
-context("import networkD3")
 test_that("networkD3 funcs", {
     t_lvl <- c(1, 3, 1, 2, 2, 3)
     t_text <- c('1', '1.1.1', '2', '2.1', '2.2', '2.2.1')
     d3_tree <- step2listD3(t_lvl, t_text)
     networkD3::diagonalNetwork(d3_tree)
-    expect_equal(
-        openssl::md5(
-            networkD3::diagonalNetworkOutput("a") %>% as.character()
-        ) %>%
-            as.character(),
-        "eb0802bbd2e422dc540b638bf703d505"
-    )
-    expect_is(renderDiagonalNetwork({}), "shiny.render.function")
+    expect_s3_class(renderDiagonalNetwork({}), "shiny.render.function")
 })
-# <div id="a" style="width:100%; height:800px; " class="diagonalNetwork html-widget html-widget-output"></div>
+
+test_that("networkD3 snap", {
+    skip_on_bioc()
+    expect_snapshot_output(networkD3::diagonalNetworkOutput("a"))
+})
 
 
-context("import openssl")
 test_that("openssl funcs", {
     key <- rsa_keygen()
     msg <- serialize("1", NULL)
@@ -168,7 +146,6 @@ test_that("openssl funcs", {
 # skip plotly, rhandsontable, tested in main UI
 
 
-context("import rlang")
 test_that("rlang funcs", {
     a = 123
     enexprFun <- function(x){
@@ -180,13 +157,11 @@ test_that("rlang funcs", {
 })
 
 
-context("import rstudioapi")
 test_that("rstudioapi funcs", {
     expect_true(is.logical(rstudioapi::isAvailable()))
 })
 
 
-context("import shinyAce")
 test_that("shinyAce funcs", {
     expect_true(is.empty(""))
     expect_true(is.empty(NULL))
@@ -202,7 +177,6 @@ test_that("shinyAce funcs", {
 # skip shinytoastr, can't test toastr.js
 
 
-context("import stringr")
 test_that("stringr funcs", {
     mystr <- c("this is a New new string.")
     expect_true(str_detect(mystr, "New"))
@@ -219,7 +193,6 @@ test_that("stringr funcs", {
 })
 
 
-context("import styler")
 test_that("styler funcs", {
     # test if this func can run
     myfile <- tempfile(fileext = ".R")
@@ -237,7 +210,6 @@ test_that("styler funcs", {
 })
 
 
-context("import vroom")
 test_that("vroom func", {
     myfile <- tempfile()
     write.csv(iris, myfile, quote = FALSE, row.names = FALSE)
@@ -249,9 +221,9 @@ test_that("vroom func", {
         col_types= vroom::cols(Sepal.Length = vroom::col_character()),
         na = character()
     )
-    expect_is(mydf[[1]], "character")
-    expect_is(mydf[[2]], "numeric")
-    expect_is(mydf$Species, "character")
+    expect_equal(class(mydf[[1]]), "character")
+    expect_equal(class(mydf[[2]]), "numeric")
+    expect_equal(class(mydf$Species), "character")
 
     expect_warning(vroom::vroom(
         myfile,
@@ -260,7 +232,6 @@ test_that("vroom func", {
 })
 
 
-context("import yaml")
 test_that("yaml func", {
     filename <- tempfile()
     cat(
@@ -269,7 +240,7 @@ test_that("yaml func", {
         file=filename
     )
     yaml_load <- yaml.load_file(filename)
-    expect_is(yaml_load, "list")
+    expect_type(yaml_load, "list")
     expect_equal(names(yaml_load), c("a", "b", "b3"))
     expect_equal(yaml_load[["b"]][["b2"]], c(1, 2))
 })
