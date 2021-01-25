@@ -7,7 +7,12 @@ wfUI <- function(id){
     Workflow management guides you step by step to prepare a data analysis workflow,
     and enbles you to run some simple workflows directly from this app. The
     workflow will be prepared in [systemPipeR (SPR)](https://systempipe.org/)
-    format or it can be used in other similar compatible workflow environments.
+    format and it can be used in other similar compatible workflow environments.
+
+    `WARNING: This module will allow users to access some server files and run
+    random R code in the workflow running session (step 5). It is recommended to use
+    this module locally. If there is public access, consider to provide this serivce
+    in an isolated place, like inside a container/ sandbox.`
 
     #### Quick start
     To run a workflow, you need to create a workflow environment and prepare
@@ -40,7 +45,7 @@ wfUI <- function(id){
             tags$script(type="module", src = "sps/js/sps_wf.js"),
             tags$link(rel="stylesheet", href = "sps/css/sps_wf.css")
         ),
-        tabTitle("WF main"),
+        tabTitle("Data analysis workflows"),
         renderDesc(ns("desc"), desc),
         spsHr(),
         br(),

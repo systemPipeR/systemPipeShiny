@@ -34,8 +34,9 @@ core_topUI <- function(id){
                 div(
                     style = "height: 95vh;",
                     div(
-                        id = "a", class = "split split-horizontal", style = "overflow: hidden;",
-                        div( id = "c1", class ="split split-content",
+                        id = ns("leftcol"), class = "split split-horizontal", style = "overflow: hidden;",
+                        # source cide ----
+                        div( id = ns("source_code"), class ="split split-content",
                              div(
                                  class = "split-header",
                                  h3("Source Code", class = "split-title"),
@@ -69,7 +70,8 @@ core_topUI <- function(id){
                                 backend. Wait a second after editing code before hitting 'Run'.")
                              )
                         ),
-                        div( id = "c3", class ="split split-content",
+                        # console ----
+                        div( id = ns("console"), class ="split split-content",
                              div(
                                  class = "split-header",
                                  h3("Console Output", class = "split-title"),
@@ -135,9 +137,10 @@ core_topUI <- function(id){
                         )
                     ),
                     div(
-                        id = "b", class ="split split-horizontal",
+                        id = ns("rightcol"), class ="split split-horizontal",
+                        # wf log ----
                         div(
-                            id = "c2", class ="split split-content",
+                            id = ns("wf_log"), class ="split split-content",
                             div(
                                 class = "split-header",
                                 h3("Workflow Log", class = "split-title"),
@@ -147,57 +150,58 @@ core_topUI <- function(id){
                                 )
                             ),
                             div(class = "split-body",
+                                verbatimTextOutput(ns("logs")) %>%
+                                    {.$attribs[['style']] <- " margin:0; overflow: visible;"; .},
+                                p("This panel always displays the most recent
+                                      modified log in `.SYSproject` folder, updates every 10s."),
+                                p("Only systemPipeR workflow logs will be displayed here. Check
+                                      console for any other random R code results"),
                                 div(
-
-                                    verbatimTextOutput(ns("logs")) %>%
-                                        {.$attribs[['style']] <- " margin:0; overflow: visible;"; .},
-                                    p("This panel always displays the most recent modified log in `.SYSproject` folder, updates every 10s."),
-                                    div(
-                                        style="height:5px; width:100%",
-                                        shinyWidgets::progressBar(
-                                            ns("update_log"), value = 0,
-                                            status = "primary", striped = TRUE,
-                                            size = "xs"
-                                        )
+                                    style="height:5px; width:100%",
+                                    shinyWidgets::progressBar(
+                                        ns("update_log"), value = 0,
+                                        status = "primary", striped = TRUE,
+                                        size = "xs"
                                     )
                                 )
                             )
                         ),
+                        # plot ----
                         div(
-                            id = "c4", class ="split split-content",
+                            id = ns("plot_panel"), class ="split split-content",
                             div(
                                 class = "split-header",
                                 h3("Plots", class = "split-title"),
                                 div(
                                     class = "split-tool",
-                                    div(
-                                        class = "dropdown",
-                                        style = "display: inline;",
-                                        tags$button(
-                                            class="btn btn-default dropdown-toggle",
-                                            type = "button",
-                                            id = ns("plot_options"),
-                                            `data-toggle` = "dropdown",
-                                            `aria-haspopup`= "true",
-                                            `aria-expanded`= "false",
-                                            tags$i(class = "fa fa-gear")
-                                        ),
-                                        tags$ul(
-                                            class="dropdown-menu",
-                                            `aria-labelledby` = ns("plot_options"),
-                                            tags$b("Delete/Clear also remove server-end files"),
-                                            tags$li(
-                                                style = "margin-left: 15px;",
-                                                shinyWidgets::switchInput(
-                                                    size = "small",
-                                                    value = FALSE,
-                                                    inputId = ns("stop_on_err"),
-                                                    offStatus = "danger",
-                                                    width = "50%"
-                                                )
-                                            )
-                                        )
-                                    ),
+                                    # div(
+                                    #     class = "dropdown",
+                                    #     style = "display: inline;",
+                                    #     tags$button(
+                                    #         class="btn btn-default dropdown-toggle",
+                                    #         type = "button",
+                                    #         id = ns("plot_options"),
+                                    #         `data-toggle` = "dropdown",
+                                    #         `aria-haspopup`= "true",
+                                    #         `aria-expanded`= "false",
+                                    #         tags$i(class = "fa fa-gear")
+                                    #     ),
+                                    #     tags$ul(
+                                    #         class="dropdown-menu",
+                                    #         `aria-labelledby` = ns("plot_options"),
+                                    #         tags$b("Delete/Clear also remove server-end files"),
+                                    #         tags$li(
+                                    #             style = "margin-left: 15px;",
+                                    #             shinyWidgets::switchInput(
+                                    #                 size = "small",
+                                    #                 value = FALSE,
+                                    #                 inputId = ns("stop_on_err"),
+                                    #                 offStatus = "danger",
+                                    #                 width = "50%"
+                                    #             )
+                                    #         )
+                                    #     )
+                                    # ),
                                     actionButton("a", "", icon = icon("minus"), class = "")
                                 )
                             ),
@@ -229,12 +233,28 @@ core_topUI <- function(id){
                                         `data-placement`="top",
                                         title="delete current plot"
                                     ),
-                                    h5("0 / 0"),
                                     actionButton(
                                         "rs-plot-clear", "", icon = icon("broom"),
                                         `data-toggle`="tooltip",
                                         `data-placement`="top",
                                         title="clear all plots"
+                                    ),
+                                    h5("0 / 0"),
+                                    actionButton(
+                                        "rs-plot-canvas", "", icon = icon("paint-brush"),
+                                        `data-toggle`="tooltip",
+                                        `data-placement`="top",
+                                        title="Send to canvas",
+                                        onclick=paste0('toCanvas("', "#rs_plot img", '", "', "core_canvas", '");
+                                                        if(toastr) toastr.info("Sceenshot sent to Canvas", "", {positionClass: "toast-bottom-right", timeOut: 2000});
+                                        ')
+                                    ),
+                                    actionButton(
+                                        "rs-plot-png", "", icon = icon("file-image"),
+                                        `data-toggle`="tooltip",
+                                        `data-placement`="top",
+                                        title="Save as image",
+                                        onclick = paste0('toPng("', '#rs_plot img', '")')
                                     )
                                 )
                             )
@@ -261,7 +281,7 @@ core_topServer <- function(id, shared){
     module <- function(input, output, session){
         pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
         ns <- session$ns
-        # update session status
+        # update session status ----
         rs_status_text <- reactiveVal("")
         update_rs <- observe({
             invalidateLater(1000)
@@ -291,22 +311,44 @@ core_topServer <- function(id, shared){
                 shinyjs::removeCssClass("rs_status", "text-warning")
             }
         })
-        # close
+        # close session ----
         observeEvent(input$close_push, ignoreInit = TRUE, {
-            setwd(shared$wf$wd_old)
+            if(shared$wf$rs$get_state() == "busy") shinytoastr::toastr_warning(
+                "Session is still busy", position = "bottom-right"
+            )
+            shinyWidgets::confirmSweetAlert(
+                session,
+                inputId = ns("confirm_close"),
+                title = "Close current session?",
+                text = if (shared$wf$rs$get_state() == "busy") "Session is running! Any running workflow or R code will be stopped, and it may cause error. Unsaved data will be lost."
+                       else "Unsaved data will be lost.",
+                type = if(shared$wf$rs$get_state() == "busy") "warning" else "info"
+            )
+        })
+
+        observeEvent(input$confirm_close, ignoreInit = TRUE, {
+            req(input$confirm_close)
+            # destroy observers
+            update_rs$suspend()
+            out_watcher$suspend()
+            plot_watcher$suspend()
+            # update status
             shared$wf$wf_session_open <- FALSE
             try({shared$wf$rs$close(); shared$wf$rs$finalize()}, silent = TRUE)
             shared$wf$rs_info$created <- FALSE
             shared$wf$rs <- NULL
             shared$wf$rs_info$log_name <- NULL
             shared$wf$rs_info$log_path <- NULL
+            # close session
             pushbar::pushbar_close()
             shinytoastr::toastr_info(
                 glue("Workflow session {shared$wf$rs_info$pid} closed."),
                 position = "bottom-right", timeOut = 2000)
             shared$wf$rs_info$pid <- NULL
-            print(getwd())
+            options(width = if(!is.null(spsOption("console_width"))) spsOption("console_width") else 80)
         })
+
+        # init editor code ----
         observeEvent(shared$wf$wf_session_open, {
             req(shared$wf$wf_session_open)
             if(!emptyIsFalse(shared$wf$wf_path))
@@ -322,7 +364,7 @@ core_topServer <- function(id, shared){
                 ')
             )
         }, ignoreInit = TRUE)
-        ## run code
+        ## run code ----
         err <- reactiveVal(NULL)
         res <- reactiveVal(NULL)
         last_stdout <- reactiveVal(NULL)
@@ -355,7 +397,7 @@ core_topServer <- function(id, shared){
                 }
             ))
         })
-        # start to send code
+        # start to send code ----
         observeEvent(code_que(), ignoreInit = TRUE, {
             if(!emptyIsFalse(code_que())){
                 shinyjs::hide("loading_eval")
@@ -408,9 +450,10 @@ core_topServer <- function(id, shared){
             # if(emptyIsFalse(que()))  out_watcher$suspend()
             out_watcher$resume()
         })
-        # watch for console output
+        # watch for console output ----
         out_watcher <- observe(suspended = TRUE, {
             invalidateLater(1000)
+            req(shared$wf$rs)
             if(shared$wf$rs$poll_process(1) == "timeout"){
                 ## while code still running
                 log_current_n <- R.utils::countLines(log_path())
@@ -461,13 +504,13 @@ core_topServer <- function(id, shared){
                 code_submitted(FALSE) # turn off output watcher
             }
         })
-        # rs interrupt
+        # rs interrupt ----
         observeEvent(input$console_stop, {
             req(shared$wf$rs$get_state() == "busy")
             shared$wf$rs$interrupt()
             code_que(list())
         })
-        # update plots
+        # update plots ----
         rs_plots <- reactiveValues(plots_new = c(), plots_done = c(), plots_done_md5 = c())
         plot_watcher <- observe(suspended = TRUE, {
             invalidateLater(3000)
@@ -515,7 +558,7 @@ core_topServer <- function(id, shared){
         observeEvent(input$clear_console, ignoreInit = TRUE, {
             removeUI(selector = paste0("#", ns("output"), " > *"), multiple = TRUE, immediate = TRUE)
         })
-        ## capture logs
+        ## capture SPR logs----
         observeEvent(1, {
             output$logs <- renderPrint({
                 cat(rep("\n", 10))
@@ -531,19 +574,20 @@ core_topServer <- function(id, shared){
             log_file <- shinyCatch({
                 fs::dir_ls(file.path(shared$wf$env_path, ".SYSproject"), glob = "*_logWF_*", type = "file") %>%
                     {.[file.mtime(.) %>% which.max()]}
-            },blocking_level = "error", shiny = F)
+            },blocking_level = "error", shiny = FALSE)
             req(length(log_file) > 0)
             log_mtime <- file.mtime(log_file)
             req(!identical(log_mtime, log_old()))
             logs(readLines(log_file))
             log_old(log_mtime)
+            output$logs <- renderPrint({
+                cat(logs(), sep = "\n")
+            })
             Sys.sleep(1)
             updateProgressBar(session, "update_log", 100)
         })
-        output$logs <- renderPrint({
-            cat(logs(), sep = "\n")
-        })
-        # kill/clean wf session on end
+
+        # kill/clean wf session on end ----
         session$onEnded(function(){
             try({shared$wf$rs$close(); shared$wf$rs$finalize()}, silent = TRUE)
             options(width = {wd <- spsOption("console_width") ;if(is.numeric(wd)) wd else 80})

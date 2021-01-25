@@ -72,7 +72,7 @@ wf_setupUI <- function(id){
             fluidRow(
                 column(
                     6,
-                    shinyWidgets::pickerInput(
+                    selectizeInput(
                         inputId = ns("choose_wf"),
                         label = "Choose a workflow template",
                         choices = c(Example="eg", RNAseq="rnaseq", Varseq="varseq",
@@ -239,7 +239,6 @@ wf_setupServer <- function(id, shared){
         observeEvent(c(input$choose_wf, wf_path()), {
             req(input$choose_wf == "exist")
             req(!is.null(wf_path()))
-            print(wf_path())
             roots <- c(`workflow folder`= wf_path())
             # targets
             shinyFiles::shinyFileChoose(

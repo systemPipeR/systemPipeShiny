@@ -1,5 +1,6 @@
 #' @importFrom  DESeq2 DESeqDataSetFromMatrix results lfcShrink
 .run_DESeq2 <- function (countDF, targets, cmp, independent = FALSE,
+                         prefilter = 1,
                          lfcShrink = TRUE, lfcShrink_type = "normal",
                          pg_id = "", lfc_filter = 0,
                          fdr_filter = 1,
@@ -12,6 +13,7 @@
     countDF <- countDF[, names(samples)]
     countDF[is.na(countDF)] <- 0
     deseqDF <- data.frame(row.names = rownames(countDF))
+    deseqDF <- deseqDF[rowSums(deseqDF) >= as.numeric(prefilter), ]
     if (independent == TRUE) {
         loopv <- seq(along = cmp[, 1])
     }

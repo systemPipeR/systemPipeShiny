@@ -165,7 +165,7 @@ gallery <- function(Id = NULL, title = "Gallery",
         length(texts) == length(hrefs) & length(hrefs) == length(images),
         msg = "texts, hrefs and images must have the same length")
     tags$div(
-        id = Id, class = "col",
+        id = Id, class = "col sps-gallery",
         p(class = "text-center h2",
           style = glue("color: {title_color};"),
           title),
@@ -372,7 +372,7 @@ renderDesc <- function(id, desc) {
     HTML(glue('
       <div class="desc">
         <div class="collapse desc-body" id="{id}" aria-expanded="false">
-         {HTML(markdown::renderMarkdown(text = glue(desc)))}
+         {HTML(markdown::renderMarkdown(text = glue(desc, .open = "@{", .close = "}@")))}
         </div>
 
         <a role="button" class="collapsed" data-toggle="collapse"
@@ -1012,6 +1012,55 @@ spsLoader <- function(id=NULL){
            ')
         )
     )
+}
+
+
+#' Match height of one element to the other element
+#' @description Match the height of one element to the second element.
+#' If the height of second element change, the height of first element will change
+#' automatically
+#' @param div1 element ID, or jquery selector if `isID = FALSE`. The first element
+#' that you want to match the height to the other element
+#' @param div2 matched element ID or selector, the other element
+#' @param isID bool, if `TRUE`, `div1` and `div2` will be treated as ID, otherwise
+#' you can use complex jquery selector
+#'
+#' @return will be run as javascript
+#' @export
+#'
+#' @examples
+#' if(interactive()){
+#'     library(shiny)
+#'
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         column(
+#'             3, id = "a",
+#'             style = "border: 1px black solid",
+#'             p("a")
+#'         ),
+#'         shinyjqui::jqui_resizable(column(
+#'             6, id ="b",
+#'             style = "border: 1px black solid",
+#'             p("b")
+#'         )),
+#'         heightMatcher("a", "b")
+#'     )
+#'
+#'     server <- function(input, output, session) {
+#'
+#'     }
+#'     # Try to drag `b` from bottom right corner and see what happens to `a`
+#'     shinyApp(ui, server)
+#' }
+heightMatcher <- function(div1, div2, isID=TRUE){
+    if(isID) {
+        div1 <- paste0("#", div1)
+        div2 <- paste0("#", div2)
+    }
+    tags$script(paste0(
+        'heightMatcher("', div1, '",', ' "', div2, '")'
+    ))
 }
 
 

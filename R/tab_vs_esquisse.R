@@ -1,27 +1,35 @@
 ###################### SPS Plot Tab Title tab######################
-## creation date: 2020-09-28 22:47:20
+## creation date: 2021-01-21 15:42:15
 ## Author:
 
 ## lines with `#####` around are important sections, you may change/add  the
 ## values inside if you used default settings when creating the tab.
 
-## UI for plot_example2
+## UI for vs_esquisse
 
-plot_example2UI <- function(id) {
+vs_esquisseUI <- function(id) {
     ns <- NS(id)
     desc <- "
 
-    #### Make a Bar Plot
-    An example plot tab that receives data from 'Data Tab Example' and generates
-    a bar plot of total reads from a count table.
+    #### Some Description of this data in markdown
+    - you should ...
+        1. eg 1.
+        2. eg 2.
+        - **Notice**: ...`this` ...
+
+
+    ```
+    some code demo ...
+    ```
+
     "
     tagList(
         ##### Progress tracker
         pgPaneUI(ns("pg"),
             titles = c(
                 "Package Requirements",
-                'Input from Count table',
-                'Validate Count table'
+                'Input from Raw data',
+                'Validate Raw data'
             ),
             pg_ids = c(
                 ns("pkg"),
@@ -41,14 +49,14 @@ plot_example2UI <- function(id) {
         fluidRow(
             column(6, genHrefTab(
                 c("data_example"),
-                title = "You need to prepare count data from these tabs:"
+                title = "You need to prepare Raw data from these tabs:"
             ))
         ),
         h5("Once you have prepared the data,
            select which tab(s) your data is coming from:"),
         ##### select input data
         fluidRow(
-            column(6, shinyWidgets::pickerInput(ns("source_data"), "Count data",
+            column(6, selectizeInput(ns("source_data"), "Raw data",
                 choices = c("Data Tab Example" = "data_example"),
                 options = list(style = "btn-primary")
             ))
@@ -66,14 +74,7 @@ plot_example2UI <- function(id) {
             ##### UI of different plot options
             div(
                 id = ns("plot_opts"), style = "background: white;",
-                shinydashboardPlus::boxPlus(
-                    width = 12,
-                    title = "Some exmaple options to control the plot",
-                    closable = FALSE,
-                    clearableTextInput(ns("plot_title"),
-                                       label = "Plot title",
-                                       value = "Total reads by samples")
-                )
+                tagList(h3("Some plotting options"))
             ),
             #####
             spsHr(),
@@ -96,18 +97,19 @@ plot_example2UI <- function(id) {
     )
 }
 
-## server for plot_example2
-plot_example2Server <- function(id, shared) {
+## server for vs_esquisse
+
+vs_esquisseServer <- function(id, shared) {
     module <- function(input, output, session) {
         ns <- session$ns
-        tab_id <- "plot_example2"
+        tab_id <- "plot_esquisse"
         # define a data container for all data sets
         mydata <- reactiveValues()
         observeEvent(input$validate_start, {
             ##### package check
             req(shinyCheckPkg(
                 session = session,
-                cran_pkg = c('ggplot2', 'plotly'),
+                cran_pkg = c('base'),
                 bioc_pkg = c(''),
                 github = c('')
             ))
@@ -117,8 +119,9 @@ plot_example2Server <- function(id, shared) {
             mydata$data <- getData(isolate(input$source_data), shared)
             pgPaneUpdate("pg", "data", 100)
             spsValidate({
-                if (is.data.frame(mydata$data)) TRUE
-                else stop("Count table needs to be a dataframe or tibble")
+                if (is.data.frame(mydata$data)) TRUE else stop(
+                    "Data xx needs to be a dataframe or tibble"
+                )
             })
             pgPaneUpdate("pg", "vd_data", 100)
             #####
@@ -131,17 +134,10 @@ plot_example2Server <- function(id, shared) {
         observeEvent(input$render, {
             ##### plotting function
             output$plot <- sps_plots$addServer(plotly::renderPlotly, tab_id, {
-                reads <- apply(mydata$data[, -1], 2, sum)
-                reads_df <- data.frame(samples = names(reads),
-                                       reads = reads)
-                plotly::ggplotly({
-                    ggplot(reads_df) +
-                    geom_bar(aes(x = samples, y = reads, fill = samples),
-                             stat = "identity")+
-                    coord_flip()+
-                    ggtitle(as.character(input$plot_title))
-
-                })
+                plotly::ggplotly(ggplot(mydata$data, aes_string(names(mydata$data)[1], names(
+                    mydata$data
+                )[2])) +
+                    geom_point(aes(color = seq_len(nrow(mydata$data)))))
             })
             #####
             shared$snap_signal <- sps_plots$notifySnap(tab_id)

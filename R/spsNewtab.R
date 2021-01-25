@@ -214,6 +214,7 @@ newTabPlot <- function(tab_id = "plot_id1",
                        open_file = TRUE,
                        verbose = spsOption("verbose"),
                        colorful = spsOption("use_crayon")){
+    msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
     verbose_old <- spsOption('verbose')
     colorful_old <- spsOption('use_crayon')
     spsOption('verbose', verbose)
@@ -344,6 +345,7 @@ newTabData <- function(tab_id = "data_id1",
                        use_string = FALSE,
                        verbose = spsOption("verbose"),
                        colorful = spsOption("use_crayon")){
+    msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
     verbose_old <- spsOption('verbose')
     colorful_old <- spsOption('use_crayon')
     spsOption('verbose', verbose)
@@ -496,6 +498,7 @@ makePlotData <- function(dataset_id = "data",
                          }),
                          app_path = getwd(),
                          use_string = FALSE){
+    msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
     stopifnot(is.character(dataset_id) & length(dataset_id) == 1)
     stopifnot(is.character(dataset_label) & length(dataset_label) == 1)
     stopifnot(is.character(receive_datatab_ids))
@@ -621,6 +624,7 @@ makePrepro <- function(method_id = "md1",
                        pre_expr ={data_filtered},
                        plot_options = "default",
                        use_string = FALSE){
+    msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
     stopifnot(is.character(method_id))
     stopifnot(is.character(label))
     stopifnot(is.character(plot_options))
@@ -781,7 +785,7 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
             glue_collapse(",\n")
     }, rec_id = receive_ids, rec_lab = receive_labels) %>% unlist()
     pt_data[['select_input']] <-
-        glue('column(6, shinyWidgets::pickerInput(ns("source_{ids}"), "{labels}",
+        glue('column(6, selectizeInput(ns("source_{ids}"), "{labels}",
                 choices = c({input_choices}),
                 options = list(style = "btn-primary")))') %>%
         glue_collapse(",\n")
@@ -862,7 +866,7 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
 .tabRegister <- function(tab_id, display_name = "tab_title", app_path = ".",
                          type="vs", type_sub = "", image = "",
                          displayed = 1,
-                         tab_file_name = glue("tab_vs_{tab_id}.R"),
+                         tab_file_name = glue("tab_{tab_id}.R"),
                          plugin = ""){
     tab_path <- file.path(app_path, "config", "tabs.csv")
     write_info <- glue_collapse(c(tab_id, display_name, type,
@@ -997,4 +1001,436 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         {glue("'{.}'")} %>% {glue("github = c({.})")}
     glue_collapse(c(cran_text, bioc_text, github_text), sep='\n')
 }
+
+#' Create a new SPS tab
+#' @description create custom tabs in newer (> 1.1) version of SPS. The old
+#' creation functions will be deprecated by next Bioconductor major release.
+#' @param tab_id character string, length 1, must be unique. Use
+#' [spsTabInfo(app_path = "YOUR_APP_PATH")][spsTabInfo()] to see current tab
+#' IDs.
+#' @param tab_displayname character string, length 1, the name to be displayed
+#' on side navigation bar list and tab title
+#' @param img realtive path, an image representation of the new plot. It can be
+#'  a internet link or a local link which uses the *www* folder as the root.
+#' e.g. drop your image *plot.png* inside *www/plot_list*, then the
+#' link here is "plot_list/plot.png". You will see these images on "Custom Tabs"
+#' main page. If no provided, a warning will be given on app start and an empty
+#' image will show up on "Custom Tabs".
+#' @param app_path string, app directory, default is current directory
+#' @param out_folder_path string, which directory to write the new tab file,
+#' default is the *R* folder in the SPS project. If you write the file other than
+#' *R*, this file will not be automatically loaded by SPS or Shiny. You must source
+#' it manually.
+#' @param author character string, or a vector of strings. authors of the tab
+#' @param template one of "simple" or "full", default "simple". "simple" gives a
+#' tab file with minimum Shiny code, you can only focus on you R plotting code.
+#' "full" gives the full tab code, so you can modify everything on the tab.
+#' @param preview bool, *TRUE* will print the new tab code to console and will
+#' not write the file and will not register the tab
+#' @param reformat bool, whether to use [styler::style_file] reformat the code
+#' @param open_file bool, if Rstudio is detected, open the new tab file?
+#' @param verbose bool, default follows the project verbosity level.
+#'  *TRUE* will give you more information on progress and debugging
+#' @param colorful bool, whether the message will be colorful or not
+#'
+#' @return returns a new tab file
+#' @export
+#' @details
+#' - template "simple": hides the UI and server code and use [spsEzUI] and [spsEzServer] instead.
+#' - template "full": full tab code. You need to know some Shiny development knowledge.
+#' @examples
+#' spsInit(change_wd = FALSE, overwrite = TRUE)
+#' spsNewTab("vs_newtab_ez", app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+#' spsNewTab("vs_newtab_full", template = "full", app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+#' spsNewTab("vs_newtab_pre", preview = TRUE, app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+spsNewTab <- function(tab_id = "vs_mytab",
+                      tab_displayname = "My custom plotting tab",
+                      img = "",
+                      app_path = getwd(),
+                      out_folder_path = file.path(app_path, "R"),
+                      author = "",
+                      template = c("simple", "full"),
+                      preview = FALSE,
+                      reformat = FALSE,
+                      open_file = TRUE,
+                      verbose = spsOption("verbose"),
+                      colorful = spsOption("use_crayon")){
+    #set up color and verbose
+    verbose_old <- spsOption('verbose')
+    colorful_old <- spsOption('use_crayon')
+    spsOption('verbose', verbose)
+    spsOption('use_crayon', colorful)
+    # assertions
+    assert_that(is.character(tab_id) & length(tab_id) == 1)
+    assert_that(is.character(img) & length(img) == 1)
+    stopifnot(is.character(author))
+    stopifnot(is.character(tab_displayname))
+    stopifnot(is.character(out_folder_path))
+    template <- match.arg(template, c("simple", "full"))
+    stopifnot(is.logical(reformat))
+    stopifnot(is.logical(open_file))
+    stopifnot(is.logical(preview))
+    # check output folder
+    spsinfo("checking R folder")
+    assert_that(dir.exists(file.path(app_path, "R")),
+                msg = glue('folder {file.path(app_path, "R")} is not there'))
+    # check output path
+    out_p <- file.path(out_folder_path, glue("tab_{tab_id}.R"))
+    if(file.exists(out_p)) spserror(glue("File {out_p} exists."))
+    if(str_detect(string = tab_displayname, ",")) spserror("comma ',' detected in display name, not allowed")
+    # check tab id is in config
+    err <- try(findTabInfo(tab_id,
+                           tab_file = file.path(app_path, "config", "tabs.csv"),
+                           force_reload = TRUE),
+               silent = TRUE)
+    if(inherits(err, "sps-tabinfo")){
+        spserror(glue("Id '{tab_id}' exists, see your tabs.csv"))
+    } else if(inherits(err, "try-error")){
+        if(str_detect(
+            err[[1]],
+            glue(".*SPS-ERROR.*{tab_id}"))){
+            spsinfo("Tab id no conflict, continue.")
+        } else spserror(err[[1]])
+    }
+
+    # add creation time
+    crt_date <- Sys.time()
+
+    # parse info
+    spsinfo("Asserting tab ID")
+    spsinfo(glue("Asserting info for tab {tab_id}"))
+    spsinfo("Parsing author(s)")
+    author <- glue_collapse(author, sep = ", ")
+
+    # make sure every injection is length 1
+    list(tab_id, tab_displayname, author, crt_date) %>%
+        {
+            check_names <- c("tab Id", "display name", "author", "creation date")
+            mapply(function(x, name){
+                if(length(x) != 1){
+                    spserror(glue("Injection {name} is not a length 1 string:
+                              {glue_collapse(x, '\n---\n')}"))
+                }
+            }, x = ., name = check_names)
+        }
+
+    # tab creation starts
+    spsinfo("Start to inject to template...")
+    temp_path <- if(template == "simple") system.file("app", "templates", "tab_template_ez.R", package = "systemPipeShiny")
+    else system.file("app", "templates", "tab_template_full.R", package = "systemPipeShiny")
+    tmp <- readLines(temp_path) %>%
+        glue_collapse(sep = '\n') %>%
+        glue(.open = "#@", .close = "@#")
+    # preview early return
+    if(preview) return(cat(tmp))
+    # write file
+    spsinfo(glue("Write to file {out_p}"), TRUE)
+    writeLines(tmp, out_p)
+    # reformat
+    .reformatTab(reformat, out_p)
+    # register tab
+    .registerTabWrapper(type_sub = "plot", img, tab_id, tab_displayname,
+                        app_path, out_p, open_file, plugin = "")
+    # finish and reset verbose to whatever before the function runs
+    msg("New tab created!", "SPS-SUCCESS", "green")
+    msg(glue('To load this new tab: `sps(tabs = c("{tab_id}")`'), "SPS", "green")
+    spsOption('verbose', verbose_old)
+    spsOption('use_crayon', colorful_old)
+    return(invisible())
+}
+
+
+
+#' Easy and simple UI and server for a SPS custom tab
+#' @description SPS custom tab simple UI and server , [spsEzUI] must use together
+#' with the [spsEzServer] function. The easiest way to use is to
+#' use [spsNewTab] function to create both.
+#' @param desc character string, length 1 in markdown format. Tab description
+#' and instructions. You can make type it in multiple lines but in only one
+#' string (one pair of quotes). e.g.
+#' ```
+#' "
+#' # some desc
+#' ## second line,
+#' - bullet 1
+#' - bullet 2
+#' "
+#' ```
+#' @param tab_title string, tab title
+#' @param plot_title  string, plot title
+#' @param plot_control some Shiny components (UI) to control the plot, like plot
+#' title, x,y labels, color, font size, etc. Group all components in a shiny
+#' `tagList`.
+#'
+#' @return `spsEzUI` returns a shiny module UI function, `spsEzServer` returns
+#' the server function
+#' @seealso [spsNewTab]
+#' @export
+#'
+#' @examples
+#' # use `spsInit()` to create an SPS project and use `spsNewTab("Your_tabID", template = "easy")`
+#' # to create a new tab file. The specified use of these two functions is in that file.
+spsEzUI <- function(desc="", tab_title = "Tab Title",
+                    plot_title = "My Plot",
+                    plot_control = shiny::tagList()){
+    plot_control <- rlang::enexpr(plot_control)
+    function(id){
+        ns <- NS(id)
+        plot_control <- rlang::eval_tidy(plot_control)
+        assert_that(inherits(plot_control, "shiny.tag.list"))
+        tagList(
+            tabTitle(tab_title),
+            if(emptyIsFalse(desc)) renderDesc(id = ns("desc"), desc) else "",
+            ## Progress
+            h3("Confirm dataset", class = "text-center text-info"),
+            spsTimeline(
+                ns("df_status"),
+                up_labels = c("1", "2"),
+                down_labels = c("Dataset", "Data Ready"),
+                icons = list(
+                    icon("table"),
+                    icon("check")
+                ),
+                completes = c(TRUE, FALSE)
+            ),
+            bsplus::bs_accordion(id = ns("main_panel")) %>%
+                bsplus::bs_set_opts(panel_type = "info") %>%
+                bsplus::bs_append(
+                    title = "1. Confirm to use example table or upload a new one",
+                    fluidRow(
+                        h3("Load table"),
+                        column(
+                            3,
+                            boxPlus(
+                                closable = FALSE, width = 12,
+                                radioGroupButtons(
+                                    inputId = ns("source_df"),
+                                    label = "Choose your file source:",
+                                    selected = "eg",
+                                    choiceNames = c("Upload", "Example"),
+                                    choiceValues = c("upload", "eg"),
+                                    justified = TRUE, status = "primary",
+                                    checkIcon = list(
+                                        yes = icon("ok", lib = "glyphicon"),
+                                        no = icon(""))
+                                ),
+                                dynamicFile(id = ns("df_upload")),
+                                selectizeInput(
+                                    inputId = ns("df_delim"),
+                                    label = "File delimiter",
+                                    choices = c(`,`=",", Tab="\t", space=" ",
+                                                `|`="|", `:`=":", `;`=";"),
+                                    options = list(style = "btn-primary")
+                                ),
+                                clearableTextInput(
+                                    ns("df_comment"), "File comments", value = "#")
+                            ),
+                            boxPlus(
+                                closable = FALSE, width = 12,
+                                title = "Confirm to use this table",
+                                actionButton(ns("add_df"), "Confirm")
+                            )
+                        ),
+                        boxPlus(
+                            closable = FALSE, width = 9,
+                            DT::DTOutput(ns("df_out"))
+                        )
+                    )
+                )%>%
+                bsplus::bs_append(
+                    title = "2. Make a plot",
+                    fluidRow(
+                        div(
+                            id = ns("plot_container"),
+                            style = "display: none;",
+                            column(
+                                3,
+                                div(
+                                    class = "panel panel-info",
+                                    id = ns("panel_left"),
+                                    style = "min-height: 500px;",
+                                    div(
+                                        id = "",
+                                        class = "panel-heading",
+                                        h4(class = "panel-title", "Plot control")
+                                    ),
+                                    div(
+                                        class = "panel-body",
+                                        style = "overflow-y: auto; height: Calc(100% - 38.5px); margin: 0 10px;",
+                                        fluidRow(
+                                            style = 'margin-top: 25px;',
+                                            class = "text-center",
+                                            canvasBtn(ns("plot_main"))
+                                        ),
+                                        spsHr(),
+                                        plot_control
+                                    )
+                                )
+                            ),
+                            column(
+                                9,
+                                div(
+                                    class = "panel panel-info",
+                                    id = ns("panel_right"),
+                                    style = "min-height: 500px;",
+                                    div(
+                                        id = "",
+                                        class = "panel-heading",
+                                        h4(class = "panel-title", plot_title)
+                                    ),
+                                    div(
+                                        class = "panel-body",
+                                        id = ns("plot_container"),
+                                        style = "overflow-y: auto; height: Calc(100% - 38.5px); margin: 0 10px;",
+                                        shinyjqui::jqui_resizable(plotOutput(ns("plot_main")))
+                                    ),
+                                )
+                            ),
+                            heightMatcher(ns("panel_left"), ns("panel_right")),
+
+                        ),
+                        div(
+                            id = ns("plot_disable"),
+                            h3("Confirm to use a data table first",
+                               class = "text-center text-warning")
+                        )
+                    )
+                ),
+            spsHr(),
+            hexPanel(ns("poweredby"), "THIS MODULE IS POWERED BY:",
+                     hex_imgs = c(
+                         "img/sps_small.png"
+                     ),
+                     hex_titles = c("SystemPipeShiny"),
+                     hex_links = c(
+                         "https://github.com/systemPipeR/systemPipeShiny/"
+                     ),
+                     ys = c("-20"),
+                     xs = c("-10")
+            )
+        )
+    } %>%
+        return()
+}
+
+
+
+#' @param plot_code some R code to make the plot.
+#' @param example_data_path example dataset path, this dataset will be loaded on
+#' app start to display
+#' @param other_server_code optional, other server R code to run for this tab
+#' @rdname spsEzUI
+#' @export
+spsEzServer <- function(
+    plot_code,
+    example_data_path = system.file(package = "systemPipeShiny", "app", "data", "iris.csv"),
+    other_server_code = ""){
+    stopifnot(file.exists(example_data_path))
+    plot_code <- rlang::enexpr(plot_code)
+    other_server_code <- rlang::enexpr(other_server_code)
+
+    function(id, shared) {
+        module <- function(input, output, session) {
+            ns <- session$ns
+            tab_id <- id
+            mydata <- reactiveValues(data = NULL)
+            # load table ----
+            df_path <- dynamicFileServer(input, session, id = "df_upload")
+            observeEvent(input$source_df, {
+                shinyjs::toggleElement(id = "df_upload", anim = TRUE)
+            })
+
+            data_df <- reactive({
+                loadDF(
+                    choice = input$source_df,
+                    upload_path =  df_path()$datapath,
+                    delim = input$df_delim,
+                    data_init = data.frame(),
+                    comment = input$df_comment,
+                    eg_path = example_data_path
+                )
+            })
+            # render table ----
+            output$df_out <- DT::renderDT({
+                DT::datatable(
+                    data_df(),
+                    style = "bootstrap",
+                    class = "compact",  filter = "top",
+                    extensions = c( 'Scroller'),
+                    options = list(
+                        deferRender = TRUE,
+                        scrollY = 200, scrollX = TRUE, scroller = TRUE,
+                        columnDefs = list(list(className = 'dt-center',
+                                               targets = "_all"))
+                    )
+                )
+            })
+            # confirm table ----
+            observeEvent(input$add_df, {
+                # clear status on click start
+                updateSpsTimeline(session, "df_status", 2, FALSE)
+                shinyjs::removeCssClass("main_panel-0", "panel-success")
+                shinyjs::addCssClass("main_panel-0", "panel-info")
+                shinyjs::removeCssClass("main_panel-1", "panel-success")
+                shinyjs::addCssClass("main_panel-1", "panel-info")
+                shinyjs::hide("plot_container")
+                shinyjs::show("plot_disable")
+                # check
+                df_filter <- data_df()[input$df_out_rows_all, ]
+                spsValidate(verbose = FALSE, {
+                    if(!not_empty(df_filter))
+                        stop("Table is empty")
+                    if(!nrow(df_filter) > 0)
+                        stop("Table has fewer than 1 row")
+                    if(nrow(df_filter) < 5)
+                        warning("You table has very a few rows, consider to add more")
+                    TRUE
+                })
+                # add data
+                mydata$data <- df_filter
+                # send success
+                shinyWidgets::confirmSweetAlert(
+                    session = session,
+                    inputId = ns("confirm_to_plot"),
+                    title = "Table added!",
+                    closeOnClickOutside = FALSE,
+                    html = TRUE,
+                    type = "success",
+                    text = div(
+                        h3("Continue to make plots?"),
+                        HTML("Or manually click <span class='text-info'>2. Make a plot</span> panel")
+                    )
+                )
+                updateSpsTimeline(session, "df_status", 2, TRUE)
+                shinyjs::removeCssClass("main_panel-0", "panel-info")
+                shinyjs::addCssClass("main_panel-0", "panel-success")
+                shinyjs::removeCssClass("main_panel-1", "panel-info")
+                shinyjs::addCssClass("main_panel-1", "panel-success")
+                shinyjs::show("plot_container")
+                shinyjs::hide("plot_disable")
+            }, ignoreInit = TRUE)
+
+            # jump to plotting
+            observeEvent(input$confirm_to_plot, {
+                req(input$confirm_to_plot)
+                shinyjs::runjs(paste0("$('#", ns(""), "main_panel-1-heading > h4').trigger('click');"))
+            })
+
+            output$plot_main <- renderPlot({
+                req(mydata$data)
+                rlang::eval_tidy(plot_code)
+            })
+
+            rlang::eval_tidy(other_server_code)
+        }
+        moduleServer(id, module)
+    } %>%
+        return()
+}
+
+
+
+
+
+
 

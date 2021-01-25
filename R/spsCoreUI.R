@@ -3,8 +3,7 @@
 
 #' Generate SPS main UI
 #'
-#' @param tabs_df vs data tab IDs
-#' @param tabs_plot vs plot tab IDs
+#' @param tabs custom tabs
 #'
 #' @return shiny dash page
 #' @details Workflow tabs and other `core` tabs are loaded by default. You can
@@ -19,24 +18,18 @@
 #' @noRd
 # @examples
 # spsUI()
-spsUI <- function(tabs_df, tabs_plot){
+spsUI <- function(tabs){
     spsinfo("Start to generate UI")
-    menu_df <- if(nrow(tabs_df) > 0){
-        lapply(seq_len(nrow(tabs_df)), function(x){
-            shinydashboard::menuSubItem(text = tabs_df$tab_labels[x],
-                                        tabName = tabs_df$tab_id[x])
-        }) %>% tagList()
-    } else tagList()
-    menu_plot <- if(nrow(tabs_plot) > 0){
-        lapply(seq_len(nrow(tabs_plot)), function(x){
-            shinydashboard::menuSubItem(text = tabs_plot$tab_labels[x],
-                                        tabName = tabs_plot$tab_id[x])
+    menu_tab <- if(nrow(tabs) > 0){
+        lapply(seq_len(nrow(tabs)), function(x){
+            shinydashboard::menuItem(text = tabs$tab_labels[x],
+                                        tabName = tabs$tab_id[x])
         }) %>% tagList()
     } else tagList()
 
+
     spsinfo("Loading custom tab UI ...")
-    tab_items <- c(tabs_df[['tab_id']],
-                   tabs_plot[['tab_id']]) %>% {.[. != ""]} %>%
+    tab_items <- c(tabs[['tab_id']]) %>% {.[. != ""]} %>%
         lapply(function(x){
             tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
             spsinfo(glue("Loading UI for {x}"))
@@ -51,7 +44,7 @@ spsUI <- function(tabs_df, tabs_plot){
         ),
         enable_rightsidebar = FALSE,
         rightSidebarIcon = "clipboard-check",
-        left_menu = core_topUI("core_top")
+        left_menu = if(spsOption("module_wf")) core_topUI("core_top") else NULL
     )
     # side bar
     spsinfo("Create UI sidebar menu ...")
@@ -60,35 +53,38 @@ spsUI <- function(tabs_df, tabs_plot){
                                           buttonId = "searchButton",
                                           label = "Search..."),
         shinydashboard::sidebarMenu(id = "left_sidebar",
-                    shinydashboard::menuItem("Dashboard",
+                    shinydashboard::menuItem("Welcome",
                                              tabName = "core_dashboard",
                                              icon = icon("sitemap")
                     ),
-                    shinydashboard::menuItem(id = 'wf',
-                             "Workflow Mangement",
-                             tabName = "wf"
+                    shinydashboard::menuItem(
+                        text = "Modules",
+                        icon = icon("layer-group"),
+                        tabName = "module_main",
+                        if(spsOption("module_wf"))
+                            shinydashboard::menuItem(
+                                text = "Workflow Mangement",
+                                tabName = "wf"
+                            )
+                        else "",
+                        if(spsOption("module_rnaseq"))
+                            shinydashboard::menuItem(
+                                text = "RNA-Seq",
+                                tabName = "vs_rnaseq"
+                            )
+                        else "",
+                        if(spsOption("module_ggplot"))
+                            shinydashboard::menuItem(
+                                text = "Quick {ggplot}",
+                                tabName = "vs_esq"
+                            )
+                        else ""
                     ),
                     shinydashboard::menuItem(
                         "Custom tabs",
                         icon = icon("images"),
                         tabName = "vs_main",
-                        shinydashboard::menuItem(
-                            text = "Prepare dataset",
-                            menu_df ## vs dfs add to sidebar
-                        ),
-                        shinydashboard::menuItem(
-                            text = "Collection of plots",
-                            menu_plot ## vs plots add to sidebar
-                        )
-                    ),
-                    shinydashboard::menuItem(
-                        text = "Visualization Modules",
-                        icon = icon("images"),
-                        tabName = "vs_main",
-                        shinydashboard::menuSubItem(
-                            text = "RNA-Seq",
-                            tabName = "vs_rnaseq"
-                        )
+                        menu_tab ## add tabs sidebar
                     ),
                     shinydashboard::menuItem(
                         "Canvas",
@@ -105,24 +101,29 @@ spsUI <- function(tabs_df, tabs_plot){
     # body
     spsinfo("Create UI tab content ...")
     sps_tabs <- shinydashboard::tabItems(
-        # WF tabs
-        shinydashboard::tabItem(tabName = "wf", wfUI("wf")),
-        wfPanel(),
+
         # VS tabs
         shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         # core tabs
+        shinydashboard::tabItem(tabName = "module_main", module_mainUI("module_main")),
         shinydashboard::tabItem(tabName = "core_dashboard",
                                 core_dashboardUI("core_dashboard")),
         shinydashboard::tabItem(tabName = "core_canvas",
                                 core_canvasUI("core_canvas")),
         shinydashboard::tabItem(tabName = "core_about",
                                 core_aboutUI("core_about")),
-        shinydashboard::tabItem(tabName = "vs_rnaseq",
-                                vs_rnaseqUI("vs_rnaseq"))
+        #  modules
+        if(spsOption("module_wf")) shinydashboard::tabItem(tabName = "wf", wfUI("wf"))
+        else shinydashboard::tabItem(tabName = "empty"),
+        if(spsOption("module_rnaseq")) shinydashboard::tabItem(tabName = "vs_rnaseq", vs_rnaseqUI("vs_rnaseq"))
+        else shinydashboard::tabItem(tabName = "empty"),
+        if(spsOption("module_ggplot")) shinydashboard::tabItem(tabName = "vs_esq", vs_esqUI("vs_esq"))
+        else shinydashboard::tabItem(tabName = "empty")
     )
     sps_tabs$children <- append(sps_tabs$children, tab_items)
     spsinfo("Add tab content to body ...")
     dashboardBody <- shinydashboard::dashboardBody(
+        class = "sps",
         tags$head(
             tags$link(rel="shortcut icon", href="img/sps_small.png"),
             shinyWidgets::useSweetAlert(),
@@ -185,7 +186,7 @@ genGallery <- function(tab_ids=NULL, Id = NULL, title = "Gallery", type = NULL,
                        title_color = "#0275d8", image_frame_size = 3) {
     tabs <- findTabInfo(tab_ids, type)
     if (is.null(tabs)) return(div("Nothing to display in gallery"))
-    tabs$images[tabs$images == ""] <- "img/noimg.png"
+    tabs$images[tabs$images %in% c("", NA)] <- "img/noimg.png"
     gallery(Id = Id, title = title, title_color = title_color,
             image_frame_size = image_frame_size,
             texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
@@ -249,34 +250,6 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
     hrefTable(Id = Id, title = title,
               text_color = text_color, item_titles = names(rows),
               item_labels = tab_list[2,], item_hrefs = tab_list[3,], ...)
-}
-
-#' Workflow progress tracker UI
-#' @description call it on top level UI not inside a module. Call this function
-#' only once. Do not repeat this function.
-#' @noRd
-# @examples
-# wfPanel()
-wfPanel <- function(){
-    div(class = "tab-pane", id = "wf-panel",
-        absolutePanel(
-            top = "3%", right = "1%", draggable = TRUE, width = "300",
-            height = "auto", class = "control-panel", cursor = "inherit",
-            style = "background-color: white; z-index:999;",
-            fluidRow(
-                column(2),
-                column(8, h4("Workflow Progress")),
-                column(2, HTML('<button class="action-button
-                                  bttn bttn-simple bttn-xs bttn-primary
-                                  bttn-no-outline" data-target="#wf-panel-main"
-                                  data-toggle="collapse">
-                                  <i class="fa fa-minus"></i></button>'))
-            ),
-            div(class = "collapse",
-                id = "wf-panel-main",
-                uiOutput("wf_panel"))
-        )
-    )
 }
 
 

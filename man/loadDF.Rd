@@ -43,7 +43,7 @@ returns a tibble or \code{NULL} if parsing is unsuccessful
 \description{
 load a file to server end. It's designed to be used with the
 input file source switch button(see it in a SPS new template data tab).
-FIt uses \link[vroom:vroom]{vroom::vroom} to load the file. In SPS, this
+It uses \link[vroom:vroom]{vroom::vroom} to load the file. In SPS, this
 function is usually combined as downstream of  \code{\link[=dynamicFileServer]{dynamicFileServer()}}
 function on on the server side to
 read the file into R. This loading function only works for parsing

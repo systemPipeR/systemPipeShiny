@@ -2,7 +2,7 @@
 wf_runUI <- function(id){
     ns <- NS(id)
     tagList(
-        actionButton(ns("set"), "set"),
+        # actionButton(ns("set"), "set"),
         div(
             id = "wf_run_displayed",
             style = "display:none",
@@ -95,7 +95,6 @@ wf_runServer <- function(id, shared){
         })
         ####### run page shortcut
         observeEvent(input$set, ignoreInit = TRUE, {
-            stop()
             shared$wf$all_ready <- TRUE
             shared$wf$env_path <- "."
             shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
@@ -149,34 +148,54 @@ wf_runServer <- function(id, shared){
             shinyjs::addCssClass("intask_wf_title", "text-success")
         })
         ## open  wf push bar and r session
-        # observeEvent(input$run_session, ignoreInit = TRUE, {
-        #     shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
-        #     shared$wf$rs$supervise(TRUE)
-        #     shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
-        #     shared$wf$rs_info$created <- TRUE
-        #     shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
-        #     shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SYSproject",
-        #                                             shared$wf$rs_info$log_name)
-        #     dir.create(dirname(shared$wf$rs_info$log_path), recursive = TRUE, showWarnings = FALSE)
-        #     if(!file.exists(shared$wf$rs_info$log_path)) file.create(shared$wf$rs_info$log_path)
-        #     shinyjs::runjs('pushbar.__proto__.handleKeyEvent = function(){return false};')
-        #     pushbar::pushbar_open(id = "core_top-wf_push")
-        #     shared$wf$wf_session_open <- TRUE
-        #     shared$wf$wd_old <- spsOption("app_path")
-        #     shared$wf$rs$call(function(log_path, env_option, pid) {
-        #         # on.exit({while(sink.number() > 0) sink()})
-        #         options(device = function(){png(); if(dev.cur() == 1) dev.new(); dev.control("enable")})
-        #         log_file <- file(log_path, "awt")
-        #         sink(log_file, append = TRUE, type = "o")
-        #         sink(log_file, append = TRUE, type = "m")
-        #         print(glue("{env_option} workflow session {pid} started"))
-        #     }, args = list(
-        #         log_path = shared$wf$rs_info$log_path,
-        #         env_option = shared$wf$env_option,
-        #         pid = shared$wf$rs_info$pid))
-        #     setwd(shared$wf$env_path)
-        #     print(getwd())
-        # })
+        observeEvent(input$run_session, ignoreInit = TRUE, {
+            # set up child session
+            shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
+            shared$wf$rs$supervise(TRUE)
+            # update SPS wf status
+            shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
+            shared$wf$rs_info$created <- TRUE
+            shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
+            shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, "log",
+                                                    shared$wf$rs_info$log_name)
+            shared$wf$rs_info$rs_dir <- file.path(shared$wf$env_path, "results", paste0("rs", shared$wf$rs_info$pid))
+            # create log folder and file
+            dir.create(dirname(shared$wf$rs_info$log_path), recursive = TRUE, showWarnings = FALSE)
+            dir.create(shared$wf$rs_info$rs_dir, recursive = TRUE, showWarnings = FALSE)
+            if(!file.exists(shared$wf$rs_info$log_path)) file.create(shared$wf$rs_info$log_path)
+            # set up console width and store current width in shared
+            spsOption("console_width",  getOption("width"))
+            options(width = 80)
+            # init r session settings
+            shared$wf$rs$call(function(log_path, rs_dir, new_wd) {
+                options(device = function(){
+                    png(file.path(.rs_dir, paste0("plot", stringr::str_pad(.plot_num, 3, pad = "0"), "_%03d.png")))
+                    if(dev.cur() == 1) dev.new()
+                    dev.control("enable")
+                    .plot_num <<- .plot_num + 1
+                })
+                setwd(new_wd)
+                .rs_dir <<- rs_dir
+                .plot_num <<- 1
+                .cur_plot <<- NULL
+                log_file <- file(log_path, "awt")
+                sink(log_file, append = TRUE, type = "o")
+                sink(log_file, append = TRUE, type = "m")
+            }, args = list(
+                log_path = normalizePath(shared$wf$rs_info$log_path),
+                rs_dir = normalizePath(shared$wf$rs_info$rs_dir),
+                new_wd = normalizePath(shared$wf$env_path)
+            ))
+            while(shared$wf$rs$poll_process(1000) == "timeout") next
+            shared$wf$rs$read()
+            # setup img resource path for html
+            addResourcePath("rs", shared$wf$rs_info$rs_dir)
+            # disable pushbar close by ESC key
+            shinyjs::runjs('pushbar.__proto__.handleKeyEvent = function(){return false};')
+            # open up session
+            pushbar::pushbar_open(id = "core_top-wf_push")
+            shared$wf$wf_session_open <- TRUE
+        })
         # download bundle
         output$download <- downloadHandler(
             filename = function() {
@@ -201,7 +220,7 @@ wf_runServer <- function(id, shared){
                 }, blocking_level = "error")
                 pg$set(10)
                 pg$set(message = "Start to zip, please wait")
-                zip::zip(zipfile=filename, files=shared$wf$env_path)
+                zip::zip(zipfile=filename, files=shared$wf$env_path, mode = "cherry-pick")
             },
             contentType = "application/zip"
         )

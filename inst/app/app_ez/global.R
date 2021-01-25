@@ -1,6 +1,6 @@
 ## use shiny::runApp() in console or click right top button
 ## '>Run App' in Rstudio to start app,
-## but do not write this code in script, type it in console
+## but do not write `shiny::runApp()` in script, type it in console
 
 time_start <- Sys.time()
 library(systemPipeShiny)
@@ -8,22 +8,29 @@ library(systemPipeShiny)
 
 
 ## SPS options
-# mode: running mode - local, server
+# mode: running mode - "local", "server"
 # warning_toast: toast pop-up message when you are under some dangerous options - TRUE, FALSE
 # loading_screen: to show loading screen? - TRUE, FALSE
-# loading_theme: loading screen themes, loading_screen need be TRUE - vhelix
+# loading_theme: loading screen themes, loading_screen need be TRUE - "vhelix"
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # admin_url: admin_page query url - "admin"
+## to load some default modules:
+# module_wf: load the workflow module? - TRUE, FALSE
+# module_rnaseq: load the RNA-Seq module? - TRUE, FALSE
+# module_ggplot: load the Quick ggplot module? - TRUE, FALSE
 options(sps = list(
-    mode = "local",
+    mode = "server",
     warning_toast = FALSE,
     loading_screen = TRUE,
     loading_theme = "vhelix",
     use_crayon = TRUE,
     verbose = FALSE,
     admin_page = FALSE,
-    admin_url = "admin"
+    admin_url = "admin",
+    module_wf = TRUE,
+    module_rnaseq = TRUE,
+    module_ggplot = TRUE
 ))
 
 
@@ -41,17 +48,11 @@ options(shiny.maxRequestSize = 30*1e6)
 
 ## load tab info
 tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
-## use `sps_enc$createDb()` to create a new database if there is no db
-## to save plot snap shots
-sps_plots <- plotContainer$new()
-## for database and encryption functions
-sps_enc <- spsEncryption$new()
 
 ####### Main App Function Starts #########
 
 sps_app <- sps(
-    vstabs = c("data_example", "plot_example1", "plot_example2"),
-    plugin = "",
+    tabs = c("vs_example"),
     server_expr = {
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }

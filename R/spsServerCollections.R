@@ -457,3 +457,7 @@ getData <- function(tab_id, shared){
     }, blocking_level = "error")
 }
 
+
+spsDebounce <- function(value, millis=1500){
+    shiny::debounce(function(){value}, millis)
+}

@@ -172,7 +172,7 @@ wf_cwlUI <- function(id){
                                     no = icon(""))
                             ),
                             dynamicFile(id = ns("targets_upload")),
-                            shinyWidgets::pickerInput(
+                            selectizeInput(
                                 inputId = ns("targets_delim"),
                                 label = "File delimiter",
                                 choices = c(Tab="\t", `,`=",", space=" ",
@@ -372,7 +372,7 @@ wf_cwlServer <- function(id, shared){
                 insertUI(
                     glue('#{ns("replace-box")}'),
                     where = "beforeEnd",
-                    ui =  column(3, shinyWidgets::pickerInput(
+                    ui =  column(3, selectizeInput(
                         inputId = ns(paste0("replace-", i)),
                         label = cwl_input_vars()[i],
                         choices = targets_columns(),
