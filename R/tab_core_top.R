@@ -1,6 +1,8 @@
 ## UI
+########### loaded but not in use under current SPS version
 
-#' @importFrom pushbar pushbar_deps pushbar
+
+# @importFrom pushbar pushbar_deps pushbar
 #' @noRd
 core_topUI <- function(id){
     ns <- NS(id)
@@ -268,7 +270,7 @@ core_topUI <- function(id){
 
 ## server
 
-#' @importFrom pushbar setup_pushbar pushbar_open pushbar_close
+# @importFrom pushbar setup_pushbar pushbar_open pushbar_close
 #' @importFrom shinydashboardPlus boxPlus
 #' @importFrom shinyjqui orderInput
 #' @importFrom shinyWidgets actionBttn confirmSweetAlert
@@ -279,13 +281,13 @@ core_topUI <- function(id){
 #' @noRd
 core_topServer <- function(id, shared){
     module <- function(input, output, session){
-        pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
+        # pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
         ns <- session$ns
         # update session status ----
         rs_status_text <- reactiveVal("")
         update_rs <- observe({
             invalidateLater(1000)
-            text_new <- capture.output(shared$wf$rs$print())
+            text_new <- utils::capture.output(shared$wf$rs$print())
             req(rs_status_text() != text_new)
             shinyjs::html("rs_status", text_new)
             if(shared$wf$rs$get_state() == "busy"){
@@ -468,7 +470,7 @@ core_topServer <- function(id, shared){
                 rs_out <- shared$wf$rs$read()
                 res <- rs_out$result
                 if(inherits(res, "ggplot")) res <- NULL # prevent ggplot to be rendered on parent
-                res <- capture.output(rs_out$result)
+                res <- utils::capture.output(rs_out$result)
                 ## mute output for certain functions
                 if(rlang::expr_text(code_que()[1][[1]]) %>%
                    stringr::str_detect(
@@ -493,7 +495,7 @@ core_topServer <- function(id, shared){
                 }
                 for(i in res) insertUI(selector = paste0("#", ns("output")), ui = p(class = "text-info", paste0(i)))
                 if(!is.null(rs_out$error)){
-                    err <- rs_out$error %>% capture.output()
+                    err <- rs_out$error %>% utils::capture.output()
                     for(i in err) insertUI(selector = paste0("#", ns("output")), ui = p(class = "text-danger", paste0(i)))
                     toastr_error(title = "ERROR", message = "Check console output", position = "bottom-right", timeOut = 3000)
                     if(input$stop_on_err){

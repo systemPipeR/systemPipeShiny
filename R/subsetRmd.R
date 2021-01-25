@@ -2,6 +2,7 @@
 # depending on SPR, so copy this
 # function over
 
+#' @importFrom assertthat is.string
 .subsetRmd <- function(p, input_steps=NULL,
                       exclude_steps=NULL,
                       p_out=NULL,

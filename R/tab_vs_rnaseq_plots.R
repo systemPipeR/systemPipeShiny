@@ -981,6 +981,9 @@ vs_rnaseq_dendroUI <- function(id){
         )
     )
 }
+
+#' @importFrom ape as.phylo
+#' @importFrom ggtree ggtree
 vs_rnaseq_dendroServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -1021,7 +1024,7 @@ vs_rnaseq_tsneUI <- function(id){
     A Barnes-Hut t-Distributed Stochastic Neighbor Embedding (t-SNE) plot can be created
     using the `tSNEplot` function, which uses the `Rtsne` package to
     compute t-SNE values. The function removes duplicates in the input data frame,
-    sets a seed for reproducibility, performs an initial PCA step. The function also
+    performs an initial PCA step. The function also
     allows for a user-set perplexity value for the computation.
 
     Generally, t-SNE will be good for a large N (number of samples) and cluster
@@ -1054,23 +1057,6 @@ vs_rnaseq_tsneUI <- function(id){
                             canvasBtn(ns('plot_main'))
                         ),
                         spsHr(),
-                        fluidRow(
-                            class = "center-child",
-                            numericInput(
-                                inputId = ns("seed"),
-                                label = "Seed",
-                                min = 1,
-                                max = 1000,
-                                step = 1,
-                                value = 1,
-                                width = "100%"
-                            )
-                        ) %>%
-                            bsHoverPopover(
-                                "Seed",
-                                "A seed for pseudo-random number generation",
-                                placement = "top"
-                            ),
                         fluidRow(
                             class = "center-child",
                             numericInput(
@@ -1212,6 +1198,8 @@ vs_rnaseq_tsneUI <- function(id){
         )
     )
 }
+
+#' @importFrom Rtsne Rtsne
 vs_rnaseq_tsneServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -1223,7 +1211,6 @@ vs_rnaseq_tsneServer <- function(id, shared){
             )
             shinyCatch(blocking_level = "error", {
                 countDF_uni <- t(unique( shared$rnaseq$trans_table)) # removes duplicates and transpose matrix, samples perspective
-                set.seed(input$seed)
                 tsne_out <- Rtsne::Rtsne(countDF_uni, dims = 2, theta = 0.0, perplexity = input$perplexity)
                 Sample <- shared$rnaseq$condition
                 plotdata <- data.frame(dim1 = tsne_out$Y[,1], dim2 = tsne_out$Y[,2])

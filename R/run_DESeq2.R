@@ -5,7 +5,7 @@
                          pg_id = "", lfc_filter = 0,
                          fdr_filter = 1,
                          session = getDefaultReactiveDomain()) {
-    if (all(class(cmp) != "matrix" & length(cmp) == 2))
+    if (all(!inherits(cmp, "matrix") & length(cmp) == 2))
         cmp <- t(as.matrix(cmp))
     samples <- as.character(targets$Factor)
     names(samples) <- paste(as.character(targets$SampleName),
@@ -52,7 +52,7 @@
                 )
             }
             if (lfcShrink) {
-                dds$condition <- relevel(dds$condition, ref = mycmp[i, 2])
+                dds$condition <- stats::relevel(dds$condition, ref = mycmp[i, 2])
                 dds <- DESeq2::nbinomWaldTest(dds)
                 res <- DESeq2::lfcShrink(
                     dds,

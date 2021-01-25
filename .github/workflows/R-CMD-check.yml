@@ -64,7 +64,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          {if(!grepl("linux-gnu", R.version$os)) options(install.packages.compile.from.source = "never")}; remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
           remotes::install_github('rstudio/rmarkdown')
           install.packages(c("BiocManager", "ape", "knitcitations", "DOT", "glue"))

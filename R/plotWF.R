@@ -14,7 +14,8 @@
 # TRUE in 'selected' column in df_wf
 
 #' @importFrom DOT dot
-#' @importFrom rsvg rsvg_svg rsvg_png
+#' @importFrom assertthat is.count
+# @importFrom rsvg rsvg_svg rsvg_png
 #' @noRd
 .plotWF <- function(df_wf, plot_style="detect", out_type='html',
                    out_path='default', height=NULL, width=NULL){
@@ -57,11 +58,7 @@
     # plot
     plot <- switch(out_type,
            'shiny' = DOT::dot(wf, return = "verbatim"),
-           'html' = DOT::dot(wf),
-           'svg' = DOT::dot(wf, return = "verbatim") %>%
-               rsvg::rsvg_svg(file = out_path, height = height, width = width),
-           'png' = DOT::dot(wf, return = "verbatim") %>% charToRaw() %>%
-               rsvg::rsvg_png(file = out_path, height = height, width = width)
+           'html' = DOT::dot(wf)
     )
     return(plot)
 }

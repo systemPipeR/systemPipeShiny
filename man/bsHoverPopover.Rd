@@ -14,7 +14,7 @@ bsHoverPopover(
 )
 }
 \arguments{
-\item{tag}{\link[htmltools:tag]{htmltools::tag},generally <button/> or <a/>, into which
+\item{tag}{\link[htmltools:tag]{htmltools::tag}, generally htmltools::tags$button() or htmltools::tags$a(), into which
 to embed the popover}
 
 \item{title}{character, title for the popover, generally text}

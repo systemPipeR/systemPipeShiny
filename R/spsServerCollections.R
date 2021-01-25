@@ -397,7 +397,7 @@ pgPaneUpdate <- function(pane_id, pg_id, value,
 #'     )
 #'     server <- function(input, output, session) {
 #'         shared <- reactiveValues()
-#'         data <- tibble::tibble(this = 123)
+#'         data <- dplyr::tibble(this = 123)
 #'         cat('before adding\n')
 #'         print(shared)
 #'         observeEvent(input$add, {
@@ -420,7 +420,7 @@ addData <- function(data, shared, tab_id) {
     shinyCatch({
         assert_that(inherits(shared, "reactivevalues"))
         assert_that(is.character(tab_id))
-        findTabInfo(tab_id)
+        # findTabInfo(tab_id) # not enforcing tab existing now
         if(emptyIsFalse(shared[['data']][[tab_id]]) & spsOption('verbose'))
             message(c(glue("found {tab_id} has already been added to "),
                       "`shared$data_intask` list, overwrite"))
@@ -444,11 +444,12 @@ getData <- function(tab_id, shared){
         assert_that(inherits(shared, "reactivevalues"))
         assert_that(is.character(tab_id) & length(tab_id) < 2,
                     msg = "A character string of one tab name each time")
-        tab_info <- findTabInfo(tab_id)$tab_labels
+        # tab_info <- findTabInfo(tab_id)$tab_labels
+        # not enforcing tab existing now
         if(!not_empty(shared[['data']][[tab_id]]))
-            stop(glue("Data from tab `{tab_info}` is empty"))
+            stop(glue("Data from tab `{tab_id}` is empty"))
         if(spsOption('verbose')){
-            success_info <- glue("data for tab `{tab_info} found`")
+            success_info <- glue("data for tab `{tab_id} found`")
             shinytoastr::toastr_info(success_info,
                                      timeOut = 3000,
                                      position = "bottom-right")

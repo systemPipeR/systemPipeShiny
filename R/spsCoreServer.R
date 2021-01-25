@@ -1,7 +1,7 @@
 # SPS core server functions, can only be used under SPS framework
 
 #' SPS main server function
-#' @importFrom pushbar setup_pushbar
+# @importFrom pushbar setup_pushbar
 #' @importFrom rlang parse_expr eval_tidy
 #' @importFrom shinyjs removeClass toggleClass hide show
 #' @noRd
@@ -45,14 +45,14 @@ spsServer <- function(tabs, server_expr) {
             spsinfo(glue("Loading server for {name}"))
             rlang::eval_tidy(module)
         },
-        SIMPLIFY = FALSE,
-        module = tab_modules,
-        name = names(tab_modules))
+            SIMPLIFY = FALSE,
+            module = tab_modules,
+            name = names(tab_modules))
 
         # global server logic, usually no need to change below
         ## pushbar set up
-        spsinfo("Add push bar")
-        pushbar::setup_pushbar()
+        # spsinfo("Add push bar")
+        # pushbar::setup_pushbar()
         ## loading screening
         spsinfo("Add loading screen logic")
         serverLoadingScreen(input, output, session)
@@ -222,7 +222,7 @@ spsWarnings <- function(session){
 #' @return returns a tibble or `NULL` if parsing is unsuccessful
 #' @export
 #' @importFrom shinyAce is.empty
-#' @importFrom tibble as_tibble
+#' @importFrom dplyr as_tibble
 #' @importFrom vroom vroom
 #' @examples
 #' if(interactive()){
@@ -267,7 +267,7 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
         if(!any(class(data_init) %in% c("tbl_df", "tbl", "data.frame"))) {
             stop("data_init need to be dataframe or tibble")
         }
-        data_init <- tibble::as_tibble(data_init)
+        data_init <- dplyr::as_tibble(data_init)
         if (choice == "upload" & shinyAce::is.empty(upload_path))
             return(data_init)
         if (choice == "eg" & shinyAce::is.empty(eg_path))

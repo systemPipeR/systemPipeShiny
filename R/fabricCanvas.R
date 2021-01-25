@@ -43,7 +43,9 @@ toCanvasBtn <- function(dom, canvasID, id="", label = "To canvas", color_class =
 #' with "btn" class. If more than one element is matched, only the first one will
 #' be screenshoted.
 #' @param id ID of this button, optional.
-#'
+#' @param isID bool, if the `dom` argument is selected by ID or other selector
+#' @param class string, length 1, other html class add to the button wrapper
+#' @param placement where should the tiptool place, top, bottom, left, right.
 #' @return a button group with several options
 #' @export
 #'

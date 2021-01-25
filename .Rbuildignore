@@ -6,9 +6,9 @@
 ^\.Rprofile$
 ^rsconnect/
 ^.git$
-^.github/
+^.github*
 ^\.idea/
-^docs/
+^docs*
 manifest\.json
 _pkgdown\.yml
 ^TODO

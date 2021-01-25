@@ -201,7 +201,7 @@ wf_targetUI <- function(id){
 #' @importFrom shinytoastr toastr_info
 #' @importFrom shinyWidgets confirmSweetAlert updateRadioGroupButtons
 #' @importFrom shinyWidgets sendSweetAlert
-#' @importFrom tibble as_tibble
+#' @importFrom dplyr as_tibble
 #' @importFrom vroom vroom cols
 #' @importFrom shinyAce is.empty
 #' @importFrom shinyjs disable enable

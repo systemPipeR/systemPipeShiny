@@ -1,0 +1,17 @@
+citEntry(entry="article",
+         title = "systemPipeShiny: An interactive framework for workflow management and visualization",
+         author = personList( as.person("Le Zhang"),
+                              as.person("Daniela Cassol"),
+                              as.person("Ponmathi Ramasamy"),
+                              as.person("Jianhai Zhang"),
+                              as.person("Gordon Mosher"),
+                              as.person("Thomas Girke")),
+         year = 2020,
+         month = "aug",
+         journal = "F1000Research",
+         doi = "10.7490/f1000research.1118073.1",
+         url = "http://dx.doi.org/10.1186/s12859-016-1241-0",
+         textVersion =
+         paste("Zhang, L., Cassol, D., Ramasamy, P., Zhang, J., Moshsher, G. & Girke, T. (2020)",
+               "systemPipeShiny: An interactive framework for workflow management and visualization",
+                "F1000Research, doi: 10.7490/f1000research.1118073.1"))

@@ -40,9 +40,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=TRUE}
-suppressPackageStartupMessages({
     library(systemPipeShiny)
-})
 ```
 
 ```{r sps-css, results = 'asis', echo=FALSE, eval=TRUE}
@@ -268,7 +266,7 @@ files using RNA-Seq as an example (Fig.3 A):
 2. Select either "Example PE" or "Example SE"" for using a pair-end/single-end target file, then choose "confirm" on the pop-up. You will see the example is loaded like Figure 3A. 
 3. You can edit, right click to add/remove rows/columns (The first row is treated as column names).
 4. SPR target file includes a header block, that can also be edited in the SPS app. Each headers needs to start with a "#".
-5. The section on the left provides sample statistics and information whether files exist on a user's system. Choose any column you want from the dropdown to check and watch the statistics bar change in this section;
+5. The section on the left provides sample statistics and information whether files exist on a user's system. Choose any column you want from the dropdown to check and watch the statistics bar change in this section.
 6. Clicking on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right.
 7. Now your target file is ready and you can click "save" to download it and later use in a SPR project. 
 8. Click on the "-" button on the "Workflow Progress", you should see the "Targets file" becomes green. 
@@ -284,9 +282,9 @@ In SPR, workflows are defined in Rmarkdown files, you can read details and obtai
 
 Now let us follow the order below to see how SPS helps you to prepare a workflow file for a RNAseq project (Fig.3 B):
 
-1. Choose "Workflow File" from navigation bar;
-2. Choose "Example Rmd" to load an RNAseq workflow;
-3. You can see the workflow steps are displayed like a tree structure;
+1. Choose "Workflow File" from navigation bar.
+2. Choose "Example Rmd" to load an RNAseq workflow.
+3. You can see the workflow steps are displayed like a tree structure.
 4. Check all steps in the workflow that you want to include. You can skip (leave blank) some steps but it may cause the workflow to fail. Read more SPR instructions before do so. 
 5. Clicking on the "Plot steps" will show a flow chart of what the step execution orders will be when you run the workflow in SPR. 
 6. Clicking "Report preview" generates a preview of what the final report will look like for current RNAseq workflow, but in the preview, no code is evaluated.
@@ -304,11 +302,11 @@ In SPR, the config file *SPRconfig.yaml* is required to define information like 
 Normally, this file is generated automatically when one starts a SPR project, but if any modification is made, 
 one needs to update this config file. For example, like we are now using SPS to prepare targets file and workflow file and when we download these new files, file names and locations may be changed. In this case, we can update the config file in SPS (Fig.3 C):
 
-1. Choose "Targets" from navigation bar;
-2. Choose "Example" to load an RNAseq config file;
+1. Choose "Targets" from navigation bar.
+2. Choose "Example" to load an RNAseq config file.
 3. Edit the file content and follow *yaml* format. You may need to update the target file and workflow file name and location in the "*targets*" and "*Rmd*" lines here. 
-4. Once your editing is done, click "Add to task" to update the progress;
-5. Now your new config file is ready and you can click "Save" to download it;
+4. Once your editing is done, click "Add to task" to update the progress.
+5. Now your new config file is ready and you can click "Save" to download it.
 6. The progress tracker should all become green, which means you are ready to run the RNAseq workflow in SPR. 
 
 <center>
@@ -341,13 +339,13 @@ In this part, we will first load the raw count table and preprocess it in "Data 
 
 Follow instructions in Figure 4A:
 
-1. Select "Data Tab Example" tab from the left;
+1. Select "Data Tab Example" tab from the left.
 2. Click "Start with this tab", it will be hidden after package requirement check has passed in the background. So it is not displayed in the figure. 
 3. Let us load an example RPKM  read count table. If you upload your own table, 
 the first column must be "Genes" and the rest of columns are treated as samples and they must be numeric values only. 
 4. You can click on box below each column name to filter data. 
 5. You can export your filtered data into clipboard, csv files, Excel ...
-6. After the data filtration, we can start to preprocess data. Here are two methods you can choose from the left dropdown menu: "Do Nothing" does not change the filtered data, and "PCA" calculates PCs based on samples. Let us just try "Do Nothing";
+6. After the data filtration, we can start to preprocess data. Here are two methods you can choose from the left dropdown menu: "Do Nothing" does not change the filtered data, and "PCA" calculates PCs based on samples. Let us just try "Do Nothing".
 7. When the data is preprocessed, plot options will be displayed in the below. You need to scroll down a little to see. "Do Nothing"  will give you the option 
 for a bar plot. Click on the plot image will redirect you to the corresponding tab. 
 
@@ -364,9 +362,9 @@ Follow instructions in Figure 4B:
 2. Click "Start/Reload", this button will validate if you have the required data set. If yes, you will see plot options and other UI.
 3. Click on "Render/Snapshot plot" to create the first plot. In SPS, the first time clicking on "Render" button creates a preview of the plot. From the second time and on, clicking on this button will take a *"snapshot"* of the plot. In SPS a snapshot is plot frozen with particular set of input data and plot options. It is isolated from the original plot tab and you cannot modify it anymore. It is similar to a screenshot but you can still interact within the plot. You will have a better understanding when we reach the *Canvas* section.
 4. Now you can interact with plot. Try to hover your mouse and move around the plot. There are many interactive components on the plot. Read more of what you can interact with a [Plotly plot](plotly.com).
-5. There is a tiny triangular icon on the right bottom corner of the plot where you can drag it to resize the plot to at most your window width and unlimited height;
+5. There is a tiny triangular icon on the right bottom corner of the plot where you can drag it to resize the plot to at most your window width and unlimited height.
 6. A panel of plot selection tools including a screenshot button is on the top 
-right;
+right.
 7. Let us take a snapshot by clicking "Render". You should see a blue message pop up from the right bottom of your screen.
 8. You can change the plot title by changing the text. This example plot tab only provides very simple plot controls. Change the text and watch how the plot title change. 
 9. Change a title and click "Render" again to take a second snapshot.
@@ -380,20 +378,26 @@ right;
 
 ### Canvas
 
-SPS Canvas is a place to display snapshots.  Snap shots can come from different
+SPS Canvas is a place to display and manage snapshots.  Snapshots can come from different
 plot tabs, or the same plot tab with different plot options. Here you can combine 
-plots together to a big scientific figure and compare plots with different plotting options side by side. 
+plots together to a big scientific figure or compare plots with different plotting options side by side. 
 
 If you have followed the instructions so far, you should have at least two snapshots and we can start to use Canvas.
 
-1. Select "Canvas" tab;
-2. You will see your snapshots in "Current snapshots" box. If you do not want to 
-see any of them, drag it to the right side so it will not be rendered on Canvas.
-3. Click "Refresh Canvas" to render the Canvas for a quick glimpse; 
-4. You can change some Canvas settings on top;
-5. In the "bar plot" section, we took two snapshots, one with original plot title and one with custom title. If you made the change, you can see it is reflected on 
-Canvas. Move your mouse on the plots, you can see they are still interactive. Then, when you move the mouse near the top of a plot, a title section will show up and you can drag it to reposition your plot. 
+1. Select "Canvas" tab.
+2. If you have some snapshots, you will see your snapshots in "Current snapshots" box, otherwise it will only be a message telling you to create some snapshots. If you do not want to see any of them, drag it to the right side so it will not be rendered on Canvas. Clicking on "*DESTROY*" will permanently delete selected snapshots and **cannot be recovered**.
+3. Click "Refresh Canvas" to render the Canvas for a quick glimpse.
+4. You can change some Canvas settings on here. Clicking on "Refresh Canvas" again will apply these changes.
+5. Move your mouse on the plots, you can see they are still interactive. Then, when you move the mouse near the top of a plot, a title section will show up and you can drag it to reposition your plot. 
 6. Similar to a plot tab, you can resize any plot on Canvas by dragging the bottom right corner of a plot. 
+7.  Download your current snapshots to a compressed file, and you can upload saved snapshot file and continue to work on it later. Note: uploading snapshots will overwrite current snapshots.
+
+Due to internet security reasons, snapshot files are encrypted. Each SPS project 
+has an unique key pair. Therefore, it is not possible to run a snapshot file in 
+a different SPS project. 
+
+Taking too many snapshots will slow down the app. A good solution is to delete/clean 
+unwanted snapshots often. 
 
 <center>
 ![plot_tab](./img/sps_ui_canvas.png)
@@ -406,29 +410,6 @@ instructions in [Create a plot](#create-a-plot) to create and snapshot a few PCA
 plots. The PCA plot tab has an additional plot point size control UI. You can try 
 to take snapshots with different point size. Finally come back to canvas and render all snapshots. You should then be able to see how point size on plots are different in different snapshots. 
 Now you can have a better understanding of the SPS snapshot-Cnavas feature.
-
-### Snapshot management
-
-Taking too many snapshots will slow down the app. A good solution is to manage 
-them through the snapshot manage menu. You can access it by clicking the 
-button "Snapshots" with a camera icon on the very top of SPS dashboard banner. 
-It will open up a big menu screen (Fig. 5B). 
-
-1. The left side displays all current snapshots. The label means the plot tab ID of which plot tab it comes from and the number after the dash means it is the Nth snapshot coming from that particular plot tab;
-2. If you want to delete any snapshot, drag it to the right;
-3. Click on "DESTROY" will permanently delete selected snapshots and cannot be recovered.
-4. Download your current snapshots to a compressed file.
-5. You can upload saved snapshot file and continue to work on it later. 
-
-Due to internet security reasons, snapshot files are encrypted. Each SPS project 
-has an unique key pair. Therefore, it is not possible to run a snapshot file in 
-a different SPS project. 
-
-<center>
-![plot_tab](./img/sps_ui_snap.png)
-</center>
-**Figure 5 B.** snapshot management
-
 
 # Advanced features
 

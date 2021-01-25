@@ -35,7 +35,7 @@ want to update}
 \item{complete}{bool, is this item completed or not}
 }
 \value{
-
+returns a shiny component
 }
 \description{
 This time time is horizontal, use \strong{spsTimeline} to define it and

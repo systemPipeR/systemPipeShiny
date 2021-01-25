@@ -32,9 +32,9 @@ if(interactive()){
     mod1 <- function(input, output, session, shared) {
         observeEvent(input$render, {
             output$plot1 <- plots$addServer(renderPlotly, 'mod1', {
-                ggplotly(ggplot(iris[1:input$slide, ],
-                                aes(Sepal.Length, Sepal.Width)) +
-                             geom_point(aes(colour = Species)))
+                plotly::ggplotly(ggplot2::ggplot(iris[1:input$slide, ],
+                                ggplot2::aes(Sepal.Length, Sepal.Width)) +
+                             ggplot2::geom_point(aes(colour = Species)))
             })
             shared$snap_signal <- plots$notifySnap("mod1")
             req(shared$snap_signal)

@@ -12,7 +12,7 @@
 #' @export
 #' @return HTML head
 #' @examples
-#' useSps()
+#' # useSps()
 useSps <- function(){
     addResourcePath("sps", "www")
     tags$head(
@@ -781,7 +781,7 @@ tabTitle <- function(title, ...){
 #' @description enhanced Bootstrap 3 popover by hovering, see
 #' [bsplus::bs_embed_popover] for details. Everything is the same but has
 #' additional trigger method, default "hover"
-#' @param tag [htmltools::tag],generally <button/> or <a/>, into which
+#' @param tag [htmltools::tag], generally htmltools::tags$button() or htmltools::tags$a(), into which
 #' to embed the popover
 #' @param title character, title for the popover, generally text
 #' @param content character, content for the popover body, can be HTML
@@ -835,7 +835,7 @@ bsHoverPopover <- function(
 #' items, use `div()` to occupy the space.
 #' @param completes a vector of TRUE or FALSE, indicating if the items are
 #' completed or not. Completed items will become green.
-#' @return
+#' @return returns a shiny component
 #' @export
 #' @details `up_labels`, `down_labels`, `icons`, `completes` must have the same
 #' length.

@@ -80,6 +80,8 @@ wf_runUI <- function(id){
 }
 
 # server
+#' @importFrom  zip zip
+#' @importFrom  callr r_session
 wf_runServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

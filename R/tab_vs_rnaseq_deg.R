@@ -17,7 +17,7 @@ vs_rnaseq_degUI <- function(id){
     case, you have the chance to refilter the DEGs. Just change the settings and
     click **Refilter**. You should see results updates in *DEG summary* section.
     2. Once you are satisfied with filters, you can make a `volcano plot`  a
-    `upset plot` and a  `Bland–Altman plot (MA) plot` in the lower part of this
+    `upset plot` and a `Bland-Altman plot (MA) plot` in the lower part of this
     tab.
     '
     tagList(
@@ -498,7 +498,7 @@ vs_rnaseq_degServer <- function(id, shared){
                     ggplot2::geom_point(ggplot2::aes(colour = direction), size = 0.5) +
                     ggplot2::scale_colour_manual(values = colors) +
                     ggplot2::scale_x_continuous(trans = "log10", limits = c(0.1,300000))+
-                    ggplot2::ggtitle(paste0(" Bland–Altman plot of ", input$ma_choose))+
+                    ggplot2::ggtitle(paste0("Bland-Altman plot of ", input$ma_choose))+
                     ggplot2::theme_minimal() +
                     ggplot2::theme(axis.line.x = ggplot2::element_line(colour = 'black', size=0.5, linetype='solid'),
                                    axis.line.y = ggplot2::element_line(colour = 'black', size=0.5, linetype='solid'))

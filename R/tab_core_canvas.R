@@ -36,7 +36,7 @@ core_canvasServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         # receive snap singal
-       ## very clean back-end for new canvas
+        ## very clean back-end for new canvas
     }
     moduleServer(id, module)
 }

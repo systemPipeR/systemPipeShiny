@@ -63,7 +63,7 @@
                     sps_plots$addUI(#@p_out_func@#(ns("plot")), id)
                     #####
                 ),
-                tags$script(glue('stretchPlotTab("{ns("plot")}")'))
+                tags$script(glue::glue('stretchPlotTab("{ns("plot")}")'))
             )
         )
     )
@@ -103,7 +103,7 @@
             shared$snap_signal <- sps_plots$notifySnap(tab_id)
             req(shared$snap_signal)
             shinytoastr::toastr_info(
-                glue("Snapshot {glue_collapse(shared$snap_signal, '-')}",
+                glue::glue("Snapshot {glue::glue_collapse(shared$snap_signal, '-')}",
                      "added to canvas"),
                 position = "bottom-right")
         })

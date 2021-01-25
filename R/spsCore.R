@@ -2,7 +2,7 @@
 # Initiation, creating tabs etc.
 
 
-#' @import shiny assertthat stringr magrittr glue ggplot2 shinyTree
+#' @import shiny shinyTree
 #' @importFrom plotly plotlyOutput
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom shinyWidgets pickerInput
@@ -18,11 +18,14 @@
 #' @importFrom shinyWidgets radioGroupButtons pickerInput
 #' @importFrom stringr str_split str_remove_all str_replace_all str_which
 #' @importFrom stringr str_remove str_which str_extract str_replace str_sort
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_detect str_pad
 #' @importFrom magrittr %>%
 #' @importFrom glue glue glue_collapse
 #' @importFrom assertthat assert_that not_empty is.writeable
 #' @importFrom ggplot2 ggplot geom_point ggtitle aes geom_bar coord_flip
+#' @importFrom stats relevel
+#' @importFrom utils capture.output write.csv read.delim
+#' @importFrom dplyr count
 NULL
 
 
@@ -59,7 +62,8 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
         spserror(glue("You input duplicated tab IDs: ",
                       "{tabs[duplicated(tabs)]}"))
     sps_env <- new.env(parent = globalenv())
-    lapply(file.path("R", list.files("R", "\\.[rR]$")),
+    r_folder <- file.path(app_path, "R")
+    lapply(file.path(r_folder, list.files(r_folder, "\\.[rR]$")),
            function(x) source(x, local = sps_env)) %>%
         invisible()
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
@@ -70,7 +74,7 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
         spsinfo("Now check input tabs")
         spsinfo("Find tab info ...")
         tabs <- c(tabs) %>% unique() %>% {.[!. %in% c("", " ")]}
-        tabs <- findTabInfo(tabs) %>% dplyr::as_tibble()
+        tabs <- findTabInfo(tabs, tab_file = file.path(app_path, "config", "tabs.csv")) %>% dplyr::as_tibble()
         if(sum(not_in_vs <- tabs$tpye != 'vs') > 0)
             spserror(glue("Tab '{glue_collapse(tabs[not_in_vs], ', ')}'",
                           "is/are not custom visulization tabs"))
