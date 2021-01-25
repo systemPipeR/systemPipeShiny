@@ -281,7 +281,7 @@ core_topUI <- function(id){
 #' @noRd
 core_topServer <- function(id, shared){
     module <- function(input, output, session){
-        # pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
+        pushbar::setup_pushbar(blur = TRUE, overlay = TRUE)
         ns <- session$ns
         # update session status ----
         rs_status_text <- reactiveVal("")
