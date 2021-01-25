@@ -81,7 +81,7 @@
         <li>
   <a href="../index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -95,16 +95,16 @@
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
     <span class="fab fa fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -145,7 +145,7 @@ name</p></td>
     <p>return depends on <code>return_type</code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
+
 <ul>
 <li><p>'print' will print out the entire <em>tabs.csv</em>, you can
 specify <code>n_print</code> for how many lines you want to print;</p></li>
@@ -162,7 +162,7 @@ specify <code>n_print</code> for how many lines you want to print;</p></li>
 #&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2020-10-07 21:55:59 SPS project setup done!</span><span></div><div class='input'><span class='co'># all lines</span>
 <span class='fu'>spsTabInfo</span>(<span class='st'>"print"</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_tabinfo"</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 14 x 8</span><span>
 #&gt;    tab_id  display_label   type  type_sub image   displayed tab_file_name plugin
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> 
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> core_a… About this App  core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 2</span><span> core_c… Plot Canvas     core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 3</span><span> core_d… Home            core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
@@ -179,15 +179,15 @@ specify <code>n_print</code> for how many lines you want to print;</p></li>
 #&gt; </span><span style='color: #BCBCBC;'>14</span><span> plot_e… Plot Bar        vs    </span><span style='color: #949494;'>"</span><span>plot</span><span style='color: #949494;'>"</span><span>   </span><span style='color: #949494;'>"</span><span>plot_… 1         tab_vs_plot_… </span><span style='color: #949494;'>""</span><span>    </div><div class='input'><span class='co'># 5 lines</span>
 <span class='fu'>spsTabInfo</span>(<span class='st'>"print"</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_tabinfo"</span>, <span class='kw'>n_print</span> <span class='kw'>=</span> <span class='fl'>5L</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 14 x 8</span><span>
 #&gt;   tab_id     display_label  type  type_sub image displayed tab_file_name  plugin
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> core_about About this App core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> core_canv… Plot Canvas    core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> core_dash… Home           core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> core_right Right side me… core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core  
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span> core_top   Top push bars  core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core  
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> core_about About this App core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> core_canv… Plot Canvas    core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> core_dash… Home           core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> core_right Right side me… core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span> core_top   Top push bars  core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>    1         No file for c… core
 #&gt; </span><span style='color: #949494;'># … with 9 more rows</span><span></div><div class='input'><span class='fu'>spsTabInfo</span>(<span class='st'>"data"</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_tabinfo"</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 14 x 8</span><span>
 #&gt;    tab_id  display_label   type  type_sub image   displayed tab_file_name plugin
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> 
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> core_a… About this App  core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 2</span><span> core_c… Plot Canvas     core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 3</span><span> core_d… Home            core  </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
@@ -201,18 +201,12 @@ specify <code>n_print</code> for how many lines you want to print;</p></li>
 #&gt; </span><span style='color: #BCBCBC;'>11</span><span> vs_main Visualization … vs    </span><span style='color: #949494;'>""</span><span>       </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>12</span><span> data_e… Data Tab Examp… vs    </span><span style='color: #949494;'>"</span><span>data</span><span style='color: #949494;'>"</span><span>   </span><span style='color: #949494;'>""</span><span>      1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>13</span><span> plot_e… Plot PCA        vs    </span><span style='color: #949494;'>"</span><span>plot</span><span style='color: #949494;'>"</span><span>   </span><span style='color: #949494;'>"</span><span>plot_… 1         No file for … </span><span style='color: #949494;'>"</span><span>core</span><span style='color: #949494;'>"</span><span>
-<<<<<<< HEAD
 #&gt; </span><span style='color: #BCBCBC;'>14</span><span> plot_e… Plot Bar        vs    </span><span style='color: #949494;'>"</span><span>plot</span><span style='color: #949494;'>"</span><span>   </span><span style='color: #949494;'>"</span><span>plot_… 1         tab_vs_plot_… </span><span style='color: #949494;'>""</span><span>    </div><div class='input'><span class='fu'>spsTabInfo</span><span class='op'>(</span><span class='st'>"colnames"</span>, app_path <span class='op'>=</span> <span class='st'>"SPS_tabinfo"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "tab_id"        "display_label" "type"          "type_sub"     
+</div><div class='output co'>#&gt; [1] "tab_id"        "display_label" "type"          "type_sub"
 #&gt; [5] "image"         "displayed"     "tab_file_name" "plugin"       </div><div class='input'><span class='fu'>spsTabInfo</span><span class='op'>(</span><span class='st'>"tab_id"</span>, app_path <span class='op'>=</span> <span class='st'>"SPS_tabinfo"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "core_about"     "core_canvas"    "core_dashboard" "core_right"    
-#&gt;  [5] "core_top"       "wf_main"        "wf_cwl"      "wf_run"        
-=======
-#&gt; </span><span style='color: #BCBCBC;'>14</span><span> plot_e… Plot Bar        vs    </span><span style='color: #949494;'>"</span><span>plot</span><span style='color: #949494;'>"</span><span>   </span><span style='color: #949494;'>"</span><span>plot_… 1         tab_vs_plot_… </span><span style='color: #949494;'>""</span><span>    </div><div class='input'><span class='fu'>spsTabInfo</span>(<span class='st'>"colnames"</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_tabinfo"</span>)</div><div class='output co'>#&gt; [1] "tab_id"        "display_label" "type"          "type_sub"     
-#&gt; [5] "image"         "displayed"     "tab_file_name" "plugin"       </div><div class='input'><span class='fu'>spsTabInfo</span>(<span class='st'>"tab_id"</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='st'>"SPS_tabinfo"</span>)</div><div class='output co'>#&gt;  [1] "core_about"     "core_canvas"    "core_dashboard" "core_right"    
-#&gt;  [5] "core_top"       "wf_main"        "wf_config"      "wf_run"        
->>>>>>> d08a12a18fc1836a533f1fa7bead2780c9f5a45d
-#&gt;  [9] "wf_target"      "wf_wf"          "vs_main"        "data_example"  
+</div><div class='output co'>#&gt;  [1] "core_about"     "core_canvas"    "core_dashboard" "core_right"
+#&gt;  [5] "core_top"       "wf_main"        "wf_cwl"      "wf_run"
+#&gt;  [9] "wf_target"      "wf_wf"          "vs_main"        "data_example"
 #&gt; [13] "plot_example1"  "plot_example2" </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -235,7 +229,7 @@ specify <code>n_print</code> for how many lines you want to print;</p></li>
       </footer>
    </div>
 
-  
+
 
 
   </body>
