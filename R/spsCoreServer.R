@@ -21,21 +21,26 @@ spsServer <- function(tabs, server_expr) {
         # core tabs
         spsinfo("Loading core tabs server")
         core_dashboardServer("core_dashboard", shared)
-        core_topServer("core_top", shared)
+
         # core_rightServer("core_right", shared)
         core_canvasServer("core_canvas", shared)
         core_aboutServer("core_about", shared)
-        # WF tabs server
-        spsinfo("Loading core workflow tabs server")
-        wf_mainServer("wf_main", shared)
-        wf_targetServer("wf_targets", shared)
-        wf_wfServer("wf_wf", shared)
-        wf_configServer("wf_config", shared)
-        wf_runServer("wf_run", shared)
+        # modules
+        module_mainServer("module_main", shared)
+        if(spsOption("module_wf")) {
+            spsinfo("Loading workflow module server"); wfServer("wf", shared)
+            core_topServer("core_top", shared) # top is now part of workflow module
+        }
+        if(spsOption("module_rnaseq")) {
+            spsinfo("Loading core RNAseq module server"); vs_rnaseqServer("vs_rnaseq", shared)
+        }
+        if(spsOption("module_ggplot")) {
+            spsinfo("Loading ggplot module server"); vs_esqServer("vs_esq", shared)
+        }
+
         # VS tabs
         spsinfo("Loading vs tabs server")
         vs_mainServer("vs_main", shared)
-        # user modules
         mapply(function(module, name){
             spsinfo(glue("Loading server for {name}"))
             rlang::eval_tidy(module)
@@ -62,9 +67,7 @@ spsServer <- function(tabs, server_expr) {
                 asis = TRUE,
                 condition = !str_detect(input$left_sidebar, "^wf_"))
         })
-        shared$wf_flags <- data.frame(targets_ready = FALSE,
-                                      wf_ready = FALSE,
-                                      wf_conf_ready = FALSE)
+
         output$wf_panel <- wfProgressPanel(shared)
         # spsWarnings(session)
         # TODO admin page, come back in next release
@@ -97,6 +100,7 @@ spsServer <- function(tabs, server_expr) {
         # additional user expressions
         rlang::eval_tidy(server_expr)
         appLoadingTime()
+        # browser()
     }
 }
 
@@ -255,11 +259,10 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
                    col_types = vroom::cols(), ...){
     df <- shinyCatch({
         choice <- match.arg(choice, c("upload", "eg"))
-        data_init <-
-            if(shinyAce::is.empty(data_init)) {
-                data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
-                    dplyr::as_tibble()
-            }
+        if(!inherits(data_init, "data.frame")){
+            data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
+                tibble::as_tibble()
+        }
         else {data_init}
         if(!any(class(data_init) %in% c("tbl_df", "tbl", "data.frame"))) {
             stop("data_init need to be dataframe or tibble")

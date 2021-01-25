@@ -114,8 +114,12 @@ On other Linux distributions, the install commands may be slightly different.
 
 # Main functionalities 
 
-Currently, `SPS` includes two main functional categories: (1) a workbench for
-designing and configuring data analysis workflows (WF), and (2) a data
+Currently, `SPS` includes two main functional categories: 
+ 1. Some pre-defined modules include: 
+    a. A workbench for designing and configuring data analysis workflows, 
+    b. Downstream analysis and visualization tools for RNA-Seq, and 
+    c. A space to make quick ggplots. 
+ 2. A data
 visualization (VS) toolbox (*Fig 1*). The WF module allows to write and to
 modify configuration files required for running workflows in `systemPipeR`. The
 VS module provides a rich set of plotting tools to visualize the results of
@@ -124,7 +128,7 @@ functionality that allows to arrange many plots in one page, save their them
 and revisit the saved plots at a later time.
 
 <center id="sps_structure">
-![SPS_structure](./img/sps_structure.png)
+![SPS_structure](./img/sps_structure.jpg)
 </center>
 **Figure 1.** Design of `systemPipeShiny.` 
 
@@ -221,10 +225,18 @@ shiny::runApp()
 After the SPS app has been launched, clicking the "Continue to app" button
 on the welcome screen will open the main dashboard (Fig.2).
 
+
 <center id="sps_ui">
 ![sps_ui](./img/sps_ui_main.jpg)
 </center>
 **Figure 2:** Snapshot of SPS' UI.
+
+1. Welcome screen.
+2. Module tabs.
+3. User defined custom tabs.
+4. The Canvas tab.
+5. All SPS tabs has this description on top. It is highly recommend to click here 
+   to expand and read the full the description for the first time.
 
 Alternatively, when using RStudio one can click the <img src=img/app_start.png style="display: inline;
 padding-left:0; width:10px; height:15px;">`Run App` button in the top right corner.
@@ -239,17 +251,38 @@ to change and create new custom tabs.
 The workflow management module in `SPS` allows to modify or create the
 configuration files required for running data analysis workflows in
 [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR). This includes
-three important files: a sample metadata (targets) file, a
-workflow file (in R Markdown format) defining the workflow steps, and a workflow
-config file organizing the workflow directory. In SPS, one can easily create
+three types of important files: a sample metadata (targets) file, a
+workflow file (in R Markdown format) defining the workflow steps, and workflow running 
+files in Common [Workflow Language (CWL)](https://www.commonwl.org/) format. In SPS, one can easily create
 these files under the "Workflow Management" module, located in navigation bar
-on the left of the dashboard (Fig2 a-b). 
+on the left of the dashboard (Fig2 - 2). 
 
-The current version of `SPS` allows to create and/or check the format of these 
-files. The execution of SPR workflows via SPS will be supported in the next
-release.
+The current version of `SPS` allows to:
 
-### Prepare a target file
+1. create a workflow environment;
+2. create and/or check the format of targets / workflow / CWL files;
+3. download the prepared workflow files to run elsewhere, like a cluster;
+4. directly excecute the workflow from SPS.
+
+
+### 1. setup a workflow 
+<center>
+![wf_setup](./img/sps_wf_setup.jpg)
+</center>
+**Figure 3. A.** Workflow Management - Targets File
+
+1. On the workflow module, read the instructions and choose step 1, it should be 
+automatically opened for you.
+2. Choose a folder where you want to create the workflow environment.
+3. Choose a workflow template. These are SPR workflows and mainly are next-generation 
+sequencing workflows. 
+4. Click "Gen workflow" to create the workflow project. 
+5. You should see a pop-up saying about the project path and other information. 
+Clicking the pop-up will jump you to the step 2. The status tracker and banner for 
+step 1 should all turn green. 
+
+
+### 2. Prepare a target file
 
 The targets file defines all input file paths and other sample information of
 analysis workflows. To better undertand the structure of this file, one can
@@ -262,117 +295,91 @@ IDs and other meta information.
 The following step-by-step instructions explain how to create and/or modify targets 
 files using RNA-Seq as an example (Fig.3 A):
 
-1. Choose "Targets" from navigation bar.
-2. Select either "Example PE" or "Example SE"" for using a pair-end/single-end target file, then choose "confirm" on the pop-up. You will see the example is loaded like Figure 3A. 
-3. You can edit, right click to add/remove rows/columns (The first row is treated as column names).
-4. SPR target file includes a header block, that can also be edited in the SPS app. Each headers needs to start with a "#".
-5. The section on the left provides sample statistics and information whether files exist on a user's system. Choose any column you want from the dropdown to check and watch the statistics bar change in this section.
-6. Clicking on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right.
-7. Now your target file is ready and you can click "save" to download it and later use in a SPR project. 
-8. Click on the "-" button on the "Workflow Progress", you should see the "Targets file" becomes green. 
+1. Your project targets file is loaded for you, but you can choose to upload a different one.
+2. You can edit, right click to add/remove rows/columns (The first row is treated as column names).
+3. SPR target file includes a header block, that can also be edited in the SPS app. Each headers needs to start with a "#". Header is only useful for RNA-Seq workflow in current SPR. You can define sample comparison groups 
+here. Leave it as default for other projects. 
+4. The section on the left provides sample statistics and information whether files exist inside the workflow project's `data` directory. Choose any column you want from the dropdown to check and watch the statistics bar change in this section.
+5. statistic status bar. 
+6. Clicking on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right. Now your target file is ready and you can click "save" to download it and later use in a SPR project. 
 
 <center>
-![wf_targets](./img/sps_ui_targets.png)
+![wf_targets](./img/sps_ui_target.jpg)
 </center>
 **Figure 3. A.** Workflow Management - Targets File
 
-### Prepare a workflow file
+### 3. Prepare a workflow file
 
 In SPR, workflows are defined in Rmarkdown files, you can read details and obtain them  [here](https://systempipe.org/pages/pipelines_area/).
 
 Now let us follow the order below to see how SPS helps you to prepare a workflow file for a RNAseq project (Fig.3 B):
 
-1. Choose "Workflow File" from navigation bar.
-2. Choose "Example Rmd" to load an RNAseq workflow.
-3. You can see the workflow steps are displayed like a tree structure.
-4. Check all steps in the workflow that you want to include. You can skip (leave blank) some steps but it may cause the workflow to fail. Read more SPR instructions before do so. 
-5. Clicking on the "Plot steps" will show a flow chart of what the step execution orders will be when you run the workflow in SPR. 
-6. Clicking "Report preview" generates a preview of what the final report will look like for current RNAseq workflow, but in the preview, no code is evaluated.
-7. If you are satisfied with your workflow file, click "Add to task" to update the workflow preparation progress just like it is for "targets file".
-8. Now choose "Save New Rmd" to save this new workflow file to later be used a SPR RNAseq project running. 
+1. Your project workflow file is loaded for you, but you can choose to upload a different one.
+2. The workflow structure is displayed in a tree-leaf-like plot. 
+3. Check all steps in the workflow that you want to include. You can skip (uncheck) some steps but it may cause the workflow to fail. Read more SPR instructions before do so. 
+4. Clicking on the "Plot steps" will show a flow chart of what the step execution orders will be when you run the workflow in SPR. 
+5. Clicking "Report preview" generates a preview of what the final report will look like for current RNAseq workflow (hidden in Fig 3.B), but in the preview, no code is evaluated.
+6. If you are satisfied with your workflow file, click "Add to task" to save your workflow file.
 
 <center>
-![wf_wf](./img/sps_ui_wf.png)
+![wf_wf](./img/sps_ui_wf.jpg)
 </center>
 **Figure 3. B.** Workflow Management - Workflow File
 
-### Prepare a configuration file
+### 4. Prepare CWL files (optional)
 
-In SPR, the config file *SPRconfig.yaml* is required to define information like *project path*, *targets file path* and more. 
-Normally, this file is generated automatically when one starts a SPR project, but if any modification is made, 
-one needs to update this config file. For example, like we are now using SPS to prepare targets file and workflow file and when we download these new files, file names and locations may be changed. In this case, we can update the config file in SPS (Fig.3 C):
+In the new version of SPR, all individual system workflow steps are called by the 
+CWL files. Each SPR workflow has a set of CWL files and normally users do not need 
+to make any change. In case you want to learn more about CWL and create some new 
+CWL files, Step 4 is a good place to practice. 
 
-1. Choose "Targets" from navigation bar.
-2. Choose "Example" to load an RNAseq config file.
-3. Edit the file content and follow *yaml* format. You may need to update the target file and workflow file name and location in the "*targets*" and "*Rmd*" lines here. 
-4. Once your editing is done, click "Add to task" to update the progress.
-5. Now your new config file is ready and you can click "Save" to download it.
-6. The progress tracker should all become green, which means you are ready to run the RNAseq workflow in SPR. 
+To run a CWL step in SPR, 3 files are required: 
 
-<center>
-![wf_config](./img/sps_ui_config.png)
-</center>
-**Figure 3. C.** Workflow Management - Config File
+- targets: to determine how many samples will be run and sample names.
+- CWL running file: can be translated to bash code;
+- CWL input: variables to inject into the running file 
 
-###  Finish workflow management
+SPR is the parser between R and CWL by injecting sample information from targets 
+to `CWL input` file and then CWL parser translate it to bash code. 
 
-If you have followed this instruction so far, the three most important workflow files 
-have been created. You can copy them over to your SPR RNAseq project root and start to 
-generate results. 
-
-## Visualize workflow results
-
-In the previous step that we have prepared files for running a SPR RNAseq workflow. 
-Now assume that the workflow has been successfully run and we have obtained some results. In this 
-part, we will use an example **count table** (RPKM normalized) to demonstrate 
-how to use the VS components. 
-
-VS tabs in SPS are sub-defined into two small groups, *data tabs* and *plot tabs*. A data tab 
-is where you prepare, filter and preprocess data. A plot tab is where the actual plots are generated.
-A plot tab requires at least one dataset from a data tab. Therefore, we need to first 
-prepare data in a data tab, depending on the preprocess method we choose, we will be given 
-different plot options (going to different plot tabs).
-
-In this part, we will first load the raw count table and preprocess it in "Data Tab Example", generate some plots in "Plot Tab Example", and finally compare plots in the "Canvas" tab.
-
-### Load raw count data
-
-Follow instructions in Figure 4A:
-
-1. Select "Data Tab Example" tab from the left.
-2. Click "Start with this tab", it will be hidden after package requirement check has passed in the background. So it is not displayed in the figure. 
-3. Let us load an example RPKM  read count table. If you upload your own table, 
-the first column must be "Genes" and the rest of columns are treated as samples and they must be numeric values only. 
-4. You can click on box below each column name to filter data. 
-5. You can export your filtered data into clipboard, csv files, Excel ...
-6. After the data filtration, we can start to preprocess data. Here are two methods you can choose from the left dropdown menu: "Do Nothing" does not change the filtered data, and "PCA" calculates PCs based on samples. Let us just try "Do Nothing".
-7. When the data is preprocessed, plot options will be displayed in the below. You need to scroll down a little to see. "Do Nothing"  will give you the option 
-for a bar plot. Click on the plot image will redirect you to the corresponding tab. 
+1. Most poeple are not familar this part, read instruction carefully.
+2. Your project targets has been loaded for you, and an example CWL running and input 
+for **hisat2** is also loaded for you. Directly parse the code. See what commandline 
+code you get. 
+3. Change the targets injecting column, and parse again, see what has changed. 
+4. You can edit the CWL running and input files
+5. Try to parse the new file and see what has changed.
+6. If new CWL files has been created, you can edit workflow Rmd files by adding your 
+new system steps. 
 
 <center>
-![data_tab](./img/sps_ui_data_tab.png)
+![wf_cwl](./img/sps_wf_cwl.jpg)
 </center>
-**Figure 4 A.** VS - data tab
+**Figure 3. C.** Workflow Management - CWL File
 
-### Create a plot
+###  5. Run or finish workflow preparation
 
-Follow instructions in Figure 4B:
 
-1. Skip this step if you jumped directly from the "Data Tab Example", otherwise select "Plot Bar" to start;
-2. Click "Start/Reload", this button will validate if you have the required data set. If yes, you will see plot options and other UI.
-3. Click on "Render/Snapshot plot" to create the first plot. In SPS, the first time clicking on "Render" button creates a preview of the plot. From the second time and on, clicking on this button will take a *"snapshot"* of the plot. In SPS a snapshot is plot frozen with particular set of input data and plot options. It is isolated from the original plot tab and you cannot modify it anymore. It is similar to a screenshot but you can still interact within the plot. You will have a better understanding when we reach the *Canvas* section.
-4. Now you can interact with plot. Try to hover your mouse and move around the plot. There are many interactive components on the plot. Read more of what you can interact with a [Plotly plot](plotly.com).
-5. There is a tiny triangular icon on the right bottom corner of the plot where you can drag it to resize the plot to at most your window width and unlimited height.
-6. A panel of plot selection tools including a screenshot button is on the top 
-right.
-7. Let us take a snapshot by clicking "Render". You should see a blue message pop up from the right bottom of your screen.
-8. You can change the plot title by changing the text. This example plot tab only provides very simple plot controls. Change the text and watch how the plot title change. 
-9. Change a title and click "Render" again to take a second snapshot.
+
+Up until this step, congratulations, the workflow is prepared. You can choose to 
+download the workflow project files as a bundle or continue to run the workflow. 
 
 <center>
-![plot_tab](./img/sps_ui_plot_tab.png)
+![wf_cwl](./img/sps_wf_run.jpg)
 </center>
-**Figure 4 B.** VS - plot tab
+**Figure 4.A.B** Workflow Runner
+
+1. On step 5 you can choose to download the prepared workflow or directly run the 
+workflow. However, if you do not have the required commandline tools, workflow will 
+most likely fail.
+2. Open up the runner. It is a Rstudio like interface. 
+3. Code editor. Required workflow running code is pre-entered for you. You can simply 
+hit "Run" to start. Of course, you can delete the default code and run random R 
+code. 
+4. Ouput R console. 
+5. Workflow running log.
+6. View any plot output. and send a copy of your current plot to SPS Canvas tab or 
+download it. 
 
 ## Snap shots and Canvas
 
@@ -402,7 +409,7 @@ unwanted snapshots often.
 <center>
 ![plot_tab](./img/sps_ui_canvas.png)
 </center>
-**Figure 5 A.** Canvas
+**Figure 6 A.** Canvas
 
 Now go back to [Load raw count data](#load-raw-count-data) section and select 
 "PCA" option in step 6 to reprocess and then go to PCA plot tab and repeat
@@ -412,51 +419,6 @@ to take snapshots with different point size. Finally come back to canvas and ren
 Now you can have a better understanding of the SPS snapshot-Cnavas feature.
 
 # Advanced features
-
-
-## SPS plugins
-
-We have created many more plots options and 
-they are distributed as "SPS plugins". A SPS plugin is a collection of SPS tabs that 
-become small R packages. 
-You need to install the plugin like you do with normal R packages by `install.packages`, 
-`BiocManager::install` or `remotes::install_github()`. The plugins(packages) come with 
-SPS tabs, data, and other helper functions. Using `spsAddPlugin()` function, you 
-are able to load them into SPS framework. 
-
-Using `spsAddPlugin()` without any argument will list all available plugins and 
-instructions to install them. 
-
-```{r , eval=TRUE}
-spsAddPlugin()
-```
-
-To load a specific plugin:
-
-```{r , eval=FALSE}
-spsAddPlugin(plugin = "PLUGIN_NAME", app_path = "PATH_OF_SPS")
-```
-
-At this stage, there is only one plugin, the *spsBio*: plots for biological data 
-visualization. It is **under testing and please expect unstableness**. Under your project 
-directory:
-
-```{r, eval=FALSE}
-remotes::install_github("systemPipeR/spsBio")
-spsAddPlugin(plugin = "spsBio")
-```
-
-Inside your SPS project root, in the *global.R* file, specify that you want to 
-load the plugin to app and start the app like normal:
-```{r}
-sps_app <- sps(
-    vstabs = c("data_example", "plot_example1", "plot_example2"),
-    plugin = "spsBio",
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
-```
 
 ## Configuration
 
@@ -509,10 +471,10 @@ the tabs. Do not modify it if you don't plan to build new tabs. See [developer s
 to operate this file. 
 
 To control what tabs to appear(load/unload) on SPS, pass the tab IDs of tabs you want to see to 
-`vstabs =` argument on `sps()`
+`tabs =` argument on `sps()`
 
 ```{r , eval=FALSE}
-sps_app <- sps(vstabs = c("ID1", "ID2", ...))
+sps_app <- sps(tabs = c("ID1", "ID2", ...))
 ```
 
 *tabs.csv* has all the tab IDs. Under current version of SPS, you can only load/unload 
@@ -528,7 +490,7 @@ loading SPS main framework.
 
 As a framework, `SPS` allows users to add/remove/customize individual tabs. At current 
 version, you can only modify tabs in Visualization module (data tabs, plot tabs). 
-Use `newTabData` to add a new data tab and `newTabPlot` for a plot tab. These functions 
+Use `spsNewTab` to create new tabs. This function
 will help you to **create the tab file**, store it to the *R* folder in your SPS project, and
 **register tab information** by adding records to *config/tabs.csv*.
 Most arguments are self-explanatory or can be 
@@ -540,8 +502,7 @@ In your *global.R*, scroll down to the bottom, you should see:
 
 ```{r, eval=FALSE}
 sps_app <- sps(
-    vstabs = c("data_example", "plot_example1", "plot_example2"),
-    plugin = "",
+    tabs = c("data_example", "plot_example1", "plot_example2"),
     server_expr = {
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }

@@ -7,12 +7,9 @@ core_canvas,Plot Canvas,core,,,1,No file for core,core
 core_dashboard,Home,core,,,1,No file for core,core
 core_right,Right side menu,core,,,1,No file for core,core
 core_top,Top push bars,core,,,1,No file for core,core
-wf_main,Workflow Main Page,wf,,,1,No file for core,core
-wf_config,Workflow Config,wf,,,1,No file for core,core
-wf_run,Workflow Run,wf,,,1,No file for core,core
-wf_target,Workflow Metadata,wf,,,1,No file for core,core
-wf_wf,Workflow Steps,wf,,,1,No file for core,core
-vs_main,Visualization Main Page,vs,,,1,No file for core,core
-data_example,Data Tab Example,vs,data,,1,No file for core,core
-plot_example1,Plot PCA,vs,plot,plot_list/plot_pca.png,1,No file for core,core
-plot_example2,Plot Bar,vs,plot,plot_list/plot_bar.png,1,tab_vs_plot_example2.R,
+module_main,Module Main Page,vs,,,1,No file for core,core
+wf,Workflow module,wf,,,1,No file for core,core
+vs_rnaseq,RNAseq module,vs,,,1,No file for core,core
+vs_esq,Quick ggplot module,vs,,,1,No file for core,core
+vs_main,custom tabs main page,vs,,,1,No file for core,core
+vs_example,My custom plotting tab,vs,plot,,1,tab_vs_example.R,

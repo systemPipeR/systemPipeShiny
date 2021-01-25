@@ -118,13 +118,12 @@ test_that("dynamic_file_server_under_modes", {
     })
 })
 
-expect_s3_class(genGallery(c("plot_example1")), "shiny.tag")
 expect_s3_class(genGallery(type = "plot"), "shiny.tag")
 
 expect_s3_class(genHrefTable(
     list(
         row1 = c("core_canvas", "core_about"),
-        row2 =  "data")
+        row2 =  "plot")
     ),
     "shiny.tag"
 )
@@ -211,7 +210,7 @@ test_that("shinyCatch & shinyCheckPkg", {
 })
 
 ############################# skip bioc and cran checks #######################
-# if(!interactive()) skip("Skip on checks")
+if(!interactive()) skip("Skip on checks")
 skip_on_bioc()
 skip_on_cran()
 

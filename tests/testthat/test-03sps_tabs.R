@@ -34,16 +34,6 @@ test_that("vs_main test", {
     expect_null(testServer(vs_mainServer, {}))
 })
 
-test_that("wf_config test", {
-    expect_s3_class(vs_mainUI("a"), "shiny.tag.list")
-    expect_null(testServer(wf_configServer, {}))
-})
-
-test_that("wf_main test", {
-    expect_s3_class(wf_mainUI("a"), "shiny.tag.list")
-    expect_null(testServer(wf_mainServer, {}))
-})
-
 test_that("wf_run test", {
     expect_s3_class(wf_runUI("a"), "shiny.tag.list")
     expect_null(testServer(wf_runServer, {}))

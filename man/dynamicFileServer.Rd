@@ -4,7 +4,7 @@
 \alias{dynamicFileServer}
 \title{Server side function for dynamicFile}
 \usage{
-dynamicFileServer(input, session, id)
+dynamicFileServer(input, session, id, roots = c(root = "default"))
 }
 \arguments{
 \item{input}{shiny server input}
@@ -13,6 +13,13 @@ dynamicFileServer(input, session, id)
 
 \item{id}{input file element ID.
 Do not us \code{ns()} to wrap the id on server side if inside module}
+
+\item{roots}{a named character vector, paths where users can reach
+on the server, so only required for "server" mode, default is
+current directory + all system volumes. You can lock users to a specific path,
+so they are not allowed to browse parent folders.
+like only current directory: \code{c(current=getwd())}; a temp folder:
+\code{c(current=tempdir())}; unlimited: \code{c(shinyFiles::getVolumes()())}}
 }
 \value{
 reactive dataframe, need to extract the value inside reactive

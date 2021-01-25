@@ -240,7 +240,12 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 #' @param session shiny server session
 #' @param id input file element ID.
 #' Do not us `ns()` to wrap the id on server side if inside module
-#'
+#' @param roots a named character vector, paths where users can reach
+#' on the server, so only required for "server" mode, default is
+#' current directory + all system volumes. You can lock users to a specific path,
+#' so they are not allowed to browse parent folders.
+#' like only current directory: `c(current=getwd())`; a temp folder:
+#' `c(current=tempdir())`; unlimited: `c(shinyFiles::getVolumes()())`
 #' @return reactive dataframe, need to extract the value inside reactive
 #' expression, observe, or inside `isolate`
 #' @export
@@ -264,10 +269,11 @@ shinyCheckPkg <- function(session, cran_pkg = NULL, bioc_pkg = NULL, github = NU
 #'     }
 #'     shinyApp(ui = ui, server = server)
 #' }
-dynamicFileServer <- function(input, session, id){
+dynamicFileServer <- function(input, session, id, roots = c(root = "default")){
     file_return <- reactiveVal(NULL)
+    if(names(roots)[1] == "root" & roots[1] == "default")
+        roots = c(current=getwd(), shinyFiles::getVolumes()())
     if (spsOption('mode') == "local") {
-        roots <- c(current=getwd(), shinyFiles::getVolumes()())
         shinyFiles::shinyFileChoose(input, id, roots = roots, session = session)
         observeEvent(input[[id]],
                      file_return({
@@ -452,3 +458,7 @@ getData <- function(tab_id, shared){
     }, blocking_level = "error")
 }
 
+
+spsDebounce <- function(value, millis=1500){
+    shiny::debounce(function(){value}, millis)
+}

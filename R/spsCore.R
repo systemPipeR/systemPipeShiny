@@ -23,16 +23,15 @@
 #' @importFrom glue glue glue_collapse
 #' @importFrom assertthat assert_that not_empty is.writeable
 #' @importFrom ggplot2 ggplot geom_point ggtitle aes geom_bar coord_flip
+#' @importFrom stats relevel
+#' @importFrom utils capture.output write.csv read.delim
+#' @importFrom dplyr count
 NULL
 
 
 #' SystemPipeShiny app main function
-#' @param vstabs custom visualization tab IDs that you want to display, in a character
+#' @param tabs custom visualization tab IDs that you want to display, in a character
 #' vector. Use [spsTabInfo()] to see what tab IDs you can load
-#' @param plugin If you have loaded some SPS plugins by [spsAddPlugin()],
-#' you can specify here as a character vector, and it will load all tabs that
-#' belong to that plugin to SPS. If you only want
-#' certain tabs from a plugin, specify in `vstabs` argument.
 #' @param server_expr additional top level sever expression you want
 #' to run. This will run after the default server expressions. It means you can
 #' have access to internal server expression objects, like the
@@ -51,18 +50,17 @@ NULL
 #' if(interactive()){
 #'     spsInit()
 #'     sps_app <- sps(
-#'         vstabs = "",
+#'         tabs = "",
 #'         server_expr = {
 #'             msg("Hello World", "GREETING", "green")
 #'         }
 #'     )
 #' }
-sps <- function(vstabs = "", plugin = "", server_expr=NULL, app_path = getwd()){
-    assert_that(is.character(vstabs))
-    assert_that(is.character(plugin))
-    if(any(duplicated(vstabs)))
+sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
+    assert_that(is.character(tabs))
+    if(any(duplicated(tabs)))
         spserror(glue("You input duplicated tab IDs: ",
-                      "{vstabs[duplicated(vstabs)]}"))
+                      "{tabs[duplicated(tabs)]}"))
     sps_env <- new.env(parent = globalenv())
     r_folder <- file.path(app_path, "R")
     lapply(file.path(r_folder, list.files(r_folder, "\\.[rR]$")),
@@ -71,28 +69,21 @@ sps <- function(vstabs = "", plugin = "", server_expr=NULL, app_path = getwd()){
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
     attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = FALSE)
     tab_info <- checkSps(app_path)
-    plugin_tabs <- tab_info$tab_id[tab_info$plugin %in% plugin]
-    if(!length(plugin_tabs) & plugin[1] != "") spswarn("No plugin matched, skip")
-    if((length(vstabs) >= 1 & sum(nchar(vstabs))) > 0 | (length(plugin_tabs))){
+
+    if(length(tabs) >= 1 & sum(nchar(tabs)) > 0){
         spsinfo("Now check input tabs")
         spsinfo("Find tab info ...")
-        vstabs <- c(vstabs, plugin_tabs) %>% unique() %>% {.[!. %in% c("", " ")]}
-        tabs <- findTabInfo(
-            vstabs,
-            tab_file = file.path(app_path, "config", "tabs.csv")) %>%
-            dplyr::as_tibble()
+        tabs <- c(tabs) %>% unique() %>% {.[!. %in% c("", " ")]}
+        tabs <- findTabInfo(tabs, tab_file = file.path(app_path, "config", "tabs.csv")) %>% dplyr::as_tibble()
         if(sum(not_in_vs <- tabs$tpye != 'vs') > 0)
-            spserror(glue("Tab '{glue_collapse(vstabs[not_in_vs], ', ')}'",
-                          "is/are not visulization tabs"))
-        tabs_data <- tabs %>% dplyr::filter(type_sub == "data")
-        tabs_plot <- tabs %>% dplyr::filter(type_sub == "plot")
+            spserror(glue("Tab '{glue_collapse(tabs[not_in_vs], ', ')}'",
+                          "is/are not custom visulization tabs"))
+
     } else {
         spsinfo("Using default tabs")
         tabs <- dplyr::tibble()
-        tabs_data <- dplyr::tibble()
-        tabs_plot <- dplyr::tibble()
     }
-    ui <- spsUI(tabs_data, tabs_plot)
+    ui <- spsUI(tabs)
     spsinfo("UI created")
     server_expr <- rlang::enexpr(server_expr)
     server <- spsServer(tabs, server_expr)

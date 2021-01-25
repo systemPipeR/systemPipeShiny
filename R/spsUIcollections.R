@@ -8,18 +8,23 @@
 #' using SPS widgets outside of SPS framework. No need to load this function
 #' again if you are working within SPS framework.
 #' @importFrom shinytoastr useToastr
+#' @importFrom bsplus use_bs_popover use_bs_tooltip
 #' @export
 #' @return HTML head
 #' @examples
-#' useSps()
+#' # useSps()
 useSps <- function(){
-    addResourcePath("sps", system.file("app/www", package = "systemPipeShiny"))
+    addResourcePath("sps", "www")
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css",
                             href = "sps/css/sps.css"),
         tags$script(src = "sps/js/sps.js"),
         tags$script(src="sps/js/sps_update_pg.js"),
-        shinytoastr::useToastr()
+        tags$script(src = "sps/js/sps_gotop.js"),
+        shinytoastr::useToastr(),
+        shinyjs::useShinyjs(),
+        bsplus::use_bs_popover(),
+        bsplus::use_bs_tooltip()
     )
 }
 
@@ -160,7 +165,7 @@ gallery <- function(Id = NULL, title = "Gallery",
         length(texts) == length(hrefs) & length(hrefs) == length(images),
         msg = "texts, hrefs and images must have the same length")
     tags$div(
-        id = Id, class = "col",
+        id = Id, class = "col sps-gallery",
         p(class = "text-center h2",
           style = glue("color: {title_color};"),
           title),
@@ -367,7 +372,7 @@ renderDesc <- function(id, desc) {
     HTML(glue('
       <div class="desc">
         <div class="collapse desc-body" id="{id}" aria-expanded="false">
-         {HTML(markdown::renderMarkdown(text = glue(desc)))}
+         {HTML(markdown::renderMarkdown(text = glue(desc, .open = "@{", .close = "}@")))}
         </div>
 
         <a role="button" class="collapsed" data-toggle="collapse"
@@ -550,8 +555,9 @@ spsHr <- function() {
 #' @param title_main If not specified and pane_id contains 'plot', title will be
 #' 'Plot Prepare'; has 'df' will be 'Data Prepare', if neither will be
 #' "Progress"
+#' @param opened bool, if this panel is opened at start
 #' @export
-pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
+pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL, opened = FALSE){
     if(is.null(title_main)) {
         title_main <- pane_id %>% {
             if(str_detect(., "plot")) "Plot Prepare"
@@ -595,7 +601,7 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
     } %>% {
         div(class = "tab-pane", id = glue("{pane_id}-pg-container"),
             absolutePanel(
-                top = "5%", right = "2%", draggable = TRUE, width = "310",
+                top = "3%", right = "2%", draggable = TRUE, width = "310",
                 height = "auto", class = "control-panel", cursor = "inherit",
                 style = "background-color: white; z-index:999;",
                 fluidRow(
@@ -609,7 +615,8 @@ pgPaneUI <- function(pane_id,  titles, pg_ids, title_main=NULL){
                                      ' data-toggle="collapse">',
                                      '<i class="fa fa-minus"></i></button>')))
                 ),
-                div(class = "collapse", id = glue("{pane_id}-pg-collapse"), .)
+                div(class = if(opened) "collapse in" else "collapse",
+                    id = glue("{pane_id}-pg-collapse"), .)
             )
         )
     }
@@ -767,3 +774,293 @@ hexPanel <- function(id, title, hex_imgs, hex_links=NULL, hex_titles = NULL,
 tabTitle <- function(title, ...){
     h2(title, style = "color:#17a2b8;", ...)
 }
+
+
+
+#' Bootstrap popover trigger on hover instead of click
+#' @description enhanced Bootstrap 3 popover by hovering, see
+#' [bsplus::bs_embed_popover] for details. Everything is the same but has
+#' additional trigger method, default "hover"
+#' @param tag [htmltools::tag], generally htmltools::tags$button() or htmltools::tags$a(), into which
+#' to embed the popover
+#' @param title character, title for the popover, generally text
+#' @param content character, content for the popover body, can be HTML
+#' @param placement character, placement of the popover with respect to `tag`
+#' @param trigger trigger method, default "hover", one of click | hover |
+#' focus | manual.
+#' @param ... other named arguments, passed to [bsplus::bs_set_data()]
+#' @importFrom bsplus bs_embed_popover
+#' @return shiny element
+#' @export
+#'
+#' @examples
+#' if(interactive()){
+#'     library(shiny)
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         actionButton('a', 'a') %>%
+#'             bsHoverPopover(title = "title a", content = "a", placement = "bottom"),
+#'         tags$a("b") %>%
+#'             bsHoverPopover(title = "title b", content = "b", placement = "bottom")
+#'     )
+#'     server <- function(input, output, session) {}
+#'     shinyApp(ui, server)
+#' }
+bsHoverPopover <- function(
+    tag, title = NULL, content = NULL, placement = "top", trigger="hover", ...){
+    bsplus::bs_embed_popover(
+        tag, title = title, content = content, placement = placement, ...) %>%{
+            if(trigger == "hover")
+                tagAppendAttributes(., `pop-toggle` = trigger)
+            else tagAppendAttributes(., `data-trigger` = trigger)
+        }
+}
+
+
+
+# credits to Abhi Sharma @ https://codepen.io/abhisharma2/pen/vEKWVo/
+
+#' A shiny timeline component
+#' @description This time time is horizontal, use **spsTimeline** to define it and
+#' use **updateSpsTimeline** on server to update it.
+#' @param id html ID of the timeline if you are using shiny modules:
+#' use namespace function to create the ID but DO NOT use namespace function
+#' on server.
+#' @param up_labels a vector of strings, text you want to display on top of each
+#' timeline item, usually like year number. If you do not want any text for a
+#' certain items, use `""` to occupy the space.
+#' @param down_labels a vector of strings, text you want to display at the
+#' bottom of each timeline item.
+#' @param icons a list of icon objects. If you do not want an icon for certain
+#' items, use `div()` to occupy the space.
+#' @param completes a vector of TRUE or FALSE, indicating if the items are
+#' completed or not. Completed items will become green.
+#' @return returns a shiny component
+#' @export
+#' @details `up_labels`, `down_labels`, `icons`, `completes` must have the same
+#' length.
+#' @examples
+#' if(interactive()){
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         column(6,
+#'                spsTimeline(
+#'                    "b",
+#'                    up_labels = c("2000", "2001"),
+#'                    down_labels = c("step 1", "step 2"),
+#'                    icons = list(icon("table"), icon("gear")),
+#'                    completes = c(FALSE, TRUE)
+#'                )
+#'          ),
+#'         column(6,
+#'                actionButton("a", "complete step 1"),
+#'                actionButton("c", "uncomplete step 1"))
+#'
+#'     )
+#'
+#'     server <- function(input, output, session) {
+#'         observeEvent(input$a, {
+#'             updateSpsTimeline(session, "b", 1)
+#'         })
+#'         observeEvent(input$c, {
+#'             updateSpsTimeline(session, "b", 1, complete = FALSE)
+#'         })
+#'     }
+#'
+#'     shinyApp(ui, server)
+#' }
+spsTimeline <- function(
+    id, up_labels, down_labels,
+    icons, completes){
+    assert_that(is.character(up_labels))
+    assert_that(is.character(down_labels))
+    assert_that(is.list(icons))
+    assert_that(length(up_labels) == length(down_labels))
+    assert_that(length(up_labels) == length(icons))
+    assert_that(length(up_labels) == length(completes))
+    lapply(seq_along(up_labels), function(i){
+        tags$li(
+            class = if(completes[i]) "li complete" else "li",
+            id = paste0(id, "-", i),
+            div(
+                class = "sps-timestamp",
+                span(up_labels[i])
+            ),
+            div(
+                class = "timeline-i",
+                icons[[i]]
+            ),
+            div(
+                class = "status",
+                h4(down_labels[i])
+            )
+        )
+    }) %>% {
+        tags$ul(
+            class = "sps-timeline", id = id,
+            style = "white-space: nowrap;",
+            .
+        )
+    }
+}
+
+#' @rdname spsTimeline
+#' @param session current shiny session
+#' @param item_no integer, which item number counting from left to right you
+#' want to update
+#' @param complete bool, is this item completed or not
+#' @export
+updateSpsTimeline <- function(session, id, item_no, complete = TRUE){
+    assert_that(is.numeric(item_no))
+    assert_that(is.character(id))
+    assert_that(length(id) == 1)
+    assert_that(item_no > 0)
+    item_no <- as.integer(item_no)
+    if (inherits(session, "session_proxy")) {
+            id <- session$ns(id)
+    }
+    if(complete){
+        shinyjs::addCssClass(
+            paste0(id, "-", item_no),
+            class = "complete",
+            asis = TRUE)
+    } else {
+        shinyjs::removeCssClass(
+            paste0(id, "-", item_no),
+            class = "complete",
+            asis = TRUE)
+    }
+}
+
+# internal css loader unit
+spsLoader <- function(id=NULL){
+    if(is.null(id)) id = paste0("loader", sample(1000000, 1))
+    tagList(
+        singleton(
+            tags$style('
+            .sps-loader {
+              height: auto;
+              display: inline-block;
+              align-items: center;
+              justify-content: center;
+            }
+            .sps-loader .container {
+              width: 80px;
+              height: 60px;
+              text-align: center;
+              font-size: 10px;
+            }
+            .sps-loader .container .boxLoading {
+              background-color: #3c8dbc;
+              height: 100%;
+              width: 6px;
+              display: inline-block;
+              -webkit-animation: sps-loading 1.2s infinite ease-in-out;
+              animation: sps-loading 1.2s infinite ease-in-out;
+            }
+            .sps-loader .container .boxLoading2 {
+              -webkit-animation-delay: -1.1s;
+              animation-delay: -1.1s;
+            }
+            .sps-loader .container .boxLoading3 {
+              -webkit-animation-delay: -1s;
+              animation-delay: -1s;
+            }
+            .sps-loader .container .boxLoading4 {
+              -webkit-animation-delay: -0.9s;
+              animation-delay: -0.9s;
+            }
+            .sps-loader .container .boxLoading5 {
+              -webkit-animation-delay: -0.8s;
+              animation-delay: -0.8s;
+            }
+
+            @-webkit-keyframes sps-loading {
+              0%,
+              40%,
+              100% {
+                -webkit-transform: scaleY(0.4);
+              }
+              20% {
+                -webkit-transform: scaleY(1);
+              }
+            }
+            @keyframes sps-loading {
+              0%,
+              40%,
+              100% {
+                transform: scaleY(0.4);
+                -webkit-transform: scaleY(0.4);
+              }
+              20% {
+                transform: scaleY(1);
+                -webkit-transform: scaleY(1);
+              }
+            }
+          ')
+        ),
+        tags$div(
+            id = id, class = "sps-loader",
+            HTML('
+            <div class="container">
+                <div class="boxLoading boxLoading1"></div>
+                <div class="boxLoading boxLoading2"></div>
+                <div class="boxLoading boxLoading3"></div>
+                <div class="boxLoading boxLoading4"></div>
+                <div class="boxLoading boxLoading5"></div>
+            </div>
+           ')
+        )
+    )
+}
+
+
+#' Match height of one element to the other element
+#' @description Match the height of one element to the second element.
+#' If the height of second element change, the height of first element will change
+#' automatically
+#' @param div1 element ID, or jquery selector if `isID = FALSE`. The first element
+#' that you want to match the height to the other element
+#' @param div2 matched element ID or selector, the other element
+#' @param isID bool, if `TRUE`, `div1` and `div2` will be treated as ID, otherwise
+#' you can use complex jquery selector
+#'
+#' @return will be run as javascript
+#' @export
+#'
+#' @examples
+#' if(interactive()){
+#'     library(shiny)
+#'
+#'     ui <- fluidPage(
+#'         useSps(),
+#'         column(
+#'             3, id = "a",
+#'             style = "border: 1px black solid",
+#'             p("a")
+#'         ),
+#'         shinyjqui::jqui_resizable(column(
+#'             6, id ="b",
+#'             style = "border: 1px black solid",
+#'             p("b")
+#'         )),
+#'         heightMatcher("a", "b")
+#'     )
+#'
+#'     server <- function(input, output, session) {
+#'
+#'     }
+#'     # Try to drag `b` from bottom right corner and see what happens to `a`
+#'     shinyApp(ui, server)
+#' }
+heightMatcher <- function(div1, div2, isID=TRUE){
+    if(isID) {
+        div1 <- paste0("#", div1)
+        div2 <- paste0("#", div2)
+    }
+    tags$script(paste0(
+        'heightMatcher("', div1, '",', ' "', div2, '")'
+    ))
+}
+
+

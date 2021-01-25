@@ -172,9 +172,6 @@ quiet <- function(x) {
 checkNameSpace <- function(packages, quietly = FALSE, from = "") {
     if (shinyAce::is.empty(packages)) return(NULL)
     missing_pkgs <- lapply(packages, function(pkg) {
-        if (!requireNamespace(pkg, quietly = TRUE)) pkg
-    })
-    missing_pkgs <- lapply(packages, function(pkg) {
         if (!eval(parse(text = "requireNamespace(pkg, quietly = TRUE)"))) pkg
     }) %>% unlist()
     if (!quietly & not_empty(missing_pkgs)) {
@@ -421,6 +418,23 @@ reactiveStop <- function(message = "\r              ", class = NULL){
     stop(cond)
 }
 
+## check and time out when opening a online file
+#' @importFrom httr GET timeout stop_for_status
+checkUrl <- function(url, timeout = 5){
+    if(!stringr::str_detect(url, "^http")) stop("url need to start with 'http(s)'")
+    if(!is.numeric(timeout) | timeout < 0) stop("timeout need to a > 0 number")
+    tryCatch({
+        httr::GET(url, httr::timeout(timeout)) %>%
+            httr::stop_for_status()
+        TRUE
+            },
+        error = function(e){
+            spswarn(glue("Bad url {url}"))
+            spswarn(e$message)
+            return(FALSE)
+        }
+    )
+}
 
 
 ## rewrite some imports here

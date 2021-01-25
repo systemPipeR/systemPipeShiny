@@ -4,16 +4,11 @@
 \alias{sps}
 \title{SystemPipeShiny app main function}
 \usage{
-sps(vstabs = "", plugin = "", server_expr = NULL, app_path = getwd())
+sps(tabs = "", server_expr = NULL, app_path = getwd())
 }
 \arguments{
-\item{vstabs}{custom visualization tab IDs that you want to display, in a character
+\item{tabs}{custom visualization tab IDs that you want to display, in a character
 vector. Use \code{\link[=spsTabInfo]{spsTabInfo()}} to see what tab IDs you can load}
-
-\item{plugin}{If you have loaded some SPS plugins by \code{\link[=spsAddPlugin]{spsAddPlugin()}},
-you can specify here as a character vector, and it will load all tabs that
-belong to that plugin to SPS. If you only want
-certain tabs from a plugin, specify in \code{vstabs} argument.}
 
 \item{server_expr}{additional top level sever expression you want
 to run. This will run after the default server expressions. It means you can
@@ -38,7 +33,7 @@ function to find required files.
 if(interactive()){
     spsInit()
     sps_app <- sps(
-        vstabs = "",
+        tabs = "",
         server_expr = {
             msg("Hello World", "GREETING", "green")
         }

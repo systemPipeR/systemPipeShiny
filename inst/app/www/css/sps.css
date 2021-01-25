@@ -30,18 +30,19 @@
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+
 /*
 systemPipeShiny CSS Styles
 */
 
 /*buttons, default is too ugly*/
-.btn-default {
+.sps .btn-default {
   color: #fff;
   background-color: var(--primary);
   border-color: #2e6da4;
 }
 
-.btn-default:hover{
+.sps .btn-default:hover{
   background-color: #4c92cf;
 }
 
@@ -168,11 +169,29 @@ img-gallery:hover {
 .desc > a:not(.collapsed):after {
     content: '- Collapse Description';
 }
-.desc a:not(.desc-body) {
-  font-size: 1.1em;
-}
+
 .desc a:not(.desc-body):link {
   text-decoration: none;
+}
+
+
+.desc hr {
+    border-top: 1px solid #3c8dbc;
+}
+
+/* sps description link*/
+.desc  a {
+  margin: 0 var(--spacing, 0px);
+  font-size: var(--a_size, 1em);
+  -webkit-transition: margin 0.25s;
+  transition: margin 0.25s;
+  -webkit-transition: font-size 0.25s;
+  transition: font-size 0.25s;
+}
+
+.desc  a:hover {
+  --spacing: 4px;
+  --a_size: 1.5em;
 }
 
 /* sps control-panel*/
@@ -280,4 +299,209 @@ a.bttn-default {
 }
 .sps-warning h4::before{
     content: "\2022 ";
+}
+
+
+/* background color of boxplus inside bt3 accordion*/
+.panel-collapse .panel-body .box {
+    background-color: #f6f6f6;
+}
+
+/* timeline */
+.sps-timeline {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sps-timestamp {
+  margin-bottom: 20px;
+  padding: 0px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 100;
+}
+
+.sps-timeline .timeline-i {
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  background-color: #D6DCE0;
+  border-radius: 25px;
+  display: inline;
+  justify-content: center;
+  position: relative;
+  transition: all 200ms ease-in;
+  left: 40%;
+  z-index: 98;
+}
+.sps-timeline .timeline-i i {
+  position: relative;
+  z-index: 99;
+  top: 25%;
+  color: white;
+}
+.sps-timeline .status {
+  padding: 0px 40px;
+  display: flex;
+  justify-content: center;
+  border-top: 5px solid #D6DCE0;
+  top: -10px;
+  position: relative;
+  transition: all 200ms ease-in;
+}
+.sps-timeline .status h4 {
+  font-weight: 600;
+}
+
+.sps-timeline .li.complete .timeline-i {
+  background-color: #5cb85c;
+}
+.sps-timeline .li.complete .status {
+  border-top: 5px solid #5cb85c;
+  top: -10px;
+}
+.sps-timeline .li.complete .status:before {
+  background-color: #5cb85c;
+  border: none;
+  transition: all 200ms ease-in;
+}
+.sps-timeline .li.complete .status h4 {
+  color: #5cb85c;
+}
+
+/*go top button*/
+.sps-gotop {
+  background-color: #fff;
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.2);
+  position: fixed;
+  display: none;
+  text-align: center;
+  cursor: pointer;
+  right: 1rem;
+  bottom: 10rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.25rem;
+  line-height: 2.5rem;
+  z-index: 99;
+  fill: #337ab7;
+  opacity: 0.7;
+  transition: opacity 1s;
+  -webkit-transition: opacity 1s;
+}
+
+.sps-gotop:hover {
+    opacity: 1;
+}
+
+
+/*blink class*/
+
+.sps-blink {
+  animation: blinking 1.5s linear infinite;
+}
+
+@keyframes blinking {
+  50% { opacity: 0; }
+}
+
+
+/*disconnect*/
+/*credit to daattali: https://github.com/daattali/shinydisconnect*/
+#shiny-disconnected-overlay {
+    background-color: #000000 !important;
+    z-index: 9997 !important;
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+}
+#ss-connect-dialog label { display: none !important; }
+
+#ss-overlay {
+  background-color: #000000 !important;
+  opacity: 0.6 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  z-index: 9998 !important;
+  overflow: hidden !important;
+  cursor: not-allowed !important;
+}
+
+#ss-connect-dialog {
+  background: white !important;
+  color: #444444 !important;
+  width: 550px !important;
+  transform: translateX(-50%) translateY(-50%) !important;
+  font-size: 22px !important;
+  top: 50% !important;
+  position: fixed !important;
+  bottom: auto !important;
+  left: 50% !important;
+  padding: 0.8em 0.5em !important;
+  text-align: center !important;
+  height: auto !important;
+  opacity: 1 !important;
+  z-index: 9999 !important;
+  border-radius: 15px !important;
+  box-shadow: rgba(0, 0, 0, 0.3) 3px 3px 10px !important;
+}
+
+#ss-connect-dialog > a {
+  display: block !important;
+  color: #337ab7 !important;
+  font-size: 0 !important;
+  margin-top: 22px !important;
+  font-weight: normal !important;
+}
+
+#ss-connect-dialog > a::before {
+  content: 'Reconnect';
+  font-size: 22px;
+}
+
+#ss-connect-dialog img{
+  display: block;
+  margin: auto;
+}
+
+#ss-connect-dialog span {
+    font-size: 15px;
+}
+
+#ss-connect-dialog span > a {
+    display: inline !important;
+    color: #337ab7 !important;
+}
+
+.shiny-discon::before { content: 'SPS Disconnected: Error occurred or timeout reached' }
+
+.shiny-discon-noserver::before { content: 'Cannot connect to the server' }
+
+
+div.active:focus, :focus {
+    outline: 0;
+}
+
+.plot-control-panel {
+    border: 1px solid #bce8f1;
+    min-height: 500px;
+    margin-left: 5px;
+    padding: 0 5px;
+}
+
+
+/* reset some values changed by shiny accessibility*/
+.carousel:hover .carousel-caption, .carousel.contrast .carousel-caption {
+    background-color: initial;
+}
+
+a.carousel-control:focus {
+    outline: initial;
+    background-image: initial;
+    box-shadow: initial;
 }

@@ -39,3 +39,15 @@ admin_url:
 warning_toast:
     default: true
     other: [false]
+
+module_wf:
+    default: true
+    other: [false]
+
+module_rnaseq:
+    default: true
+    other: [false]
+
+module_ggplot:
+    default: true
+    other: [false]

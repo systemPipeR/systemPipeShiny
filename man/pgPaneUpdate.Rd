@@ -7,7 +7,7 @@
 \usage{
 pgPaneUpdate(pane_id, pg_id, value, session = getDefaultReactiveDomain())
 
-pgPaneUI(pane_id, titles, pg_ids, title_main = NULL)
+pgPaneUI(pane_id, titles, pg_ids, title_main = NULL, opened = FALSE)
 }
 \arguments{
 \item{pane_id}{Progress panel main ID, use \code{ns} wrap it on \code{pgPaneUI} but not
@@ -31,6 +31,8 @@ to use \code{ns} wrap each ID.}
 \item{title_main}{If not specified and pane_id contains 'plot', title will be
 'Plot Prepare'; has 'df' will be 'Data Prepare', if neither will be
 "Progress"}
+
+\item{opened}{bool, if this panel is opened at start}
 }
 \value{
 HTML elements

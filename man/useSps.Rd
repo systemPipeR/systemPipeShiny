@@ -16,5 +16,5 @@ using SPS widgets outside of SPS framework. No need to load this function
 again if you are working within SPS framework.
 }
 \examples{
-useSps()
+# useSps()
 }

@@ -39,7 +39,7 @@
             fluidRow(
                 column(width = 5, dynamicFile(id = ns("file_upload"))),
                 column(width = 3,
-                       shinyWidgets::pickerInput(
+                       selectizeInput(
                            inputId = ns("delim"), label = "File delimiter",
                            choices = c(`,`=",", space=" ",
                                        Tab="\t", `|`="|", `:`=":", `;`=";"),
@@ -58,7 +58,7 @@
                 p("Depending on different ways of preprocessing,
                   different plotting options will be available"),
                 column(4,
-                    shinyWidgets::pickerInput(
+                       selectizeInput(
                         inputId = ns("select_prepro"),
                         choices = #@choices@#,
                         options = list(style = "btn-primary")
