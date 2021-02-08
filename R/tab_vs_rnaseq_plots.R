@@ -402,7 +402,7 @@ vs_rnaseq_pcaUI <- function(id){
                     div(
                         id = "",
                         class = "panel-heading",
-                        h4(class = "panel-title", "GLM-PCA Plot")
+                        h4(class = "panel-title", "PCA Plot")
                     ),
                     div(
                         class = "panel-body",
@@ -611,7 +611,7 @@ vs_rnaseq_mdsUI <- function(id){
                     div(
                         id = "",
                         class = "panel-heading",
-                        h4(class = "panel-title", "GLM-PCA Plot")
+                        h4(class = "panel-title", "MDS Plot")
                     ),
                     div(
                         class = "panel-body",
@@ -748,7 +748,7 @@ vs_rnaseq_heatmapUI <- function(id){
                     div(
                         id = "",
                         class = "panel-heading",
-                        h4(class = "panel-title", "GLM-PCA Plot")
+                        h4(class = "panel-title", "Heatmap Plot")
                     ),
                     div(
                         class = "panel-body",
@@ -968,7 +968,7 @@ vs_rnaseq_dendroUI <- function(id){
                     div(
                         id = "",
                         class = "panel-heading",
-                        h4(class = "panel-title", "GLM-PCA Plot")
+                        h4(class = "panel-title", "Dendro/tree Plot")
                     ),
                     div(
                         class = "panel-body",
@@ -993,25 +993,22 @@ vs_rnaseq_dendroServer <- function(id, shared){
                 need(shared$rnaseq$trans_method %in% c("rlog", "vst"), message = "Need to use rlog or vst transformation"),
                 need(not_empty(shared$rnaseq$trans_table), message = "Count table not transformed")
             )
-            shinyCatch(blocking_level = "error", {
-                ## cor() computes the correlation coefficient
-                d <- stats::cor( shared$rnaseq$trans_table, method = input$cor_method)
-                ## Hierarchical cluster analysis
-                hc <- stats::hclust(stats::dist(1 - d))
-                tree <- ape::as.phylo(hc)
-                tree$Sample <- shared$rnaseq$condition
-                ggtree::ggtree(tree, color = "steelblue", layout = input$layout) +
-                    ggtree::geom_tippoint(size=0.5, alpha=0.5) +
-                    ggtree::geom_tiplab() +
-                    ggplot2::xlab(input$xlab) +
-                    ggplot2::ylab(input$ylab) +
-                    ggplot2::ggtitle(input$plot_title)+
-                    ggplot2::theme(
-                        plot.title = ggplot2::element_text(size = input$title_size, hjust = 0.5),
-                        axis.title.x = ggplot2::element_text(size = input$xlab_size),
-                        axis.title.y = ggplot2::element_text(size = input$ylab_size)
-                    )
-            })
+            ## cor() computes the correlation coefficient
+            d <- stats::cor( shared$rnaseq$trans_table, method = input$cor_method)
+            ## Hierarchical cluster analysis
+            hc <- stats::hclust(stats::dist(1 - d))
+            tree <- ape::as.phylo(hc)
+            ggtree::ggtree(tree, color = "steelblue", layout = input$layout) +
+                ggtree::geom_tippoint(size=0.5, alpha=0.5) +
+                ggtree::geom_tiplab() +
+                ggplot2::xlab(input$xlab) +
+                ggplot2::ylab(input$ylab) +
+                ggplot2::ggtitle(input$plot_title)+
+                ggplot2::theme(
+                    plot.title = ggplot2::element_text(size = input$title_size, hjust = 0.5),
+                    axis.title.x = ggplot2::element_text(size = input$xlab_size),
+                    axis.title.y = ggplot2::element_text(size = input$ylab_size)
+                )
         })
     }
     moduleServer(id, module)
@@ -1185,7 +1182,7 @@ vs_rnaseq_tsneUI <- function(id){
                     div(
                         id = "",
                         class = "panel-heading",
-                        h4(class = "panel-title", "GLM-PCA Plot")
+                        h4(class = "panel-title", "t-SNE Plot")
                     ),
                     div(
                         class = "panel-body",

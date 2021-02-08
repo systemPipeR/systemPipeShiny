@@ -323,7 +323,7 @@ checkTabs <- function(app_path, warn_img = TRUE){
     if(length(no_img) > 0 & warn_img){
         spswarn(glue("These plot tabs has no image path:
                   '{paste(no_img, collapse = ', ')}'
-                  It is recommended to add an image. It will be used",
+                  It is recommended to add an image. It will be used ",
                   "to generate gallery. Now an empty image is used for ",
                   "these tabs' gallery."))
     }
