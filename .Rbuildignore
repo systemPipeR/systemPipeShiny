@@ -13,3 +13,5 @@ manifest\.json
 _pkgdown\.yml
 ^TODO
 ^vignettes/systemPipeShiny_cache/*
+^SPS_20*
+

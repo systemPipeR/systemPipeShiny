@@ -40,7 +40,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE, eval=TRUE}
-    library(systemPipeShiny)
+    suppressPackageStartupMessages(library(systemPipeShiny))
 ```
 
 ```{r sps-css, results = 'asis', echo=FALSE, eval=TRUE}
@@ -97,35 +97,52 @@ The `systemPipeShiny` package can be installed from a user's R console as follow
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 BiocManager::install("systemPipeShiny")
+
+# or use "pak"
+if (!requireNamespace("pak", quietly=TRUE))
+    install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
+pak::pkg_install("systemPipeShiny")
+
 ```
 
-If the user's OS is Linux then one may need to install the following dependencies.
+If the user's OS is Linux then one may need to install the following dependencies 
+**before** installing SPS.
 The following example applies to Ubuntu.
 
 ```{bash, eval=FALSE}
-sudo apt-get install libv8-dev
-sudo apt-get install libssl-dev
-sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install -y libcurl4-openssl-dev
+sudo apt-get install -y libssl-dev
+sudo apt-get install -y libv8-dev
+# other dependencies
+sudo apt-get install -y libicu-dev
+sudo apt-get install -y pandoc
+sudo apt-get install -y make
+sudo apt-get install -y libglpk-dev
+sudo apt-get install -y libgmp3-dev
+sudo apt-get install -y zlib1g-dev
 ```
 
-*libcurl4-openssl-dev* may not be required for Ubuntu > 18.04.
+Most likely you only need to install first 3, *libcurl4-openssl-dev* may not be 
+required for Ubuntu > 18.04. In case any other problem happens, try to install 
+other system dependencies.
 
 On other Linux distributions, the install commands may be slightly different. 
 
 # Main functionalities 
 
-Currently, `SPS` includes two main functional categories: 
+Currently, `SPS` includes 3 main functional categories (*Fig 1*): 
+
  1. Some pre-defined modules include: 
     a. A workbench for designing and configuring data analysis workflows, 
     b. Downstream analysis and visualization tools for RNA-Seq, and 
     c. A space to make quick ggplots. 
- 2. A data
-visualization (VS) toolbox (*Fig 1*). The WF module allows to write and to
-modify configuration files required for running workflows in `systemPipeR`. The
-VS module provides a rich set of plotting tools to visualize the results of
-individual steps in `systemPipeR` workflow. The latter includes a Canvas
-functionality that allows to arrange many plots in one page, save their them
-and revisit the saved plots at a later time.
+ 2. A section with user custom tabs: users define their own shiny tabs.  
+ 3. An image editing tab "Canvas" which allows users to edit plots made from 
+    the previous two categories. 
+
+Besides, SPS provides many functions to extend the default Shiny development, like 
+more UI components, server functions. Also, SPS has some useful general R ulitlies
+like error catching, logging, and more. 
 
 <center id="sps_structure">
 ![SPS_structure](./img/sps_structure.jpg)
@@ -142,12 +159,14 @@ functionalies into groups. On the backend, **SPS tabs** are based on [Shiny modu
 that are stored in separate files. This modular structure is highly extensible 
 and greatly simplifies the design of new `SPS` tabs by both users and/or developers. 
 Details about extending existing tabs and designing new ones are provided in 
-an [advanced user section](#extend-sps). 
+[advanced sections on our website](https://systempipe.org/sps/). 
 
-# Example workflow with toy RNA-Seq data
+# SPS example usage
 
-The following sections illustrate the main functionalities of `SPS` using an analysis 
-workflow for RNA-Seq data as an example.
+The following instructions go through use each module step by step.
+
+Please read our website: <https://systempipe.org/sps/> for full instructions, 
+animations, videos, and advanced sections. 
 
 ## Load package
 
@@ -248,12 +267,12 @@ to change and create new custom tabs.
 
 ## Workflow management
 
-The workflow management module in `SPS` allows to modify or create the
+The workflow management module in `SPS` allows one to modify or create the
 configuration files required for running data analysis workflows in
 [systemPipeR](https://systempipe.org/docs/systemPipeR/) (SPR). This includes
 three types of important files: a sample metadata (targets) file, a
 workflow file (in R Markdown format) defining the workflow steps, and workflow running 
-files in Common [Workflow Language (CWL)](https://www.commonwl.org/) format. In SPS, one can easily create
+files in [Common Workflow Language (CWL)](https://www.commonwl.org/) format. In SPS, one can easily create
 these files under the "Workflow Management" module, located in navigation bar
 on the left of the dashboard (Fig2 - 2). 
 
@@ -262,7 +281,7 @@ The current version of `SPS` allows to:
 1. create a workflow environment;
 2. create and/or check the format of targets / workflow / CWL files;
 3. download the prepared workflow files to run elsewhere, like a cluster;
-4. directly excecute the workflow from SPS.
+4. directly execute the workflow from SPS.
 
 
 ### 1. setup a workflow 
@@ -271,8 +290,8 @@ The current version of `SPS` allows to:
 </center>
 **Figure 3. A.** Workflow Management - Targets File
 
-1. On the workflow module, read the instructions and choose step 1, it should be 
-automatically opened for you.
+1. In the workflow module, read the instructions and choose step 1. Step 1 should be 
+automatically opened for you on start.
 2. Choose a folder where you want to create the workflow environment.
 3. Choose a workflow template. These are SPR workflows and mainly are next-generation 
 sequencing workflows. 
@@ -340,9 +359,9 @@ To run a CWL step in SPR, 3 files are required:
 - CWL input: variables to inject into the running file 
 
 SPR is the parser between R and CWL by injecting sample information from targets 
-to `CWL input` file and then CWL parser translate it to bash code. 
+to `CWL input` file and then CWL parser translates it to bash code. 
 
-1. Most poeple are not familar this part, read instruction carefully.
+1. Most people are not familiar this part, so read instructions carefully.
 2. Your project targets has been loaded for you, and an example CWL running and input 
 for **hisat2** is also loaded for you. Directly parse the code. See what commandline 
 code you get. 
@@ -350,7 +369,7 @@ code you get.
 4. You can edit the CWL running and input files
 5. Try to parse the new file and see what has changed.
 6. If new CWL files has been created, you can edit workflow Rmd files by adding your 
-new system steps. 
+new steps. 
 
 <center>
 ![wf_cwl](./img/sps_wf_cwl.jpg)
@@ -358,8 +377,6 @@ new system steps.
 **Figure 3. C.** Workflow Management - CWL File
 
 ###  5. Run or finish workflow preparation
-
-
 
 Up until this step, congratulations, the workflow is prepared. You can choose to 
 download the workflow project files as a bundle or continue to run the workflow. 
@@ -371,159 +388,196 @@ download the workflow project files as a bundle or continue to run the workflow.
 
 1. On step 5 you can choose to download the prepared workflow or directly run the 
 workflow. However, if you do not have the required commandline tools, workflow will 
-most likely fail.
-2. Open up the runner. It is a Rstudio like interface. 
+most likely fail. Make sure you system has these tools ([Read about these tools](http://bioconductor.org/packages/release/bioc/vignettes/systemPipeR/inst/doc/systemPipeR.html#261_Third-party_software_tools)).
+2. Open up the runner. It is a "Rstudio-like" interface. 
 3. Code editor. Required workflow running code is pre-entered for you. You can simply 
 hit "Run" to start. Of course, you can delete the default code and run random R 
 code. 
-4. Ouput R console. 
+4. Output R console. 
 5. Workflow running log.
 6. View any plot output. and send a copy of your current plot to SPS Canvas tab or 
 download it. 
 
-## Snap shots and Canvas
+## RNA-Seq Module
 
-### Canvas
+This is a module which takes a **raw count table** to do normalization, 
+Differential gene expression (DEG) analysis, and finally helps users to generate 
+different plots to visualize the results. 
 
-SPS Canvas is a place to display and manage snapshots.  Snapshots can come from different
-plot tabs, or the same plot tab with different plot options. Here you can combine 
-plots together to a big scientific figure or compare plots with different plotting options side by side. 
 
-If you have followed the instructions so far, you should have at least two snapshots and we can start to use Canvas.
-
-1. Select "Canvas" tab.
-2. If you have some snapshots, you will see your snapshots in "Current snapshots" box, otherwise it will only be a message telling you to create some snapshots. If you do not want to see any of them, drag it to the right side so it will not be rendered on Canvas. Clicking on "*DESTROY*" will permanently delete selected snapshots and **cannot be recovered**.
-3. Click "Refresh Canvas" to render the Canvas for a quick glimpse.
-4. You can change some Canvas settings on here. Clicking on "Refresh Canvas" again will apply these changes.
-5. Move your mouse on the plots, you can see they are still interactive. Then, when you move the mouse near the top of a plot, a title section will show up and you can drag it to reposition your plot. 
-6. Similar to a plot tab, you can resize any plot on Canvas by dragging the bottom right corner of a plot. 
-7.  Download your current snapshots to a compressed file, and you can upload saved snapshot file and continue to work on it later. Note: uploading snapshots will overwrite current snapshots.
-
-Due to internet security reasons, snapshot files are encrypted. Each SPS project 
-has an unique key pair. Therefore, it is not possible to run a snapshot file in 
-a different SPS project. 
-
-Taking too many snapshots will slow down the app. A good solution is to delete/clean 
-unwanted snapshots often. 
+### Prepare metadata and count table
+To start, we require two files, the metadata file (targets) and a raw count table (Fig. 5).  
 
 <center>
-![plot_tab](./img/sps_ui_canvas.png)
+![rna_data](./img/sps_rna_data.jpg)
 </center>
-**Figure 6 A.** Canvas
+**Figure 5** RNAseq 
 
-Now go back to [Load raw count data](#load-raw-count-data) section and select 
-"PCA" option in step 6 to reprocess and then go to PCA plot tab and repeat
-instructions in [Create a plot](#create-a-plot) to create and snapshot a few PCA 
-plots. The PCA plot tab has an additional plot point size control UI. You can try 
-to take snapshots with different point size. Finally come back to canvas and render all snapshots. You should then be able to see how point size on plots are different in different snapshots. 
-Now you can have a better understanding of the SPS snapshot-Cnavas feature.
+1. This is the RNAseq module UI when you first click it. All sub-tabs are disbled 
+at the beginning. Other tabs will enabled as you proceed with different options.
+2. First, we need a metadata file to tell SPS what samples and conditions to use. 
+Here, we use the metadata file from SPR, which is also known as "targets" file. 
+If you are not familiar with the targets file, we suggest to use the workflow module 
+step 2 to practice creating and checking the format. You can also use the example to 
+see how it looks like. 
+3. The loaded targets table is display here. You can use the box below each column 
+name to filter what samples to include/exclude. Only the "SampleName" and "Factor"
+columns are used, other columns are ignored. `SampleName` should be a unique character 
+string without space for each row.  `Factor` is the experiment design factors, or 
+conditions, or treatments. 
+4. If you want to DEG analysis, DEG comparison groups are defined in the targets 
+file header. 
+5. The header will be parsed into comparison groups which contain individual comparisons.
+If the parsed comparison is not what you want, edit the header lines and reupload.
+6. If everything is expected, confirm to use this table. 
+7. You should see the progress timeline of step 1 becomes green if your targets 
+and header pass the format checking. 
+8. (Not on  figure) Similarly, use example or upload a count table and confirm to use it. 
+
+Note: For the count table, the first column will be used as gene names. Other column 
+names will be treated as sample names, and values in these columns are treated as 
+raw counts. Make sure columns except the first one are **numeric**, and replace `NA` 
+with `0`.
+
+Upon successfully confirm targets and count table, you should see the "Normalize Data"
+subtab is enabled. You can click on the top navigation or click the pop-up for the next 
+step. 
+
+### Process raw count 
+If this UI is displayed, that means your targets and count table are accepted by 
+SPS (Fig 6). On this sub-tab, you can choose: 
+
+1. Transform your count data with "raw", "rlog" or "VST" and visualize the results
+in other sub-tabs.
+2. Do DEG analysis. 
+
+These two options are independent. 
+
+<center>
+![rna_norm](./img/sps_rna_norm.jpg)
+</center>
+**Figure 6** RNAseq Normalization
+
+1. At step 1 panel, choose how SPS can help you, count transformation or DEG analysis. 
+The former will jump you to step 2, latter will jump to step 3. 
+2. There are many options. If you are not clear, hover your mouse on the option, 
+and some tips will show up. 
+3. To start data transformation or DEG analysis. 
+4. A gallery of different plot options will show up when the data process is done. 
+5. When the data process is done, you can download results from the right side panel.
+Check all items you want and SPS will help you to zip it into one file to download.
+6. If at least one item is checked, downloading is enabled. 
+7. Progress timeline will also change upon successful data process.
+8. Different visualization options will be enabled depending on the data process options. 
+
+
+### Plot options
+
+SPS RNAseq module provides 6 different plot options to cluster transformed count table. 
+
+<center>
+![rna_plot](./img/sps_rna_plot.jpg)
+</center>
+**Figure 6** RNAseq plots
+
+1. Change plot options to customize your plots. 
+2. Most plots are [Plotly](https://plotly.com) plots, which means you can interact 
+with these plots, like hiding/show groups, zoom in/out, etc. 
+3. All SPS plots are resizable. Dragging the bottom-right corner icon to resize your 
+plot.
+4. Click "To canvas" to take a screenshot of current plot and edit it in `SPS Canvas`
+tab. Or clicking the down-arrow button to directly save current plot to a png or jpg. 
+
+### DEG report 
+This is a special sub-tab designed to filter and visualize DEG results. This sub-tab 
+can be accessed once the DEG is calculated on the "Normalize Data" sub-tab. 
+
+
+<center>
+![rna_deg](./img/sps_rna_deg.jpg)
+</center>
+**Figure 7** RNAseq DEG
+
+1. DEG summary plot. You can view what are the DEG results across different comparision 
+groups. 
+2. Switch to view a ggplot friendly table. Different from the table you could download from 
+"Normalize Data" subtab, this DEG table is rearranged so you can easily make a ggplot from it. 
+3. You can change the filter settings here, so DEGs will be re-filtered and you do not need 
+to go back to "Normalize Data" subtab to recalculate DEG. 
+4. DEG plotting options. Choose from a volcano plot, an upset plot (intersection), 
+a MA plot or a heatmap. 
+
+
+### Interact with other bioconductor packages.
+
+#### Locally
+If you are familiar with R and want to continue other analysis after these, simple stop SPS: 
+
+1. After count transformation, there is a `spsRNA_trans` object stored in your R 
+environment. `raw` method gives you a normalized count table. Other two methods 
+give you a `DESeq2` class object. You can use it for other analysis.
+2.  After DEG analysis,  SPS stores a global object called `spsDEG.`
+It is a `summerizedExperiment` object which has all individual tables from all 
+DEG comparisons. You can use it for other downstream analysis.
+
+
+#### Remotely
+If you are using SPS from a remote server, you can choose to download results from 
+"Normalize Data" sub-tab. Choose results in tabular format or `summerizedExperiment`
+format which is saved in a `.rds` file. 
+
+## Quick {ggplot} module
+
+This module enables you to quickly upload datasets and make a {[ggplot](https://ggplot2.tidyverse.org/)} 
+in a second by using some functionalities from {[Esquisse](https://dreamrs.github.io/esquisse/index.html)}.
+
+<center>
+![quickgg](./img/sps_quickgg.jpg)
+</center>
+**Figure 8** Quick ggplot
+
+1. Provide a tabular data table by uploading or use example. 
+2. Drag variables from into different ggplot aesthetic boxes to make a ggplot.
+3. Change to different plot types.
+4. Customize other different plotting options. 
+
+For a more specific guide, read [Esquisse official guide](https://dreamrs.github.io/esquisse/articles/get-started.html).
+
+
+## Canvas
+
+SPS Canvas is a place to display and edit scrennshots from different plots. To start 
+to use Canvas, you need to take some screenshots but clicking "To Canvas" buttons 
+on different tabs/modules. After clicking, the screenshots will be automatically sent 
+from these places to this Canvas. 
+
+
+<center>
+
+![plot_tab](./img/sps_canvas.jpg)
+
+</center>
+
+**Figure 9** Canvas
+
+
+1. The Canvas area.
+2. Canvas drawing grids. By default, your objects are limited to these drawing grids, but you can change it from top options inside "canvas".
+The grid area size is automatically calculated to fit your screen size when you start SPS. 
+3. Object information. When you select any object on the Canvas, a bounding box will show to display the object's dimensions, scale, angle and other information.
+You can disable them in the "View" menu
+4. To edit your screenshots, simply drag your screenshots from left to Canvas working area. 
+5. You can add text or titles, and change the font color, decorations in this panel. 
+6. Different Canvas options. Several menus and buttons help you to better control the Canvas.
+Hover your mouse on buttons will display a tooltip of their functionality. 
+
+Keyboard shortcuts are also enabled with SPS Canvas. Go to "help" menu to see these 
+options. 
+
 
 # Advanced features
 
-## Configuration
-
-### App options
-
-App options in SPS are controlled by "SPS options". These options can change 
-app appearance, debugging level, server server behaviors, *etc*. The valid options can 
-be found and change on the `global.R` file. They are similar to *Shiny* options, 
-but unlike *shiny* options are single values, SPS options are passed using the `Option(sps = list(...))` 
-function in `global.R` as a group. To view all options and their default, valid
-values('*' means any value is okay):
-
-```{r, eval=TRUE}
-viewSpsDefaults(app_path = sps_dir)
-```
-
-To view a single option value, use `spsOption(opt = "OPTION_NAME")`; to overwrite a single 
-option, use `spsOption(opt = "OPTION_NAME", value = "NEW_VALUE")`.
-
-<p style="color:var(--info)">Note: Do not worry if you set some invalid values, on app start, `sps()` will check all SPS
-options, ignore unknown values and set invalid values back to default. You will see warning 
-messages on console to tell you specifically what is wrong with your options.</p>
-
-| Option          | Description                       | Default | Other     |
-|-----------------|-----------------------------------|---------|-----------|
-| mode            | running mode                      | "local" | "server"  |
-| warning_toast   | show security warnings?           | TRUE    | FALSE     |
-| loading_screen  | show loading screen?              | TRUE    | FALSE     |
-| loading_theme   | loading screen theme              | "vhelix"| any string|
-| use_crayon      | colorful console message?         | TRUE    | FALSE     |
-| verbose         | more details for SPS functions?   | FALSE   | TRUE      |
-| admin_page      | show admin page?                  | FALSE   | TRUE      |
-| admin_url       | admin_page query url              | "admin" | any string|
-
-some details:
-
-- mode: this option will change how the upload files are selected.
-    - local: You can choose file from server side, and it is a direct link, no file will be copied to server. Most often used when you are on you own computer. <span style="color:var(--info)">It is still choosing files from the server side, because you are using your own computer as a Shiny server.</span>
-    - server: Choose files from the client side, and upload as a temp file to the server.
-    - If you are on you own computer, there is no difference, but `local` mode can avoid copy your files to temp. <span style="color:var(--info)">If you are deploying the app to cloud, please **use server mode**</span>
-- warning_toast: A toast pop-up message when you are under some dangerous options when app starts.
-- loading_theme: `loading_screen` must be `TRUE`. Only one theme for now, we will add more in future.
-- verbose: Give you more information on debugging.
-- admin_url: the admin page url, `admin_page` must be `TRUE` for it to work. It will be added in an upcoming version, a preview can be seen by adding "/?admin" to the end of app url, e.g. "[https://tgirke.shinyapps.io/systemPipeShiny/?admin](https://tgirke.shinyapps.io/systemPipeShiny/?admin)".
-
-### Tab configurations
-
-Tabs are registered(defined) by the *tabs.csv* file under SPS project *config* folder. It contains information for all 
-the tabs. Do not modify it if you don't plan to build new tabs. See [developer section](#extend-spsfor-developers) for how 
-to operate this file. 
-
-To control what tabs to appear(load/unload) on SPS, pass the tab IDs of tabs you want to see to 
-`tabs =` argument on `sps()`
-
-```{r , eval=FALSE}
-sps_app <- sps(tabs = c("ID1", "ID2", ...))
-```
-
-*tabs.csv* has all the tab IDs. Under current version of SPS, you can only load/unload 
-tabs in the "vs" type. Tabs under "core" and "wf" types are unable to change.
-
-## A variety of additional shiny widgets 
-
-There are many useful HTML components that 
-can be use outside out SPS. You can include these widgets in your own Shiny apps without 
-loading SPS main framework. 
-
-# Extend `SPS`
-
-As a framework, `SPS` allows users to add/remove/customize individual tabs. At current 
-version, you can only modify tabs in Visualization module (data tabs, plot tabs). 
-Use `spsNewTab` to create new tabs. This function
-will help you to **create the tab file**, store it to the *R* folder in your SPS project, and
-**register tab information** by adding records to *config/tabs.csv*.
-Most arguments are self-explanatory or can be 
-easily understood by reading the the help file. 
-
-## Adding the new tabs at your SPS application 
-
-In your *global.R*, scroll down to the bottom, you should see:
-
-```{r, eval=FALSE}
-sps_app <- sps(
-    tabs = c("data_example", "plot_example1", "plot_example2"),
-    server_expr = {
-        msg("Custom expression runs -- Hello World", "GREETING", "green")
-    }
-)
-```
-
-This is the SPS main function. You can load/unload tabs by providing tab IDs in `vstabs` argument, like
-`c("tab1", "tab2)`. Open *config/tabs.csv* or use `spsTabInfo()` to see what tabs IDs can be load and other
-tab information. Currently you can only load/unload visualization tabs, the key word `vs` under column "*type*";
-essential framework tabs(*core*) and workflow tabs (*wf*) are loaded automatically and these tabs cannot be modified.
-
-# How to deploy the application
-
-Among several options of deployment of your `SPS` custom application, here you can find the example of [shinyapps.io](https://www.shinyapps.io/). 
-To get started, it is required to create a *shinyapps.io* account. Please follow this [tutorial](https://shiny.rstudio.com/articles/shinyapps.html) 
-with all the instructions to create an account. 
-`SPS` project provides a ready-to-use file, `deploy.R`, with the required information to configure ShinyApps account and deploy the application.
-
-Once the account is set correctly, you can deploy it as soon as the project is created. It 
-is recommended to create -> test/run -> deploy a Shiny app from Rstudio and follow 
-[this tutorial](https://shiny.rstudio.com/articles/shinyapps.html).
+To read the detailed advanced features, please to go our [website](https://systempipe.org/sps/).
 
 # Version Information
 
