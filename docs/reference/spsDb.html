@@ -98,6 +98,9 @@ global.R, normal users don't need to change anything." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -279,24 +282,24 @@ component of the chain expression</p></dd>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='st'>"config"</span>, showWarnings <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>mydb</span> <span class='op'>&lt;-</span> <span class='va'>spsDb</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Created SPS database method container</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Connected, but tables missing, seems like a new db.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Use CreateDb method to create tables</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>createDb</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2021-02-12 15:19:36 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
-#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Key md5 c63fa114409b39599e6b519c2ec3f237</span><span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:25:58 Created SPS database method container</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>createDb</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:25:58 Creating SPS db...</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #BB0000;font-weight: bold;'>[SPS-DANGER] 2021-02-12 15:25:58 Db created at 'config/sps.db'. DO NOT share this file with others</span><span>
+#&gt; </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:25:58 Key md5 e5b672f1526b1ce64dfd9239539a5844</span><span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20210212151936</div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryInsert</span><span class='op'>(</span><span class='st'>"sps_meta"</span>, value <span class='op'>=</span> <span class='st'>"'new1', '1'"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Inerted 1 rows</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
+#&gt; 1 creation_date 20210212152558</div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryInsert</span><span class='op'>(</span><span class='st'>"sps_meta"</span>, value <span class='op'>=</span> <span class='st'>"'new1', '1'"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:25:58 Inerted 1 rows</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20210212151936
+#&gt; 1 creation_date 20210212152558
 #&gt; 2          new1              1</div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryInsert</span><span class='op'>(</span><span class='st'>"sps_meta"</span>, value <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"'new2'"</span>, <span class='st'>"'2'"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Inerted 1 rows</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:25:58 Inerted 1 rows</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20210212151936
+#&gt; 1 creation_date 20210212152558
 #&gt; 2          new1              1
 #&gt; 3          new2              2</div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryUpdate</span><span class='op'>(</span><span class='st'>"sps_meta"</span>, value <span class='op'>=</span> <span class='st'>'234'</span>,
                  col <span class='op'>=</span> <span class='st'>"value"</span>, WHERE <span class='op'>=</span> <span class='st'>"info = 'new1'"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Updated 1 rows</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:25:58 Updated 1 rows</span><span></span></div><div class='input'><span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryValue</span><span class='op'>(</span><span class='st'>"sps_meta"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            info          value
-#&gt; 1 creation_date 20210212151936
+#&gt; 1 creation_date 20210212152558
 #&gt; 2          new1            234
 #&gt; 3          new2              2</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
     <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
@@ -305,7 +308,7 @@ component of the chain expression</p></dd>
         dp_expr<span class='op'>=</span><span class='st'>"filter(., info %in% c('new1', 'new2') %&gt;% select(2)"</span><span class='op'>)</span>
 <span class='op'>}</span>
 <span class='va'>mydb</span><span class='op'>$</span><span class='fu'>queryDel</span><span class='op'>(</span><span class='st'>"sps_meta"</span>, WHERE <span class='op'>=</span> <span class='st'>"value = '234'"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:19:36 Deleted 1 rows</span><span></span></div></span></pre>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-02-12 15:25:58 Deleted 1 rows</span><span></span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

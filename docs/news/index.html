@@ -87,6 +87,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -112,6 +115,136 @@
       <small>Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="systempipeshiny-1110" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.10">
+<a href="#systempipeshiny-1110" class="anchor"></a>systemPipeShiny 1.1.10</h1>
+<p>Changes made from 1.1.0 to 1.1.10 <!--#   YYYY.MM.DD --></p>
+<div id="20201124" class="section level2">
+<h2 class="hasAnchor">
+<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201124'>#20201124</a>" class="anchor"></a>2020.11.24</h2>
+<div id="workflow-module-r-session" class="section level3">
+<h3 class="hasAnchor">
+<a href="#workflow-module-r-session" class="anchor"></a>Workflow module R session</h3>
+<ul>
+<li>Now workflow module R session uses a background child R process, which runs independently to the parent R session which runs shiny.</li>
+<li>So the shiny will be not blocked while code is running in the background (you can still click other buttons when the child session is busy) – synchronous and non-blocking. A child indicator is also placed in the UI, updates every second.</li>
+<li>The UI design of R session is similar to Rstudio. Four panels, source code, console, log (specific to SPR), and plots.</li>
+<li>Standard out/error and plots are captured in the workflow folder. Users can download them in the bundle on step 5 <em>Workflow Run.</em>
+</li>
+<li>Plots will be displayed on the plots panel. Now supports plots that opens R <code>device</code> (base and ggplot), html widget plots are not supported as this moment.</li>
+</ul>
+</div>
+<div id="general-ui" class="section level3">
+<h3 class="hasAnchor">
+<a href="#general-ui" class="anchor"></a>General UI</h3>
+<ul>
+<li>A new shiny disconnection popup for SPS. Besides the gray layer on shiny disconnection, a panel will be displayed to users to indicate the problem. Similar to what shows on a shiny server, but more informative and also works locally.</li>
+</ul>
+</div>
+<div id="rnaseq-module" class="section level3">
+<h3 class="hasAnchor">
+<a href="#rnaseq-module" class="anchor"></a>RNAseq module</h3>
+<ul>
+<li>redesigned the UI and server logic. Plots for DEG analysis and Canvas connections will be added soon.</li>
+</ul>
+</div>
+</div>
+<div id="20201030" class="section level2">
+<h2 class="hasAnchor">
+<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201030'>#20201030</a>" class="anchor"></a>2020.10.30</h2>
+<div id="general-ui-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#general-ui-1" class="anchor"></a>General UI</h3>
+<ul>
+<li>Added a “Go Top” button on the right bottom corner, clicking on this button will automatically scroll to the top of the page. This button only shows up when client has &gt; 50px scroll height.</li>
+</ul>
+</div>
+</div>
+<div id="20201030-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201030'>#20201030</a>-1" class="anchor"></a>2020.10.30</h2>
+<div id="workflow-module-cwl-tab" class="section level3">
+<h3 class="hasAnchor">
+<a href="#workflow-module-cwl-tab" class="anchor"></a>Workflow module CWL tab</h3>
+<ul>
+<li>Now the CWL file and CWL input file can be be edited. The edits will be imported to CWL parser every one second. Now this is a very useful place to test or write new CWL scripts.</li>
+</ul>
+</div>
+</div>
+<div id="20201027" class="section level2">
+<h2 class="hasAnchor">
+<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201027'>#20201027</a>" class="anchor"></a>2020.10.27</h2>
+<div id="workflow-module-cwl-tab-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#workflow-module-cwl-tab-1" class="anchor"></a>Workflow module CWL tab</h3>
+<ul>
+<li>Now this tab has a dynamically rendered dropdown panel which allows users to choose which column for the targets table to map to the variables in CWL input file.</li>
+</ul>
+</div>
+</div>
+<div id="20201027-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201027'>#20201027</a>-1" class="anchor"></a>2020.10.27</h2>
+<div id="workflow-module-fully-functioning" class="section level3">
+<h3 class="hasAnchor">
+<a href="#workflow-module-fully-functioning" class="anchor"></a>Workflow module fully functioning</h3>
+<ul>
+<li><p>Now you can run a full example workflow in SPS by choosing the “Example” option on workflow setup step.</p></li>
+<li><p>Other systemPipeR preconfiged workflows will cause problems because formatting issues that will cause errors in <code><a href="https://rdrr.io/pkg/systemPipeR/man/runWF.html">systemPipeR::runWF</a></code> function, not introduced by SPS. Please wait the updates on systemPipeR to fix this. You can still use SPS to prepare files for all workflows. That means, step 1-4 will work, step 5 will give you errors if you choose a workflow which is not “Example”.</p></li>
+</ul>
+</div>
+</div>
+<div id="20201022" class="section level2">
+<h2 class="hasAnchor">
+<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201022'>#20201022</a>" class="anchor"></a>2020.10.22</h2>
+<div id="rework-on-the-workflow-part" class="section level3">
+<h3 class="hasAnchor">
+<a href="#rework-on-the-workflow-part" class="anchor"></a>Rework on the workflow part</h3>
+<ul>
+<li><p>All 3 tabs merged into the main tab</p></li>
+<li><p>changed config tab to CWL tab</p></li>
+<li><p>added support for the running wf as a sub tab</p></li>
+<li><p>Now the main tab has 5 subtabs, they are all connected.</p></li>
+<li><p>Better guidelines for users, step-like usage, can’t reach other steps if a previous step is not completed.</p></li>
+<li><p>Original snapshot management drop down page changed to running workflow session. This session will lock users to a unique page, they can’t interactive other app parts on the page(working directory changed), to prevent app crash due to wd change.</p></li>
+</ul>
+</div>
+<div id="other-changes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#other-changes" class="anchor"></a>Other changes</h3>
+<ul>
+<li><p>A new UI component <code>spsTimeline</code> : horizontal timeline UI unit, has status, can be updated on server by <code>updateSpsTimeline</code>.</p></li>
+<li><p>A new UI <code>bsHoverPopover</code>: enhanced high level function of <code>bsPlus::HoverPopover</code>, additional JS used to make the popover work on buttons as well.</p></li>
+<li><p>Fixed some link problems in <code>renderDesc</code>. Better links in <code>renderDesc</code>, enlarged and spacing animation for links.</p></li>
+<li>
+<p>Change on about page</p>
+<ul>
+<li><p>The news is now rendered on <em>about</em> tab in the app</p></li>
+<li><p>reduced developer content on about page.</p></li>
+<li><p>changed developer emails to github links.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="20201009" class="section level2">
+<h2 class="hasAnchor">
+<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201009'>#20201009</a>" class="anchor"></a>2020.10.09</h2>
+<div id="change-on-visualization" class="section level3">
+<h3 class="hasAnchor">
+<a href="#change-on-visualization" class="anchor"></a>Change on visualization</h3>
+<ul>
+<li>
+<p>RNAseq part is now only in one tab as big module: users upload the targets file and a raw count table, and make different plots in subtabs.</p>
+<ul>
+<li>This introduced a lot of dependencies, will decide later if we keep as it is or separate it to <em>spsBio.</em>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
