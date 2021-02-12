@@ -73,20 +73,18 @@ entered text. It works the same as Textinput." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
-</li>
-<li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -95,7 +93,7 @@ entered text. It works the same as Textinput." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -122,7 +120,7 @@ entered text. It works the same as Textinput." />
 entered text. It works the same as <code>Textinput</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>clearableTextInput</span>(<span class='no'>inputId</span>, <span class='no'>label</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>placeholder</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
+    <pre class="usage"><span class='fu'>clearableTextInput</span><span class='op'>(</span><span class='va'>inputId</span>, <span class='va'>label</span>, value <span class='op'>=</span> <span class='st'>""</span>, placeholder <span class='op'>=</span> <span class='st'>""</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,19 +151,20 @@ entered text. It works the same as <code>Textinput</code>.</p>
     <p>must be call <code><a href='useSps.html'>useSps()</a></code> at head to load css and js</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
 
-    <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
-        <span class='fu'><a href='useSps.html'>useSps</a></span>(),
-        <span class='fu'>clearableTextInput</span>(<span class='st'>"input1"</span>, <span class='st'>"This is a input box"</span>)
-    )
+    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
+        <span class='fu'><a href='useSps.html'>useSps</a></span><span class='op'>(</span><span class='op'>)</span>,
+        <span class='fu'>clearableTextInput</span><span class='op'>(</span><span class='st'>"input1"</span>, <span class='st'>"This is a input box"</span><span class='op'>)</span>
+    <span class='op'>)</span>
 
-    <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>, <span class='no'>output</span>, <span class='no'>session</span>) {
+    <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
 
-    }
+    <span class='op'>}</span>
 
-    <span class='fu'>shinyApp</span>(<span class='no'>ui</span>, <span class='no'>server</span>)
-}</div></pre>
+    <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -181,7 +180,7 @@ entered text. It works the same as <code>Textinput</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

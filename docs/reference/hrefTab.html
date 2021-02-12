@@ -77,20 +77,18 @@ label_text, hrefs must be the same length" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
-</li>
-<li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -99,7 +97,7 @@ label_text, hrefs must be the same length" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -130,23 +128,23 @@ must be there in <code>config</code> directory.
 <code>label_text</code>, <code>hrefs</code> must be the same length</p>
     </div>
 
-    <pre class="usage"><span class='fu'>genHrefTab</span>(
-  <span class='no'>tab_ids</span>,
-  <span class='kw'>Id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"A bar to list tabs"</span>,
-  <span class='kw'>text_color</span> <span class='kw'>=</span> <span class='st'>"#0275d8"</span>,
-  <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
-)
+    <pre class="usage"><span class='fu'>genHrefTab</span><span class='op'>(</span>
+  <span class='va'>tab_ids</span>,
+  Id <span class='op'>=</span> <span class='cn'>NULL</span>,
+  title <span class='op'>=</span> <span class='st'>"A bar to list tabs"</span>,
+  text_color <span class='op'>=</span> <span class='st'>"#0275d8"</span>,
+  app_path <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
-<span class='fu'>hrefTab</span>(
-  <span class='kw'>Id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"A list of tabs"</span>,
-  <span class='kw'>title_color</span> <span class='kw'>=</span> <span class='st'>"#0275d8"</span>,
-  <span class='no'>label_text</span>,
-  <span class='no'>hrefs</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>hrefTab</span><span class='op'>(</span>
+  Id <span class='op'>=</span> <span class='cn'>NULL</span>,
+  title <span class='op'>=</span> <span class='st'>"A list of tabs"</span>,
+  title_color <span class='op'>=</span> <span class='st'>"#0275d8"</span>,
+  <span class='va'>label_text</span>,
+  <span class='va'>hrefs</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,18 +196,19 @@ must be there in <code>config</code> directory.
 If you want to use hrefTab outside a SPS project just use <em>hrefTab</em></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
-    <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
-        <span class='fu'><a href='useSps.html'>useSps</a></span>(),
-        <span class='fu'>hrefTab</span>(<span class='kw'>label_text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Bar Plot"</span>, <span class='st'>"PCA Plot"</span>, <span class='st'>"Scatter Plot"</span>),
-                <span class='kw'>hrefs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"https://google.com/"</span>, <span class='st'>""</span>, <span class='st'>""</span>))
-    )
+    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
+    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
+        <span class='fu'><a href='useSps.html'>useSps</a></span><span class='op'>(</span><span class='op'>)</span>,
+        <span class='fu'>hrefTab</span><span class='op'>(</span>label_text <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Bar Plot"</span>, <span class='st'>"PCA Plot"</span>, <span class='st'>"Scatter Plot"</span><span class='op'>)</span>,
+                hrefs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"https://google.com/"</span>, <span class='st'>""</span>, <span class='st'>""</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='op'>)</span>
 
-    <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>, <span class='no'>output</span>, <span class='no'>session</span>) {
+    <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
 
-    }
-    <span class='fu'>shinyApp</span>(<span class='no'>ui</span>, <span class='no'>server</span>)
-}</div></pre>
+    <span class='op'>}</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -225,7 +224,7 @@ If you want to use hrefTab outside a SPS project just use <em>hrefTab</em></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

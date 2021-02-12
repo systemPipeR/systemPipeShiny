@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A shiny gallery component — gallery • systemPipeShiny</title>
+<title>A shiny timeline component — spsTimeline • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="A shiny gallery component — gallery" />
-<meta property="og:description" content="texts, hrefs, images Must have the same length" />
+<meta property="og:title" content="A shiny timeline component — spsTimeline" />
+<meta property="og:description" content="This time time is horizontal, use spsTimeline to define it and
+use updateSpsTimeline on server to update it." />
 
 
 
@@ -109,88 +110,99 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A shiny gallery component</h1>
+    <h1>A shiny timeline component</h1>
     <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsUIcollections.R'><code>R/spsUIcollections.R</code></a></small>
-    <div class="hidden name"><code>gallery.Rd</code></div>
+    <div class="hidden name"><code>spsTimeline.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>texts</code>, <code>hrefs</code>, <code>images</code> Must have the same length</p>
+    <p>This time time is horizontal, use <strong>spsTimeline</strong> to define it and
+use <strong>updateSpsTimeline</strong> on server to update it.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gallery</span><span class='op'>(</span>
-  Id <span class='op'>=</span> <span class='cn'>NULL</span>,
-  title <span class='op'>=</span> <span class='st'>"Gallery"</span>,
-  title_color <span class='op'>=</span> <span class='st'>"#0275d8"</span>,
-  <span class='va'>texts</span>,
-  <span class='va'>hrefs</span>,
-  <span class='va'>images</span>,
-  image_frame_size <span class='op'>=</span> <span class='fl'>4</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>spsTimeline</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>up_labels</span>, <span class='va'>down_labels</span>, <span class='va'>icons</span>, <span class='va'>completes</span><span class='op'>)</span>
+
+<span class='fu'>updateSpsTimeline</span><span class='op'>(</span><span class='va'>session</span>, <span class='va'>id</span>, <span class='va'>item_no</span>, complete <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Id</th>
-      <td><p>ID of this gallery</p></td>
+      <th>id</th>
+      <td><p>html ID of the timeline if you are using shiny modules:
+use namespace function to create the ID but DO NOT use namespace function
+on server.</p></td>
     </tr>
     <tr>
-      <th>title</th>
-      <td><p>Title of gallery</p></td>
+      <th>up_labels</th>
+      <td><p>a vector of strings, text you want to display on top of each
+timeline item, usually like year number. If you do not want any text for a
+certain items, use <code>""</code> to occupy the space.</p></td>
     </tr>
     <tr>
-      <th>title_color</th>
-      <td><p>Title color</p></td>
+      <th>down_labels</th>
+      <td><p>a vector of strings, text you want to display at the
+bottom of each timeline item.</p></td>
     </tr>
     <tr>
-      <th>texts</th>
-      <td><p>label under each image</p></td>
+      <th>icons</th>
+      <td><p>a list of icon objects. If you do not want an icon for certain
+items, use <code><a href='https://rdrr.io/pkg/htmltools/man/builder.html'>div()</a></code> to occupy the space.</p></td>
     </tr>
     <tr>
-      <th>hrefs</th>
-      <td><p>link when clicking each</p></td>
+      <th>completes</th>
+      <td><p>a vector of TRUE or FALSE, indicating if the items are
+completed or not. Completed items will become green.</p></td>
     </tr>
     <tr>
-      <th>images</th>
-      <td><p>image source,</p></td>
+      <th>session</th>
+      <td><p>current shiny session</p></td>
     </tr>
     <tr>
-      <th>image_frame_size</th>
-      <td><p>integer, 1-12, this controls width</p></td>
+      <th>item_no</th>
+      <td><p>integer, which item number counting from left to right you
+want to update</p></td>
+    </tr>
+    <tr>
+      <th>complete</th>
+      <td><p>bool, is this item completed or not</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a div element</p>
+    <p>returns a shiny component</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code><a href='useSps.html'>useSps()</a></code> must be called in UI before using this function.</p>
-<p>The version usually been used in SPS framework is <code><a href='genGallery.html'>genGallery()</a></code></p>
+    <p><code>up_labels</code>, <code>down_labels</code>, <code>icons</code>, <code>completes</code> must have the same
+length.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
-    <span class='va'>texts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"p1"</span>, <span class='st'>"p2"</span>, <span class='st'>"p3"</span>, <span class='st'>"p4"</span>, <span class='st'>"p5"</span><span class='op'>)</span>
-    <span class='va'>hrefs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"https://unsplash.it/1200/768.jpg?image=251"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=252"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=253"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=254"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=255"</span><span class='op'>)</span>
-    <span class='va'>images</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"https://unsplash.it/600.jpg?image=251"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=252"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=253"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=254"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=255"</span><span class='op'>)</span>
-    <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://shiny.rstudio.com/'>shiny</a></span><span class='op'>)</span>
-
     <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
         <span class='fu'><a href='useSps.html'>useSps</a></span><span class='op'>(</span><span class='op'>)</span>,
-        <span class='fu'>gallery</span><span class='op'>(</span>texts <span class='op'>=</span> <span class='va'>texts</span>, hrefs <span class='op'>=</span> <span class='va'>hrefs</span>, images <span class='op'>=</span> <span class='va'>images</span><span class='op'>)</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/column.html'>column</a></span><span class='op'>(</span><span class='fl'>6</span>,
+               <span class='fu'>spsTimeline</span><span class='op'>(</span>
+                   <span class='st'>"b"</span>,
+                   up_labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"2000"</span>, <span class='st'>"2001"</span><span class='op'>)</span>,
+                   down_labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"step 1"</span>, <span class='st'>"step 2"</span><span class='op'>)</span>,
+                   icons <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/icon.html'>icon</a></span><span class='op'>(</span><span class='st'>"table"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/icon.html'>icon</a></span><span class='op'>(</span><span class='st'>"gear"</span><span class='op'>)</span><span class='op'>)</span>,
+                   completes <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+               <span class='op'>)</span>
+         <span class='op'>)</span>,
+        <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/column.html'>column</a></span><span class='op'>(</span><span class='fl'>6</span>,
+               <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/actionButton.html'>actionButton</a></span><span class='op'>(</span><span class='st'>"a"</span>, <span class='st'>"complete step 1"</span><span class='op'>)</span>,
+               <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/actionButton.html'>actionButton</a></span><span class='op'>(</span><span class='st'>"c"</span>, <span class='st'>"uncomplete step 1"</span><span class='op'>)</span><span class='op'>)</span>
+
     <span class='op'>)</span>
 
     <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
-
+        <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>observeEvent</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>$</span><span class='va'>a</span>, <span class='op'>{</span>
+            <span class='fu'>updateSpsTimeline</span><span class='op'>(</span><span class='va'>session</span>, <span class='st'>"b"</span>, <span class='fl'>1</span><span class='op'>)</span>
+        <span class='op'>}</span><span class='op'>)</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>observeEvent</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>$</span><span class='va'>c</span>, <span class='op'>{</span>
+            <span class='fu'>updateSpsTimeline</span><span class='op'>(</span><span class='va'>session</span>, <span class='st'>"b"</span>, <span class='fl'>1</span>, complete <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+        <span class='op'>}</span><span class='op'>)</span>
     <span class='op'>}</span>
 
     <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>

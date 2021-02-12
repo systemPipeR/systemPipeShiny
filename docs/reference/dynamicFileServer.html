@@ -73,20 +73,18 @@ file path" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
-</li>
-<li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -95,7 +93,7 @@ file path" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -122,7 +120,7 @@ file path" />
 file path</p>
     </div>
 
-    <pre class="usage"><span class='fu'>dynamicFileServer</span>(<span class='no'>input</span>, <span class='no'>session</span>, <span class='no'>id</span>)</pre>
+    <pre class="usage"><span class='fu'>dynamicFileServer</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>session</span>, <span class='va'>id</span>, roots <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>root <span class='op'>=</span> <span class='st'>"default"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,6 +138,15 @@ file path</p>
       <td><p>input file element ID.
 Do not us <code>ns()</code> to wrap the id on server side if inside module</p></td>
     </tr>
+    <tr>
+      <th>roots</th>
+      <td><p>a named character vector, paths where users can reach
+on the server, so only required for "server" mode, default is
+current directory + all system volumes. You can lock users to a specific path,
+so they are not allowed to browse parent folders.
+like only current directory: <code><a href='https://rdrr.io/r/base/c.html'>c(current=getwd())</a></code>; a temp folder:
+<code><a href='https://rdrr.io/r/base/c.html'>c(current=tempdir())</a></code>; unlimited: <code><a href='https://rdrr.io/r/base/c.html'>c(shinyFiles::getVolumes()())</a></code></p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -148,24 +155,25 @@ Do not us <code>ns()</code> to wrap the id on server side if inside module</p></
 expression, observe, or inside <code>isolate</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
-    <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>shinyjs</span>)
-    <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(<span class='kw'>sps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>mode</span><span class='kw'>=</span><span class='st'>'server'</span>)) <span class='co'># Change the mode to 'local' to see difference</span>
-    <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
-        <span class='fu'><a href='https://rdrr.io/pkg/shinyjs/man/useShinyjs.html'>useShinyjs</a></span>(),
-        <span class='fu'><a href='dynamicFile.html'>dynamicFile</a></span>(<span class='st'>"getFile"</span>),
-        <span class='fu'>textOutput</span>(<span class='st'>"txt_file"</span>)
-    )
+    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
+    <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://deanattali.com/shinyjs/'>shinyjs</a></span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span><span class='op'>(</span>sps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>mode<span class='op'>=</span><span class='st'>'server'</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Change the mode to 'local' to see difference</span>
+    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/shinyjs/man/useShinyjs.html'>useShinyjs</a></span><span class='op'>(</span><span class='op'>)</span>,
+        <span class='fu'><a href='dynamicFile.html'>dynamicFile</a></span><span class='op'>(</span><span class='st'>"getFile"</span><span class='op'>)</span>,
+        <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/textOutput.html'>textOutput</a></span><span class='op'>(</span><span class='st'>"txt_file"</span><span class='op'>)</span>
+    <span class='op'>)</span>
 
-    <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>,<span class='no'>output</span>,<span class='no'>session</span>){
-        <span class='fu'><a href='https://rdrr.io/pkg/shinyjs/man/runjs.html'>runjs</a></span>(<span class='st'>'$(".sps-file input").attr("readonly", true)'</span>)
-        <span class='no'>myfile</span> <span class='kw'>&lt;-</span> <span class='fu'>dynamicFileServer</span>(<span class='no'>input</span>, <span class='no'>session</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"getFile"</span>)
-        <span class='fu'>observe</span>({
-            <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>myfile</span>()) <span class='co'># remember to use `()` for reactive value</span>
-        })
-    }
-    <span class='fu'>shinyApp</span>(<span class='kw'>ui</span> <span class='kw'>=</span> <span class='no'>ui</span>, <span class='kw'>server</span> <span class='kw'>=</span> <span class='no'>server</span>)
-}</div></pre>
+    <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>,<span class='va'>output</span>,<span class='va'>session</span><span class='op'>)</span><span class='op'>{</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/shinyjs/man/runjs.html'>runjs</a></span><span class='op'>(</span><span class='st'>'$(".sps-file input").attr("readonly", true)'</span><span class='op'>)</span>
+        <span class='va'>myfile</span> <span class='op'>&lt;-</span> <span class='fu'>dynamicFileServer</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>session</span>, id <span class='op'>=</span> <span class='st'>"getFile"</span><span class='op'>)</span>
+        <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/observe.html'>observe</a></span><span class='op'>(</span><span class='op'>{</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>myfile</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># remember to use `()` for reactive value</span>
+        <span class='op'>}</span><span class='op'>)</span>
+    <span class='op'>}</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span>ui <span class='op'>=</span> <span class='va'>ui</span>, server <span class='op'>=</span> <span class='va'>server</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -181,7 +189,7 @@ expression, observe, or inside <code>isolate</code></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

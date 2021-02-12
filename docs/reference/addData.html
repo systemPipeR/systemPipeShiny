@@ -72,20 +72,18 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
-</li>
-<li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -94,7 +92,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -120,9 +118,9 @@
     <p>These functions are designed to be used inside SPS tabs</p>
     </div>
 
-    <pre class="usage"><span class='fu'>addData</span>(<span class='no'>data</span>, <span class='no'>shared</span>, <span class='no'>tab_id</span>)
+    <pre class="usage"><span class='fu'>addData</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>shared</span>, <span class='va'>tab_id</span><span class='op'>)</span>
 
-<span class='fu'>getData</span>(<span class='no'>tab_id</span>, <span class='no'>shared</span>)</pre>
+<span class='fu'>getData</span><span class='op'>(</span><span class='va'>tab_id</span>, <span class='va'>shared</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,36 +147,37 @@ ID to get data from if using <code>getData</code>.</p></td>
 the <code>get</code> method</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
-    <span class='fu'><a href='spsInit.html'>spsInit</a></span>()
-    <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(<span class='kw'>sps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
-    <span class='no'>ui</span> <span class='kw'>&lt;-</span> <span class='fu'>fluidPage</span>(
-        <span class='fu'>useToastr</span>(),
-        <span class='fu'>actionButton</span>(<span class='st'>"add"</span>, <span class='st'>"add"</span>),
-        <span class='fu'>actionButton</span>(<span class='st'>"get"</span>, <span class='st'>"get"</span>),
-        <span class='fu'>actionButton</span>(<span class='st'>"wrong"</span>, <span class='st'>"when it gets wrong"</span>)
-    )
-    <span class='no'>server</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>input</span>, <span class='no'>output</span>, <span class='no'>session</span>) {
-        <span class='no'>shared</span> <span class='kw'>&lt;-</span> <span class='fu'>reactiveValues</span>()
-        <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>tibble</a></span>(<span class='kw'>this</span> <span class='kw'>=</span> <span class='fl'>123</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>'before adding\n'</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>shared</span>)
-        <span class='fu'>observeEvent</span>(<span class='no'>input</span>$<span class='no'>add</span>, {
-            <span class='fu'>addData</span>(<span class='no'>data</span>, <span class='no'>shared</span>, <span class='st'>"core_about"</span>)
-            <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>'after adding\n'</span>)
-            <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>shared</span>) <span class='co'># watch the data_intask object is created</span>
-        })
-        <span class='fu'>observeEvent</span>(<span class='no'>input</span>$<span class='no'>get</span>, {
-            <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>"get data\n"</span>)
-            <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>getData</span>(<span class='st'>'core_about'</span>, <span class='no'>shared</span>))
-        })
-        <span class='fu'>observeEvent</span>(<span class='no'>input</span>$<span class='no'>wrong</span>, {
-            <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>"get wrong data\n"</span>)
-            <span class='fu'>getData</span>(<span class='st'>'not_there'</span>, <span class='no'>shared</span>)
-        })
-    }
-    <span class='fu'>shinyApp</span>(<span class='no'>ui</span>, <span class='no'>server</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
+    <span class='fu'><a href='spsInit.html'>spsInit</a></span><span class='op'>(</span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span><span class='op'>(</span>sps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'>fluidPage</span><span class='op'>(</span>
+        <span class='fu'>useToastr</span><span class='op'>(</span><span class='op'>)</span>,
+        <span class='fu'>actionButton</span><span class='op'>(</span><span class='st'>"add"</span>, <span class='st'>"add"</span><span class='op'>)</span>,
+        <span class='fu'>actionButton</span><span class='op'>(</span><span class='st'>"get"</span>, <span class='st'>"get"</span><span class='op'>)</span>,
+        <span class='fu'>actionButton</span><span class='op'>(</span><span class='st'>"wrong"</span>, <span class='st'>"when it gets wrong"</span><span class='op'>)</span>
+    <span class='op'>)</span>
+    <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
+        <span class='va'>shared</span> <span class='op'>&lt;-</span> <span class='fu'>reactiveValues</span><span class='op'>(</span><span class='op'>)</span>
+        <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>this <span class='op'>=</span> <span class='fl'>123</span><span class='op'>)</span>
+        <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>'before adding\n'</span><span class='op'>)</span>
+        <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>shared</span><span class='op'>)</span>
+        <span class='fu'>observeEvent</span><span class='op'>(</span><span class='va'>input</span><span class='op'>$</span><span class='va'>add</span>, <span class='op'>{</span>
+            <span class='fu'>addData</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>shared</span>, <span class='st'>"core_about"</span><span class='op'>)</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>'after adding\n'</span><span class='op'>)</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>shared</span><span class='op'>)</span> <span class='co'># watch the data_intask object is created</span>
+        <span class='op'>}</span><span class='op'>)</span>
+        <span class='fu'>observeEvent</span><span class='op'>(</span><span class='va'>input</span><span class='op'>$</span><span class='va'>get</span>, <span class='op'>{</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>"get data\n"</span><span class='op'>)</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>getData</span><span class='op'>(</span><span class='st'>'core_about'</span>, <span class='va'>shared</span><span class='op'>)</span><span class='op'>)</span>
+        <span class='op'>}</span><span class='op'>)</span>
+        <span class='fu'>observeEvent</span><span class='op'>(</span><span class='va'>input</span><span class='op'>$</span><span class='va'>wrong</span>, <span class='op'>{</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>"get wrong data\n"</span><span class='op'>)</span>
+            <span class='fu'>getData</span><span class='op'>(</span><span class='st'>'not_there'</span>, <span class='va'>shared</span><span class='op'>)</span>
+        <span class='op'>}</span><span class='op'>)</span>
+    <span class='op'>}</span>
+    <span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -194,7 +193,7 @@ the <code>get</code> method</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A shiny gallery component — gallery • systemPipeShiny</title>
+<title>Easy and simple UI and server for a SPS custom tab — spsEzUI • systemPipeShiny</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="A shiny gallery component — gallery" />
-<meta property="og:description" content="texts, hrefs, images Must have the same length" />
+<meta property="og:title" content="Easy and simple UI and server for a SPS custom tab — spsEzUI" />
+<meta property="og:description" content="SPS custom tab simple UI and server , spsEzUI must use together
+with the spsEzServer function. The easiest way to use is to
+use spsNewTab function to create both." />
 
 
 
@@ -109,92 +111,86 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A shiny gallery component</h1>
-    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsUIcollections.R'><code>R/spsUIcollections.R</code></a></small>
-    <div class="hidden name"><code>gallery.Rd</code></div>
+    <h1>Easy and simple UI and server for a SPS custom tab</h1>
+    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsNewtab.R'><code>R/spsNewtab.R</code></a></small>
+    <div class="hidden name"><code>spsEzUI.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>texts</code>, <code>hrefs</code>, <code>images</code> Must have the same length</p>
+    <p>SPS custom tab simple UI and server , spsEzUI must use together
+with the spsEzServer function. The easiest way to use is to
+use <a href='spsNewTab.html'>spsNewTab</a> function to create both.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gallery</span><span class='op'>(</span>
-  Id <span class='op'>=</span> <span class='cn'>NULL</span>,
-  title <span class='op'>=</span> <span class='st'>"Gallery"</span>,
-  title_color <span class='op'>=</span> <span class='st'>"#0275d8"</span>,
-  <span class='va'>texts</span>,
-  <span class='va'>hrefs</span>,
-  <span class='va'>images</span>,
-  image_frame_size <span class='op'>=</span> <span class='fl'>4</span>
+    <pre class="usage"><span class='fu'>spsEzUI</span><span class='op'>(</span>
+  desc <span class='op'>=</span> <span class='st'>""</span>,
+  tab_title <span class='op'>=</span> <span class='st'>"Tab Title"</span>,
+  plot_title <span class='op'>=</span> <span class='st'>"My Plot"</span>,
+  plot_control <span class='op'>=</span> <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/htmltools/man/tag.html'>tagList</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
+
+<span class='fu'>spsEzServer</span><span class='op'>(</span>
+  <span class='va'>plot_code</span>,
+  example_data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span>package <span class='op'>=</span> <span class='st'>"systemPipeShiny"</span>, <span class='st'>"app"</span>, <span class='st'>"data"</span>,
+    <span class='st'>"iris.csv"</span><span class='op'>)</span>,
+  other_server_code <span class='op'>=</span> <span class='st'>""</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Id</th>
-      <td><p>ID of this gallery</p></td>
+      <th>desc</th>
+      <td><p>character string, length 1 in markdown format. Tab description
+and instructions. You can make type it in multiple lines but in only one
+string (one pair of quotes). e.g.</p><pre><span class='st'>"
+# some desc
+## second line,
+- bullet 1
+- bullet 2
+"</span>
+</pre></td>
     </tr>
     <tr>
-      <th>title</th>
-      <td><p>Title of gallery</p></td>
+      <th>tab_title</th>
+      <td><p>string, tab title</p></td>
     </tr>
     <tr>
-      <th>title_color</th>
-      <td><p>Title color</p></td>
+      <th>plot_title</th>
+      <td><p>string, plot title</p></td>
     </tr>
     <tr>
-      <th>texts</th>
-      <td><p>label under each image</p></td>
+      <th>plot_control</th>
+      <td><p>some Shiny components (UI) to control the plot, like plot
+title, x,y labels, color, font size, etc. Group all components in a shiny
+<code>tagList</code>.</p></td>
     </tr>
     <tr>
-      <th>hrefs</th>
-      <td><p>link when clicking each</p></td>
+      <th>plot_code</th>
+      <td><p>some R code to make the plot.</p></td>
     </tr>
     <tr>
-      <th>images</th>
-      <td><p>image source,</p></td>
+      <th>example_data_path</th>
+      <td><p>example dataset path, this dataset will be loaded on
+app start to display</p></td>
     </tr>
     <tr>
-      <th>image_frame_size</th>
-      <td><p>integer, 1-12, this controls width</p></td>
+      <th>other_server_code</th>
+      <td><p>optional, other server R code to run for this tab</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a div element</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p><code>spsEzUI</code> returns a shiny module UI function, <code>spsEzServer</code> returns
+the server function</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='useSps.html'>useSps()</a></code> must be called in UI before using this function.</p>
-<p>The version usually been used in SPS framework is <code><a href='genGallery.html'>genGallery()</a></code></p>
+    <div class='dont-index'><p><a href='spsNewTab.html'>spsNewTab</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
-    <span class='va'>texts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"p1"</span>, <span class='st'>"p2"</span>, <span class='st'>"p3"</span>, <span class='st'>"p4"</span>, <span class='st'>"p5"</span><span class='op'>)</span>
-    <span class='va'>hrefs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"https://unsplash.it/1200/768.jpg?image=251"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=252"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=253"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=254"</span>,
-               <span class='st'>"https://unsplash.it/1200/768.jpg?image=255"</span><span class='op'>)</span>
-    <span class='va'>images</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"https://unsplash.it/600.jpg?image=251"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=252"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=253"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=254"</span>,
-                <span class='st'>"https://unsplash.it/600.jpg?image=255"</span><span class='op'>)</span>
-    <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://shiny.rstudio.com/'>shiny</a></span><span class='op'>)</span>
-
-    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
-        <span class='fu'><a href='useSps.html'>useSps</a></span><span class='op'>(</span><span class='op'>)</span>,
-        <span class='fu'>gallery</span><span class='op'>(</span>texts <span class='op'>=</span> <span class='va'>texts</span>, hrefs <span class='op'>=</span> <span class='va'>hrefs</span>, images <span class='op'>=</span> <span class='va'>images</span><span class='op'>)</span>
-    <span class='op'>)</span>
-
-    <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
-
-    <span class='op'>}</span>
-
-    <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
-<span class='op'>}</span>
+    <pre class="examples"><div class='input'><span class='co'># use `spsInit()` to create an SPS project and use `spsNewTab("Your_tabID", template = "easy")`</span>
+<span class='co'># to create a new tab file. The specified use of these two functions is in that file.</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

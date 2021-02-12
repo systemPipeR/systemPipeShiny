@@ -1,5 +1,15 @@
 title: systemPipeShiny
 
+navbar:
+  components:
+    home:
+      text: SPS Home
+      icon: "fa fa-home"
+      href: https://systempipe.org/sps/
+    articles: ~
+    intro: ~
+    news: ~
+
 authors:
    Le Zhang:
      href: https://lezhang.me/
@@ -14,16 +24,8 @@ authors:
    Thomas Girke:
      href: http://girke.bioinformatics.ucr.edu/
 
-home:
-  links:
-  - text: Download from GitHub
-    href: https://github.com/systemPipeR/systemPipeShiny
-  - text: Ask a question about systemPipeShiny
-    href: https://support.bioconductor.org/
-  - text: Report a bug
-    href: https://github.com/systemPipeR/systemPipeShiny/issues
-
 reference:
+  - text: Functions
   - title: 1. SPS framework functions
   - subtitle: SPS core
     contents:

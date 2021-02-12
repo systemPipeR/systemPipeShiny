@@ -31,20 +31,18 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
-</li>
-<li>
-  <a href="articles/systemPipeShiny.html">Get started</a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
@@ -53,7 +51,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -69,87 +67,39 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
-<div id="systempipeshiny-" class="section level1">
+<div id="package-function-reference" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#systempipeshiny-" class="anchor"></a>systemPipeShiny <img src="https://github.com/systemPipeR/systemPipeShiny-book/blob/master/img/sps.png?raw=true" align="right" height="139">
-</h1></div>
-<!-- badges: start -->
-<p><img src="https://github.com/systemPipeR/systemPipeShiny/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"><!-- badges: end --></p>
-<p><code>systemPipeShiny</code>(SPS) a Shiny-based R/Bioconductor package that extends the widely used <a href="http://www.bioconductor.org/packages/release/bioc/html/systemPipeR.html">systemPipeR</a> workflow environment and data visualization with a versatile graphical user interface.</p>
-<p>There is an online demo of <a href="https://tgirke.shinyapps.io/systemPipeShiny/">systempipeShiny</a>. This application is hosted by a small server. Do not use it for production activities. Heavy tasks will crash it and disconnect you from it.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>To install the package, please use the <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install</a></code> command:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span><span class="kw">=</span><span class="fl">TRUE</span>))
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
-<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeShiny"</span>, <span class="kw">build_vignettes</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">dependencies</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></div>
-<p>To obtain the most recent updates immediately, one can install it directly from <a href="https://github.com/systemPipeR/systemPipeShiny">GitHub</a> as follow:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span><span class="kw">=</span><span class="fl">TRUE</span>))
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
-<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"systemPipeR/systemPipeShiny"</span>, <span class="kw">build_vignettes</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">dependencies</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></div>
-<p>If you are on Linux, you may also need the following libraries. Different distributions may have different commands, but the following commands are examples for Ubuntu:</p>
-<pre><code>sudo apt-get install libcurl4-openssl-dev
-sudo apt-get install libv8-dev
-sudo apt-get install libxm12-dev
-sudo apt-get install libssl-dev</code></pre>
-</div>
-<div id="quick-start" class="section level2">
-<h2 class="hasAnchor">
-<a href="#quick-start" class="anchor"></a>Quick start</h2>
-<p>This is a basic example which shows how to use <code>systempipeShiny</code> package:</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="co">## Imports the library</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">systemPipeShiny</span>)
-<span class="co">## Creates the project directory</span>
-<span class="fu"><a href="reference/spsInit.html">spsInit</a></span>()</pre></div>
-<p>By default, a project folder is created and named as <code>SPS_</code>+<code>DATE</code>. This project folder provides all the necessary files to launch the application. If you are using Rstudio, <code>global.R</code> file will be opened automatically and this is the only file you may need to make custom changes if there is any.</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="co">## Launching the interface</span>
-<span class="kw pkg">shiny</span><span class="kw ns">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">runApp</a></span>()</pre></div>
-</div>
-</div>
-<div id="contact" class="section level1">
-<h1 class="hasAnchor">
-<a href="#contact" class="anchor"></a>Contact</h1>
-<p>For additional details regarding the functions of <code>systempipeShiny</code>, please consult the vignette available <a href="https://systempipe.org/systemPipeShiny/articles/systemPipeShiny.html">here</a>.</p>
-<p>Please use <a href="https://github.com/systemPipeR/systemPipeShiny/issues" class="uri">https://github.com/systemPipeR/systemPipeShiny/issues</a> for reporting bugs, issues or for suggesting new features to be implemented.</p>
-<div id="internal" class="section level2">
-<h2 class="hasAnchor">
-<a href="#internal" class="anchor"></a>Internal</h2>
-<details><p><summary><b> Click to expand the list of internal notes. </b></summary></p>
-<div id="run-to-update-the-website-docs-folder" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-to-update-the-website-docs-folder" class="anchor"></a>Run to update the website (./docs/ folder)</h3>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></div>
-</div>
-<div id="running-roxygen" class="section level3">
-<h3 class="hasAnchor">
-<a href="#running-roxygen" class="anchor"></a>Running roxygen</h3>
-<div class="sourceCode" id="cb7"><pre class="r"><span class="kw pkg">roxygen2</span><span class="kw ns">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span>()</pre></div>
-</div>
-<div id="todo" class="section level3">
-<h3 class="hasAnchor">
-<a href="#todo" class="anchor"></a>TODO</h3>
-<p>See <a href="https://github.com/systemPipeR/systemPipeShiny/projects">github projects</a></p>
+<a href="#package-function-reference" class="anchor"></a>Package Function Reference</h1></div>
+<p class="home-text">
+Go to the <a href="reference/index.html">Reference</a> to see functions exported from this package.
+</p>
+<style>
+.home-text {
+font-weight: 800;
+display: flex;
+justify-content: center;
+}
 
-</div>
-</details>
-</div>
-</div>
+a.home-text{
+font-size: 3rem;
+}
 
+p.home-text{
+font-size: 2rem;
+}
+
+</style>
+<p><a href="https://systempipe.org/sps/" class="home-text"><i class="fa fa-home"></i>Back to SPS Home</a></p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from BIOC at <br><a href="https://www.bioconductor.org/packages/systemPipeShiny">https://​www.bioconductor.org/​packages/​systemPipeShiny</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/systemPipeR/systemPipeShiny/">https://​github.com/​systemPipeR/​systemPipeShiny/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/systemPipeR/systemPipeShiny/issues">https://​github.com/​systemPipeR/​systemPipeShiny/​issues</a>
-</li>
-<li>Download from GitHub at <br><a href="https://github.com/systemPipeR/systemPipeShiny">https://​github.com/​systemPipeR/​systemPipeShiny</a>
-</li>
-<li>Ask a question about systemPipeShiny at <br><a href="https://support.bioconductor.org/">https://​support.bioconductor.org/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/systemPipeR/systemPipeShiny/issues">https://​github.com/​systemPipeR/​systemPipeShiny/​issues</a>
 </li>
@@ -194,7 +144,7 @@ sudo apt-get install libssl-dev</code></pre>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

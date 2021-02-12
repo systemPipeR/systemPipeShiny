@@ -105,63 +105,6 @@ spsServer <- function(tabs, server_expr) {
 }
 
 
-#' Workflow Progress tracker server logic
-#' @description use it on the top level server not inside a module. Only
-#' designed for workflow tabs. For other purpose, use `pgPaneUI`.
-#' @param shared the shared object
-#' @importFrom shinydashboardPlus timelineBlock timelineItem timelineLabel
-#' @importFrom shinyWidgets progressBar
-#' @return reactive renderUI object
-#' @seealso [pgPaneUpdate()]
-#' @noRd
-# @examples
-# wfProgressPanel(shared)
-wfProgressPanel <- function(shared){
-    renderUI({
-        total_progress <- sum(as.numeric(shared$wf_flags))/0.03
-        shinydashboardPlus::timelineBlock(reversed = FALSE,
-                      shinydashboardPlus::timelineItem(
-                          title = "Targets file",
-                          icon = timeline_icon(shared$wf_flags$targets_ready),
-                          color = timeline_color(shared$wf_flags$targets_ready),
-                          border = FALSE,
-                          shinyWidgets::progressBar(
-                              "pg_target",  striped = TRUE, status = "primary",
-                              timeline_pg(shared$wf_flags$targets_ready))
-                      ),
-                      shinydashboardPlus::timelineItem(
-                          title = "Workflow Rmd",
-                          icon = timeline_icon(shared$wf_flags$wf_ready),
-                          color = timeline_color(shared$wf_flags$wf_ready),
-                          border = FALSE,
-                          shinyWidgets::progressBar(
-                              "pg_rmd", striped = TRUE, status = "primary",
-                              timeline_pg(shared$wf_flags$wf_ready))
-                      ),
-                      shinydashboardPlus::timelineItem(
-                          title = "Config",
-                          icon = timeline_icon(shared$wf_flags$wf_conf_ready),
-                          color = timeline_color(shared$wf_flags$wf_conf_ready),
-                          border = FALSE,
-                          shinyWidgets::progressBar(
-                              "pg_config", striped = TRUE, status = "primary",
-                              timeline_pg(shared$wf_flags$wf_conf_ready))
-                      ),
-                      shinydashboardPlus::timelineLabel("Ready",
-                                    color = if(all(as.logical(shared$wf_flags)))
-                                        "olive"
-                                    else "orange"),
-                      div(style = "margin-left: 60px; margin-right: 15px;",
-                          shinyWidgets::progressBar(
-                              "pg_wf_all", total_progress, striped = TRUE,
-                              status = timline_pg_status(total_progress)
-                          )
-                      )
-        )
-    })
-}
-
-
 #' Warning toast under some options when app starts
 #'
 #' @param session shiny session
