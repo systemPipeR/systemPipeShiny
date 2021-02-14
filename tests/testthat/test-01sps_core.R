@@ -19,28 +19,10 @@ test_that("test SPS setup function", {
 })
 
 
-sps_plots <<- plotContainer$new()
-sps_enc <<- spsEncryption$new()
 test_that("SPS classes", {
-    expect_s3_class(sps_plots, "plot_container")
+    sps_enc <<- spsEncryption$new()
     expect_s3_class(sps_enc, "spsencrypt")
 })
-
-# UI methods
-expect_warning(expect_error(sps_plots$addUI(div(), tab_id = "plotui1")))
-plot_ui_return <- sps_plots$addUI(div(id = "myplot"), "plot1")
-expect_s3_class(plot_ui_return, "shiny.tag")
-expect_s3_class(sps_plots$getUI("plot1"), "shiny.tag")
-# server methods
-plot_server_return <- sps_plots$addServer(renderPlot, tab_id = "plot1",  "abc")
-expect_s3_class(plot_server_return, "shiny.render.function")
-expect_s3_class(sps_plots$getServer("plot1"), "shiny.render.function")
-# canvas notify methods
-expect_null(sps_plots$notifySnap("plot1"))
-expect_equal(sps_plots$notifySnap("plot1")[2], "1")
-sps_plots$notifySnap("plot1", reset = TRUE)
-expect_null(sps_plots$notifySnap("plot1"))
-
 
 sps <- suppressWarnings(sps())
 test_that("SPS main UI and server", {

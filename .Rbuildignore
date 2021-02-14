@@ -15,4 +15,4 @@ _pkgdown\.yml
 ^vignettes/systemPipeShiny_cache/*
 ^SPS_20*
 ^_pkgdown/
-
+^index.md$
