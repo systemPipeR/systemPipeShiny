@@ -21,17 +21,12 @@ if [[ -f "${hash_file}" ]]; then
     echo "New hash:     ${new_hash}"
     if [[ ! "${current_hash}" == "${new_hash}" ]]; then
         echo "hash differs, update needed"
-        echo ${new_hash} > ${hash_file}
-        touch /tmp/${folder_base}_update
+        touch ./differ
     else
         echo "skip pkgdown"
     fi
 else
     echo "${hash_file} is not there, update needed"
-    find ${man_folder} -type f -print0 | \
-        sort -z | \
-        xargs -0 md5sum | \
-        md5sum | \
-        awk '{ print $1 }' > ${hash_file}
+    touch ./differ
 fi
 

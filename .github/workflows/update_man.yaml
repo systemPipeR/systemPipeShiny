@@ -25,19 +25,10 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
               echo "there are changes, start to build man";
               echo "::set-output name=pkgdown::true"
-              git config --local user.name "Github Action Bot"
-              git config --local user.email "gh-action-bot@protonmail.com"
-              git add -A
-              git commit -m "Bot update hash" -a
           else
               echo "no change";
               echo "::set-output name=pkgdown::false"
           fi
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
 
   pkgdown:
     name: pkgdown
@@ -94,6 +85,14 @@ jobs:
           pkgdown::build_reference()
           pkgdown::build_news()
         shell: Rscript {0}
+
+      - name: update hash
+        run: |
+            find ./man -type f -print0 | \
+            sort -z | \
+            xargs -0 md5sum | \
+            md5sum | \
+            awk '{ print $1 }' > .github/reference_hash/man_hash.txt
 
       - name: Update github
         run: |
