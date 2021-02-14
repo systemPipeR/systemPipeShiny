@@ -74,10 +74,10 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
         spsinfo("Now check input tabs")
         spsinfo("Find tab info ...")
         tabs <- c(tabs) %>% unique() %>% {.[!. %in% c("", " ")]}
-        tabs <- findTabInfo(tabs, tab_file = file.path(app_path, "config", "tabs.csv")) %>% dplyr::as_tibble()
+        tabs <- findTabInfo(tabs, tab_file = file.path(app_path, "config", "tabs.csv"), force_reload = TRUE) %>% dplyr::as_tibble()
         if(sum(not_in_vs <- tabs$tpye != 'vs') > 0)
             spserror(glue("Tab '{glue_collapse(tabs[not_in_vs], ', ')}'",
-                          "is/are not custom visulization tabs"))
+                          "is/are not custom tabs"))
 
     } else {
         spsinfo("Using default tabs")

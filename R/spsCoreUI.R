@@ -192,6 +192,7 @@ genGallery <- function(tab_ids=NULL, Id = NULL, title = "Gallery", type = NULL,
     }
     tabs <- findTabInfo(
         tab_ids, type,
+        force_reload = TRUE,
         tab_file = file.path(app_path, "config", "tabs.csv"))
     if (is.null(tabs)) return(div("Nothing to display in gallery"))
     tabs$images[tabs$images %in% c("", NA)] <- "img/noimg.png"
@@ -214,7 +215,7 @@ genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
         if(!emptyIsFalse(app_path)) app_path <- getwd()
     }
     tabs <- findTabInfo(
-        tab_ids, tab_file = file.path(app_path, "config", "tabs.csv"))
+        tab_ids, tab_file = file.path(app_path, "config", "tabs.csv"), force_reload = TRUE)
     hrefTab(Id = Id, title = title, text_color = text_color,
             label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
 }
@@ -265,9 +266,9 @@ genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
     }
     tab_list <- mapply(rows, FUN = function(x) {
         if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
-            findTabInfo(type = x, tab_file = file.path(app_path, "config", "tabs.csv"))
+            findTabInfo(type = x, tab_file = file.path(app_path, "config", "tabs.csv"), force_reload = TRUE)
         } else {
-            findTabInfo(x, tab_file = file.path(app_path, "config", "tabs.csv"))
+            findTabInfo(x, tab_file = file.path(app_path, "config", "tabs.csv"), force_reload = TRUE)
         }
     }, SIMPLIFY = TRUE)
     hrefTable(Id = Id, title = title,

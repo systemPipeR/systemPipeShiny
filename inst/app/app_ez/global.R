@@ -5,7 +5,7 @@
 time_start <- Sys.time()
 library(systemPipeShiny)
 library(magrittr) # load pipes
-# load additional libraries that you want to use here
+# load additional libraries that you want to use below
 
 
 ## SPS options
@@ -44,17 +44,14 @@ options(shiny.maxRequestSize = 30*1e6)
 # options(shiny.trace = TRUE)
 # options(shiny.fullstacktrace = TRUE)
 # options(shiny.error = browser)
-# options(shiny.autoreload.r = TRUE)
 # options(shiny.autoreload = FALSE) # takes some computer power, you may consider turn it off
-
-## load tab info
-tab_info <- suppressMessages(vroom::vroom("config/tabs.csv", comment = "#", na = character()))
 
 ####### Main App Function Starts #########
 
 sps_app <- sps(
     tabs = c("vs_example"),
     server_expr = {
+        # add you own server functions below
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }
 )

@@ -82,29 +82,30 @@ will be no message." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
 </li>
 <li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,20 +141,20 @@ package, if not specified, it follows the project option, can be be forced to
 will be no message.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>msg</span>(
-  <span class='no'>msg</span>,
-  <span class='kw'>level</span> <span class='kw'>=</span> <span class='st'>"INFO"</span>,
-  <span class='kw'>.other_color</span> <span class='kw'>=</span> <span class='st'>"white"</span>,
-  <span class='kw'>info_text</span> <span class='kw'>=</span> <span class='st'>"INFO"</span>,
-  <span class='kw'>warning_text</span> <span class='kw'>=</span> <span class='st'>"WARNING"</span>,
-  <span class='kw'>error_text</span> <span class='kw'>=</span> <span class='st'>"ERROR"</span>
-)
+    <pre class="usage"><span class='fu'>msg</span><span class='op'>(</span>
+  <span class='va'>msg</span>,
+  level <span class='op'>=</span> <span class='st'>"INFO"</span>,
+  .other_color <span class='op'>=</span> <span class='st'>"white"</span>,
+  info_text <span class='op'>=</span> <span class='st'>"INFO"</span>,
+  warning_text <span class='op'>=</span> <span class='st'>"WARNING"</span>,
+  error_text <span class='op'>=</span> <span class='st'>"ERROR"</span>
+<span class='op'>)</span>
 
-<span class='fu'>spsinfo</span>(<span class='no'>msg</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>spsinfo</span><span class='op'>(</span><span class='va'>msg</span>, verbose <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>spswarn</span>(<span class='no'>msg</span>)
+<span class='fu'>spswarn</span><span class='op'>(</span><span class='va'>msg</span><span class='op'>)</span>
 
-<span class='fu'>spserror</span>(<span class='no'>msg</span>)</pre>
+<span class='fu'>spserror</span><span class='op'>(</span><span class='va'>msg</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -201,9 +202,16 @@ but not in SPS framework. Use <a href='spsOption.html'>spsOption</a> to set up t
 of your scripts: <code><a href='spsOption.html'>spsOption("use_crayon", TRUE)</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>msg</span>(<span class='st'>"this is info"</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[INFO] 2020-10-07 21:55:43 this is info</span><span></span></div><div class='input'><span class='fu'>msg</span>(<span class='st'>"this is warning"</span>, <span class='st'>"warning"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[WARNING] 2020-10-07 21:55:43 this is warning</span><span></span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='fu'>msg</span>(<span class='st'>"this is error"</span>, <span class='st'>"error"</span>))</div><div class='output co'>#&gt; Error : </span><span style='color: #BB0000;font-weight: bold;'>[ERROR] 2020-10-07 21:55:43 this is error</span><span></div><div class='input'><span class='fu'>msg</span>(<span class='st'>"this is other"</span>, <span class='st'>"error2"</span>)</div><div class='output co'>#&gt; </span><span style='color: #BBBBBB;font-weight: bold;'>[error2] 2020-10-07 21:55:43 this is other</span><span></div><div class='input'><span class='fu'>spsinfo</span>(<span class='st'>"some msg, verbose false"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># will not show up</span>
-<span class='fu'>spsinfo</span>(<span class='st'>"some msg, verbose true"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2020-10-07 21:55:43 some msg, verbose true</span><span></span></div><div class='input'><span class='fu'>spswarn</span>(<span class='st'>"sps warning"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2020-10-07 21:55:43 sps warning</span><span></span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='fu'>spserror</span>(<span class='st'>"sps error"</span>))</div><div class='output co'>#&gt; Error : </span><span style='color: #BB0000;font-weight: bold;'>[SPS-ERROR] 2020-10-07 21:55:43 sps error</span><span></div><div class='input'>
-</div></span></pre>
+    <pre class="examples"><div class='input'><span class='fu'>msg</span><span class='op'>(</span><span class='st'>"this is info"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>[INFO] 2021-02-14 04:27:03 this is info</span></div><div class='input'><span class='fu'>msg</span><span class='op'>(</span><span class='st'>"this is warning"</span>, <span class='st'>"warning"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: [WARNING] 2021-02-14 04:27:03 this is warning</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>msg</span><span class='op'>(</span><span class='st'>"this is error"</span>, <span class='st'>"error"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Error : [ERROR] 2021-02-14 04:27:03 this is error</div><div class='input'><span class='fu'>msg</span><span class='op'>(</span><span class='st'>"this is other"</span>, <span class='st'>"error2"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [error2] 2021-02-14 04:27:03 this is other</div><div class='input'><span class='fu'>spsinfo</span><span class='op'>(</span><span class='st'>"some msg, verbose false"</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># will not show up</span>
+<span class='fu'>spsinfo</span><span class='op'>(</span><span class='st'>"some msg, verbose true"</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>[SPS-INFO] 2021-02-14 04:27:03 some msg, verbose true</span></div><div class='input'><span class='fu'>spswarn</span><span class='op'>(</span><span class='st'>"sps warning"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: [SPS-WARNING] 2021-02-14 04:27:03 sps warning</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>spserror</span><span class='op'>(</span><span class='st'>"sps error"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Error : [SPS-ERROR] 2021-02-14 04:27:03 sps error</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -219,7 +227,7 @@ of your scripts: <code><a href='spsOption.html'>spsOption("use_crayon", TRUE)</a
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -1,0 +1,104 @@
+on:
+  schedule:
+  - cron: "0 1 * * *"
+
+name: update_docs
+
+jobs:
+  check_man_hash:
+    name: update_docs
+    runs-on: ubuntu-20.04
+    outputs:
+      pkgdown: ${{ steps.update_gh.outputs.pkgdown }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: check man folder hash
+        run: |
+          bash .github/bash/update_man.sh
+      - name: send results to next job
+        id: update_gh
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+              echo "there are changes, start to build man";
+              echo "::set-output name=pkgdown::true"
+          else
+              echo "no change";
+              echo "::set-output name=pkgdown::false"
+          fi
+
+  pkgdown:
+    name: pkgdown
+    needs: check_man_hash
+    if: needs.check_man_hash.outputs.pkgdown == 'true'
+    runs-on: ubuntu-20.04
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+      - uses: r-lib/actions/setup-r@v1
+        id: install-r
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+
+      - uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Install pak and query dependencies
+        run: |
+          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
+          saveRDS(pak::pkg_deps_tree("local::.", dependencies = TRUE), ".github/r-depends.rds")
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-pkgdown-${{ steps.install-r.outputs.installed-r-version }}-1-${{ hashFiles('.github/r-depends.rds') }}
+          restore-keys: ${{ runner.os }}-pkgdown-${{ steps.install-r.outputs.installed-r-version }}-1-
+
+      - name: Install system dependencies
+        run: |
+          pak::pkg_system_requirements("pkgdown", execute = TRUE)
+          pak::local_system_requirements(execute = TRUE)
+        shell: Rscript {0}
+
+      - name: Install dependencies
+        run: |
+          pak::local_install_dev_deps(upgrade = TRUE)
+          pak::pkg_install("pkgdown")
+        shell: Rscript {0}
+
+      - name: clear docs
+        run: rm -rf ./docs
+
+      - name: run pkgdown
+        run: |
+          pkgdown::build_home()
+          pkgdown::build_reference()
+          pkgdown::build_news()
+        shell: Rscript {0}
+
+      - name: update hash
+        run: |
+            find ./man -type f -print0 | \
+            sort -z | \
+            xargs -0 md5sum | \
+            md5sum | \
+            awk '{ print $1 }' > .github/reference_hash/man_hash.txt
+
+      - name: Update github
+        run: |
+          git config --local user.name "Github Action Bot"
+          git config --local user.email "gh-action-bot@protonmail.com"
+          git add -A
+          git commit -m "Bot update docs" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
