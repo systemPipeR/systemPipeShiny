@@ -22,7 +22,7 @@ jobs:
       - name: send results to next job
         id: update_gh
         run: |
-          if [[ -f "/tmp/man_update" ]]; then
+          if [ -n "$(git status --porcelain)" ]; then
               echo "there are changes, start to build man";
               echo "::set-output name=pkgdown::true"
               git config --local user.name "Github Action Bot"

@@ -33,6 +33,5 @@ else
         xargs -0 md5sum | \
         md5sum | \
         awk '{ print $1 }' > ${hash_file}
-    touch /tmp/man_update
 fi
 
