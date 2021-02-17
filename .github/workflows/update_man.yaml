@@ -11,9 +11,6 @@ name: update_docs
 jobs:
   check_man_hash:
     name: update_docs
-    strategy:
-      matrix:
-          trigger_repo: ['systemPipeR/systemPipeR.github.io']
     runs-on: ubuntu-20.04
     outputs:
       pkgdown: ${{ steps.update_gh.outputs.pkgdown }}
@@ -37,6 +34,9 @@ jobs:
     name: pkgdown
     needs: check_man_hash
     if: needs.check_man_hash.outputs.pkgdown == 'true'
+    strategy:
+      matrix:
+          trigger_repo: ['systemPipeR/systemPipeR.github.io']
     runs-on: ubuntu-20.04
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
