@@ -112,5 +112,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.SPS_WF }}
-          repository: ${{ matrix.repo }}
+          repository: ${{ matrix.trigger_repo }}
           event-type: SPS-docs-updated
