@@ -16,3 +16,4 @@ docs/reference/SPS_plotdata*
 docs/reference/SPS_prepro*
 docs/reference/SPS_tabinfo*
 SPS_20*
+.github/r-depends.rds
