@@ -1,4 +1,8 @@
 on:
+  push:
+    branches:
+      - main
+      - master
   schedule:
   - cron: "0 1 * * *"
 
@@ -7,6 +11,9 @@ name: update_docs
 jobs:
   check_man_hash:
     name: update_docs
+    strategy:
+      matrix:
+          trigger_repo: ['systemPipeR/systemPipeR.github.io']
     runs-on: ubuntu-20.04
     outputs:
       pkgdown: ${{ steps.update_gh.outputs.pkgdown }}
@@ -101,4 +108,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-
+      - name: Trigger website build
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.SPS_WF }}
+          repository: ${{ matrix.repo }}
+          event-type: SPS-docs-updated
