@@ -1,8 +1,8 @@
+
+name: update_docs
 on:
   schedule:
   - cron: "0 1 * * *"
-
-name: update_docs
 
 jobs:
   check_man_hash:
@@ -30,6 +30,9 @@ jobs:
     name: pkgdown
     needs: check_man_hash
     if: needs.check_man_hash.outputs.pkgdown == 'true'
+    strategy:
+      matrix:
+          trigger_repo: ['systemPipeR/systemPipeR.github.io']
     runs-on: ubuntu-20.04
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -101,4 +104,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-
+      - name: Trigger website build
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.SPS_WF }}
+          repository: ${{ matrix.trigger_repo }}
+          event-type: SPS-docs-updated
