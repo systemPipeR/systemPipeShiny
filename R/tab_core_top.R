@@ -1,8 +1,6 @@
 ## UI
 ########### loaded but not in use under current SPS version
 
-
-# @importFrom pushbar pushbar_deps pushbar
 #' @noRd
 core_topUI <- function(id){
     ns <- NS(id)
@@ -37,7 +35,7 @@ core_topUI <- function(id){
                     style = "height: 95vh;",
                     div(
                         id = ns("leftcol"), class = "split split-horizontal", style = "overflow: hidden;",
-                        # source cide ----
+                        # source code ----
                         div( id = ns("source_code"), class ="split split-content",
                              div(
                                  class = "split-header",
@@ -270,14 +268,9 @@ core_topUI <- function(id){
 
 ## server
 
-# @importFrom pushbar setup_pushbar pushbar_open pushbar_close
 #' @importFrom shinydashboardPlus boxPlus
-#' @importFrom shinyjqui orderInput
 #' @importFrom shinyWidgets actionBttn confirmSweetAlert
 #' @importFrom shinyjs toggleState
-#' @importFrom fs dir_ls
-#' @importFrom readr read_lines
-#' @importFrom R.utils countLines
 #' @noRd
 core_topServer <- function(id, shared){
     module <- function(input, output, session){

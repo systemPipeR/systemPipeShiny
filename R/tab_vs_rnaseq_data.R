@@ -11,7 +11,7 @@ vs_rnaseq_dataUI <- function(id) {
     You need to first upload your **Raw** count table and the **targets (metadata
     table)** with a special header.
     If you are not sure how these tables look like, it is recommended to first
-    use our examples first. For the metadata file, SPS uses the [targets file](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file) format
+    use our examples first. For the metadata file, SPS uses the [targets file](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-targets-file) format
     from systemPipeR. All comparisions for DEG analysis are defined in the <CMP>
     header section in the targets file.
 
@@ -210,7 +210,6 @@ vs_rnaseq_dataUI <- function(id) {
 
 ## server for rnaseq data sub tab
 #' @importFrom tibble column_to_rownames
-#' @importFrom systemPipeR readComp
 vs_rnaseq_dataServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

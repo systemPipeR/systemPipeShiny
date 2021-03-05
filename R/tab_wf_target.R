@@ -1,7 +1,6 @@
 
 ## submodule target UI
 
-#' @importFrom rhandsontable rHandsontableOutput
 #' @importFrom shinyAce aceEditor
 #' @importFrom shinydashboard valueBox
 #' @importFrom shinydashboardPlus boxPlus
@@ -20,8 +19,8 @@ wf_targetUI <- function(id){
             #### Targets file
             The targets (metadata) file defines all input files\' path and other sample
             information of an analysis workflow. Read "Structure of targets file"
-            section in
-            [SPR vignette](https://systempipe.org/docs/systemPipeR/#structure-of-targets-file)
+            section on
+            [our website](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-targets-file)
             to better undertand the structure of this file.
             This file is similar to the `colData` slot in an `SummarizedExperiment`
             object which stores sample ID and other meta information.
@@ -195,8 +194,6 @@ wf_targetUI <- function(id){
 }
 
 ## submodule server
-#' @importFrom rhandsontable renderRHandsontable rhandsontable
-#' @importFrom rhandsontable  hot_context_menu hot_to_r
 #' @importFrom shinyAce updateAceEditor
 #' @importFrom shinytoastr toastr_info
 #' @importFrom shinyWidgets confirmSweetAlert updateRadioGroupButtons

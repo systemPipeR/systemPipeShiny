@@ -13,7 +13,6 @@
 # only selected steps will be plotted, make sure at least some steps are
 # TRUE in 'selected' column in df_wf
 
-#' @importFrom DOT dot
 #' @importFrom assertthat is.count
 # @importFrom rsvg rsvg_svg rsvg_png
 #' @noRd

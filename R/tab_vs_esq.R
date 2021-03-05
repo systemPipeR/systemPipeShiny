@@ -6,7 +6,6 @@
 ## values inside if you used default settings when creating the tab.
 
 ## UI for vs_esquisse
-#' @importFrom esquisse esquisseContainer esquisserUI
 vs_esqUI <- function(id) {
     ns <- NS(id)
     desc <- "
@@ -134,7 +133,6 @@ vs_esqUI <- function(id) {
 }
 
 ## server for vs_esq
-#' @importFrom esquisse esquisserServer
 vs_esqServer <- function(id, shared) {
     module <- function(input, output, session) {
         ns <- session$ns

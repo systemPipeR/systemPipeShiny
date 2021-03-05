@@ -1,8 +1,7 @@
-######################### SPS main function #############################
+
 # Initiation, creating tabs etc.
 
-
-#' @import shiny shinyTree
+#' @import shiny spsUtil spsComps drawer
 #' @importFrom plotly plotlyOutput
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom shinyWidgets pickerInput
@@ -15,7 +14,7 @@
 #' @importFrom shinytoastr toastr_success
 #' @importFrom methods is
 #' @importFrom DT DTOutput
-#' @importFrom shinyWidgets radioGroupButtons pickerInput
+#' @importFrom shinyWidgets radioGroupButtons pickerInput progressBar updateProgressBar
 #' @importFrom stringr str_split str_remove_all str_replace_all str_which
 #' @importFrom stringr str_remove str_which str_extract str_replace str_sort
 #' @importFrom stringr str_detect str_pad
@@ -26,8 +25,15 @@
 #' @importFrom stats relevel
 #' @importFrom utils capture.output write.csv read.delim
 #' @importFrom dplyr count
+#' @importFrom shinytoastr toastr_warning toastr_error
 NULL
 
+utils::globalVariables(c(
+    ".", ".module_pkgs"
+))
+
+
+######################### SPS main functions #############################
 
 #' SystemPipeShiny app main function
 #' @param tabs custom visualization tab IDs that you want to display, in a character
@@ -57,6 +63,7 @@ NULL
 #'     )
 #' }
 sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
+    # check tabs
     assert_that(is.character(tabs))
     if(any(duplicated(tabs)))
         spserror(glue("You input duplicated tab IDs: ",
@@ -83,12 +90,18 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
         spsinfo("Using default tabs")
         tabs <- dplyr::tibble()
     }
-    ui <- spsUI(tabs)
+    # check for required module pkgs
+    missings <- checkModulePkgs()
+    if(missings %>% unlist %>% length() > 0) spswarn("You have missing packages, some modules will not be loaded")
+    # load UI
+    ui <- spsUI(tabs, missings)
     spsinfo("UI created")
+    # load server
     server_expr <- rlang::enexpr(server_expr)
-    server <- spsServer(tabs, server_expr)
+    server <- spsServer(tabs, server_expr, missings)
     spsinfo("Server functions created")
     spsinfo("App starts ...", verbose = TRUE)
+    # return in a list to be called
     list(ui = ui, server = server)
 }
 
@@ -100,8 +113,9 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
 #' @param app_path path, a directory where do you want to create this project,
 #' must exist.
 #' @param project_name Your project name, default is `SPS_` + `time`
-#' @param database_name project database name, recommend to use the default
-#'  name: "sps.db". It is used to store app meta information, see [spsDb()]
+#' @param database_name deprecated in current version.
+#' project database name, recommend to use the default
+#'  name: "sps.db". It is used to store app meta information.
 #' @param overwrite bool, overwrite the `app_path` if there is a folder that
 #' has the same name as `project_name`?
 #' @param change_wd bool, when creation is done, change working directory into
@@ -110,7 +124,10 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
 #' @param open_files bool, If `change_wd == TRUE` and you are also in Rstudio,
 #' it will open up *global.R* for you
 #' @param colorful bool, should message from this function be colorful?
-#' @details Make sure you have write permission to `app_path`
+#' @details Make sure you have write permission to `app_path`.
+#'
+#' The database in not used in current version.
+#'
 #' @importFrom rstudioapi isAvailable navigateToFile
 #' @export
 #' @return creates the project folder
@@ -155,12 +172,12 @@ spsInit <- function(app_path=getwd(),
     copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, overwrite, verbose)
     copySPSfiles("app/app_ez/server.R", project_dir, FALSE, overwrite, verbose)
 
-    spsinfo("Create SPS database", TRUE)
-    suppressWarnings(
-        spsDb$new()$createDb(db_name=file.path(project_dir,
-                                               "config",
-                                               database_name))
-    )
+    # spsinfo("Create SPS database", TRUE)
+    # suppressWarnings(
+    #     spsDb$new()$createDb(db_name=file.path(project_dir,
+    #                                            "config",
+    #                                            database_name))
+    # )
     if(change_wd) {
         spsinfo(glue("Change working directory to {project_dir}"))
         setwd(project_dir)
@@ -171,6 +188,8 @@ spsInit <- function(app_path=getwd(),
     msg("SPS project setup done!", "SPS-INFO", "green")
 }
 
+
+################### Internal setups ###########################
 
 #' Pre start SPS checks
 #'
@@ -354,41 +373,6 @@ copySPSfiles <- function(file_path,
     spsinfo(glue("File(s) copied for {app_path}"), verbose)
 }
 
-
-#' Get or set SPS options
-#'
-#' @param opt string, length 1, what option you want to get or set
-#' @param value if this is not `NULL`, this function will set the
-#' option you choose to this value
-#' @param empty_is_false bool, when trying to get an option value, if the
-#' option is `NULL`, `NA`, `""` or length is 0, return `FALSE`?
-#' @return return the option value if value exists; return `FALSE` if the value
-#' is empty, like `NULL`, `NA`, `""`; return `NULL` if `empty_is_false = FALSE`;
-#'  see [emptyIsFalse]
-#'
-#'  If `value != NULL` will set the option to this new value, no returns.
-#' @export
-#' @seealso [viewSpsDefaults()] for options you can view or set
-#' @examples
-#' spsOption("test1", 1)
-#' spsOption("test1")
-#' spsOption("test2")
-#' spsOption("test2", empty_is_false = FALSE)
-spsOption <- function(opt, value = NULL, empty_is_false = TRUE){
-    assert_that(is.character(opt) & length(opt) == 1)
-    if(not_empty(value))
-        options(sps = getOption('sps') %>% {.[[opt]] <- value; .})
-    else {
-        get_value <- getOption('sps')[[opt]]
-        if(!emptyIsFalse(get_value)){
-            if(empty_is_false) FALSE
-            else get_value
-        }
-        else get_value
-    }
-}
-
-
 #' View SPS project 'config/tabs.csv' information
 #'
 #' @param return_type one of 'print', 'data', 'colnames', or a specified column
@@ -429,3 +413,83 @@ spsTabInfo <- function(return_type = "print", n_print = 40, app_path = getwd()){
         }
            )
 }
+
+# declaim pkg check var
+.module_pkgs <- list(
+    wf = sort(c(
+        'systemPipeR',
+        'systemPipeRdata',
+        'networkD3',
+        'rhandsontable',
+        'zip',
+        'callr',
+        'pushbar',
+        'fs',
+        'readr',
+        'R.utils',
+        'DOT',
+        'shinyTree',
+        "openssl"
+    )),
+    rna = sort(c(
+        'DESeq2',
+        'systemPipeR',
+        'SummarizedExperiment',
+        'glmpca',
+        'pheatmap',
+        'grid',
+        'ape',
+        'ggtree',
+        'Rtsne',
+        'UpSetR',
+        'tidyr'
+    )),
+    ggplot = sort(c(
+        'esquisse'
+    ))
+)
+
+
+checkModulePkgs <- function(){
+    list(
+        wf = checkModulePkgs_internal("module_wf", .module_pkgs[['wf']], "workflow"),
+        rna = checkModulePkgs_internal("module_rnaseq", .module_pkgs[['rna']], "RNA-Seq"),
+        ggplot = checkModulePkgs_internal("module_ggplot", .module_pkgs[['ggplot']], "Quick ggplot")
+    )
+}
+
+checkModulePkgs_internal <- function(module_name, pkgs, mol_title){
+    if(spsOption(module_name)){
+        missings <- spsUtil::checkNameSpace(pkgs, quietly = TRUE)
+        missing_str <- glue_collapse(missings, '", "')
+        if(emptyIsFalse(missings)){
+            spswarn(c('You are loading the ', mol_title, ' module but missing packages: "',
+                      missing_str, '", run:'))
+            cat(glue(
+                '
+                if (!requireNamespace("BiocManager", quietly=TRUE))
+                    install.packages("BiocManager")
+                BiocManager::install(c("{missing_str}"))\n
+                '
+            ))
+        }
+        glue(
+        '
+        ```r
+        if (!requireNamespace("BiocManager", quietly=TRUE))
+            install.packages("BiocManager")
+        BiocManager::install(c("{missing_str}"))
+        ```
+        '
+        )
+    } else NULL
+}
+
+
+
+
+
+
+
+
+

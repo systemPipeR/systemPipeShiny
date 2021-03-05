@@ -77,9 +77,7 @@ wf_cwlUI <- function(id){
         When I run `renderWF`
 
         ```
-        args <- renderWF(
-            args,
-            inputvars = c(FileName1 = "_FASTQ_PATH1_"))
+        args <- renderWF(args, inputvars = c(FileName1 = "_FASTQ_PATH1_"))
         ```
         I am saying to replace the `_FASTQ_PATH1_` records in *.yml* with `FileName1`
         column from my targets file. Internally, SPR will treat the input yaml as the following
@@ -90,6 +88,9 @@ wf_cwlUI <- function(id){
           class: File
           path: [f1_1, f1_2, f1_x, ...]
         ```
+
+        #### Read more
+        Read more how CWL works in SPR on [our website](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container)
         '),
         spsHr(),
         boxPlus(

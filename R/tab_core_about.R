@@ -78,14 +78,9 @@ core_aboutUI <- function(id){
                 collapsible = FALSE
             )
         ), spsHr(),
-        h3("Read the manual"),
-        tags$iframe(src="https://systempiper.github.io/systemPipeShiny-book/",
-                    style="border: 1px solid #AAA; width: 100%; height: 700px"),
-        br(), spsHr(),
-        tags$a(href="https://bioconductor.org/packages/release/bioc/html/systemPipeShiny.html",
-               "Visist Bioconductor page")
+        markdown('### [Read the manual](https://systempipe.org/sps/)'),
+        br()
     )
-
 }
 
 ## server

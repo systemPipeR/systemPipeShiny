@@ -1,5 +1,5 @@
 temp_dir <- tempdir()
-systemPipeShiny::quiet(systemPipeShiny::spsInit(app_path = temp_dir,
+spsUtil::quiet(systemPipeShiny::spsInit(app_path = temp_dir,
                                                 project_name = "test_tabs",
                                                 open_files = FALSE,
                                                 overwrite = TRUE,

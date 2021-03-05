@@ -1,4 +1,3 @@
-#' @importFrom  DESeq2 DESeqDataSetFromMatrix results lfcShrink
 .run_DESeq2 <- function (countDF, targets, cmp, independent = FALSE,
                          prefilter = 1,
                          lfcShrink = TRUE, lfcShrink_type = "normal",
