@@ -25,7 +25,7 @@ wf_runUI <- function(id){
         **Most SPR workflows needs to run in *Unix-like* system. Windows will fail to run except the example workflow**
         '),
             spsHr(),
-            boxPlus(
+            box(
                 width = 8,
                 collapsible = FALSE,
                 closable = FALSE,
@@ -59,7 +59,7 @@ wf_runUI <- function(id){
                         spsLoader())
                 )
             ),
-            boxPlus(
+            box(
                 title = "Required files in task",
                 width = 4,
                 closable = FALSE,

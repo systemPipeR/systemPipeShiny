@@ -1105,7 +1105,7 @@ spsEzUI <- function(desc="", tab_title = "Tab Title",
                         h3("Load table"),
                         column(
                             3,
-                            boxPlus(
+                            box(
                                 closable = FALSE, width = 12,
                                 radioGroupButtons(
                                     inputId = ns("source_df"),
@@ -1129,13 +1129,13 @@ spsEzUI <- function(desc="", tab_title = "Tab Title",
                                 clearableTextInput(
                                     ns("df_comment"), "File comments", value = "#")
                             ),
-                            boxPlus(
+                            box(
                                 closable = FALSE, width = 12,
                                 title = "Confirm to use this table",
                                 actionButton(ns("add_df"), "Confirm")
                             )
                         ),
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 9,
                             DT::DTOutput(ns("df_out"))
                         )

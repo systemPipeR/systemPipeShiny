@@ -1,0 +1,38 @@
+## remote messages to notify users in the app
+## When app starts, it will first try to load this file from online
+## type: one of package or general, required
+## expire: a date to display before the date, required
+## title: required
+## icon: any font-awesome icon name
+## status: one of primary, success, info, warning, danger
+## pkg_name: required if type == 'package'
+## version: required if type == 'package'
+-
+    type: package
+    pkg_name: systemPipeShiny
+    version: 1.1.21
+    title: SPS 1.1.20 available
+    expire: 2021-05-05
+    icon: info
+    status: info
+    message: |
+        ## New version of SPS
+        SPS 1.1.20 has come out. In this version, we have enabled many new features,
+        and fix bugs from our-end and caused by other dependencies.
+        Read the change log on [github](https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md)
+        or [our website](https://systempipe.org/sps/funcs/sps/news/index.html)
+
+-
+    type: general
+    pkg_name:
+    version:
+    title: Manual updated
+    expire: 2021-06-01
+    icon:
+    status:
+    message: |
+        ## sysPipe website
+        We have created the  <https://systempipe.org/> website for systemPipeR,
+        systemPipeShiny and all downstream packages.
+
+        You can also read the user manual for SPS on the website <https://systempipe.org/sps>

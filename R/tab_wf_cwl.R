@@ -93,10 +93,10 @@ wf_cwlUI <- function(id){
         Read more how CWL works in SPR on [our website](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container)
         '),
         spsHr(),
-        boxPlus(
+        box(
             title = "Parse CWL files",
             closable = FALSE, collapsible = FALSE,
-            status = "teal",
+            status = "info",
             width = 12,
             class = "center-block",
             HTML(
@@ -121,12 +121,12 @@ wf_cwlUI <- function(id){
                     )
             )
         ),
-        boxPlus(
+        box(
             title = "Choose which targets columns to replace CWL input variables:",
             class = "center-block", width = 12, closable = FALSE, collapsible = TRUE,
             fluidRow(id = ns("replace-box"))
         ),
-        boxPlus(
+        box(
             class = "center-block",
             closable = FALSE, width = 12, collapsible = TRUE,
             title = "Parse Results",
@@ -159,7 +159,7 @@ wf_cwlUI <- function(id){
                     ),
                     column(
                         3,
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 12,
                             radioGroupButtons(
                                 inputId = ns("source_targets"),
@@ -184,7 +184,7 @@ wf_cwlUI <- function(id){
                                 ns("targets_comment"), "File comments", value = "#")
                         )
                     ),
-                    boxPlus(
+                    box(
                         closable = FALSE, width = 9,
                         DT::DTOutput(ns("targets"))
                     )
@@ -195,7 +195,7 @@ wf_cwlUI <- function(id){
                 fluidRow(
                     column(
                         3,
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 12,
                             radioGroupButtons(
                                 inputId = ns("source_cwl"),
@@ -225,7 +225,7 @@ wf_cwlUI <- function(id){
                 fluidRow(
                     column(
                         3,
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 12,
                             radioGroupButtons(
                                 inputId = ns("source_cwl_input"),

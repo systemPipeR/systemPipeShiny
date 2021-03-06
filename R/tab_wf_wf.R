@@ -60,7 +60,7 @@ wf_wfUI <- function(id){
             A manual with screenshots and details is on [our website](https://systempipe.org/sps/modules/workflow/)
             '),
             spsHr(),
-            boxPlus(
+            box(
                 title = "Confirm to use this workflow file",
                 closable = FALSE, collapsible = TRUE,
                 width = 12,
@@ -108,7 +108,7 @@ wf_wfUI <- function(id){
                 )
             ),
             fluidRow(
-                boxPlus(title = "Display workflow file", width = 12,
+                box(title = "Display workflow file", width = 12,
                         closable = FALSE,
                         shinyWidgets::radioGroupButtons(
                             inputId = ns("wf_source"),
@@ -131,7 +131,7 @@ wf_wfUI <- function(id){
             ),
             fluidRow(
                 column(5,
-                       boxPlus(
+                       box(
                            title = "Select workflow steps",
                            width = 12,
                            closable = FALSE,
@@ -153,7 +153,7 @@ wf_wfUI <- function(id){
                        )
                 ),
                 column(7,
-                       boxPlus(title = "Workflow steps selected",
+                       box(title = "Workflow steps selected",
                                width = 12,
                                closable  = FALSE,
                                enable_sidebar = TRUE,
@@ -177,7 +177,7 @@ wf_wfUI <- function(id){
                 )
             ),
             fluidRow(
-                boxPlus(
+                box(
                     title = "Preview of the workflow report", width = 12,
                     closable = FALSE,
                     uiOutput(ns("wf_md_ui"))

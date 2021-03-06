@@ -6,7 +6,7 @@ core_topUI <- function(id){
     ns <- NS(id)
     init <-
 "print('Ready to run a workflow')"
-    tagList(
+    div(
         tags$script(src = "sps/js/split1.6.0.js"),
         pushbar::pushbar_deps(),
         pushbar::pushbar(
@@ -268,7 +268,7 @@ core_topUI <- function(id){
 
 ## server
 
-#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinydashboard box
 #' @importFrom shinyWidgets actionBttn confirmSweetAlert
 #' @importFrom shinyjs toggleState
 #' @noRd

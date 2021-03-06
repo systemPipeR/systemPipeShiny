@@ -1,5 +1,4 @@
 ## UI
-#' @importFrom shinydashboardPlus carousel carouselItem
 #' @noRd
 core_dashboardUI <- function(id){
     ns <- NS(id)

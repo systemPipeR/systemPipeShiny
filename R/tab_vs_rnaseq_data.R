@@ -101,7 +101,7 @@ vs_rnaseq_dataUI <- function(id) {
                         HTML('<p>Only <b>SampleName</b> and <b>Factor</b> columns are required.</p>'),
                         column(
                             3,
-                            boxPlus(
+                            box(
                                 closable = FALSE, width = 12,
                                 radioGroupButtons(
                                     inputId = ns("source_targets"),
@@ -125,13 +125,13 @@ vs_rnaseq_dataUI <- function(id) {
                                 clearableTextInput(
                                     ns("targets_comment"), "File comments", value = "#")
                             ),
-                            boxPlus(
+                            box(
                                 closable = FALSE, width = 12,
                                 title = "Confirm to use this table",
                                 actionButton(ns("add_targets"), "Confirm")
                             )
                         ),
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 9,
                             DT::DTOutput(ns("targets"))
                         )
@@ -142,12 +142,12 @@ vs_rnaseq_dataUI <- function(id) {
                           groups for DEG analysis. The parsed comparision groups
                           are displayed on the right. Please confirm this is the
                           the desired DEG groups."),
-                        boxPlus(
+                        box(
                             verbatimTextOutput(ns("targets_header_raw")),
                             title = "Original header lines",
                             width = 7, closable = FALSE,
                             style = "height: 300px; overflow-y: scroll;"),
-                        boxPlus(
+                        box(
                             verbatimTextOutput(ns("targets_header_parsed")),
                             title = "Parsed DEG comparisions",
                             width = 5, closable = FALSE,
@@ -163,7 +163,7 @@ vs_rnaseq_dataUI <- function(id) {
                         h3("Load count table"),
                         column(
                             3,
-                            boxPlus(closable = FALSE, width = 12,
+                            box(closable = FALSE, width = 12,
                                     radioGroupButtons(
                                         inputId = ns("source_count"),
                                         label = "Choose your count file source:",
@@ -187,7 +187,7 @@ vs_rnaseq_dataUI <- function(id) {
                                         ns("count_comment"), "File comments", value = "#")
 
                             ),
-                            boxPlus(
+                            box(
                                 closable = FALSE, width = 12,
                                 title = "Confirm to use this count table",
                                 p(
@@ -198,7 +198,7 @@ vs_rnaseq_dataUI <- function(id) {
                                     ns("add_count"), "Confirm", disabled = "disabled")
                             )
                         ),
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 9,
                             DT::DTOutput(ns("count"))
                         )

@@ -9,10 +9,9 @@
 #' @details Workflow tabs and other `core` tabs are loaded by default. You can
 #' only optionally choose visualization tabs. See config/tabs.csv for tab info.
 #' @importFrom rlang eval_tidy parse_expr
-#' @importFrom shinydashboard menuSubItem tabItem dashboardSidebar
-#' @importFrom shinydashboard sidebarSearchForm sidebarMenu menuItem tabItems
-#' @importFrom shinydashboard dashboardBody
-#' @importFrom shinydashboardPlus dashboardHeaderPlus dashboardPagePlus
+#' @importFrom shinydashboard menuSubItem tabItem
+#' @importFrom shinydashboard sidebarSearchForm sidebarMenu menuItem tabItems dashboardBody
+#' @importFrom shinydashboardPlus dashboardHeader dashboardPage dashboardSidebar dashboardPage
 #' @importFrom shinyWidgets useSweetAlert
 #' @importFrom shinyjs useShinyjs
 #' @noRd
@@ -28,7 +27,6 @@ spsUI <- function(tabs, module_missings){
         }) %>% tagList()
     } else tagList()
 
-
     spsinfo("Loading custom tab UI ...")
     tab_items <- c(tabs[['tab_id']]) %>% {.[. != ""]} %>%
         lapply(function(x){
@@ -37,15 +35,24 @@ spsUI <- function(tabs, module_missings){
             shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
         })
     # header
+    spsinfo("Loading notifications from developer...")
+    notes <- parseNote()
     spsinfo("Create UI header ...")
-    dashboardHeader <- shinydashboardPlus::dashboardHeaderPlus(
+    dashboardHeader <- shinydashboardPlus::dashboardHeader(
         title = tagList(
             span(class = "logo-lg", "systemPipeShiny"),
             img(src = "img/sps_small.png")
         ),
-        enable_rightsidebar = FALSE,
-        rightSidebarIcon = "clipboard-check",
-        left_menu = if(spsOption("module_wf")) core_topUI("core_top") else NULL
+        leftUi = tagList(
+            if(length(module_missings[['wf']]) == 0) core_topUI("core_top")  else div(),
+            div(notes[['modals']])
+        ),
+        shinydashboard::dropdownMenu(
+            type = "notifications", badgeStatus = if(emptyIsFalse(notes[['items']])) "warning" else "success" ,
+            icon = if(emptyIsFalse(notes[['items']])) icon("warning") else icon("check"),
+            headerText = "SPS notifications",
+            .list = notes[['items']]
+        )
     )
     # side bar
     spsinfo("Create UI sidebar menu ...")
@@ -55,59 +62,61 @@ spsUI <- function(tabs, module_missings){
         spsOption("module_rnaseq"),
         spsOption("module_ggplot"))
     # start to load tabs
-    dashboardSidebar <-  shinydashboard::dashboardSidebar(
+    dashboardSidebar <-  shinydashboardPlus::dashboardSidebar(
+
         shinydashboard::sidebarSearchForm(textId = "searchText",
                                           buttonId = "searchButton",
                                           label = "Search..."),
-        shinydashboard::sidebarMenu(id = "left_sidebar",
-                    shinydashboard::menuItem("Welcome",
-                                             tabName = "core_dashboard",
-                                             icon = icon("sitemap")
-                    ),
-                    if (any_module) {
+        shinydashboard::sidebarMenu(
+            id = "left_sidebar",
+            shinydashboard::menuItem("Welcome",
+                                     tabName = "core_dashboard",
+                                     icon = icon("sitemap")
+            ),
+            if (any_module) {
+                shinydashboard::menuItem(
+                    text = "Modules",
+                    icon = icon("layer-group"),
+                    tabName = "module_main",
+                    if(spsOption("module_wf"))
                         shinydashboard::menuItem(
-                            text = "Modules",
-                            icon = icon("layer-group"),
-                            tabName = "module_main",
-                            if(spsOption("module_wf"))
-                                shinydashboard::menuItem(
-                                    text = "Workflow Mangement",
-                                    tabName = "wf"
-                                )
-                            else "",
-                            if(spsOption("module_rnaseq"))
-                                shinydashboard::menuItem(
-                                    text = "RNA-Seq",
-                                    tabName = "vs_rnaseq"
-                                )
-                            else "",
-                            if(spsOption("module_ggplot"))
-                                shinydashboard::menuItem(
-                                    text = "Quick {ggplot}",
-                                    tabName = "vs_esq"
-                                )
-                            else ""
+                            text = "Workflow Mangement",
+                            tabName = "wf"
                         )
-                    } else {
-                        ""
-                    }
-                    ,
-                    shinydashboard::menuItem(
-                        "Custom tabs",
-                        icon = icon("images"),
-                        tabName = "vs_main",
-                        menu_tab ## add tabs sidebar
-                    ),
-                    shinydashboard::menuItem(
-                        "Canvas",
-                        tabName = "core_canvas",
-                        icon = icon("paint-brush")
-                    ),
-                    shinydashboard::menuItem(
-                        "About",
-                        icon = icon("info"),
-                        tabName = "core_about"
-                    )
+                    else "",
+                    if(spsOption("module_rnaseq"))
+                        shinydashboard::menuItem(
+                            text = "RNA-Seq",
+                            tabName = "vs_rnaseq"
+                        )
+                    else "",
+                    if(spsOption("module_ggplot"))
+                        shinydashboard::menuItem(
+                            text = "Quick {ggplot}",
+                            tabName = "vs_esq"
+                        )
+                    else ""
+                )
+            } else {
+                ""
+            }
+            ,
+            shinydashboard::menuItem(
+                "Custom tabs",
+                icon = icon("images"),
+                tabName = "vs_main",
+                menu_tab ## add tabs sidebar
+            ),
+            shinydashboard::menuItem(
+                "Canvas",
+                tabName = "core_canvas",
+                icon = icon("paint-brush")
+            ),
+            shinydashboard::menuItem(
+                "About",
+                icon = icon("info"),
+                tabName = "core_about"
+            )
         )
     )
     # body
@@ -161,7 +170,7 @@ spsUI <- function(tabs, module_missings){
     # )
     # app main UI
     spsinfo("Merge header, menu, body to dashboard ...")
-    mainUI <- shinydashboardPlus::dashboardPagePlus(
+    mainUI <- shinydashboardPlus::dashboardPage(
         header = dashboardHeader,
         sidebar = dashboardSidebar,
         title = "systemPipeShiny",

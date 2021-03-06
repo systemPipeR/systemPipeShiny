@@ -1,14 +1,12 @@
 #' Admin page UI
 #' Internal func
-#' @importFrom shinydashboard dashboardSidebar dashboardBody
-#' @importFrom shinydashboardPlus dashboardPagePlus dashboardHeaderPlus
 #' @importFrom shinyWidgets materialSwitch
 #' @noRd
 adminUI <- function(){
     ns <- NS("admin")
     shinydashboardPlus::dashboardPagePlus(
         title = "Admin Panel",
-        header = shinydashboardPlus::dashboardHeaderPlus(
+        header = shinydashboard::dashboardHeader(
 
         ),
         sidebar = shinydashboard::dashboardSidebar(

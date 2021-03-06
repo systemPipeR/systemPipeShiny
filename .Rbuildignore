@@ -17,3 +17,4 @@ _pkgdown\.yml
 ^_pkgdown/
 ^index.md$
 ^inst/depend
+^inst/remote_resouce

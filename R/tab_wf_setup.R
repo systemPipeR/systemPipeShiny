@@ -42,7 +42,7 @@ wf_setupUI <- function(id){
         '),
         spsHr(),
         # column(1),
-        boxPlus(
+        box(
             width = 12,
             collapsible = FALSE,
             closable = FALSE,

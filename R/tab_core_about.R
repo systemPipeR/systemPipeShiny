@@ -1,11 +1,11 @@
 ## UI
-#' @importFrom shinydashboardPlus widgetUserBox
+#' @importFrom shinydashboardPlus userBox
 #' @noRd
 core_aboutUI <- function(id){
     ns <- NS(id)
     tags$div(
         tabTitle("About this app"),
-        boxPlus(
+        box(
             closable = FALSE,
             collapsible = TRUE,
             width = 12,
@@ -23,7 +23,7 @@ core_aboutUI <- function(id){
         ), spsHr(),
         h3("Developers"),
         fluidRow(
-            shinydashboardPlus::widgetUserBox(
+            shinydashboard::box(
                 title = HTML('<a href="https://github.com/lz100">Le Zhang</a>'),
                 subtitle = "Student",
                 type = 2,
@@ -32,7 +32,7 @@ core_aboutUI <- function(id){
                 closable = FALSE,
                 collapsible = FALSE
             ),
-            shinydashboardPlus::widgetUserBox(
+            shinydashboard::box(
                 title = HTML('<a href="https://github.com/dcassol">Daniela Cassol</a>'),
                 subtitle = "Postdoc",
                 type = 2,
@@ -41,7 +41,7 @@ core_aboutUI <- function(id){
                 closable = FALSE,
                 collapsible = FALSE
             ),
-            shinydashboardPlus::widgetUserBox(
+            shinydashboard::box(
                 title =  HTML('<a href="https://github.com/mathrj">Ponmathi Ramasamy</a>'),
                 subtitle = "Student",
                 width = 3,
@@ -50,7 +50,7 @@ core_aboutUI <- function(id){
                 closable = FALSE,
                 collapsible = FALSE
             ),
-            shinydashboardPlus::widgetUserBox(
+            shinydashboard::box(
                 title = HTML('<a href="https://github.com/jianhaizhang">Jianhai Zhang</a>'),
                 subtitle = "Student",
                 type = 2,
@@ -59,7 +59,7 @@ core_aboutUI <- function(id){
                 closable = FALSE,
                 collapsible = FALSE
             ),
-            shinydashboardPlus::widgetUserBox(
+            shinydashboard::box(
                 title = HTML('<a href="https://github.com/gdmosher">Gordon Mosher</a>'),
                 subtitle = "Student",
                 type = 2,
@@ -68,7 +68,7 @@ core_aboutUI <- function(id){
                 closable = FALSE,
                 collapsible = FALSE
             ),
-            shinydashboardPlus::widgetUserBox(
+            shinydashboard::box(
                 title = HTML('<a href="https://girke.bioinformatics.ucr.edu">Thomas Girke</a>'),
                 subtitle = "PI",
                 type = 2,

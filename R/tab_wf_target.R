@@ -3,7 +3,7 @@
 
 #' @importFrom shinyAce aceEditor
 #' @importFrom shinydashboard valueBox
-#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinydashboard box
 #' @importFrom shinyWidgets radioGroupButtons
 #' @noRd
 wf_targetUI <- function(id){
@@ -55,7 +55,7 @@ wf_targetUI <- function(id){
             you will see the instruction in the pop-up box.
             '),
             spsHr(),
-            boxPlus(
+            box(
                 title = "Confirm to use this targets file",
                 closable = FALSE, collapsible = TRUE,
                 width = 12,
@@ -130,7 +130,7 @@ wf_targetUI <- function(id){
                        fluidRow(
                            uiOutput(ns("box_missing_ui"))
                        ),
-                       shinydashboardPlus::boxPlus(
+                       shinydashboardPlus::box(
                            "Missing files (first row is treated as column names)",
                            width = 12,
                            p("Write down the root path if you are not using workflow environment default root to store data."),
