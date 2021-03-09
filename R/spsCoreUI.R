@@ -17,23 +17,31 @@
 #' @noRd
 # @examples
 # spsUI()
-spsUI <- function(tabs, module_missings){
+spsUI <- function(tabs, module_missings, sps_env){
     spsinfo("Start to generate UI")
     addResourcePath("sps", "www")
+
+    spsinfo("resolve default tabs UI")
+    core_welcomeUI <- rlang::env_get(sps_env, 'core_welcomeUI', core_welcomeUI)
+    module_mainUI <- rlang::env_get(sps_env, 'module_mainUI', module_mainUI)
+    vs_mainUI <- rlang::env_get(sps_env, 'vs_mainUI', vs_mainUI)
+    core_canvasUI <- rlang::env_get(sps_env, 'core_canvasUI', core_canvasUI)
+    core_aboutUI <- rlang::env_get(sps_env, 'core_aboutUI', core_aboutUI)
+
+    spsinfo("Loading custom tab UI ...")
     menu_tab <- if(nrow(tabs) > 0){
         lapply(seq_len(nrow(tabs)), function(x){
             shinydashboard::menuItem(text = tabs$tab_labels[x],
-                                        tabName = tabs$tab_id[x])
+                                     tabName = tabs$tab_id[x])
         }) %>% tagList()
     } else tagList()
-
-    spsinfo("Loading custom tab UI ...")
     tab_items <- c(tabs[['tab_id']]) %>% {.[. != ""]} %>%
         lapply(function(x){
             tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
             spsinfo(glue("Loading UI for {x}"))
             shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
         })
+
     # header
     spsinfo("Loading notifications from developer...")
     notes <- parseNote()
@@ -50,7 +58,7 @@ spsUI <- function(tabs, module_missings){
         shinydashboard::dropdownMenu(
             type = "notifications", badgeStatus = if(emptyIsFalse(notes[['items']])) "warning" else "success" ,
             icon = if(emptyIsFalse(notes[['items']])) icon("warning") else icon("check"),
-            headerText = "SPS notifications",
+            headerText = "Notifications",
             .list = notes[['items']]
         )
     )
@@ -70,7 +78,7 @@ spsUI <- function(tabs, module_missings){
         shinydashboard::sidebarMenu(
             id = "left_sidebar",
             shinydashboard::menuItem("Welcome",
-                                     tabName = "core_dashboard",
+                                     tabName = "core_welcome",
                                      icon = icon("sitemap")
             ),
             if (any_module) {
@@ -127,8 +135,8 @@ spsUI <- function(tabs, module_missings){
         shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
         # core tabs
         shinydashboard::tabItem(tabName = "module_main", module_mainUI("module_main")),
-        shinydashboard::tabItem(tabName = "core_dashboard",
-                                core_dashboardUI("core_dashboard")),
+        shinydashboard::tabItem(tabName = "core_welcome",
+                                core_welcomeUI("core_welcome")),
         shinydashboard::tabItem(tabName = "core_canvas",
                                 core_canvasUI("core_canvas")),
         shinydashboard::tabItem(tabName = "core_about",

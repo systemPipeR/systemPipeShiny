@@ -4,7 +4,7 @@
 tab_id,display_label,type,type_sub,image,displayed,tab_file_name,plugin
 core_about,About this App,core,,,1,No file for core,core
 core_canvas,Canvas,core,,,1,No file for core,core
-core_dashboard,Home,core,,,1,No file for core,core
+core_welcome,Home,core,,,1,No file for core,core
 core_right,Internal use only,core,,,1,No file for core,core
 core_top,Top push bars,core,,,1,No file for core,core
 module_main,Module Main Page,core,,,1,No file for core,core

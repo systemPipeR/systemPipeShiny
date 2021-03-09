@@ -1,6 +1,6 @@
 ## UI
 #' @noRd
-core_dashboardUI <- function(id){
+core_welcomeUI <- function(id){
     ns <- NS(id)
     tagList(
         tabTitle("Welcome to systemPipeShiny"),
@@ -97,7 +97,7 @@ core_dashboardUI <- function(id){
 }
 
 ## server
-core_dashboardServer <- function(id, shared){
+core_welcomeServer <- function(id, shared){
     module <- function(input, output, session, shared){
         ns <- session$ns
     }

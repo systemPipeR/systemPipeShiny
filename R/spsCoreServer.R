@@ -4,14 +4,23 @@
 #' @importFrom rlang parse_expr eval_tidy
 #' @importFrom shinyjs removeClass toggleClass hide show
 #' @noRd
-spsServer <- function(tabs, server_expr, mod_missings) {
+spsServer <- function(tabs, server_expr, mod_missings, sps_env) {
     spsinfo("Start to create server function")
+    spsinfo("Resolve default tabs server")
+    core_welcomeServer <- rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)
+    module_mainServer <- rlang::env_get(sps_env, 'module_mainServer', module_mainServer)
+    vs_mainServer <- rlang::env_get(sps_env, 'vs_mainServer', vs_mainServer)
+    core_canvasServer <- rlang::env_get(sps_env, 'core_canvasServer', core_canvasServer)
+    core_aboutServer <- rlang::env_get(sps_env, 'core_aboutServer', core_aboutServer)
+
+    spsinfo("Load custom tabs servers")
     tab_modules <- if(nrow(tabs) > 0) {
         names(tabs[['tab_id']]) <- tabs[['tab_id']]
         lapply(tabs[['tab_id']], function(x){
             glue('{x}Server("{x}", shared)') %>% rlang::parse_expr()
         })
     } else list(empty = substitute(spsinfo("No custom server to load.")))
+
     function(input, output, session) {
         # add a container to communicate tabs
         spsinfo("Start to load server")
@@ -19,7 +28,7 @@ spsServer <- function(tabs, server_expr, mod_missings) {
         shared <- reactiveValues()
         # core tabs
         spsinfo("Loading core tabs server")
-        core_dashboardServer("core_dashboard", shared)
+        core_welcomeServer("core_welcome", shared)
 
         # core_rightServer("core_right", shared)
         core_canvasServer("core_canvas", shared)

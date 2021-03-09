@@ -2,13 +2,22 @@
 
 
 
-parseNote <- function(url = "https://raw.githubusercontent.com/lz100/systemPipeShiny/master/inst/remote_resource/notifications.yaml"){
+parseNote <- function(url = spsOption('note_url')){
     # load
-    if(!spsUtil::checkUrl(url, 2)) {
-        spswarn(glue("Cannot reach {url}"))
+    if (!is.character(url) && length(url) != 1){
+        spswarn("Notification url needs to be a single string")
         return(NULL)
     }
-    notes <- yaml::read_yaml(url)
+    if (stringr::str_starts(url, "http")){
+        spswarn("Notification url needs to start with 'http(s)'")
+        return(NULL)
+    }
+    if(!spsUtil::checkUrl(url, 2)) {
+        spswarn(glue("Cannot reach notification url: {url}"))
+        return(NULL)
+    }
+    notes <- shinyCatch(yaml::read_yaml(url))
+    if(is.null(notes)) return(NULL)
     # notes <- yaml::read_yaml("../inst/remote_resource/notifications.yaml")
     mapply(function(note, index){
         if(!.checkNoteExpire(note[['expire']])) return(NULL)

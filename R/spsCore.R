@@ -94,11 +94,11 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
     missings <- checkModulePkgs()
     if(missings %>% unlist %>% length() > 0) spswarn("You have missing packages, some modules will not be loaded")
     # load UI
-    ui <- spsUI(tabs, missings)
+    ui <- spsUI(tabs, missings, sps_env)
     spsinfo("UI created")
     # load server
     server_expr <- rlang::enexpr(server_expr)
-    server <- spsServer(tabs, server_expr, missings)
+    server <- spsServer(tabs, server_expr, missings, sps_env)
     spsinfo("Server functions created")
     spsinfo("App starts ...", verbose = TRUE)
     # return in a list to be called
@@ -286,22 +286,97 @@ resolveOptions <- function(app_path = getwd()){
     options(sps = sps_defaults)
 }
 
-#' Print SPS default options
+#' Print SPS options
 #' @description  Make sure you have created the app directory and it
-#' has *config/config.yaml* file
+#' has *config/config.yaml* file.
+#'
+#' [spsOptDefaults] prints out all default and other avaliable values for
+#' each option. [spsOptions] print all current set option values.
+#'
+#' Note: the [spsUtil::spsOption] is used to get or set a **single** option value.
+#' [spsOptions] is used to print **all** current option values. If you need to
+#' set all values at once, use the *global.R* file under SPS project root.
 #' @param app_path path, where is the app directory
 #'
 #' @export
-#' @return cat to console the default options
+#' @return cat to console SPS option values
 #' @examples
 #' if(interactive()){
+#'     # start a SPS project
 #'     spsInit(open_files = FALSE)
 #'     viewSpsDefaults()
+#'     # change a few options
+#'     options(sps = list(
+#'         mode = "server",
+#'         warning_toast = TRUE,
+#'         loading_screen = FALSE,
+#'         loading_theme = "vhelix",
+#'         use_crayon = TRUE
+#'     ))
+#'     # view current options
+#'     spsOptions()
 #' }
-viewSpsDefaults <- function(app_path = getwd()){
+spsOptDefaults <- function(app_path = getwd()){
     sps_defaults <- verifyConfig(app_path)[[1]]
-    cat(glue("{names(sps_defaults)}: {sps_defaults}\n\n"))
+    option_names <- names(sps_defaults)
+    for (i in seq_along(sps_defaults)) {
+        option_names[i] %>% crayon::blue$bold() %>% {cat(., ":\n", sep = "")}
+        cat(crayon::green$bold("    Default: ")); cat(sps_defaults[[i]][['default']], "\n")
+        cat(crayon::green$bold("    Other: ")); cat(sps_defaults[[i]][['other']], "\n")
+    }
+    cat("* means any value will be accepted\n")
 }
+
+#' @rdname spsOptDefaults
+#' @param show_legend bool, show the color legend?
+#' @importFrom crayon green blue make_style chr
+#'
+#' @return
+#' @export
+#'
+spsOptions <- function(app_path = getwd(), show_legend = TRUE){
+    sps_defaults <- verifyConfig(app_path)[[2]]
+    default_names <- names(sps_defaults)
+    sps_values <- getOption("sps")
+    option_names <- names(sps_values)
+    cat(crayon::green$bold("Current project option settings:"), "\n")
+    for (i in seq_along(sps_values)) {
+        if(option_names[i] %in% default_names) {
+            title_color <- crayon::blue$bold
+            title_suffix <- ""
+            if(identical(sps_values[[i]], sps_defaults[[option_names[i]]])){
+                value_color <- crayon::green$bold
+                value_suffix <- ""
+            }  else {
+                value_color <- crayon::chr
+                value_suffix <- "+"
+            }
+        } else {
+            title_suffix <- "*"
+            title_color <-  crayon::make_style("orange")$bold
+            value_color <-  crayon::make_style("orange")
+            value_suffix <- "+"
+        }
+        paste0(option_names[i], title_suffix) %>% title_color() %>% {cat(., ":\n", sep = "")}
+        cat("    ", value_color(paste0(sps_values[[i]]), value_suffix), "\n", sep = "")
+    }
+    if(show_legend){
+        cat(
+            "********\nOption legend:\n",
+            crayon::blue$bold("    known options    "),
+            crayon::make_style("orange")$bold("    Hidden/custom options* and values+\n"),
+            "Value legend:\n",
+            crayon::green$bold("    same as default values    "),
+            "    different from defaults+",
+            sep = ""
+        )
+    }
+}
+
+
+
+
+
 
 #' Check sps tab file on start
 #' @importFrom vroom vroom cols col_character
