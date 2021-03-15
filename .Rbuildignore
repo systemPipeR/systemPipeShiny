@@ -13,3 +13,8 @@ manifest\.json
 _pkgdown\.yml
 ^TODO
 ^vignettes/systemPipeShiny_cache/*
+^SPS_20*
+^_pkgdown/
+^index.md$
+^inst/depend
+^inst/remote_resouce

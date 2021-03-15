@@ -24,55 +24,55 @@ test_that("DT snap", {
 })
 
 
-test_that("R6 class", {
-    testR6 <- R6::R6Class(
-        classname = "testR6",
-        public = list(
-            initialize = function(){
-                message("create a new R6")
-            },
-            addList = function(num){
-                private$my_list[[length(private$my_list) + 1]] <- num
-            },
-            showList = function(){
-                return(private$my_list)
-            }
-        ),
-        private = list(
-            my_list = list()
-        )
-    )
-    expect_message(testR6$new())
-    newR6 <- testR6$new()
-    expect_type(newR6$showList(), "list")
-    newR6$addList(5)
-    newR6$addList(5)
-    expect_length(newR6$showList(), 2)
-})
+# test_that("R6 class", {
+#     testR6 <- R6::R6Class(
+#         classname = "testR6",
+#         public = list(
+#             initialize = function(){
+#                 message("create a new R6")
+#             },
+#             addList = function(num){
+#                 private$my_list[[length(private$my_list) + 1]] <- num
+#             },
+#             showList = function(){
+#                 return(private$my_list)
+#             }
+#         ),
+#         private = list(
+#             my_list = list()
+#         )
+#     )
+#     expect_message(testR6$new())
+#     newR6 <- testR6$new()
+#     expect_type(newR6$showList(), "list")
+#     newR6$addList(5)
+#     newR6$addList(5)
+#     expect_length(newR6$showList(), 2)
+# })
 
 
-test_that("colourInput", {
-    skip_on_bioc()
-    expect_snapshot_output(colourpicker::colourInput("a", "a"))
-})
+# test_that("colourInput", {
+#     skip_on_bioc()
+#     expect_snapshot_output(colourpicker::colourInput("a", "a"))
+# })
 
 
 
-test_that("blue  green  make_style  red funcs", {
-    skip_on_bioc()
-    if(crayon::has_color()){
-        expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
-        expect_equal(crayon::green$bold("a"),  "\033[32m\033[1ma\033[22m\033[39m")
-        expect_equal(crayon::red$bold("a"), "\033[31m\033[1ma\033[22m\033[39m")
-        expect_equal(crayon::make_style("orange")$bold("a"), "\033[38;5;214m\033[1ma\033[22m\033[39m")
-
-    } else {
-        expect_equal(crayon::blue$bold("a"), remove_ANSI("\033[34m\033[1ma\033[22m\033[39m"))
-        expect_equal(crayon::green$bold("a"),  remove_ANSI("\033[32m\033[1ma\033[22m\033[39m"))
-        expect_equal(crayon::red$bold("a"), remove_ANSI("\033[31m\033[1ma\033[22m\033[39m"))
-        expect_equal(crayon::make_style("orange")$bold("a"), remove_ANSI("\033[38;5;214m\033[1ma\033[22m\033[39m"))
-    }
-})
+# test_that("blue  green  make_style  red funcs", {
+#     skip_on_bioc()
+#     if(crayon::has_color()){
+#         expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
+#         expect_equal(crayon::green$bold("a"),  "\033[32m\033[1ma\033[22m\033[39m")
+#         expect_equal(crayon::red$bold("a"), "\033[31m\033[1ma\033[22m\033[39m")
+#         expect_equal(crayon::make_style("orange")$bold("a"), "\033[38;5;214m\033[1ma\033[22m\033[39m")
+#
+#     } else {
+#         expect_equal(crayon::blue$bold("a"), remove_ANSI("\033[34m\033[1ma\033[22m\033[39m"))
+#         expect_equal(crayon::green$bold("a"),  remove_ANSI("\033[32m\033[1ma\033[22m\033[39m"))
+#         expect_equal(crayon::red$bold("a"), remove_ANSI("\033[31m\033[1ma\033[22m\033[39m"))
+#         expect_equal(crayon::make_style("orange")$bold("a"), remove_ANSI("\033[38;5;214m\033[1ma\033[22m\033[39m"))
+#     }
+# })
 
 test_that("dplyr funcs", {
     df <- dplyr::as_tibble(iris)
@@ -81,7 +81,7 @@ test_that("dplyr funcs", {
     remote <- df %>%
         dplyr::filter(Sepal.Length < 5) %>%
         dplyr::select(Petal.Width)
-    new_df <- collect(remote)
+    new_df <- dplyr::collect(remote)
     expect_equal(names(new_df), "Petal.Width")
     expect_equal(nrow(new_df), 22)
     expect_equal(dplyr::pull(df, Petal.Width)[2], 0.2)
@@ -114,34 +114,28 @@ test_that("glue funcs", {
 })
 
 
-test_that("renderMarkdown funcs", {
-    expect_equal(renderMarkdown(text = "# abc"), "<h1>abc</h1>\n")
-    expect_equal(renderMarkdown(text = "- abc"), "<ul>\n<li>abc</li>\n</ul>\n")
-})
+# test_that("networkD3 funcs", {
+#     t_lvl <- c(1, 3, 1, 2, 2, 3)
+#     t_text <- c('1', '1.1.1', '2', '2.1', '2.2', '2.2.1')
+#     d3_tree <- step2listD3(t_lvl, t_text)
+#     networkD3::diagonalNetwork(d3_tree)
+#     expect_s3_class(renderDiagonalNetwork({}), "shiny.render.function")
+# })
+
+# test_that("networkD3 snap", {
+#     skip_on_bioc()
+#     expect_snapshot_output(networkD3::diagonalNetworkOutput("a"))
+# })
 
 
-test_that("networkD3 funcs", {
-    t_lvl <- c(1, 3, 1, 2, 2, 3)
-    t_text <- c('1', '1.1.1', '2', '2.1', '2.2', '2.2.1')
-    d3_tree <- step2listD3(t_lvl, t_text)
-    networkD3::diagonalNetwork(d3_tree)
-    expect_s3_class(renderDiagonalNetwork({}), "shiny.render.function")
-})
-
-test_that("networkD3 snap", {
-    skip_on_bioc()
-    expect_snapshot_output(networkD3::diagonalNetworkOutput("a"))
-})
-
-
-test_that("openssl funcs", {
-    key <- rsa_keygen()
-    msg <- serialize("1", NULL)
-    encry <- encrypt_envelope(msg, key$pubkey)
-    decry <- decrypt_envelope(encry$data, encry$iv, encry$session, key) %>%
-        unserialize()
-    expect_equal(decry, "1")
-})
+# test_that("openssl funcs", {
+#     key <- rsa_keygen()
+#     msg <- serialize("1", NULL)
+#     encry <- encrypt_envelope(msg, key$pubkey)
+#     decry <- decrypt_envelope(encry$data, encry$iv, encry$session, key) %>%
+#         unserialize()
+#     expect_equal(decry, "1")
+# })
 
 # skip plotly, rhandsontable, tested in main UI
 

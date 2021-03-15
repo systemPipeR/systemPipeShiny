@@ -3,139 +3,169 @@
 
 #' Generate SPS main UI
 #'
-#' @param tabs_df vs data tab IDs
-#' @param tabs_plot vs plot tab IDs
+#' @param tabs custom tabs
 #'
 #' @return shiny dash page
 #' @details Workflow tabs and other `core` tabs are loaded by default. You can
 #' only optionally choose visualization tabs. See config/tabs.csv for tab info.
 #' @importFrom rlang eval_tidy parse_expr
-#' @importFrom shinydashboard menuSubItem tabItem dashboardSidebar
-#' @importFrom shinydashboard sidebarSearchForm sidebarMenu menuItem tabItems
-#' @importFrom shinydashboard dashboardBody
-#' @importFrom shinydashboardPlus dashboardHeaderPlus dashboardPagePlus
+#' @importFrom shinydashboard menuSubItem tabItem
+#' @importFrom shinydashboard sidebarSearchForm sidebarMenu menuItem tabItems dashboardBody
+#' @importFrom shinydashboardPlus dashboardHeader dashboardPage dashboardSidebar dashboardPage
 #' @importFrom shinyWidgets useSweetAlert
 #' @importFrom shinyjs useShinyjs
 #' @noRd
 # @examples
 # spsUI()
-spsUI <- function(tabs_df, tabs_plot){
+spsUI <- function(tabs, mod_missings, sps_env, guide){
     spsinfo("Start to generate UI")
-    menu_df <- if(nrow(tabs_df) > 0){
-        lapply(seq_len(nrow(tabs_df)), function(x){
-            shinydashboard::menuSubItem(text = tabs_df$tab_labels[x],
-                                        tabName = tabs_df$tab_id[x])
-        }) %>% tagList()
-    } else tagList()
-    menu_plot <- if(nrow(tabs_plot) > 0){
-        lapply(seq_len(nrow(tabs_plot)), function(x){
-            shinydashboard::menuSubItem(text = tabs_plot$tab_labels[x],
-                                        tabName = tabs_plot$tab_id[x])
-        }) %>% tagList()
-    } else tagList()
+    addResourcePath("sps", "www")
 
-    spsinfo("Loading custom tab UI ...")
-    tab_items <- c(tabs_df[['tab_id']],
-                   tabs_plot[['tab_id']]) %>% {.[. != ""]} %>%
-        lapply(function(x){
-            tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
-            spsinfo(glue("Loading UI for {x}"))
-            shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
-        })
+    spsinfo("parse title and logo")
+    sps_title <- spsOption("title")
+    if(!(is.character(sps_title) && length(sps_title) == 1)) spserror("Value for option 'title' is incorrect")
+    sps_logo <- spsOption("title_logo")
+    if(!(is.character(sps_logo) && length(sps_logo) == 1)) spserror("Value for option 'title_logo' is incorrect")
+
+    spsinfo("resolve default tabs UI")
+    core_welcomeUI <- rlang::env_get(sps_env, 'core_welcomeUI', core_welcomeUI)
+    module_mainUI <- rlang::env_get(sps_env, 'module_mainUI', module_mainUI)
+    vs_mainUI <- rlang::env_get(sps_env, 'vs_mainUI', vs_mainUI)
+    core_canvasUI <- rlang::env_get(sps_env, 'core_canvasUI', core_canvasUI)
+    core_aboutUI <- rlang::env_get(sps_env, 'core_aboutUI', core_aboutUI)
+
+    if(spsOption("tab_vs_main")) {
+        spsinfo("Loading custom tab UI ...")
+        menu_tab <- if(nrow(tabs) > 0){
+            lapply(seq_len(nrow(tabs)), function(x){
+                shinydashboard::menuItem(text = tabs$tab_labels[x],
+                                         tabName = tabs$tab_id[x])
+            }) %>% tagList()
+        } else tagList()
+        tab_items <- c(tabs[['tab_id']]) %>% {.[. != ""]} %>%
+            lapply(function(x){
+                tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
+                spsinfo(glue("Loading UI for {x}"))
+                shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
+            })
+    } else {
+        spsinfo("You choose not to load custom tabs", TRUE)
+    }
+
+
     # header
+    spsinfo("Loading notifications from developer...")
+    notes <- parseNote()
+
+    spsinfo("Loading guide UI")
+
     spsinfo("Create UI header ...")
-    dashboardHeader <- shinydashboardPlus::dashboardHeaderPlus(
+    dashboardHeader <- shinydashboardPlus::dashboardHeader(
         title = tagList(
-            span(class = "logo-lg", "systemPipeShiny"),
-            img(src = "img/sps_small.png")
+            span(class = "logo-lg", sps_title),
+            img(src = sps_logo, height = "25", width = "25")
         ),
-        enable_rightsidebar = FALSE,
-        rightSidebarIcon = "clipboard-check"
-        # left_menu = core_topUI("core_top")
+        leftUi = tagList(
+            if(!is.null(mod_missings[['wf']]) && length(mod_missings[['wf']]) == 0) core_topUI("core_top")  else div(),
+            div(notes[['modals']])
+        ),
+        guide[['guide_ui']],
+        shinydashboard::dropdownMenu(
+            type = "notifications", badgeStatus = if(emptyIsFalse(notes[['items']])) "warning" else "success" ,
+            icon = if(emptyIsFalse(notes[['items']])) icon("warning") else icon("check"),
+            headerText = "Notifications",
+            .list = notes[['items']]
+        )
     )
     # side bar
     spsinfo("Create UI sidebar menu ...")
-    dashboardSidebar <-  shinydashboard::dashboardSidebar(
-        shinydashboard::sidebarSearchForm(textId = "searchText",
-                                          buttonId = "searchButton",
-                                          label = "Search..."),
-        shinydashboard::sidebarMenu(id = "left_sidebar",
-                    shinydashboard::menuItem("Dashboard",
-                                             tabName = "core_dashboard",
-                                             icon = icon("sitemap")
-                    ),
-                    shinydashboard::menuItem(id = 'wf-control',
-                             "Workflow Mangement",
-                             tabName = "wf_main",
-                             shinydashboard::menuSubItem(text="Targets",
-                                                         tabName="wf_targets"),
-                             shinydashboard::menuSubItem(text="Workflow File",
-                                                         tabName="wf_wf"),
-                             shinydashboard::menuSubItem(text="Workflow Config",
-                                                         tabName="wf_config"),
-                             shinydashboard::menuSubItem(
-                                text= HTML('Run Workflow<small class="badge
-                                  pull-right bg-olive">Dev</small>'),
-                                tabName="wf_run")
-                    ),
-                    shinydashboard::menuItem(
-                        "Visualization",
-                        icon = icon("images"),
-                        tabName = "vs_main",
+    # detect if any built-in module is loaded
+    any_module <- any(
+        spsOption("module_wf"),
+        spsOption("module_rnaseq"),
+        spsOption("module_ggplot"))
+    # start to load tabs
+    dashboardSidebar <-  shinydashboardPlus::dashboardSidebar(
+        br(),
+        # shinydashboard::sidebarSearchForm(textId = "searchText",
+        #                                   buttonId = "searchButton",
+        #                                   label = "Search..."),
+        shinydashboard::sidebarMenu(
+            id = "left_sidebar",
+            if(spsOption("tab_welcome")) shinydashboard::menuItem("Welcome", tabName = "core_welcome", icon = icon("sitemap")) else "",
+            if (any_module) {
+                shinydashboard::menuItem(
+                    text = "Modules",
+                    icon = icon("layer-group"),
+                    tabName = "module_main",
+                    if(spsOption("module_wf"))
                         shinydashboard::menuItem(
-                            text = "Prepare dataset",
-                            ## vs dfs add to sidebar
-                            menu_df
-                        ),
-                        shinydashboard::menuItem(
-                            text = "Collection of plots",
-                            ## vs plots add to sidebar
-                            menu_plot
+                            text = "Workflow Mangement",
+                            tabName = "wf"
                         )
-                    ),
-                    shinydashboard::menuItem(
-                        "Canvas",
-                        tabName = "core_canvas",
-                        icon = icon("paint-brush")
-                    ),
-                    shinydashboard::menuItem(
-                        "About",
-                        icon = icon("info"),
-                        tabName = "core_about"
-                    )
+                    else "",
+                    if(spsOption("module_rnaseq"))
+                        shinydashboard::menuItem(
+                            text = "RNA-Seq",
+                            tabName = "vs_rnaseq"
+                        )
+                    else "",
+                    if(spsOption("module_ggplot"))
+                        shinydashboard::menuItem(
+                            text = "Quick {ggplot}",
+                            tabName = "vs_esq"
+                        )
+                    else ""
+                )
+            } else {
+                ""
+            }
+            ,
+            if(spsOption("tab_vs_main")) shinydashboard::menuItem("Custom tabs", icon = icon("images"), tabName = "vs_main", menu_tab) else "",
+            if(spsOption("tab_canvas")) shinydashboard::menuItem("Canvas", tabName = "core_canvas", icon = icon("paint-brush")) else "",
+            if(spsOption("tab_about")) shinydashboard::menuItem("About", icon = icon("info"), tabName = "core_about") else ""
         )
     )
     # body
     spsinfo("Create UI tab content ...")
     sps_tabs <- shinydashboard::tabItems(
-        # WF tabs
-        shinydashboard::tabItem(tabName = "wf_main", wf_mainUI("wf_main")),
-        wfPanel(),
-        shinydashboard::tabItem(tabName = "wf_targets",
-                                wf_targetUI("wf_targets")),
-        shinydashboard::tabItem(tabName = "wf_wf", wf_wfUI("wf_wf")),
-        shinydashboard::tabItem(tabName = "wf_config",
-                                wf_configUI("wf_config")),
-        shinydashboard::tabItem(tabName = "wf_run", wf_runUI("wf_run")),
+
         # VS tabs
-        shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
+        if(spsOption("tab_vs_main")) shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")) else missingTab(),
         # core tabs
-        shinydashboard::tabItem(tabName = "core_dashboard",
-                                core_dashboardUI("core_dashboard")),
-        shinydashboard::tabItem(tabName = "core_canvas",
-                                core_canvasUI("core_canvas")),
-        shinydashboard::tabItem(tabName = "core_about",
-                                core_aboutUI("core_about"))
+        if(any_module) shinydashboard::tabItem(tabName = "module_main", module_mainUI("module_main")) else missingTab(),
+        if(spsOption("tab_welcome")) shinydashboard::tabItem(tabName = "core_welcome", core_welcomeUI("core_welcome")) else missingTab(),
+        if(spsOption("tab_canvas")) shinydashboard::tabItem(tabName = "core_canvas", core_canvasUI("core_canvas")) else missingTab(),
+        if(spsOption("tab_about")) shinydashboard::tabItem(tabName = "core_about", core_aboutUI("core_about")) else missingTab(),
+        #  modules
+        shinydashboard::tabItem(
+            tabName = "wf",
+            if(!is.null(mod_missings[['wf']]) && length(mod_missings[['wf']]) == 0) wfUI("wf") else modMissingUI(mod_missings[['wf']])
+        ),
+        shinydashboard::tabItem(
+            tabName = "vs_rnaseq",
+            if(!is.null(mod_missings[['rna']]) && length(mod_missings[['rna']]) == 0) vs_rnaseqUI("vs_rnaseq") else modMissingUI(mod_missings[['rna']])
+        ),
+        shinydashboard::tabItem(
+            tabName = "vs_esq",
+            if(!is.null(mod_missings[['ggplot']]) && length(mod_missings[['ggplot']]) == 0) vs_esqUI("vs_esq") else modMissingUI(mod_missings[['ggplot']])
+        )
     )
-    sps_tabs$children <- append(sps_tabs$children, tab_items)
+    if(spsOption("tab_vs_main")) sps_tabs$children <- append(sps_tabs$children, tab_items)
     spsinfo("Add tab content to body ...")
     dashboardBody <- shinydashboard::dashboardBody(
+        class = "sps",
         tags$head(
-            tags$link(rel="shortcut icon", href="img/sps_small.png"),
-            shinyjs::useShinyjs(),
+            tags$link(rel="shortcut icon", href=sps_logo),
             shinyWidgets::useSweetAlert(),
-            useSps(),
+            shinytoastr::useToastr(),
+            shinyjs::useShinyjs(),
+            if(!emptyIsFalse(checkNameSpace('cicerone'))) cicerone::use_cicerone() else div(),
+            tags$script(src="sps/js/sps.js"),
+            tags$link(rel="stylesheet", href = "sps/css/sps.css")
         ),
+        spsComps::spsGoTop(),
+        disconUI(),
         sps_tabs
     )
     # right side bar, not in use at this moment
@@ -145,10 +175,10 @@ spsUI <- function(tabs_df, tabs_plot){
     # )
     # app main UI
     spsinfo("Merge header, menu, body to dashboard ...")
-    mainUI <- shinydashboardPlus::dashboardPagePlus(
+    mainUI <- shinydashboardPlus::dashboardPage(
         header = dashboardHeader,
         sidebar = dashboardSidebar,
-        title = "systemPipeShiny",
+        title = sps_title,
         body =  dashboardBody #,rightsidebar = rightsidebar
     )
     # merge everything together
@@ -158,154 +188,25 @@ spsUI <- function(tabs_df, tabs_plot){
 }
 
 
-
-#' Generate gallery by only providing tab names
-#' @description A fast way in SPS to generate a [gallery] to display plot tab
-#' screenshots
-#' @param tab_ids  a vector of tab IDs
-#' @param Id element ID
-#' @param title gallery title
-#' @param title_color title color, common colors or hex code
-#' @param image_frame_size integer, 1-12
-#' @param type If this value is not `NULL`, filter by tab type, and tab_ids
-#' will be ignored. One of c("core", "wf", "data", "vs"). use [spsTabInfo()]
-#' to see tab information
-#' @param app_path app path, default current working directory
-#' @export
-#' @return gallery div
-#' @details require a SPS project and the config/tabs.csv file. If you want to
-#' use gallery outside a SPS project, use [gallery()]
-#' @examples
-#' if(interactive()){
-#'     spsInit()
-#'     ui <- fluidPage(
-#'         genGallery(c("plot_example1")),
-#'         genGallery(type = "plot")
-#'     )
-#'     server <- function(input, output, session) {
-#'
-#'     }
-#'     shinyApp(ui, server)
-#' }
-genGallery <- function(tab_ids=NULL, Id = NULL, title = "Gallery", type = NULL,
-                       title_color = "#0275d8", image_frame_size = 3,
-                       app_path = NULL) {
-    # use user input path > project setting > default
-    if(!emptyIsFalse(app_path)){
-        app_path <- spsOption("app_path")
-        if(!emptyIsFalse(app_path)) app_path <- getwd()
-    }
-    tabs <- findTabInfo(
-        tab_ids, type,
-        tab_file = file.path(app_path, "config", "tabs.csv"))
-    if (is.null(tabs)) return(div("Nothing to display in gallery"))
-    tabs$images[tabs$images == ""] <- "img/noimg.png"
-    gallery(Id = Id, title = title, title_color = title_color,
-            image_frame_size = image_frame_size,
-            texts = tabs[['tab_labels']], hrefs = tabs[['hrefs']],
-            images = tabs[['images']])
+disconUI <- function(){
+    if(Sys.getenv("SHINY_PORT", "") == "") {
+        HTML('
+            <div id="ss-connect-dialog" style="display: none;">
+              <a id="ss-reload-link" href="#" onclick="window.location.reload(true);"></a>
+            </div>
+            <div id="ss-overlay" style="display: none;"></div>
+        ')
+    } else div()
 }
 
-#' @rdname hrefTab
-#' @param tab_ids tab names, must have the \code{tab_info} dataframe
-#' @param text_color Table text color
-#' @param app_path app path, default is current working directory
-#' @export
-genHrefTab <- function(tab_ids, Id = NULL, title = "A bar to list tabs",
-                       text_color = "#0275d8", app_path = NULL, ...) {
-    # use user input path > project setting > default
-    if(!emptyIsFalse(app_path)){
-        app_path <- spsOption("app_path")
-        if(!emptyIsFalse(app_path)) app_path <- getwd()
-    }
-    tabs <- findTabInfo(
-        tab_ids, tab_file = file.path(app_path, "config", "tabs.csv"))
-    hrefTab(Id = Id, title = title, text_color = text_color,
-            label_text =  tabs[['tab_labels']], hrefs = tabs[['hrefs']], ...)
-}
 
-#' Generate a table that lists tabs by rows
-#' @description  A fast way in SPS to generate a table that lists SPS tabs
-#' @param rows a named list of character vector, the item names in the list
-#' will be the row names and each item should be a vector of tab IDs.
-#' Or you can use one of 'core', 'wf', 'vs', 'data', 'plot' to specify a tab
-#' type, so it will find
-#' all tabs matching that type. See `tab_info.csv` under `config` directory for
-#' type info.
-#' @param Id element ID
-#' @param title table title
-#' @param text_color text color for table
-#' @param ... any additional arguments to the html element, like class, style...
-#' @param app_path app path, default is current working directory
-#' @details For `rows`, there are some specially reserved characters
-#' for type and sub-types, one of c('core', 'wf', 'vs', 'data', 'plot').
-#' If indicated, it will return a list of tabs matching
-#' the indicated tabs instead of searching individual tab names. See examples.
-#' @return HTML elements
-#' @details This function requires a SPS project and the config/tabs.csv file.
-#' If you want to use hrefTable outside a SPS project, or want to create some
-#' links pointing to outside web resources, use [hrefTable]
-#' @export
-#' @examples
-#' if(interactive()){
-#'     spsInit()
-#'     # will be two rows, one row is searched by tab IDs and the other is
-#'     # searched by type.
-#'     rows <- list(row1 = c("core_canvas", "core_about"),
-#'                  row2 =  "data")
-#'     ui <- fluidPage(
-#'         genHrefTable(rows)
-#'     )
-#'     server <- function(input, output, session) {
-#'
-#'     }
-#'     shinyApp(ui, server)
-#' }
-genHrefTable <- function(rows, Id = NULL, title = "A Table to list tabs",
-                         text_color = "#0275d8", app_path = NULL, ...) {
-    # use user input path > project setting > default
-    if(!emptyIsFalse(app_path)){
-        app_path <- spsOption("app_path")
-        if(!emptyIsFalse(app_path)) app_path <- getwd()
-    }
-    tab_list <- mapply(rows, FUN = function(x) {
-        if (length(x) == 1 & x[1] %in% c('core', 'wf', 'vs', 'data', 'plot')){
-            findTabInfo(type = x, tab_file = file.path(app_path, "config", "tabs.csv"))
-        } else {
-            findTabInfo(x, tab_file = file.path(app_path, "config", "tabs.csv"))
-        }
-    }, SIMPLIFY = TRUE)
-    hrefTable(Id = Id, title = title,
-              text_color = text_color, item_titles = names(rows),
-              item_labels = tab_list[2,], item_hrefs = tab_list[3,], ...)
-}
-
-#' Workflow progress tracker UI
-#' @description call it on top level UI not inside a module. Call this function
-#' only once. Do not repeat this function.
-#' @noRd
-# @examples
-# wfPanel()
-wfPanel <- function(){
-    div(class = "tab-pane", id = "wf-panel",
-        absolutePanel(
-            top = "3%", right = "1%", draggable = TRUE, width = "300",
-            height = "auto", class = "control-panel", cursor = "inherit",
-            style = "background-color: white; z-index:999;",
-            fluidRow(
-                column(2),
-                column(8, h4("Workflow Progress")),
-                column(2, HTML('<button class="action-button
-                                  bttn bttn-simple bttn-xs bttn-primary
-                                  bttn-no-outline" data-target="#wf-panel-main"
-                                  data-toggle="collapse">
-                                  <i class="fa fa-minus"></i></button>'))
-            ),
-            div(class = "collapse",
-                id = "wf-panel-main",
-                uiOutput("wf_panel"))
+modMissingUI <- function(install_md){
+    if (length(install_md)) {
+        div(
+            h2("Please install following packages and restart R and then restart the app"),
+            markdown(install_md)
         )
-    )
+    } else div()
 }
 
-
+missingTab <- function(){div(class = "tab-pane")}

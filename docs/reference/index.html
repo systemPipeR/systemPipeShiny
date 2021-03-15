@@ -71,29 +71,30 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
 </li>
 <li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -167,13 +168,7 @@
     </tbody><tbody>
       
       
-      <tr>
-        
-        <td>
-          <p><code><a href="spsAddPlugin.html">spsAddPlugin()</a></code> <code><a href="spsAddPlugin.html">spsRemovePlugin()</a></code> <code><a href="spsAddPlugin.html">spsNewPlugin()</a></code> </p>
-        </td>
-        <td><p>SPS plugin operations</p></td>
-      </tr>
+      
     </tbody><tbody>
       
       <tr>
@@ -214,9 +209,111 @@
       <tr>
         
         <td>
-          <p><code><a href="newTabPlot.html">newTabPlot()</a></code> <code><a href="newTabPlot.html">newTabData()</a></code> </p>
+          <p><code><a href="addData.html">addData()</a></code> <code><a href="addData.html">getData()</a></code> </p>
         </td>
-        <td><p>Create a new SPS tab</p></td>
+        <td><p>Add and get data between SPS tabs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="bsHoverPopover.html">bsHoverPopover()</a></code> </p>
+        </td>
+        <td><p>Bootstrap popover trigger on hover instead of click</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="canvasBtn.html">canvasBtn()</a></code> </p>
+        </td>
+        <td><p>Screenshot a plot or UI to SPS Canvas or download as an image</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="clearableTextInput.html">clearableTextInput()</a></code> </p>
+        </td>
+        <td><p>A clearable text inputInput control</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dynamicFile.html">dynamicFile()</a></code> </p>
+        </td>
+        <td><p>Dynamically generate Shiny file selection component</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dynamicFileServer.html">dynamicFileServer()</a></code> </p>
+        </td>
+        <td><p>Server side function for dynamicFile</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="emptyIsFalse.html">emptyIsFalse()</a></code> </p>
+        </td>
+        <td><p>Empty objects and FALSE will return FALSE</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gallery.html">gallery()</a></code> </p>
+        </td>
+        <td><p>A shiny gallery component</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="genGallery.html">genGallery()</a></code> </p>
+        </td>
+        <td><p>Generate gallery by only providing tab names</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="genHrefTable.html">genHrefTable()</a></code> </p>
+        </td>
+        <td><p>Generate a table that lists tabs by rows</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="heightMatcher.html">heightMatcher()</a></code> </p>
+        </td>
+        <td><p>Match height of one element to the other element</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="hexPanel.html">hexLogo()</a></code> <code><a href="hexPanel.html">hexPanel()</a></code> </p>
+        </td>
+        <td><p>Hexagon logo and logo panel</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="hrefTab.html">genHrefTab()</a></code> <code><a href="hrefTab.html">hrefTab()</a></code> </p>
+        </td>
+        <td><p>Display a list of links in a row of buttons</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="hrefTable.html">hrefTable()</a></code> </p>
+        </td>
+        <td><p>A table of hyper reference buttons</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="loadDF.html">loadDF()</a></code> </p>
+        </td>
+        <td><p>Load tabular files as tibbles to server</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="msg.html">msg()</a></code> <code><a href="msg.html">spsinfo()</a></code> <code><a href="msg.html">spswarn()</a></code> <code><a href="msg.html">spserror()</a></code> </p>
+        </td>
+        <td><p>SPS terminal message logging methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pgPaneUpdate.html">pgPaneUpdate()</a></code> <code><a href="pgPaneUpdate.html">pgPaneUI()</a></code> </p>
+        </td>
+        <td><p>A draggable progress panel</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="quiet.html">quiet()</a></code> </p>
+        </td>
+        <td><p>Suppress cat print output</p></td>
       </tr><tr>
         
         <td>
@@ -226,21 +323,117 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="makePlotData.html">makePlotData()</a></code> </p>
+          <p><code><a href="renderDesc.html">renderDesc()</a></code> </p>
         </td>
-        <td><p>Create data receiving methods for plot tabs</p></td>
+        <td><p>Render some collapsible markdown text</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="makePrepro.html">makePrepro()</a></code> </p>
+          <p><code><a href="shinyCatch.html">shinyCatch()</a></code> </p>
         </td>
-        <td><p>Create data tab preprocess methods</p></td>
+        <td><p>Shiny exception handling</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="shinyCheckPkg.html">shinyCheckPkg()</a></code> </p>
+        </td>
+        <td><p>Shiny package checker</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sps.html">sps()</a></code> </p>
+        </td>
+        <td><p>SystemPipeShiny app main function</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsDb.html">spsDb</a></code> </p>
+        </td>
+        <td><p>SPS database functions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsEncryption.html">spsEncryption</a></code> </p>
+        </td>
+        <td><p>SPS encryption functions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsEzUI.html">spsEzUI()</a></code> <code><a href="spsEzUI.html">spsEzServer()</a></code> </p>
+        </td>
+        <td><p>Easy and simple UI and server for a SPS custom tab</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsHr.html">spsHr()</a></code> </p>
+        </td>
+        <td><p>hr line with color #3b8dbc38</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsInit.html">spsInit()</a></code> </p>
+        </td>
+        <td><p>Create a SystemPipeShiny project</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsNewTab.html">spsNewTab()</a></code> </p>
+        </td>
+        <td><p>Create a new SPS tab</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsOption.html">spsOption()</a></code> </p>
+        </td>
+        <td><p>Get or set SPS options</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="spsTabInfo.html">spsTabInfo()</a></code> </p>
         </td>
         <td><p>View SPS project 'config/tabs.csv' information</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsTimeline.html">spsTimeline()</a></code> <code><a href="spsTimeline.html">updateSpsTimeline()</a></code> </p>
+        </td>
+        <td><p>A shiny timeline component</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="spsValidate.html">spsValidate()</a></code> </p>
+        </td>
+        <td><p>Validate expressions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tabTitle.html">tabTitle()</a></code> </p>
+        </td>
+        <td><p>h2 title with bootstrap info color</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="textInputGroup.html">textInputGroup()</a></code> </p>
+        </td>
+        <td><p>Text input with a button right next to</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="uiExamples.html">uiExamples()</a></code> </p>
+        </td>
+        <td><p>Example UI elements for plotting</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="useSps.html">useSps()</a></code> </p>
+        </td>
+        <td><p>Use SystemPipeShiny javascripts and css style</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="viewSpsDefaults.html">viewSpsDefaults()</a></code> </p>
+        </td>
+        <td><p>Print SPS default options</p></td>
       </tr>
     </tbody><tbody>
       
@@ -266,12 +459,6 @@
           <p><code><a href="spsEncryption.html">spsEncryption</a></code> </p>
         </td>
         <td><p>SPS encryption functions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotContainer.html">plotContainer</a></code> </p>
-        </td>
-        <td><p>SPS snapshots container</p></td>
       </tr>
     </tbody><tbody>
       
@@ -506,7 +693,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

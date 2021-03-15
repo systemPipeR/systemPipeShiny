@@ -7,13 +7,12 @@
 # out_path: string, path of output plot, only apply from svg or png
 # plot_style:  one of 'detect', 'none', 'linear'
 # default is detect, ignoring level but detecting the the longest branch
-# linking frist and last step as main branch.
+# linking first and last step as main branch.
 # height: int, height of svg or png in pixels, default NULL, automatic
 # width: int, width of svg or png in pixels, default NULL, automatic
 # only selected steps will be plotted, make sure at least some steps are
 # TRUE in 'selected' column in df_wf
 
-#' @importFrom DOT dot
 #' @importFrom assertthat is.count
 # @importFrom rsvg rsvg_svg rsvg_png
 #' @noRd

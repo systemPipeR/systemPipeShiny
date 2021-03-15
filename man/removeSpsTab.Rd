@@ -37,13 +37,7 @@ Remove a tab R file and remove from the tabs.csv config file
 }
 \examples{
 spsInit(change_wd = FALSE, overwrite = TRUE)
-newTabData(
-    tab_id = "data_new_remove",
-    tab_displayname = "my first data tab",
-    prepro_methods = list(makePrepro(label = "do nothing",
-                                     plot_options = "plot_new")),
-    app_path = glue::glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}")
-)
-removeSpsTab("data_new_remove", force = TRUE,
+spsNewTab("vs_new", app_path = glue::glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
+removeSpsTab("vs_new", force = TRUE,
              app_path = glue::glue("SPS_{format(Sys.time(), '\%Y\%m\%d')}"))
 }

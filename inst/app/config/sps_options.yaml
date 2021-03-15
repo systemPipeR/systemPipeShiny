@@ -1,3 +1,12 @@
+
+title:
+    default: 'systemPipeShiny'
+    other: ['*']
+
+title_logo:
+    default: "img/sps_small.png"
+    other: ['*']
+
 mode:
     default: local
     other: [server]
@@ -39,3 +48,36 @@ admin_url:
 warning_toast:
     default: true
     other: [false]
+
+module_wf:
+    default: true
+    other: [false]
+
+module_rnaseq:
+    default: true
+    other: [false]
+
+module_ggplot:
+    default: true
+    other: [false]
+
+tab_welcome:
+    default: true
+    other: [false]
+
+tab_vs_main:
+    default: true
+    other: [false]
+
+tab_canvas:
+    default: true
+    other: [false]
+
+tab_about:
+    default: true
+    other: [false]
+
+note_url:
+    default: 'https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/inst/remote_resource/notifications.yaml'
+    other: ['*']
+

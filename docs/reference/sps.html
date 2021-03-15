@@ -72,29 +72,30 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="https://systempipe.org/sps/">
+    <span class="fa fa fa fa-home"></span>
      
+    SPS Home
   </a>
 </li>
 <li>
-  <a href="../articles/systemPipeShiny.html">Get started</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/systemPipeR/systemPipeShiny/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -120,29 +121,22 @@
     <p>SystemPipeShiny app main function</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sps</span>(<span class='kw'>vstabs</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>plugin</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>server_expr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>app_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>())</pre>
+    <pre class="usage"><span class='fu'>sps</span><span class='op'>(</span>tabs <span class='op'>=</span> <span class='st'>""</span>, server_expr <span class='op'>=</span> <span class='cn'>NULL</span>, app_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>vstabs</th>
+      <th>tabs</th>
       <td><p>custom visualization tab IDs that you want to display, in a character
 vector. Use <code><a href='spsTabInfo.html'>spsTabInfo()</a></code> to see what tab IDs you can load</p></td>
-    </tr>
-    <tr>
-      <th>plugin</th>
-      <td><p>If you have loaded some SPS plugins by <code><a href='spsAddPlugin.html'>spsAddPlugin()</a></code>,
-you can specify here as a character vector, and it will load all tabs that
-belong to that plugin to SPS. If you only want
-certain tabs from a plugin, specify in <code>vstabs</code> argument.</p></td>
     </tr>
     <tr>
       <th>server_expr</th>
       <td><p>additional top level sever expression you want
 to run. This will run after the default server expressions. It means you can
 have access to internal server expression objects, like the
-<code><a href='https://shiny.rstudio.com/reference/shiny/latest/reactiveValues.html'>shiny::reactiveValues()</a></code>
+<code><a href='https://rdrr.io/pkg/shiny/man/reactiveValues.html'>shiny::reactiveValues()</a></code>
 object <code>shared</code>. You can also overwrite other values. Read "shared object" in
 vignette.</p></td>
     </tr>
@@ -161,15 +155,16 @@ vignette.</p></td>
 function to find required files.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
-    <span class='fu'><a href='spsInit.html'>spsInit</a></span>()
-    <span class='no'>sps_app</span> <span class='kw'>&lt;-</span> <span class='fu'>sps</span>(
-        <span class='kw'>vstabs</span> <span class='kw'>=</span> <span class='st'>""</span>,
-        <span class='kw'>server_expr</span> <span class='kw'>=</span> {
-            <span class='fu'><a href='msg.html'>msg</a></span>(<span class='st'>"Hello World"</span>, <span class='st'>"GREETING"</span>, <span class='st'>"green"</span>)
-        }
-    )
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
+    <span class='fu'><a href='spsInit.html'>spsInit</a></span><span class='op'>(</span><span class='op'>)</span>
+    <span class='va'>sps_app</span> <span class='op'>&lt;-</span> <span class='fu'>sps</span><span class='op'>(</span>
+        tabs <span class='op'>=</span> <span class='st'>""</span>,
+        server_expr <span class='op'>=</span> <span class='op'>{</span>
+            <span class='fu'><a href='msg.html'>msg</a></span><span class='op'>(</span><span class='st'>"Hello World"</span>, <span class='st'>"GREETING"</span>, <span class='st'>"green"</span><span class='op'>)</span>
+        <span class='op'>}</span>
+    <span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -185,7 +180,7 @@ function to find required files.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

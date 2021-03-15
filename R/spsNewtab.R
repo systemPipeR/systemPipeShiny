@@ -1,652 +1,656 @@
 ############################ SPS New Tab Functions ############################
 
-#' Create a new SPS tab
-#' @description Functions to create a new SPS tab. It is recommended to create
-#' the data tab first then its linked plot tabs.
-#' @param tab_id character string, length 1, must start with "*plot_*" for plot
-#' tabs and "*data_*" for data tabs. Must be a unique value. use
-#' [spsTabInfo(app_path = "YOUR_APP_PATH")][spsTabInfo()] to see current tab
-#' IDs.
-#' @param tab_displayname character string, length 1, the name to be displayed
-#' on side navigation bar list and tab title
-#' @param desc character string, length 1 in markdown format. Tab description
-#' and instructions. You can make type it in multiple lines but in only one
-#' string (one pair of quotes). e.g.
-#' ```
-#' "
-#' # some desc
-#' ## second line,
-#' - bullet 1
-#' - bullet 2
-#' "
-#' ```
-#' @param img realtive path, ideally a plot screenshot of users expect
-#' to see when they make the plot. It can be a internet link or a local
-#' link which uses the *www* folder asthe root.
-#' e.g. drop your image *plot.png* inside *www/plot_list*, then the
-#' link here is "plot_list/plot.png". Only needed for plot tabs.
-#' @param plot_control_ui  additional UI components you want to
-#' add to control plotting options, like additional slider bar, some on/off
-#' switches, text input etc. If more than one components, put them in a
-#' [shiny::tagList]
-#' @param plot_expr the plot expression, like all other expression in other
-#' shiny reactive expressions. e.g for more than one line use *{}*. Only to be
-#' used for plot tabs. default is
-#' ```
-#' plotly::ggplotly(
-#'     ggplot2::ggplot(mydata$data,
-#'            ggplot2::aes_string(names(mydata$data)[1],
-#'                       names(mydata$data)[2])
-#'     ) +
-#'     ggplot2::geom_point(aes(
-#'             color = seq_len(nrow(mydata$data))
-#'     ))
-#' )
-#' ```
-#'
-#' @param pkgs which packages you require users to install, list. specify
-#' CRAN, bioconductor or github packages in a vector. see
-#' [shinyCheckPkg]
-#' ```
-#' list(
-#'     cran_pkg = c("base"),
-#'     bioc_pkg = c(""),
-#'     github = c("")
-#' )
-#' ```
-#' @param plot_data a list of *makePlotData()* results, see [makePlotData] for
-#' details.
-#' ```
-#' list(
-#'     makePlotData("plot_1", ...),
-#'     makePlotData("plot_2", ...),
-#'     ...
-#' )
-#' ```
-#' @param plot_out_func the plot output function to use on UI,
-#' like [shiny::plotOutput], just the function name without quotes
-#' and without *()*. default is [plotly::plotlyOutput].
-#' @param plot_render_func The render plot function to use on server. No quotes,
-#' no *()*. Must be **paired** with *plot_out_func*. e.g
-#' If [plotly::plotlyOutput] is used on UI, server must use
-#' [plotly::renderPlotly]. If you use [shiny::renderPlot],
-#' plot will not show up.
-#' @param app_path string, app directory, default is current directory
-#' @param out_folder_path string, which directory to write the new tab file,
-#' default is the *R* folder in the SPS project
-#' @param plugin character string, if you are building a tab for a plugin, you
-#' can specify the plugin name here.
-#' @param author character string, or a vector of strings. authors of the tab
-#' @param empty bool, for **advanced developers**, if you don't want to
-#' use SPS default tab UI and server structure, you can use turn this to *TRUE*.
-#' A very simple template will be generated and you need to write all UI and
-#' server parts by yourself. In this case, only `tab_id`, `display_name`,
-#' `author` are needed, other
-#' tab args can be ignored, system args are still working, like `verbose`,
-#' `preview`, `style`, `colorful`
-#' @param preview bool, *TRUE* will print the new tab code to console and will
-#' not write the file and will not register the tab
-#' @param use_string bool, sometimes parsing an expression in R may not be
-#' totally accurate. To aviod this problem, turn this to *TRUE* and for
-#' *plot_control_ui*, *plot_expr*, *p_out_func*, *p_render_func*, wrap your
-#' expression in a quoted string. What you have provided in the string will be
-#' what on the new tab file, no expression parsing will happen. Can only be
-#' controlled as a group, which means use string for all of them or none of
-#' them in plot tabs. For data tab, the affected argument is *common_validation*
-#' . When turn this to *TRUE*, be careful with quotes in your expression,
-#' escape or use alternative of single/double quotes.
-#' ```
-#' newTabPlot(
-#'     ...
-#'     use_string = TRUE,
-#'     plot_control_ui = "
-#'     tagList(clearableTextInput('id1', 'label')), h5('this title')
-#'     ",
-#'     plot_expr = "
-#'     plotly::ggplotly(
-#'         ggplot2::ggplot(mydata$data,
-#'                ggplot2::aes_string(names(mydata$data)[1],
-#'                           names(mydata$data)[2])) +
-#'             ggplot2::geom_point(aes(
-#'                 color = seq_len(nrow(mydata$data))
-#'             ))
-#'     )
-#'     ",
-#'     p_out_func = "plotly::plotlyOutput"
-#'     ...
-#' )
-#' ```
-#' @param reformat bool, whether to use [styler::style_file] reformat the code
-#' @param open_file bool, if Rstudio is detected, open the new tab file?
-#' @param verbose bool, default follows the project verbosity level.
-#'  *TRUE* will give you more information on progress and debugging
-#' @param colorful bool, whether the message will be colorful or not
-#' @details
-#' - Must use this function inside a SPS project, use [spsInit()] if
-#' there is no project.
-#' - For a new data tab, different preprocessing methods, their
-#'  pre-prequirements and what plotting options available after each
-#'  preprocess is controlled by the [makePrepro()] function. Each call from
-#'  [makePrepro] function specify one preprocessing method.
-#'  All preprocess methods should be provided in a list
-#'  and passed to the *prepro_methods* argument.
-#' - A new plot tab can have more than one data set as the input. For example a
-#' plot can require a metadata table and a log transformed table as inputs.
-#' There can also be multiple data tabs can preprocess and produce the same log table.
-#' So you need to specify how many data inputs this plot requires; for each
-#' input which data tab(s) this plot tab can receive data from; for each input
-#' data type, what validations (data format checks) you want to do. All of these
-#' are controlled by [makePlotData] and return(s) of this function should be
-#' provided in a list to the *plot_data* argument.
-#' - Different reprocess methods in a data tab
-#'  is controlled by the [makePrepro] function. Each call from
-#'  this function specify one preprocessing method. All preprocess methods
-#'  should be provided in a list to the *prepro_methods* argument.
-#' - One of the steps in creating a plot tab is to specify incoming data source.
-#' This is controlled by `receive_datatab_ids` argument in [makePlotData()].
-#' It requires the data tab IDs exist in the
-#' config file *config/tabs.csv*. So, it is best to create all required data
-#' tabs first. Or specify it to any existing data tab like 'data_example' and
-#' when the template is created, manually change it.
-#' @return a tab file in R folder and tab info registered on config/tabs.csv
-#' @export
-#' @importFrom rlang enquo
-#' @examples
-#' spsInit(change_wd = FALSE, overwrite = TRUE)
-#' newTabData(
-#'     tab_id = "data_new",
-#'     tab_displayname = "my first data tab",
-#'     prepro_methods = list(makePrepro(label = "do nothing",
-#'                                      plot_options = "plot_new")),
-#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
-#' )
-#' newTabPlot(
-#'     tab_id = "plot_new1",
-#'     tab_displayname = "my first plot tab",
-#'     plot_data = list(
-#'         makePlotData(dataset_label = "Data from my new tab",
-#'                      receive_datatab_ids = "data_new",
-#'                      app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
-#'     ),
-#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
-#' )
-#' newTabData(
-#'     tab_id = "data_empty",
-#'     tab_displayname = "my first empty data tab",
-#'     empty = TRUE,
-#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
-#' )
-#' newTabPlot(
-#'     tab_id = "plot_empty",
-#'     tab_displayname = "my first empty plot tab",
-#'     empty = TRUE,
-#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
-#' )
-newTabPlot <- function(tab_id = "plot_id1",
-                       tab_displayname = "Plot Tab Title",
-                       desc = "default",
-                       img = "",
-                       plot_expr = plotly::ggplotly(
-                           ggplot2::ggplot(
-                               mydata$data,
-                               ggplot2::aes_string(names(mydata$data)[1], names(mydata$data)[2])) +
-                               ggplot2::geom_point(ggplot2::aes(
-                                   color = seq_len(nrow(mydata$data))
-                               ))
-                       ),
-                       pkgs = list(
-                           cran_pkg = c("base"),
-                           bioc_pkg = c(""),
-                           github = c("")
-                       ),
-                       plot_data = list(makePlotData(app_path = app_path)),
-                       plot_out_func = plotly::plotlyOutput,
-                       plot_render_func = plotly::renderPlotly,
-                       app_path = getwd(),
-                       out_folder_path = file.path(app_path, "R"),
-                       plot_control_ui = tagList(h3("Some plotting options")),
-                       author = "",
-                       plugin = "",
-                       empty = FALSE,
-                       preview = FALSE,
-                       use_string = FALSE,
-                       reformat = TRUE,
-                       open_file = TRUE,
-                       verbose = spsOption("verbose"),
-                       colorful = spsOption("use_crayon")){
-    verbose_old <- spsOption('verbose')
-    colorful_old <- spsOption('use_crayon')
-    spsOption('verbose', verbose)
-    spsOption('use_crayon', colorful)
-    spsinfo("Asserting tab ID")
-    spsinfo(glue("Asserting info for tab {tab_id}"))
-    out_p <- file.path(out_folder_path, glue("tab_vs_{tab_id}.R"))
-    .newtabAsserts(tab_id = tab_id, tab_displayname = tab_displayname,
-                   desc = desc, author = author,
-                   out_folder_path = out_folder_path,
-                   out_p = out_p, app_path = app_path,
-                   plot_data = plot_data,
-                   reformat = reformat, open_file = open_file,
-                   type_sub = "plot", preview = preview, img = img)
-    spsinfo("Creates descrption")
-    if(desc == "default") desc <- "
-    #### Some Description of this data in markdown
-    - you should ...
-        1. eg 1.
-        2. eg 2.
-        - **Notice**: ...`this` ...
-
-
-    ```
-    some code demo ...
-    ```
-    "
-    spsinfo("Parsing plot `data` methods")
-    pt_data <- .collectPlotData(plot_data)
-    pg_title <-  pt_data[['pg_title']]
-    pg_id <-  pt_data[['pg_id']]
-    hreftab <-  pt_data[['hreftab']]
-    select_input <- pt_data[['select_input']]
-    getdata <- pt_data[['getdata']]
-    vd <- pt_data[['vd']]
-    spsinfo("Parsing plot expression")
-    plot_expr <- .expr2string(rlang::enquo(plot_expr), use_string)
-    spsinfo("Parsing plot output and render function")
-    p_out_func <- .expr2string(rlang::enquo(plot_out_func), use_string)
-    p_render_func <- .expr2string(rlang::enquo(plot_render_func), use_string)
-    spsinfo("Parsing plot UI control HTML")
-    control_ui <- .expr2string(rlang::enquo(plot_control_ui), use_string)
-    spsinfo("Parsing package requirements")
-    pkgs <- .resolveTabPkg(pkgs)
-    spsinfo("Parsing author(s)")
-    author <- glue_collapse(author, sep = ", ")
-    spsinfo("Ensure all template replacements are length 1 strings")
-    list(tab_id, tab_displayname, desc,
-         pg_id, pg_title, select_input,
-         getdata, vd, plot_expr,
-         p_out_func, p_render_func, author,
-         pkgs, hreftab, control_ui) %>%
-        {
-            check_names <- c("tab Id", "display name", "description",
-                             "progress data ID", "progress data title",
-                             "data input selection", "get data expr",
-                             "data validation expr", "plot expression",
-                             "plot output func", "plot render func",
-                             "author", "Package requirements",
-                             "data href tab", "plot control UI")
-            mapply(function(x, name){
-                if(length(x) != 1){
-                    spserror(glue("Injection {name} is not a length 1 string:
-                              {glue_collapse(x, '\n---\n')}"))
-                }
-            }, x = ., name = check_names)
-        }
-    spsinfo("Start to inject to template...")
-    crt_date <- Sys.time()
-    tmp_file <- if(!empty)"plot_tab_template.R" else "plot_tab_template_empty.R"
-    tmp <- readLines(
-        system.file(file.path("app", "templates", tmp_file),
-                    package = "systemPipeShiny")
-    ) %>%
-        glue_collapse(sep = '\n') %>%
-        glue(.open = "#@", .close = "@#")
-    if(preview) return(cat(tmp))
-    spsinfo(glue("Write to file {out_p}"), TRUE)
-    writeLines(tmp, out_p)
-    # reformat
-    .reformatTab(reformat, out_p)
-    # register tab
-    .registerTabWrapper(type_sub = "plot", img, tab_id, tab_displayname,
-                        app_path, out_p, open_file, plugin = plugin)
-    # reset verbose to whatever before the function runs
-    spsOption('verbose', verbose_old)
-    msg("New tab created!", "SPS-SUCCESS", "green")
-    spsOption('use_crayon', colorful_old)
-    return(invisible())
-}
-
-
-#' @rdname newTabPlot
-#' @param common_validation expression, use '\{\}' to wrap around multiple line
-#' expressions. Usually a [spsValidate] object. You can use shiny's built in
-#' [shiny::req] or [shiny::validate] for a simpler version.
-#' @param prepro_methods a list of [makePrepro] method returns, read help for
-#' that function for details
-#' @param eg_path example data set path. Each data tab requires an example data
-#' set to be displayed when users don't have anything to upload. Usually this
-#' data file is a tabular file and stored in the *data* folder in a SPS
-#' project
-#' @export
-#' @importFrom rlang enquo
-newTabData <- function(tab_id = "data_id1",
-                       tab_displayname = "Data Tab Title",
-                       desc = "default",
-                       pkgs = list(
-                           cran_pkg = c("base"),
-                           bioc_pkg = c(""),
-                           github = c("")
-                       ),
-                       common_validation = spsValidate({"pass"}, "common"),
-                       prepro_methods = list(
-                           makePrepro("nothing", "do nothing"),
-                           makePrepro("md1", "method1",
-                                      vd_expr = {nrow(data_filtered) > 1})
-                       ),
-                       app_path = getwd(),
-                       out_folder_path = file.path(app_path, "R"),
-                       eg_path = file.path(app_path, "data", "iris.csv"),
-                       plugin = "",
-                       author = "",
-                       empty = FALSE,
-                       preview = FALSE,
-                       reformat = TRUE,
-                       open_file = TRUE,
-                       use_string = FALSE,
-                       verbose = spsOption("verbose"),
-                       colorful = spsOption("use_crayon")){
-    verbose_old <- spsOption('verbose')
-    colorful_old <- spsOption('use_crayon')
-    spsOption('verbose', verbose)
-    spsOption('use_crayon', colorful)
-    spsinfo("Asserting tab ID")
-    spsinfo(glue("Asserting info for tab {tab_id}"))
-    out_p <- file.path(out_folder_path, glue("tab_vs_{tab_id}.R"))
-    .newtabAsserts(tab_id = tab_id, tab_displayname = tab_displayname,
-                   desc = desc, author = author,
-                   out_folder_path = out_folder_path,
-                   out_p = out_p, app_path = app_path,
-                   prepro_methods = prepro_methods,
-                   reformat = reformat, open_file = open_file,
-                   type_sub = "data", preview = preview)
-    spsinfo("Creates descrption")
-    if(desc == "default") desc <- "
-    #### Some Description of this data in markdown
-    - you should ...
-        1. eg 1.
-        2. eg 2.
-        - **Notice**: ...`this` ...
-
-
-    ```
-    some code demo ...
-    ```
-    "
-    spsinfo("Parsing common validation")
-    common_validation <- .expr2string(rlang::enquo(common_validation), use_string)
-    spsinfo("Parsing preprocess methods")
-    prepro <- .collectPrepro(prepro_methods)
-    choices <-  prepro[['choices']]
-    vds <- prepro[['vds']]
-    pre <- prepro[['pres']]
-    pt_options <- prepro[['pt_opts']]
-    spsinfo("Parsing package requirements")
-    pkgs <- .resolveTabPkg(pkgs)
-    spsinfo("Parsing author(s)")
-    author <- glue_collapse(author, sep = ", ")
-    eg_path = eg_path = normalizePath(eg_path, winslash = "/")
-    spsinfo("Ensure all template replacements are length 1 strings")
-    list(tab_id, tab_displayname, desc, common_validation,
-         choices, vds, pre, author, eg_path, pkgs) %>%
-        {check_names <- c("tab Id", "display name", "description",
-                          "common validation expressions",
-                          "preprocess choices", "preprocess validation",
-                          "preprocess method", "author", "example file",
-                          "Package requirements")
-        mapply(function(x, name){
-            if(length(x) != 1){
-                spserror(glue("Injection {x} is not a length 1 string"))
-            }
-        }, x = ., name = check_names)
-        }
-    spsinfo("Start to inject to template...")
-    crt_date <- Sys.time()
-    tmp_file <- if(!empty)"data_tab_template.R" else "data_tab_template_empty.R"
-    tmp <- readLines(
-        system.file(file.path("app", "templates", tmp_file),
-                    package = "systemPipeShiny")
-    ) %>%
-        glue_collapse(sep = '\n') %>%
-        glue(.open = "#@", .close = "@#")
-    if(preview) return(cat(tmp))
-    spsinfo(glue("Write to file {out_p}"), TRUE)
-    writeLines(tmp, out_p)
-    # reformat
-    .reformatTab(reformat, out_p)
-    # register tab
-    .registerTabWrapper(type_sub = "data", img = "", tab_id, tab_displayname,
-                        app_path, out_p, open_file, plugin = plugin)
-    # reset verbose to whatever before the function runs
-    # reset verbose to whatever before the function runs
-    spsOption('verbose', verbose_old)
-    msg("New tab created!", "SPS-SUCCESS", "green")
-    spsOption('use_crayon', colorful_old)
-    return(invisible())
-}
-
-
-#' Create data receiving methods for plot tabs
-#' @description This function specify for each input data type in a plot tab,
-#' 1. where the data is coming from, 2. how to validate incoming data.
-#' To use this function, make sure there is a SPS project and
-#' *config/tabs.csv* exists.
-#' @param dataset_id string, length 1, a unique ID within this plot
-#'  tab.
-#' @param dataset_label string, length 1, what label to display on UI for this
-#' type of input data
-#' @param receive_datatab_ids a vector of tab IDs: for this kind of data input,
-#' which data tabs that can be used as input source(s). For example, if this
-#' plot tab requires a dataframe and can be produced from "data_df1" or
-#' "data_df2", *receive_datatab_ids = c("data_df1", "data_df2")*. These options
-#' are later rendered as a drop down menu for users to choose where
-#' they have prepared the required data from.
-#' @param app_path path, SPS project folder
-#' @param vd_expr what expression to validate(check) the incoming data set.
-#' Usually it is a [spsValidate] object
-#' @param use_string bool, if you don't want to parse *vd_expr*, use quoted
-#' string for *vd_expr* and turn this to TRUE. See the same argument in
-#' [newTabPlot]
-#'
-#' @return a special list that stores one type of data input info
-#' @export
-#' @details For the validation expression, the incoming data is stored in a
-#' reactive values object, and you can access this data object
-#' by *mydata$dataset_id*,
-#' e.g. the dataset_id is "raw_data", then when the time you validate this
-#' type of incoming data set, a variable *mydata$raw_data* is accessible. So you
-#' can directly use `mydata$raw_data` in *vd_expr*.
-#'
-#' It is recommended to create data tabs first before running this function,
-#' because *receive_datatab_ids* required data tab id exists in the *tabs.csv*
-#' file.
-#' @seealso [newTabPlot]
-#' @importFrom rlang enquo
-#' @examples
-#' spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_plotdata")
-#' newTabData("data_df1", "df 1",
-#'            app_path = "SPS_plotdata",
-#'            open_file = FALSE)
-#' newTabData("data_df2", "df 2",
-#'            app_path = "SPS_plotdata",
-#'            open_file = FALSE)
-#' plotdata_raw <- makePlotData("raw", "raw data",
-#'              receive_datatab_ids = "data_df1",
-#'              vd_expr = spsValidate({
-#'                  if(!is.data.frame(mydata$raw))
-#'                      stop("Input raw data need to be a dataframe")
-#'              }, vd_name = "Validate raw data"),
-#'              app_path = "SPS_plotdata")
-#' plotdata_meta <- makePlotData("meta", "meta data",
-#'              receive_datatab_ids = c("data_df1", "data_df2"),
-#'              vd_expr = spsValidate({
-#'                  if(!is.data.frame(mydata$meta))
-#'                      stop("Input raw data need to be a dataframe")
-#'                  if(nrow(mydata$meta) < 1)
-#'                      stop("Input raw data need to have at least one row")
-#'              }, vd_name = "Validate meta data"),
-#'              app_path = "SPS_plotdata")
-#' newTabPlot("plot_test1",
-#'            app_path = "SPS_plotdata",
-#'            plot_data = list(plotdata_raw, plotdata_meta))
-makePlotData <- function(dataset_id = "data",
-                         dataset_label = "Raw data",
-                         receive_datatab_ids = "data_example",
-                         vd_expr = spsValidate({
-                             if(is.data.frame(mydata$data)) TRUE
-                             else stop("Data xx needs to be a dataframe or tibble")
-                         }),
-                         app_path = getwd(),
-                         use_string = FALSE){
-    stopifnot(is.character(dataset_id) & length(dataset_id) == 1)
-    stopifnot(is.character(dataset_label) & length(dataset_label) == 1)
-    stopifnot(is.character(receive_datatab_ids))
-    spsinfo(glue("Creates plot data method for {dataset_id}"))
-    rec_tab_labels <- lapply(
-        receive_datatab_ids,
-        function(x){
-            label <- findTabInfo(
-                x, force_reload = TRUE,
-                tab_file =
-                    file.path(app_path, "config", "tabs.csv"))[['tab_labels']]
-            if(nchar(label) == 0){
-                as.character(x)
-            } else label
-        }
-    ) %>% unlist()
-    vd_expr_parsed <- .expr2string(rlang::enquo(vd_expr), use_string)
-    structure(
-        list(id = dataset_id,
-             dataset_label = dataset_label,
-             receive_datatab_ids = receive_datatab_ids,
-             rec_tab_labels = rec_tab_labels,
-             vd = vd_expr_parsed
-        ),
-        class = c("sps-plotdata")
-    )
-}
-
-
-#' Create data tab preprocess methods
-#' @description On a data tab, given the same uploaded data set,
-#' users can choose different ways to preprocess the data and therefore
-#' different preprocessing methods will lead to different plot tab options.
-#' Every call of this function defines a preprocess method: 1. data
-#' validation expression before preprocess; 2. actual preprocess expression; 3.
-#' plot options after preprocess.
-#' @param method_id string, length 1, a unique ID within this data tab.
-#' @param label string, length 1, what label to display on UI for users to
-#' choose as a preprocess option
-#' @param vd_expr expression, usually a [spsValidate] object. Before preprocess
-#' if there is any additional validation that is special to this preprocess
-#' method, you can specify here
-#' @param pre_expr The actual preprocess expression. You should use
-#' a pre-created variable called *data_filtered* to start and this is the
-#' object that contains filtered data after users filtering on the UI. In the
-#' end of this expression, you should return a preprocessed dataframe or
-#' whatever object type that can be accepted by the desired plot tab. It is
-#' recommended to write the preprocess method into a function and directly call
-#' the function here, e.g.
-#' ```
-#' myPreprocess <- function(data){
-#'     if(is.numeric(data[ ,1]))
-#'         data[ ,1] <- data[ ,1] + 1
-#'     return(data)
-#' }
-#' makePrepro(
-#'  ...,
-#'  pre_expr = myPreprocess(data_filtered),
-#'  ...
-#' )
-#' ```
-#' @param plot_options plot tab IDs: if data is preprocessed by this method,
-#' what kind of plots it can make, specify plot tab IDs in a vector. Note:
-#' unlike the *receive_datatab_ids* argument in [makePlotData] that requires
-#' the *config/tabs.csv* exists, this argument doesn't require the config file
-#' or the plot tab to be existing. You can use any ID(s) here. The ID checking
-#' is postponed when the [genGallery] function runs on app start. "default"
-#' means all possible plot tabs, the same as *type = 'plot'* in [genGallery].
-#' @param use_string same as the argument in [newTabPlot], controls
-#' *vd_expr* and *pre_expr* in this function
-#' @return a special list that contains all info for a preprocess method
-#' @export
-#' @details for *vd_expr*, *pre_expr* a variable called *data_filtered* is
-#' accessible and is the object where data stored. One should use this
-#' object to do validation or preprocess. See examples.
-#' @importFrom rlang enquo
-#' @examples
-#' spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_prepro")
-#' # first preprocess method
-#' prepro_log <- makePrepro(
-#'     "log", "take log of first column",
-#'     vd_expr = spsValidate({
-#'         if(!is.data.frame(data_filtered))
-#'             stop("Input input data need to be a dataframe")
-#'     }, vd_name = "log method pre-checks"),
-#'     pre_expr = {
-#'         if(is.numeric(data_filtered[ ,1]))
-#'             {if(all(data_filtered[ ,1] > 0)){
-#'                 data_filtered[ ,1] <- log(data_filtered[ ,1])}
-#'             }
-#'         data_filtered
-#'     },
-#'     plot_options = c("plot_xx1", "plot_xx2")
-#'     )
-#' ## remember to save these helper functions in a R scripts under the R
-#' ## folder. They will be automatically sourced when app starts.
-#' myPreprocess <- function(data){
-#'     if(is.numeric(data[ ,1]))
-#'         data[ ,1] <- data[ ,1] + 1
-#'     return(data)
-#' }
-#' myVd <- function(data, vd_name){
-#'     spsValidate({
-#'         if(!is.data.frame(data))
-#'             stop("Input input data need to be a dataframe")
-#'     }, vd_name = vd_name)
-#' }
-#' # second preprocess method
-#' prepro_addone <- makePrepro(
-#'     "addone", "add one to first column",
-#'     vd_expr = myVd(data_filtered, "add one method pre-checks"),
-#'     pre_expr = myPreprocess(data_filtered),
-#'     plot_options = c("plot_xx1")
-#' )
-#' # Combine two methods and make a new data tab
-#' newTabData("data_test1",  "test 1",
-#'            app_path = "SPS_prepro",
-#'            prepro_methods = list(prepro_log, prepro_addone)
-#'            )
-makePrepro <- function(method_id = "md1",
-                       label = "New method1",
-                       vd_expr = spsValidate(is.data.frame(data_filtered)),
-                       pre_expr ={data_filtered},
-                       plot_options = "default",
-                       use_string = FALSE){
-    stopifnot(is.character(method_id))
-    stopifnot(is.character(label))
-    stopifnot(is.character(plot_options))
-    spsinfo(glue("Creates preprocess method for {method_id}"))
-    vd_expr_parsed <- .expr2string(rlang::enquo(vd_expr), use_string)
-    pre_expr_parsed <- .expr2string(rlang::enquo(pre_expr), use_string)
-    if(plot_options[1] == 'default'){
-        p_option <- ("type = 'plot'")
-    } else if(length(plot_options) == 1){
-        p_option <- glue("c('{plot_options}')")
-    } else if(length(plot_options) > 1){
-        p_option <- glue_collapse(plot_options, sep = "', '") %>%
-            {glue("c('{.}')")}
-    } else if(!emptyIsFalse(plot_options)) {
-        spserror("plot_options can't be empty")
-    }
-    structure(
-        list(id = method_id,
-             label = label,
-             vd = vd_expr_parsed,
-             pre = pre_expr_parsed,
-             pt_opts = p_option
-        ),
-        class = c("sps-prepro")
-    )
-}
+# #' Create a new SPS tab
+# #' @description Functions to create a new SPS tab. It is recommended to create
+# #' the data tab first then its linked plot tabs.
+# #' @param tab_id character string, length 1, must start with "*plot_*" for plot
+# #' tabs and "*data_*" for data tabs. Must be a unique value. use
+# #' [spsTabInfo(app_path = "YOUR_APP_PATH")][spsTabInfo()] to see current tab
+# #' IDs.
+# #' @param tab_displayname character string, length 1, the name to be displayed
+# #' on side navigation bar list and tab title
+# #' @param desc character string, length 1 in markdown format. Tab description
+# #' and instructions. You can make type it in multiple lines but in only one
+# #' string (one pair of quotes). e.g.
+# #' ```
+# #' "
+# #' # some desc
+# #' ## second line,
+# #' - bullet 1
+# #' - bullet 2
+# #' "
+# #' ```
+# #' @param img realtive path, ideally a plot screenshot of users expect
+# #' to see when they make the plot. It can be a internet link or a local
+# #' link which uses the *www* folder asthe root.
+# #' e.g. drop your image *plot.png* inside *www/plot_list*, then the
+# #' link here is "plot_list/plot.png". Only needed for plot tabs.
+# #' @param plot_control_ui  additional UI components you want to
+# #' add to control plotting options, like additional slider bar, some on/off
+# #' switches, text input etc. If more than one components, put them in a
+# #' [shiny::tagList]
+# #' @param plot_expr the plot expression, like all other expression in other
+# #' shiny reactive expressions. e.g for more than one line use *{}*. Only to be
+# #' used for plot tabs. default is
+# #' ```
+# #' plotly::ggplotly(
+# #'     ggplot2::ggplot(mydata$data,
+# #'            ggplot2::aes_string(names(mydata$data)[1],
+# #'                       names(mydata$data)[2])
+# #'     ) +
+# #'     ggplot2::geom_point(aes(
+# #'             color = seq_len(nrow(mydata$data))
+# #'     ))
+# #' )
+# #' ```
+# #'
+# #' @param pkgs which packages you require users to install, list. specify
+# #' CRAN, bioconductor or github packages in a vector. see
+# #' [shinyCheckPkg]
+# #' ```
+# #' list(
+# #'     cran_pkg = c("base"),
+# #'     bioc_pkg = c(""),
+# #'     github = c("")
+# #' )
+# #' ```
+# #' @param plot_data a list of *makePlotData()* results, see [makePlotData] for
+# #' details.
+# #' ```
+# #' list(
+# #'     makePlotData("plot_1", ...),
+# #'     makePlotData("plot_2", ...),
+# #'     ...
+# #' )
+# #' ```
+# #' @param plot_out_func the plot output function to use on UI,
+# #' like [shiny::plotOutput], just the function name without quotes
+# #' and without *()*. default is [plotly::plotlyOutput].
+# #' @param plot_render_func The render plot function to use on server. No quotes,
+# #' no *()*. Must be **paired** with *plot_out_func*. e.g
+# #' If [plotly::plotlyOutput] is used on UI, server must use
+# #' [plotly::renderPlotly]. If you use [shiny::renderPlot],
+# #' plot will not show up.
+# #' @param app_path string, app directory, default is current directory
+# #' @param out_folder_path string, which directory to write the new tab file,
+# #' default is the *R* folder in the SPS project
+# #' @param plugin character string, if you are building a tab for a plugin, you
+# #' can specify the plugin name here.
+# #' @param author character string, or a vector of strings. authors of the tab
+# #' @param empty bool, for **advanced developers**, if you don't want to
+# #' use SPS default tab UI and server structure, you can use turn this to *TRUE*.
+# #' A very simple template will be generated and you need to write all UI and
+# #' server parts by yourself. In this case, only `tab_id`, `display_name`,
+# #' `author` are needed, other
+# #' tab args can be ignored, system args are still working, like `verbose`,
+# #' `preview`, `style`, `colorful`
+# #' @param preview bool, *TRUE* will print the new tab code to console and will
+# #' not write the file and will not register the tab
+# #' @param use_string bool, sometimes parsing an expression in R may not be
+# #' totally accurate. To aviod this problem, turn this to *TRUE* and for
+# #' *plot_control_ui*, *plot_expr*, *p_out_func*, *p_render_func*, wrap your
+# #' expression in a quoted string. What you have provided in the string will be
+# #' what on the new tab file, no expression parsing will happen. Can only be
+# #' controlled as a group, which means use string for all of them or none of
+# #' them in plot tabs. For data tab, the affected argument is *common_validation*
+# #' . When turn this to *TRUE*, be careful with quotes in your expression,
+# #' escape or use alternative of single/double quotes.
+# #' ```
+# #' newTabPlot(
+# #'     ...
+# #'     use_string = TRUE,
+# #'     plot_control_ui = "
+# #'     tagList(clearableTextInput('id1', 'label')), h5('this title')
+# #'     ",
+# #'     plot_expr = "
+# #'     plotly::ggplotly(
+# #'         ggplot2::ggplot(mydata$data,
+# #'                ggplot2::aes_string(names(mydata$data)[1],
+# #'                           names(mydata$data)[2])) +
+# #'             ggplot2::geom_point(aes(
+# #'                 color = seq_len(nrow(mydata$data))
+# #'             ))
+# #'     )
+# #'     ",
+# #'     p_out_func = "plotly::plotlyOutput"
+# #'     ...
+# #' )
+# #' ```
+# #' @param reformat bool, whether to use [styler::style_file] reformat the code
+# #' @param open_file bool, if Rstudio is detected, open the new tab file?
+# #' @param verbose bool, default follows the project verbosity level.
+# #'  *TRUE* will give you more information on progress and debugging
+# #' @param colorful bool, whether the message will be colorful or not
+# #' @details
+# #' - Must use this function inside a SPS project, use [spsInit()] if
+# #' there is no project.
+# #' - For a new data tab, different preprocessing methods, their
+# #'  pre-prequirements and what plotting options available after each
+# #'  preprocess is controlled by the [makePrepro()] function. Each call from
+# #'  [makePrepro] function specify one preprocessing method.
+# #'  All preprocess methods should be provided in a list
+# #'  and passed to the *prepro_methods* argument.
+# #' - A new plot tab can have more than one data set as the input. For example a
+# #' plot can require a metadata table and a log transformed table as inputs.
+# #' There can also be multiple data tabs can preprocess and produce the same log table.
+# #' So you need to specify how many data inputs this plot requires; for each
+# #' input which data tab(s) this plot tab can receive data from; for each input
+# #' data type, what validations (data format checks) you want to do. All of these
+# #' are controlled by [makePlotData] and return(s) of this function should be
+# #' provided in a list to the *plot_data* argument.
+# #' - Different reprocess methods in a data tab
+# #'  is controlled by the [makePrepro] function. Each call from
+# #'  this function specify one preprocessing method. All preprocess methods
+# #'  should be provided in a list to the *prepro_methods* argument.
+# #' - One of the steps in creating a plot tab is to specify incoming data source.
+# #' This is controlled by `receive_datatab_ids` argument in [makePlotData()].
+# #' It requires the data tab IDs exist in the
+# #' config file *config/tabs.csv*. So, it is best to create all required data
+# #' tabs first. Or specify it to any existing data tab like 'data_example' and
+# #' when the template is created, manually change it.
+# #' @return a tab file in R folder and tab info registered on config/tabs.csv
+# #' @export
+# #' @importFrom rlang enquo
+# #' @examples
+# #' spsInit(change_wd = FALSE, overwrite = TRUE)
+# #' newTabData(
+# #'     tab_id = "data_new",
+# #'     tab_displayname = "my first data tab",
+# #'     prepro_methods = list(makePrepro(label = "do nothing",
+# #'                                      plot_options = "plot_new")),
+# #'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+# #' )
+# #' newTabPlot(
+# #'     tab_id = "plot_new1",
+# #'     tab_displayname = "my first plot tab",
+# #'     plot_data = list(
+# #'         makePlotData(dataset_label = "Data from my new tab",
+# #'                      receive_datatab_ids = "data_new",
+# #'                      app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+# #'     ),
+# #'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+# #' )
+# #' newTabData(
+# #'     tab_id = "data_empty",
+# #'     tab_displayname = "my first empty data tab",
+# #'     empty = TRUE,
+# #'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+# #' )
+# #' newTabPlot(
+# #'     tab_id = "plot_empty",
+# #'     tab_displayname = "my first empty plot tab",
+# #'     empty = TRUE,
+# #'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
+# #' )
+# newTabPlot <- function(tab_id = "plot_id1",
+#                        tab_displayname = "Plot Tab Title",
+#                        desc = "default",
+#                        img = "",
+#                        plot_expr = plotly::ggplotly(
+#                            ggplot2::ggplot(
+#                                mydata$data,
+#                                ggplot2::aes_string(names(mydata$data)[1], names(mydata$data)[2])) +
+#                                ggplot2::geom_point(ggplot2::aes(
+#                                    color = seq_len(nrow(mydata$data))
+#                                ))
+#                        ),
+#                        pkgs = list(
+#                            cran_pkg = c("base"),
+#                            bioc_pkg = c(""),
+#                            github = c("")
+#                        ),
+#                        plot_data = list(makePlotData(app_path = app_path)),
+#                        plot_out_func = plotly::plotlyOutput,
+#                        plot_render_func = plotly::renderPlotly,
+#                        app_path = getwd(),
+#                        out_folder_path = file.path(app_path, "R"),
+#                        plot_control_ui = tagList(h3("Some plotting options")),
+#                        author = "",
+#                        plugin = "",
+#                        empty = FALSE,
+#                        preview = FALSE,
+#                        use_string = FALSE,
+#                        reformat = TRUE,
+#                        open_file = TRUE,
+#                        verbose = spsOption("verbose"),
+#                        colorful = spsOption("use_crayon")){
+#     msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
+#     verbose_old <- spsOption('verbose')
+#     colorful_old <- spsOption('use_crayon')
+#     spsOption('verbose', verbose)
+#     spsOption('use_crayon', colorful)
+#     spsinfo("Asserting tab ID")
+#     spsinfo(glue("Asserting info for tab {tab_id}"))
+#     out_p <- file.path(out_folder_path, glue("tab_vs_{tab_id}.R"))
+#     .newtabAsserts(tab_id = tab_id, tab_displayname = tab_displayname,
+#                    desc = desc, author = author,
+#                    out_folder_path = out_folder_path,
+#                    out_p = out_p, app_path = app_path,
+#                    plot_data = plot_data,
+#                    reformat = reformat, open_file = open_file,
+#                    type_sub = "plot", preview = preview, img = img)
+#     spsinfo("Creates descrption")
+#     if(desc == "default") desc <- "
+#     #### Some Description of this data in markdown
+#     - you should ...
+#         1. eg 1.
+#         2. eg 2.
+#         - **Notice**: ...`this` ...
+#
+#
+#     ```
+#     some code demo ...
+#     ```
+#     "
+#     spsinfo("Parsing plot `data` methods")
+#     pt_data <- .collectPlotData(plot_data)
+#     pg_title <-  pt_data[['pg_title']]
+#     pg_id <-  pt_data[['pg_id']]
+#     hreftab <-  pt_data[['hreftab']]
+#     select_input <- pt_data[['select_input']]
+#     getdata <- pt_data[['getdata']]
+#     vd <- pt_data[['vd']]
+#     spsinfo("Parsing plot expression")
+#     plot_expr <- .expr2string(rlang::enquo(plot_expr), use_string)
+#     spsinfo("Parsing plot output and render function")
+#     p_out_func <- .expr2string(rlang::enquo(plot_out_func), use_string)
+#     p_render_func <- .expr2string(rlang::enquo(plot_render_func), use_string)
+#     spsinfo("Parsing plot UI control HTML")
+#     control_ui <- .expr2string(rlang::enquo(plot_control_ui), use_string)
+#     spsinfo("Parsing package requirements")
+#     pkgs <- .resolveTabPkg(pkgs)
+#     spsinfo("Parsing author(s)")
+#     author <- glue_collapse(author, sep = ", ")
+#     spsinfo("Ensure all template replacements are length 1 strings")
+#     list(tab_id, tab_displayname, desc,
+#          pg_id, pg_title, select_input,
+#          getdata, vd, plot_expr,
+#          p_out_func, p_render_func, author,
+#          pkgs, hreftab, control_ui) %>%
+#         {
+#             check_names <- c("tab Id", "display name", "description",
+#                              "progress data ID", "progress data title",
+#                              "data input selection", "get data expr",
+#                              "data validation expr", "plot expression",
+#                              "plot output func", "plot render func",
+#                              "author", "Package requirements",
+#                              "data href tab", "plot control UI")
+#             mapply(function(x, name){
+#                 if(length(x) != 1){
+#                     spserror(glue("Injection {name} is not a length 1 string:
+#                               {glue_collapse(x, '\n---\n')}"))
+#                 }
+#             }, x = ., name = check_names)
+#         }
+#     spsinfo("Start to inject to template...")
+#     crt_date <- Sys.time()
+#     tmp_file <- if(!empty)"plot_tab_template.R" else "plot_tab_template_empty.R"
+#     tmp <- readLines(
+#         system.file(file.path("app", "templates", tmp_file),
+#                     package = "systemPipeShiny")
+#     ) %>%
+#         glue_collapse(sep = '\n') %>%
+#         glue(.open = "#@", .close = "@#")
+#     if(preview) return(cat(tmp))
+#     spsinfo(glue("Write to file {out_p}"), TRUE)
+#     writeLines(tmp, out_p)
+#     # reformat
+#     .reformatTab(reformat, out_p)
+#     # register tab
+#     .registerTabWrapper(type_sub = "plot", img, tab_id, tab_displayname,
+#                         app_path, out_p, open_file, plugin = plugin)
+#     # reset verbose to whatever before the function runs
+#     spsOption('verbose', verbose_old)
+#     msg("New tab created!", "SPS-SUCCESS", "green")
+#     spsOption('use_crayon', colorful_old)
+#     return(invisible())
+# }
+#
+#
+# #' @rdname newTabPlot
+# #' @param common_validation expression, use '\{\}' to wrap around multiple line
+# #' expressions. Usually a [spsValidate] object. You can use shiny's built in
+# #' [shiny::req] or [shiny::validate] for a simpler version.
+# #' @param prepro_methods a list of [makePrepro] method returns, read help for
+# #' that function for details
+# #' @param eg_path example data set path. Each data tab requires an example data
+# #' set to be displayed when users don't have anything to upload. Usually this
+# #' data file is a tabular file and stored in the *data* folder in a SPS
+# #' project
+# #' @export
+# #' @importFrom rlang enquo
+# newTabData <- function(tab_id = "data_id1",
+#                        tab_displayname = "Data Tab Title",
+#                        desc = "default",
+#                        pkgs = list(
+#                            cran_pkg = c("base"),
+#                            bioc_pkg = c(""),
+#                            github = c("")
+#                        ),
+#                        common_validation = spsValidate({"pass"}, "common"),
+#                        prepro_methods = list(
+#                            makePrepro("nothing", "do nothing"),
+#                            makePrepro("md1", "method1",
+#                                       vd_expr = {nrow(data_filtered) > 1})
+#                        ),
+#                        app_path = getwd(),
+#                        out_folder_path = file.path(app_path, "R"),
+#                        eg_path = file.path(app_path, "data", "iris.csv"),
+#                        plugin = "",
+#                        author = "",
+#                        empty = FALSE,
+#                        preview = FALSE,
+#                        reformat = TRUE,
+#                        open_file = TRUE,
+#                        use_string = FALSE,
+#                        verbose = spsOption("verbose"),
+#                        colorful = spsOption("use_crayon")){
+#     msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
+#     verbose_old <- spsOption('verbose')
+#     colorful_old <- spsOption('use_crayon')
+#     spsOption('verbose', verbose)
+#     spsOption('use_crayon', colorful)
+#     spsinfo("Asserting tab ID")
+#     spsinfo(glue("Asserting info for tab {tab_id}"))
+#     out_p <- file.path(out_folder_path, glue("tab_vs_{tab_id}.R"))
+#     .newtabAsserts(tab_id = tab_id, tab_displayname = tab_displayname,
+#                    desc = desc, author = author,
+#                    out_folder_path = out_folder_path,
+#                    out_p = out_p, app_path = app_path,
+#                    prepro_methods = prepro_methods,
+#                    reformat = reformat, open_file = open_file,
+#                    type_sub = "data", preview = preview)
+#     spsinfo("Creates descrption")
+#     if(desc == "default") desc <- "
+#     #### Some Description of this data in markdown
+#     - you should ...
+#         1. eg 1.
+#         2. eg 2.
+#         - **Notice**: ...`this` ...
+#
+#
+#     ```
+#     some code demo ...
+#     ```
+#     "
+#     spsinfo("Parsing common validation")
+#     common_validation <- .expr2string(rlang::enquo(common_validation), use_string)
+#     spsinfo("Parsing preprocess methods")
+#     prepro <- .collectPrepro(prepro_methods)
+#     choices <-  prepro[['choices']]
+#     vds <- prepro[['vds']]
+#     pre <- prepro[['pres']]
+#     pt_options <- prepro[['pt_opts']]
+#     spsinfo("Parsing package requirements")
+#     pkgs <- .resolveTabPkg(pkgs)
+#     spsinfo("Parsing author(s)")
+#     author <- glue_collapse(author, sep = ", ")
+#     eg_path = eg_path = normalizePath(eg_path, winslash = "/")
+#     spsinfo("Ensure all template replacements are length 1 strings")
+#     list(tab_id, tab_displayname, desc, common_validation,
+#          choices, vds, pre, author, eg_path, pkgs) %>%
+#         {check_names <- c("tab Id", "display name", "description",
+#                           "common validation expressions",
+#                           "preprocess choices", "preprocess validation",
+#                           "preprocess method", "author", "example file",
+#                           "Package requirements")
+#         mapply(function(x, name){
+#             if(length(x) != 1){
+#                 spserror(glue("Injection {x} is not a length 1 string"))
+#             }
+#         }, x = ., name = check_names)
+#         }
+#     spsinfo("Start to inject to template...")
+#     crt_date <- Sys.time()
+#     tmp_file <- if(!empty)"data_tab_template.R" else "data_tab_template_empty.R"
+#     tmp <- readLines(
+#         system.file(file.path("app", "templates", tmp_file),
+#                     package = "systemPipeShiny")
+#     ) %>%
+#         glue_collapse(sep = '\n') %>%
+#         glue(.open = "#@", .close = "@#")
+#     if(preview) return(cat(tmp))
+#     spsinfo(glue("Write to file {out_p}"), TRUE)
+#     writeLines(tmp, out_p)
+#     # reformat
+#     .reformatTab(reformat, out_p)
+#     # register tab
+#     .registerTabWrapper(type_sub = "data", img = "", tab_id, tab_displayname,
+#                         app_path, out_p, open_file, plugin = plugin)
+#     # reset verbose to whatever before the function runs
+#     # reset verbose to whatever before the function runs
+#     spsOption('verbose', verbose_old)
+#     msg("New tab created!", "SPS-SUCCESS", "green")
+#     spsOption('use_crayon', colorful_old)
+#     return(invisible())
+# }
+#
+#
+# #' Create data receiving methods for plot tabs
+# #' @description This function specify for each input data type in a plot tab,
+# #' 1. where the data is coming from, 2. how to validate incoming data.
+# #' To use this function, make sure there is a SPS project and
+# #' *config/tabs.csv* exists.
+# #' @param dataset_id string, length 1, a unique ID within this plot
+# #'  tab.
+# #' @param dataset_label string, length 1, what label to display on UI for this
+# #' type of input data
+# #' @param receive_datatab_ids a vector of tab IDs: for this kind of data input,
+# #' which data tabs that can be used as input source(s). For example, if this
+# #' plot tab requires a dataframe and can be produced from "data_df1" or
+# #' "data_df2", *receive_datatab_ids = c("data_df1", "data_df2")*. These options
+# #' are later rendered as a drop down menu for users to choose where
+# #' they have prepared the required data from.
+# #' @param app_path path, SPS project folder
+# #' @param vd_expr what expression to validate(check) the incoming data set.
+# #' Usually it is a [spsValidate] object
+# #' @param use_string bool, if you don't want to parse *vd_expr*, use quoted
+# #' string for *vd_expr* and turn this to TRUE. See the same argument in
+# #' [newTabPlot]
+# #'
+# #' @return a special list that stores one type of data input info
+# #' @export
+# #' @details For the validation expression, the incoming data is stored in a
+# #' reactive values object, and you can access this data object
+# #' by *mydata$dataset_id*,
+# #' e.g. the dataset_id is "raw_data", then when the time you validate this
+# #' type of incoming data set, a variable *mydata$raw_data* is accessible. So you
+# #' can directly use `mydata$raw_data` in *vd_expr*.
+# #'
+# #' It is recommended to create data tabs first before running this function,
+# #' because *receive_datatab_ids* required data tab id exists in the *tabs.csv*
+# #' file.
+# #' @seealso [newTabPlot]
+# #' @importFrom rlang enquo
+# #' @examples
+# #' spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_plotdata")
+# #' newTabData("data_df1", "df 1",
+# #'            app_path = "SPS_plotdata",
+# #'            open_file = FALSE)
+# #' newTabData("data_df2", "df 2",
+# #'            app_path = "SPS_plotdata",
+# #'            open_file = FALSE)
+# #' plotdata_raw <- makePlotData("raw", "raw data",
+# #'              receive_datatab_ids = "data_df1",
+# #'              vd_expr = spsValidate({
+# #'                  if(!is.data.frame(mydata$raw))
+# #'                      stop("Input raw data need to be a dataframe")
+# #'              }, vd_name = "Validate raw data"),
+# #'              app_path = "SPS_plotdata")
+# #' plotdata_meta <- makePlotData("meta", "meta data",
+# #'              receive_datatab_ids = c("data_df1", "data_df2"),
+# #'              vd_expr = spsValidate({
+# #'                  if(!is.data.frame(mydata$meta))
+# #'                      stop("Input raw data need to be a dataframe")
+# #'                  if(nrow(mydata$meta) < 1)
+# #'                      stop("Input raw data need to have at least one row")
+# #'              }, vd_name = "Validate meta data"),
+# #'              app_path = "SPS_plotdata")
+# #' newTabPlot("plot_test1",
+# #'            app_path = "SPS_plotdata",
+# #'            plot_data = list(plotdata_raw, plotdata_meta))
+# makePlotData <- function(dataset_id = "data",
+#                          dataset_label = "Raw data",
+#                          receive_datatab_ids = "data_example",
+#                          vd_expr = spsValidate({
+#                              if(is.data.frame(mydata$data)) TRUE
+#                              else stop("Data xx needs to be a dataframe or tibble")
+#                          }),
+#                          app_path = getwd(),
+#                          use_string = FALSE){
+#     msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
+#     stopifnot(is.character(dataset_id) & length(dataset_id) == 1)
+#     stopifnot(is.character(dataset_label) & length(dataset_label) == 1)
+#     stopifnot(is.character(receive_datatab_ids))
+#     spsinfo(glue("Creates plot data method for {dataset_id}"))
+#     rec_tab_labels <- lapply(
+#         receive_datatab_ids,
+#         function(x){
+#             label <- findTabInfo(
+#                 x, force_reload = TRUE,
+#                 tab_file =
+#                     file.path(app_path, "config", "tabs.csv"))[['tab_labels']]
+#             if(nchar(label) == 0){
+#                 as.character(x)
+#             } else label
+#         }
+#     ) %>% unlist()
+#     vd_expr_parsed <- .expr2string(rlang::enquo(vd_expr), use_string)
+#     structure(
+#         list(id = dataset_id,
+#              dataset_label = dataset_label,
+#              receive_datatab_ids = receive_datatab_ids,
+#              rec_tab_labels = rec_tab_labels,
+#              vd = vd_expr_parsed
+#         ),
+#         class = c("sps-plotdata")
+#     )
+# }
+#
+#
+# #' Create data tab preprocess methods
+# #' @description On a data tab, given the same uploaded data set,
+# #' users can choose different ways to preprocess the data and therefore
+# #' different preprocessing methods will lead to different plot tab options.
+# #' Every call of this function defines a preprocess method: 1. data
+# #' validation expression before preprocess; 2. actual preprocess expression; 3.
+# #' plot options after preprocess.
+# #' @param method_id string, length 1, a unique ID within this data tab.
+# #' @param label string, length 1, what label to display on UI for users to
+# #' choose as a preprocess option
+# #' @param vd_expr expression, usually a [spsValidate] object. Before preprocess
+# #' if there is any additional validation that is special to this preprocess
+# #' method, you can specify here
+# #' @param pre_expr The actual preprocess expression. You should use
+# #' a pre-created variable called *data_filtered* to start and this is the
+# #' object that contains filtered data after users filtering on the UI. In the
+# #' end of this expression, you should return a preprocessed dataframe or
+# #' whatever object type that can be accepted by the desired plot tab. It is
+# #' recommended to write the preprocess method into a function and directly call
+# #' the function here, e.g.
+# #' ```
+# #' myPreprocess <- function(data){
+# #'     if(is.numeric(data[ ,1]))
+# #'         data[ ,1] <- data[ ,1] + 1
+# #'     return(data)
+# #' }
+# #' makePrepro(
+# #'  ...,
+# #'  pre_expr = myPreprocess(data_filtered),
+# #'  ...
+# #' )
+# #' ```
+# #' @param plot_options plot tab IDs: if data is preprocessed by this method,
+# #' what kind of plots it can make, specify plot tab IDs in a vector. Note:
+# #' unlike the *receive_datatab_ids* argument in [makePlotData] that requires
+# #' the *config/tabs.csv* exists, this argument doesn't require the config file
+# #' or the plot tab to be existing. You can use any ID(s) here. The ID checking
+# #' is postponed when the [genGallery] function runs on app start. "default"
+# #' means all possible plot tabs, the same as *type = 'plot'* in [genGallery].
+# #' @param use_string same as the argument in [newTabPlot], controls
+# #' *vd_expr* and *pre_expr* in this function
+# #' @return a special list that contains all info for a preprocess method
+# #' @export
+# #' @details for *vd_expr*, *pre_expr* a variable called *data_filtered* is
+# #' accessible and is the object where data stored. One should use this
+# #' object to do validation or preprocess. See examples.
+# #' @importFrom rlang enquo
+# #' @examples
+# #' spsInit(change_wd = FALSE, overwrite = TRUE, project_name = "SPS_prepro")
+# #' # first preprocess method
+# #' prepro_log <- makePrepro(
+# #'     "log", "take log of first column",
+# #'     vd_expr = spsValidate({
+# #'         if(!is.data.frame(data_filtered))
+# #'             stop("Input input data need to be a dataframe")
+# #'     }, vd_name = "log method pre-checks"),
+# #'     pre_expr = {
+# #'         if(is.numeric(data_filtered[ ,1]))
+# #'             {if(all(data_filtered[ ,1] > 0)){
+# #'                 data_filtered[ ,1] <- log(data_filtered[ ,1])}
+# #'             }
+# #'         data_filtered
+# #'     },
+# #'     plot_options = c("plot_xx1", "plot_xx2")
+# #'     )
+# #' ## remember to save these helper functions in a R scripts under the R
+# #' ## folder. They will be automatically sourced when app starts.
+# #' myPreprocess <- function(data){
+# #'     if(is.numeric(data[ ,1]))
+# #'         data[ ,1] <- data[ ,1] + 1
+# #'     return(data)
+# #' }
+# #' myVd <- function(data, vd_name){
+# #'     spsValidate({
+# #'         if(!is.data.frame(data))
+# #'             stop("Input input data need to be a dataframe")
+# #'     }, vd_name = vd_name)
+# #' }
+# #' # second preprocess method
+# #' prepro_addone <- makePrepro(
+# #'     "addone", "add one to first column",
+# #'     vd_expr = myVd(data_filtered, "add one method pre-checks"),
+# #'     pre_expr = myPreprocess(data_filtered),
+# #'     plot_options = c("plot_xx1")
+# #' )
+# #' # Combine two methods and make a new data tab
+# #' newTabData("data_test1",  "test 1",
+# #'            app_path = "SPS_prepro",
+# #'            prepro_methods = list(prepro_log, prepro_addone)
+# #'            )
+# makePrepro <- function(method_id = "md1",
+#                        label = "New method1",
+#                        vd_expr = spsValidate(is.data.frame(data_filtered)),
+#                        pre_expr ={data_filtered},
+#                        plot_options = "default",
+#                        use_string = FALSE){
+#     msg("This function is suspended in version >= 1.1, use 'spsNewTab' instead.", "NOTICE", "orange")
+#     stopifnot(is.character(method_id))
+#     stopifnot(is.character(label))
+#     stopifnot(is.character(plot_options))
+#     spsinfo(glue("Creates preprocess method for {method_id}"))
+#     vd_expr_parsed <- .expr2string(rlang::enquo(vd_expr), use_string)
+#     pre_expr_parsed <- .expr2string(rlang::enquo(pre_expr), use_string)
+#     if(plot_options[1] == 'default'){
+#         p_option <- ("type = 'plot'")
+#     } else if(length(plot_options) == 1){
+#         p_option <- glue("c('{plot_options}')")
+#     } else if(length(plot_options) > 1){
+#         p_option <- glue_collapse(plot_options, sep = "', '") %>%
+#             {glue("c('{.}')")}
+#     } else if(!emptyIsFalse(plot_options)) {
+#         spserror("plot_options can't be empty")
+#     }
+#     structure(
+#         list(id = method_id,
+#              label = label,
+#              vd = vd_expr_parsed,
+#              pre = pre_expr_parsed,
+#              pt_opts = p_option
+#         ),
+#         class = c("sps-prepro")
+#     )
+# }
 
 #' Remove a SPS tab
 #' @description Remove a tab R file and remove from the tabs.csv config file
@@ -667,14 +671,8 @@ makePrepro <- function(method_id = "md1",
 #' @importFrom utils menu
 #' @examples
 #' spsInit(change_wd = FALSE, overwrite = TRUE)
-#' newTabData(
-#'     tab_id = "data_new_remove",
-#'     tab_displayname = "my first data tab",
-#'     prepro_methods = list(makePrepro(label = "do nothing",
-#'                                      plot_options = "plot_new")),
-#'     app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}")
-#' )
-#' removeSpsTab("data_new_remove", force = TRUE,
+#' spsNewTab("vs_new", app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+#' removeSpsTab("vs_new", force = TRUE,
 #'              app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
 removeSpsTab <- function(tab_id="none", force = FALSE,
                          app_path = getwd(), multiple = FALSE,
@@ -748,98 +746,6 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
 
 ## Internal
 
-.collectPlotData <- function(plotdata = list(makePlotData())){
-    lapply(plotdata, function(md){
-        assert_that(inherits(md, "sps-plotdata"),
-                    msg = "Input is not coming from `makePlotData` function")
-    })
-    # parse items from plotdata list
-    ids <- lapply(plotdata, '[[', 'id') %>% unlist()
-    labels <- lapply(plotdata, '[[', 'dataset_label') %>% unlist()
-    receive_ids <- lapply(plotdata, '[[', 'receive_datatab_ids')
-    receive_labels <-  lapply(plotdata, '[[', 'rec_tab_labels')
-    vds = lapply(plotdata, '[[', 'vd') %>% unlist()
-    pt_data <- list()
-    if(any(duplicated(ids)))
-        spserror(glue("Plot data id must be unique, find duplicated: ",
-                      "{ids[duplicated(ids)]}"))
-    # progress titles
-    pg_title_input <- glue("'Input from {labels}'") %>%
-        glue_collapse(",\n") %>% {glue("{.},")}
-    pg_title_vd <- glue("'Validate {labels}'") %>%
-        glue_collapse(",\n")
-    pt_data[['pg_title']] <- glue_collapse(c(pg_title_input, pg_title_vd), "\n")
-    # progress ids
-    pg_id_input <- glue("ns('{ids}')") %>%
-        glue_collapse(",\n") %>% {glue("{.},")}
-    pg_id_vd<- glue("ns('vd_{ids}')") %>%
-        glue_collapse(",\n")
-    pt_data[['pg_id']] <- glue_collapse(c(pg_id_input, pg_id_vd), "\n")
-    # select input dropdown menu
-    input_choices <- mapply(function(rec_id, rec_lab){
-        glue('"{rec_lab}" = "{rec_id}"') %>%
-            glue_collapse(",\n")
-    }, rec_id = receive_ids, rec_lab = receive_labels) %>% unlist()
-    pt_data[['select_input']] <-
-        glue('column(6, shinyWidgets::pickerInput(ns("source_{ids}"), "{labels}",
-                choices = c({input_choices}),
-                options = list(style = "btn-primary")))') %>%
-        glue_collapse(",\n")
-    # href tabs
-    href_ids <- lapply(receive_ids, function(x){
-        glue_collapse(x, '", "') %>%
-            {glue('"{.}"')}
-    }) %>% unlist()
-    pt_data[['hreftab']] <-
-        glue('
-        column(6, genHrefTab(
-               c({href_ids}),
-               title = "You need to prepare {labels} from these tabs:"
-        ))'
-        ) %>% glue_collapse(',\n')
-    # server get data
-    pt_data[['getdata']] <-
-        glue('mydata${ids} <- getData(isolate(input$source_{ids}), shared)
-          pgPaneUpdate("pg", "{ids}", 100)') %>%
-        glue_collapse('\n')
-    # validates
-    pt_data[['vd']] <-
-        glue('{vds}
-         pgPaneUpdate("pg", "vd_{ids}", 100)') %>%
-        glue_collapse("\n")
-    pt_data
-}
-
-
-# collect all info from `makePrepro` lists
-.collectPrepro <- function(prepro_methods){
-    lapply(prepro_methods, function(md){
-        assert_that(inherits(md, "sps-prepro"),
-                    msg = "Input is not coming from `makePrepro` function")
-    })
-    prepro <- list(
-        ids = lapply(prepro_methods, '[[', 'id') %>% unlist(),
-        labels = lapply(prepro_methods, '[[', 'label') %>% unlist(),
-        vds = lapply(prepro_methods, '[[', 'vd') %>% unlist(),
-        pres = lapply(prepro_methods, '[[', 'pre') %>% unlist(),
-        pt_opts = lapply(prepro_methods, '[[', 'pt_opts') %>% unlist()
-    )
-    if(any(duplicated(prepro[['ids']])))
-        spserror(glue("Preprocess id must be unique, find duplicated: ",
-                      "{prepro[['ids']][duplicated(prepro[['ids']])]}"))
-    prepro[['choices']] <-
-        glue("`{prepro[['labels']]}` = '{prepro[['ids']]}'") %>%
-        glue_collapse(",\n") %>% {glue('c({.})')}
-    prepro[['vds']] <- glue("'{prepro[['ids']]}' = {prepro[['vds']]}") %>%
-        glue_collapse(",\n")
-    prepro[['pres']] <- glue("'{prepro[['ids']]}' = {prepro[['pres']]}") %>%
-        glue_collapse(",\n")
-    prepro[['pt_opts']] <- glue("'{prepro[['ids']]}' = genGallery({prepro[['pt_opts']]})") %>%
-        glue_collapse(",\n")
-    prepro[['ids']] <- prepro[['labels']] <- NULL
-    prepro
-}
-
 # deparse rlang quotes to strings
 #' @importFrom rlang eval_tidy
 .expr2string <- function(quo_expr, use_string = FALSE){
@@ -862,7 +768,7 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
 .tabRegister <- function(tab_id, display_name = "tab_title", app_path = ".",
                          type="vs", type_sub = "", image = "",
                          displayed = 1,
-                         tab_file_name = glue("tab_vs_{tab_id}.R"),
+                         tab_file_name = glue("tab_{tab_id}.R"),
                          plugin = ""){
     tab_path <- file.path(app_path, "config", "tabs.csv")
     write_info <- glue_collapse(c(tab_id, display_name, type,
@@ -997,4 +903,438 @@ removeSpsTab <- function(tab_id="none", force = FALSE,
         {glue("'{.}'")} %>% {glue("github = c({.})")}
     glue_collapse(c(cran_text, bioc_text, github_text), sep='\n')
 }
+
+#' Create a new SPS tab
+#' @description create custom tabs in newer (> 1.1) version of SPS. The old
+#' creation functions will be deprecated by next Bioconductor major release.
+#' @param tab_id character string, length 1, must be unique. Use
+#' [spsTabInfo(app_path = "YOUR_APP_PATH")][spsTabInfo()] to see current tab
+#' IDs.
+#' @param tab_displayname character string, length 1, the name to be displayed
+#' on side navigation bar list and tab title
+#' @param img realtive path, an image representation of the new plot. It can be
+#'  a internet link or a local link which uses the *www* folder as the root.
+#' e.g. drop your image *plot.png* inside *www/plot_list*, then the
+#' link here is "plot_list/plot.png". You will see these images on "Custom Tabs"
+#' main page. If no provided, a warning will be given on app start and an empty
+#' image will show up on "Custom Tabs".
+#' @param app_path string, app directory, default is current directory
+#' @param out_folder_path string, which directory to write the new tab file,
+#' default is the *R* folder in the SPS project. If you write the file other than
+#' *R*, this file will not be automatically loaded by SPS or Shiny. You must source
+#' it manually.
+#' @param author character string, or a vector of strings. authors of the tab
+#' @param template one of "simple" or "full", default "simple". "simple" gives a
+#' tab file with minimum Shiny code, you can only focus on you R plotting code.
+#' "full" gives the full tab code, so you can modify everything on the tab.
+#' @param preview bool, *TRUE* will print the new tab code to console and will
+#' not write the file and will not register the tab
+#' @param reformat bool, whether to use [styler::style_file] reformat the code
+#' @param open_file bool, if Rstudio is detected, open the new tab file?
+#' @param verbose bool, default follows the project verbosity level.
+#'  *TRUE* will give you more information on progress and debugging
+#' @param colorful bool, whether the message will be colorful or not
+#'
+#' @return returns a new tab file
+#' @export
+#' @details
+#' - template "simple": hides the UI and server code and use [spsEzUI] and [spsEzServer] instead.
+#' - template "full": full tab code. You need to know some Shiny development knowledge.
+#' @examples
+#' spsInit(change_wd = FALSE, overwrite = TRUE)
+#' spsNewTab("vs_newtab_ez", app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+#' spsNewTab("vs_newtab_full", template = "full",
+#' app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+#' spsNewTab("vs_newtab_pre", preview = TRUE,
+#' app_path = glue::glue("SPS_{format(Sys.time(), '%Y%m%d')}"))
+spsNewTab <- function(tab_id = "vs_mytab",
+                      tab_displayname = "My custom plotting tab",
+                      img = "",
+                      app_path = getwd(),
+                      out_folder_path = file.path(app_path, "R"),
+                      author = "",
+                      template = c("simple", "full"),
+                      preview = FALSE,
+                      reformat = FALSE,
+                      open_file = TRUE,
+                      verbose = spsOption("verbose"),
+                      colorful = spsOption("use_crayon")){
+    #set up color and verbose
+    verbose_old <- spsOption('verbose')
+    colorful_old <- spsOption('use_crayon')
+    spsOption('verbose', verbose)
+    spsOption('use_crayon', colorful)
+    # assertions
+    assert_that(is.character(tab_id) & length(tab_id) == 1)
+    assert_that(is.character(img) & length(img) == 1)
+    stopifnot(is.character(author))
+    stopifnot(is.character(tab_displayname))
+    stopifnot(is.character(out_folder_path))
+    template <- match.arg(template, c("simple", "full"))
+    stopifnot(is.logical(reformat))
+    stopifnot(is.logical(open_file))
+    stopifnot(is.logical(preview))
+    # check output folder
+    spsinfo("checking R folder")
+    assert_that(dir.exists(file.path(app_path, "R")),
+                msg = glue('folder {file.path(app_path, "R")} is not there'))
+    # check output path
+    out_p <- file.path(out_folder_path, glue("tab_{tab_id}.R"))
+    if(file.exists(out_p)) spserror(glue("File {out_p} exists."))
+    if(str_detect(string = tab_displayname, ",")) spserror("comma ',' detected in display name, not allowed")
+    # check tab id is in config
+    err <- try(findTabInfo(tab_id,
+                           tab_file = file.path(app_path, "config", "tabs.csv"),
+                           force_reload = TRUE),
+               silent = TRUE)
+    if(inherits(err, "sps-tabinfo")){
+        spserror(glue("Id '{tab_id}' exists, see your tabs.csv"))
+    } else if(inherits(err, "try-error")){
+        if(str_detect(
+            err[[1]],
+            glue(".*SPS-ERROR.*{tab_id}"))){
+            spsinfo("Tab id no conflict, continue.")
+        } else spserror(err[[1]])
+    }
+
+    # add creation time
+    crt_date <- Sys.time()
+
+    # parse info
+    spsinfo("Asserting tab ID")
+    spsinfo(glue("Asserting info for tab {tab_id}"))
+    spsinfo("Parsing author(s)")
+    author <- glue_collapse(author, sep = ", ")
+
+    # make sure every injection is length 1
+    list(tab_id, tab_displayname, author, crt_date) %>%
+        {
+            check_names <- c("tab Id", "display name", "author", "creation date")
+            mapply(function(x, name){
+                if(length(x) != 1){
+                    spserror(glue("Injection {name} is not a length 1 string:
+                              {glue_collapse(x, '\n---\n')}"))
+                }
+            }, x = ., name = check_names)
+        }
+
+    # tab creation starts
+    spsinfo("Start to inject to template...")
+    temp_path <- if(template == "simple") system.file("app", "templates", "tab_template_ez.R", package = "systemPipeShiny")
+    else system.file("app", "templates", "tab_template_full.R", package = "systemPipeShiny")
+    tmp <- readLines(temp_path) %>%
+        glue_collapse(sep = '\n') %>%
+        glue(.open = "#@", .close = "@#")
+    # preview early return
+    if(preview) return(cat(tmp))
+    # write file
+    spsinfo(glue("Write to file {out_p}"), TRUE)
+    writeLines(tmp, out_p)
+    # reformat
+    .reformatTab(reformat, out_p)
+    # register tab
+    .registerTabWrapper(type_sub = "plot", img, tab_id, tab_displayname,
+                        app_path, out_p, open_file, plugin = "")
+    # finish and reset verbose to whatever before the function runs
+    msg("New tab created!", "SPS-SUCCESS", "green")
+    msg(glue('To load this new tab: `sps(tabs = c("{tab_id}")`'), "SPS", "green")
+    spsOption('verbose', verbose_old)
+    spsOption('use_crayon', colorful_old)
+    return(invisible())
+}
+
+
+
+#' Easy and simple UI and server for a SPS custom tab
+#' @description SPS custom tab simple UI and server , [spsEzUI] must use together
+#' with the [spsEzServer] function. The easiest way to use is to
+#' use [spsNewTab] function to create both.
+#' @param desc character string, length 1 in markdown format. Tab description
+#' and instructions. You can make type it in multiple lines but in only one
+#' string (one pair of quotes). e.g.
+#' ```
+#' "
+#' # some desc
+#' ## second line,
+#' - bullet 1
+#' - bullet 2
+#' "
+#' ```
+#' @param tab_title string, tab title
+#' @param plot_title  string, plot title
+#' @param plot_control some Shiny components (UI) to control the plot, like plot
+#' title, x,y labels, color, font size, etc. Group all components in a shiny
+#' `tagList`.
+#'
+#' @return `spsEzUI` returns a shiny module UI function, `spsEzServer` returns
+#' the server function
+#' @seealso [spsNewTab]
+#' @export
+#'
+#' @examples
+#' # use `spsInit()` to create an SPS project and use `spsNewTab("Your_tabID", template = "easy")`
+#' # to create a new tab file. The specified use of these two functions is in that file.
+spsEzUI <- function(desc="", tab_title = "Tab Title",
+                    plot_title = "My Plot",
+                    plot_control = shiny::tagList()){
+    plot_control <- rlang::enexpr(plot_control)
+    function(id){
+        ns <- NS(id)
+        plot_control <- rlang::eval_tidy(plot_control)
+        assert_that(inherits(plot_control, "shiny.tag.list"))
+        tagList(
+            tabTitle(tab_title),
+            if(emptyIsFalse(desc)) renderDesc(id = ns("desc"), desc) else "",
+            ## Progress
+            h3("Confirm dataset", class = "text-center text-info"),
+            spsTimeline(
+                ns("df_status"),
+                up_labels = c("1", "2"),
+                down_labels = c("Dataset", "Data Ready"),
+                icons = list(
+                    icon("table"),
+                    icon("check")
+                ),
+                completes = c(TRUE, FALSE)
+            ),
+            bsplus::bs_accordion(id = ns("main_panel")) %>%
+                bsplus::bs_set_opts(panel_type = "info") %>%
+                bsplus::bs_append(
+                    title = "1. Confirm to use example table or upload a new one",
+                    fluidRow(
+                        h3("Load table"),
+                        column(
+                            3,
+                            box(
+                                closable = FALSE, width = 12,
+                                radioGroupButtons(
+                                    inputId = ns("source_df"),
+                                    label = "Choose your file source:",
+                                    selected = "eg",
+                                    choiceNames = c("Upload", "Example"),
+                                    choiceValues = c("upload", "eg"),
+                                    justified = TRUE, status = "primary",
+                                    checkIcon = list(
+                                        yes = icon("ok", lib = "glyphicon"),
+                                        no = icon(""))
+                                ),
+                                dynamicFile(id = ns("df_upload")),
+                                selectizeInput(
+                                    inputId = ns("df_delim"),
+                                    label = "File delimiter",
+                                    choices = c(`,`=",", Tab="\t", space=" ",
+                                                `|`="|", `:`=":", `;`=";"),
+                                    options = list(style = "btn-primary")
+                                ),
+                                clearableTextInput(
+                                    ns("df_comment"), "File comments", value = "#")
+                            ),
+                            box(
+                                closable = FALSE, width = 12,
+                                title = "Confirm to use this table",
+                                actionButton(ns("add_df"), "Confirm")
+                            )
+                        ),
+                        box(
+                            closable = FALSE, width = 9,
+                            DT::DTOutput(ns("df_out"))
+                        )
+                    )
+                )%>%
+                bsplus::bs_append(
+                    title = "2. Make a plot",
+                    fluidRow(
+                        div(
+                            id = ns("plot_container"),
+                            style = "display: none;",
+                            column(
+                                3,
+                                div(
+                                    class = "panel panel-info",
+                                    id = ns("panel_left"),
+                                    style = "min-height: 500px;",
+                                    div(
+                                        id = "",
+                                        class = "panel-heading",
+                                        h4(class = "panel-title", "Plot control")
+                                    ),
+                                    div(
+                                        class = "panel-body",
+                                        style = "overflow-y: auto; height: Calc(100% - 38.5px); margin: 0 10px;",
+                                        fluidRow(
+                                            style = 'margin-top: 25px;',
+                                            class = "text-center",
+                                            canvasBtn(ns("plot_main"))
+                                        ),
+                                        spsHr(),
+                                        plot_control
+                                    )
+                                )
+                            ),
+                            column(
+                                9,
+                                div(
+                                    class = "panel panel-info",
+                                    id = ns("panel_right"),
+                                    style = "min-height: 500px;",
+                                    div(
+                                        id = "",
+                                        class = "panel-heading",
+                                        h4(class = "panel-title", plot_title)
+                                    ),
+                                    div(
+                                        class = "panel-body",
+                                        id = ns("plot_container"),
+                                        style = "overflow-y: auto; height: Calc(100% - 38.5px); margin: 0 10px;",
+                                        shinyjqui::jqui_resizable(plotOutput(ns("plot_main")))
+                                    ),
+                                )
+                            ),
+                            heightMatcher(ns("panel_left"), ns("panel_right")),
+
+                        ),
+                        div(
+                            id = ns("plot_disable"),
+                            h3("Confirm to use a data table first",
+                               class = "text-center text-warning")
+                        )
+                    )
+                ),
+            spsHr(),
+            hexPanel(ns("poweredby"), "THIS MODULE IS POWERED BY:",
+                     hex_imgs = c(
+                         "img/sps_small.png"
+                     ),
+                     hex_titles = c("SystemPipeShiny"),
+                     hex_links = c(
+                         "https://github.com/systemPipeR/systemPipeShiny/"
+                     ),
+                     ys = c("-20"),
+                     xs = c("-10")
+            )
+        )
+    } %>%
+        return()
+}
+
+
+
+#' @param plot_code some R code to make the plot.
+#' @param example_data_path example dataset path, this dataset will be loaded on
+#' app start to display
+#' @param other_server_code optional, other server R code to run for this tab
+#' @rdname spsEzUI
+#' @export
+spsEzServer <- function(
+    plot_code,
+    example_data_path = system.file(package = "systemPipeShiny", "app", "data", "iris.csv"),
+    other_server_code = ""){
+    stopifnot(file.exists(example_data_path))
+    plot_code <- rlang::enexpr(plot_code)
+    other_server_code <- rlang::enexpr(other_server_code)
+
+    function(id, shared) {
+        module <- function(input, output, session) {
+            ns <- session$ns
+            tab_id <- id
+            mydata <- reactiveValues(data = NULL)
+            # load table ----
+            df_path <- dynamicFileServer(input, session, id = "df_upload")
+            observeEvent(input$source_df, {
+                shinyjs::toggleElement(id = "df_upload", anim = TRUE)
+            })
+
+            data_df <- reactive({
+                loadDF(
+                    choice = input$source_df,
+                    upload_path =  df_path()$datapath,
+                    delim = input$df_delim,
+                    data_init = data.frame(),
+                    comment = input$df_comment,
+                    eg_path = example_data_path
+                )
+            })
+            # render table ----
+            output$df_out <- DT::renderDT({
+                DT::datatable(
+                    data_df(),
+                    style = "bootstrap",
+                    class = "compact",  filter = "top",
+                    extensions = c( 'Scroller'),
+                    options = list(
+                        deferRender = TRUE,
+                        scrollY = 200, scrollX = TRUE, scroller = TRUE,
+                        columnDefs = list(list(className = 'dt-center',
+                                               targets = "_all"))
+                    )
+                )
+            })
+            # confirm table ----
+            observeEvent(input$add_df, {
+                # clear status on click start
+                updateSpsTimeline(session, "df_status", 2, FALSE)
+                shinyjs::removeCssClass("main_panel-0", "panel-success")
+                shinyjs::addCssClass("main_panel-0", "panel-info")
+                shinyjs::removeCssClass("main_panel-1", "panel-success")
+                shinyjs::addCssClass("main_panel-1", "panel-info")
+                shinyjs::hide("plot_container")
+                shinyjs::show("plot_disable")
+                # check
+                df_filter <- data_df()[input$df_out_rows_all, ]
+                spsValidate(verbose = FALSE, {
+                    if(!not_empty(df_filter))
+                        stop("Table is empty")
+                    if(!nrow(df_filter) > 0)
+                        stop("Table has fewer than 1 row")
+                    if(nrow(df_filter) < 5)
+                        warning("You table has very a few rows, consider to add more")
+                    TRUE
+                })
+                # add data
+                mydata$data <- df_filter
+                # send success
+                shinyWidgets::confirmSweetAlert(
+                    session = session,
+                    inputId = ns("confirm_to_plot"),
+                    title = "Table added!",
+                    closeOnClickOutside = FALSE,
+                    html = TRUE,
+                    type = "success",
+                    text = div(
+                        h3("Continue to make plots?"),
+                        HTML("Or manually click <span class='text-info'>2. Make a plot</span> panel")
+                    )
+                )
+                updateSpsTimeline(session, "df_status", 2, TRUE)
+                shinyjs::removeCssClass("main_panel-0", "panel-info")
+                shinyjs::addCssClass("main_panel-0", "panel-success")
+                shinyjs::removeCssClass("main_panel-1", "panel-info")
+                shinyjs::addCssClass("main_panel-1", "panel-success")
+                shinyjs::show("plot_container")
+                shinyjs::hide("plot_disable")
+            }, ignoreInit = TRUE)
+
+            # jump to plotting
+            observeEvent(input$confirm_to_plot, {
+                req(input$confirm_to_plot)
+                shinyjs::runjs(paste0("$('#", ns(""), "main_panel-1-heading > h4').trigger('click');"))
+            })
+
+            output$plot_main <- renderPlot({
+                req(mydata$data)
+                rlang::eval_tidy(plot_code)
+            })
+
+            rlang::eval_tidy(other_server_code)
+        }
+        moduleServer(id, module)
+    } %>%
+        return()
+}
+
+
+
+
+
+
 
