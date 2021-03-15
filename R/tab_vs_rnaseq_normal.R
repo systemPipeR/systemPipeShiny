@@ -1,7 +1,5 @@
 ############ vs_rnaseq_normal sub tab ####################
 #' @importFrom shinyjs disabled
-#' @importFrom SummarizedExperiment SummarizedExperiment assays assay
-#' @importFrom DESeq2 counts DESeqDataSetFromMatrix
 vs_rnaseq_normalUI <- function(id){
     ns <- NS(id)
     desc <-
@@ -369,7 +367,7 @@ vs_rnaseq_normalUI <- function(id){
             fixed = TRUE,
             cursor = "default",
             h4("DEG Running Porgress", style="text-align: center"), br(),
-            progressBar(
+            shinyWidgets::progressBar(
                 id = ns("deg_pg"), value = 0,
                 title = "", total = 6
             )
@@ -377,8 +375,6 @@ vs_rnaseq_normalUI <- function(id){
     )
 }
 
-#' @importFrom DESeq2 rlog counts DESeqDataSetFromMatrix varianceStabilizingTransformation
-#' @importFrom SummarizedExperiment SummarizedExperiment
 vs_rnaseq_normalServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

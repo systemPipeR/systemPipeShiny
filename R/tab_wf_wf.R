@@ -1,9 +1,4 @@
 ## UI
-#' @importFrom networkD3 diagonalNetworkOutput
-#' @importFrom shiny downloadButton
-#' @importFrom shinydashboardPlus boxPlus
-#' @importFrom shinyTree shinyTree
-#' @importFrom shinyWidgets radioGroupButtons
 #' @noRd
 wf_wfUI <- function(id){
     ns <- NS(id)
@@ -14,10 +9,12 @@ wf_wfUI <- function(id){
             tabTitle("Workflow"),
             renderDesc(id = ns("desc"),
             '
+
+
             #### Workflow files
             In SPR, workflows are defined as Rmarkdown files,
             you can read details and obtain them
-            [here](https://systempipe.org/pages/pipelines_area/). This step can
+            [here](https://systempipe.org/spr/systempiper/templates/). This step can
             help you choose/ skip some steps. Make a workflow diagram to see how
             the order SPR execute the workflow and take a preview of the
             final report. If you just want to use the defaults, simply clicking
@@ -58,9 +55,12 @@ wf_wfUI <- function(id){
             #### Download
             After step selection, you can download the new Rmarkdown file by
             "Save New Rmd".
+
+            #### more detailed manual
+            A manual with screenshots and details is on [our website](https://systempipe.org/sps/modules/workflow/)
             '),
             spsHr(),
-            boxPlus(
+            box(
                 title = "Confirm to use this workflow file",
                 closable = FALSE, collapsible = TRUE,
                 width = 12,
@@ -108,7 +108,7 @@ wf_wfUI <- function(id){
                 )
             ),
             fluidRow(
-                boxPlus(title = "Display workflow file", width = 12,
+                box(title = "Display workflow file", width = 12,
                         closable = FALSE,
                         shinyWidgets::radioGroupButtons(
                             inputId = ns("wf_source"),
@@ -125,13 +125,13 @@ wf_wfUI <- function(id){
                                   accept = "Rmd"),
                         tags$div(
                             style = 'overflow:auto; height: 500px',
-                            diagonalNetworkOutput(ns("wf_D3"))
+                            networkD3::diagonalNetworkOutput(ns("wf_D3"))
                         )
                 )
             ),
             fluidRow(
                 column(5,
-                       boxPlus(
+                       box(
                            title = "Select workflow steps",
                            width = 12,
                            closable = FALSE,
@@ -148,12 +148,12 @@ wf_wfUI <- function(id){
                            h4("Search steps in the box below"),
                            p("When steps are chosen, you can plot steps and preview
                              report document."),
-                           shinyTree(ns("rmd_tree"), checkbox = TRUE)
+                           shinyTree::shinyTree(ns("rmd_tree"), checkbox = TRUE)
 
                        )
                 ),
                 column(7,
-                       boxPlus(title = "Workflow steps selected",
+                       box(title = "Workflow steps selected",
                                width = 12,
                                closable  = FALSE,
                                enable_sidebar = TRUE,
@@ -177,7 +177,7 @@ wf_wfUI <- function(id){
                 )
             ),
             fluidRow(
-                boxPlus(
+                box(
                     title = "Preview of the workflow report", width = 12,
                     closable = FALSE,
                     uiOutput(ns("wf_md_ui"))
@@ -193,12 +193,13 @@ wf_wfUI <- function(id){
 }
 
 ## server
-#' @importFrom networkD3 renderDiagonalNetwork diagonalNetwork
-#' @importFrom shinyTree get_selected updateTree renderTree
 #' @importFrom shinyWidgets sendSweetAlert
 #' @importFrom shinyjs runjs enable disable
 #' @noRd
 wf_wfServer <- function(id, shared){
+    if (!eval(parse(text = 'require("shinyTree")'))) {
+        spserror('Tried to load the required package "shinyTree" but failed')
+    }
     module <- function(input, output, session){
         ns <- session$ns
         rmd_file_temp <-  reactiveVal(NULL)
@@ -249,7 +250,7 @@ wf_wfServer <- function(id, shared){
             if (input$wf_source == "upload" & is.null(rmd_file_path())) {
                 # hide tree if nothing is there
                 runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = "hidden"')
-                updateTree(session = session,
+               shinyTree::updateTree(session = session,
                                       treeId = "rmd_tree",
                                       data = list(""))
             } else {
@@ -258,8 +259,8 @@ wf_wfServer <- function(id, shared){
 
         })
 
-        output$wf_D3 <- renderDiagonalNetwork({
-            diagonalNetwork(
+        output$wf_D3 <- networkD3::renderDiagonalNetwork({
+            networkD3::diagonalNetwork(
                 step2listD3(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text)),
                 fontSize = 15)
         })

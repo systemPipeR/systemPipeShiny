@@ -9,6 +9,9 @@ library(magrittr) # load pipes
 
 
 ## SPS options
+# read "https://systempipe.org/sps/adv_features/config/#app-options" for details
+# title: dashboard and website title - any string
+# title_logo: logo to display when dashboard is collapsed and on website tab - url of an image
 # mode: running mode - "local", "server"
 # warning_toast: toast pop-up message when you are under some dangerous options - TRUE, FALSE
 # loading_screen: to show loading screen? - TRUE, FALSE
@@ -16,12 +19,14 @@ library(magrittr) # load pipes
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # admin_url: admin_page query url - "admin"
+# note_url: User notification broadcast file url - http(s) address
 ## to load some default modules:
-# module_wf: load the workflow module? - TRUE, FALSE
-# module_rnaseq: load the RNA-Seq module? - TRUE, FALSE
-# module_ggplot: load the Quick ggplot module? - TRUE, FALSE
+# tab_welcome ~ module_wf: whether to load the corresponding tab or module? - TRUE, FALSE
+
 options(sps = list(
-    mode = "server",
+    title = "systemPipeShiny",
+    title_logo = "img/sps_small.png",
+    mode = "local",
     warning_toast = FALSE,
     loading_screen = TRUE,
     loading_theme = "vhelix",
@@ -29,6 +34,11 @@ options(sps = list(
     verbose = FALSE,
     admin_page = FALSE,
     admin_url = "admin",
+    note_url = 'https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/inst/remote_resource/notifications.yaml',
+    tab_welcome = TRUE,
+    tab_vs_main = TRUE,
+    tab_canvas = TRUE,
+    tab_about = TRUE,
     module_wf = TRUE,
     module_rnaseq = TRUE,
     module_ggplot = TRUE

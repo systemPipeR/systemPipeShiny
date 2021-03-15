@@ -309,423 +309,423 @@
 #)
 
 
-#' Imports for database handling classes
-#' @importFrom R6 R6Class
-#' @importFrom RSQLite dbDisconnect dbListTables dbWriteTable dbGetQuery
-#' @importFrom RSQLite dbSendStatement dbGetRowsAffected
-#' @importFrom RSQLite dbClearResult dbConnect SQLite
-#' @importFrom dplyr tribble tbl collect pull
-#' @importFrom openssl rsa_keygen encrypt_envelope decrypt_envelope
-NULL
+##' Imports for database handling classes
+##' @importFrom R6 R6Class
+##' @importFrom RSQLite dbDisconnect dbListTables dbWriteTable dbGetQuery
+##' @importFrom RSQLite dbSendStatement dbGetRowsAffected
+##' @importFrom RSQLite dbClearResult dbConnect SQLite
+##' @importFrom dplyr tribble tbl collect pull
+##' @importFrom openssl rsa_keygen encrypt_envelope decrypt_envelope
+#NULL
 
-#' SPS database functions
-#'
-#' @description Initiate this container at global level.
-#' Methods in this class can help admin to
-#' manage general information of SPS. For now it only stores some meta data and
-#' the encryption key pairs. You can use this database to store
-#' other useful things, like user password hash, IP, browsing info ...
-#'
-#' A SQLite database by default is created inside `config` directory.
-#' If not, you
-#' can use `createDb` method to create one. On initiation, this class checks
-#' if the default db is there and gives warnings if not.
-#'
-#' One instance of this class is created by the [spsEncryption] super class in
-#' *global.R*, normal users don't need to change anything.
-#' @export
-#' @examples
-#' dir.create("config", showWarnings = FALSE)
-#' mydb <- spsDb$new()
-#' mydb$createDb()
-#' mydb$queryValue("sps_meta")
-#' mydb$queryInsert("sps_meta", value = "'new1', '1'")
-#' mydb$queryValue("sps_meta")
-#' mydb$queryInsert("sps_meta", value = c("'new2'", "'2'"))
-#' mydb$queryValue("sps_meta")
-#' mydb$queryUpdate("sps_meta", value = '234',
-#'                  col = "value", WHERE = "info = 'new1'")
-#' mydb$queryValue("sps_meta")
-#' \dontrun{
-#'     library(dplyr)
-#'     mydb$queryValueDp(
-#'         "sps_meta",
-#'         dp_expr="filter(., info %in% c('new1', 'new2') %>% select(2)")
-#' }
-#' mydb$queryDel("sps_meta", WHERE = "value = '234'")
-spsDb <- R6::R6Class("spsDb",
-    public = list(
-        #' @description initialize a new class object
-        initialize = function(){
-            spsinfo("Created SPS database method container", verbose = TRUE)
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            fail_msg <- c("Can't find default SPS db. ",
-                          "Use `createDb` method",
-                          " to create new or be careful ",
-                          "to change default db_name ",
-                          "when you use other methods")
-            con <- private$dbConnect("config/sps.db")
-
-            if(is.null(con)){
-                spswarn(fail_msg)
-            } else if(!all(c("sps_raw", "sps_meta") %in%
-                           RSQLite::dbListTables(con))){
-                spsinfo("Connected, but tables missing, seems like a new db.",
-                        TRUE)
-                spsinfo("Use CreateDb method to create tables", TRUE)
-            } else {
-                spsinfo("Default SPS-db found and is working")
-            }
-        },
-
-        #' @description Create a SPS database
-        #'
-        #' @param db_name database path, you need to
-        #' manually create parent directory
-        #' if not exists
-        createDb = function(db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            if(!dir.exists(dirname(db_name)))
-                dir.create(dirname(db_name), recursive = TRUE)
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                spserror("Can't create db. Make sure your wd is writeable")
-            } else {
-                spsinfo("Creating SPS db...", TRUE)
-                sps_meta <- dplyr::tribble(
-                    ~info, ~value,
-                    "creation_date",
-                    as.character(format(Sys.time(), "%Y%m%d%H%M%S")),
-                )
-                RSQLite::dbWriteTable(con, 'sps_meta',
-                                      sps_meta, overwrite = TRUE)
-                spsinfo("Db write meta")
-                key <- private$genkey()
-                key_encode <- key %>% serialize(NULL)
-                sps_raw <- dplyr::tribble(
-                    ~info, ~value,
-                    "key", key_encode,
-                )
-                RSQLite::dbWriteTable(con, 'sps_raw', sps_raw, overwrite = TRUE)
-                spsinfo("Key generated and stored in db")
-                msg(c(glue("Db created at '{db_name}'. "),
-                      "DO NOT share this file with others"),
-                    "SPS-DANGER", "red")
-                msg(glue("Key md5 {glue_collapse(key$pubkey$fingerprint)}"),
-                    "SPS-INFO", "orange")
-            }
-        },
-
-        #' @description Query database
-        #'
-        #' @param db_name  database path
-        #' @param table  table name
-        #' @param SELECT  SQL select grammar
-        #' @param WHERE SQL select where
-        #' @return query result, usually a dataframe
-        queryValue = function(table, SELECT="*",
-                              WHERE="1", db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                spserror("Can't find db.")
-            } else {
-                results <- RSQLite::dbGetQuery(con, glue("
-                    SELECT {SELECT}
-                    FROM {table}
-                    WHERE {WHERE}
-                "))
-                spsinfo("Query sent")
-                return(results)
-            }
-        },
-
-        #' @description Query database with [dplyr] grammar
-        #'
-        #' Only supports simple selections, like comparison, %in%, `between()`,
-        #' `is.na()`, etc. Advanced selections like wildcard,
-        #' using outside dplyr functions like `[stringr::str_detect()]`,
-        #'  `[base::grepl()]` are not supported.
-        #'
-        #' @param db_name  database path
-        #' @param table  table name
-        #' @param dp_expr dplyr chained expression, must use '.' in first
-        #' component of the chain expression
-        #' @return query result, usually a tibble
-        queryValueDp = function(table, dp_expr="select(., everything())",
-                                 db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                msg("Can't find db.", "error")
-            } else {
-                results <- dplyr::tbl(con, table) %>%
-                    {rlang::eval_tidy(rlang::parse_expr(dp_expr))} %>%
-                    dplyr::collect()
-                spsinfo("Query sent")
-                return(results)
-            }
-        },
-
-        #' @description update(modify) the value in db
-        #'
-        #' @param db_name  database path
-        #' @param table  table name
-        #' @param value  new value
-        #' @param col  which column
-        #' @param WHERE SQL where statement, conditions to select rows
-        queryUpdate =  function(table, value, col,
-                                WHERE="1", db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                spserror("Can't find db.")
-            } else {
-                res <- RSQLite::dbSendStatement(con, glue(
-                    "UPDATE {table} SET {col}={value} WHERE {WHERE}"))
-                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    spsinfo("No row updated", verbose = TRUE)
-                } else {
-                    spsinfo(glue("Updated {aff_rows} rows"), verbose = TRUE)
-                }
-                RSQLite::dbClearResult(res)
-            }
-        },
-
-        #' @description delete value in db
-        #'
-        #' @param db_name  database path
-        #' @param table  table name
-        #' @param WHERE SQL where statement, conditions to select rows
-        queryDel =  function(table, WHERE="1", db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                spserror("Can't find db.")
-            } else {
-                res <- RSQLite::dbSendStatement(con, glue(
-                    "DELETE FROM {table} WHERE {WHERE}"))
-                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    spsinfo("No row deleted", verbose = TRUE)
-                } else {
-                    spsinfo(glue("Deleted {aff_rows} rows"), verbose = TRUE)
-                }
-                RSQLite::dbClearResult(res)
-            }
-        },
-
-        #' @description Insert value to db
-        #'
-        #' @param db_name  database path
-        #' @param table  table name
-        #' @param value  new values for the entire row
-        #' @param WHERE SQL where statement, conditions to select rows
-        queryInsert =  function(table, value, db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                msg("Can't find db.", "error")
-            } else {
-                value <- glue_collapse(value, sep = ", ")
-                res <- RSQLite::dbSendStatement(con, glue(
-                    "INSERT INTO {table} VALUES ({value})"))
-                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
-                    spswarn("No row inserted")
-                } else {
-                    spsinfo(glue("Inerted {aff_rows} rows"), verbose = TRUE)
-                }
-                RSQLite::dbClearResult(res)
-            }
-        }
-    ),
-    private = list(
-        dbConnect = function(db_name){
-            if(!is.character(db_name) | length(db_name) != 1)
-                spserror("Invalid db name")
-            con <- tryCatch(
-                RSQLite::dbConnect(
-                    RSQLite::SQLite(),
-                    normalizePath(db_name, mustWork = FALSE)
-                ),
-                error = function(e){
-                    spswarn(e)
-                    return(NULL)
-                }
-            )
-            spsinfo("Db connected")
-            return(con)
-        },
-        genkey = function(){
-            return(openssl::rsa_keygen())
-        }
-    )
-)
-
-#' SPS encryption functions
-#'
-#' @description
-#' Methods in this class can help admin to encrypt files been output from sps.
-#' For now it is only used to encypt and decrypt snapshots.
-#' This class requires the SPS database. This class inherits all functions from
-#' the [spsDb] class, so there is no need to initiate the `spsDb` container.
-#'
-#' This class is required to run a SPS app. This class needs to be initialized
-#' global level. This has already been written in *global.R* for you.
-#' @export
-#' @examples
-#' dir.create("config", showWarnings = FALSE)
-#' spsOption('verbose', TRUE)
-#' my_ecpt <- spsEncryption$new()
-#' my_ecpt$createDb()
-#' my_ecpt$keyChange()
-#' # imagine a file has one line "test"
-#' writeLines(text = "test", con = "test.txt")
-#' # encrypt the file
-#' my_ecpt$encrypt("test.txt", "test.bin", overwrite = TRUE)
-#' # decrypt the file
-#' my_ecpt$decrypt("test.bin", "test_decpt.txt", overwrite = TRUE)
-#' # check the decrypted file content
-#' readLines('test_decpt.txt')
-spsEncryption <- R6::R6Class(
-    "spsencrypt",
-    inherit = spsDb,
-    public = list(
-        #' @description initialize a new class container
-        initialize = function(){
-            spsinfo("Created SPS encryption method container", verbose = TRUE)
-            spsinfo("This container inherits all functions from spsDb class")
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            fail_msg <- c("Can't create default SPS db. ",
-                          "Default name 'config/sps.db'. Use `createDb` method",
-                          " to create new or be careful ",
-                          "to change default db_name ",
-                          "when you use other methods")
-            con <- private$dbConnect("config/sps.db")
-
-            if(is.null(con)){
-                spswarn(fail_msg)
-            } else if(!all(c("sps_raw", "sps_meta") %in%
-                           RSQLite::dbListTables(con))){
-                spsinfo("Connected, but tables missing, seems like a new db.")
-            } else {
-                spsinfo("Default SPS-db found and is working", verbose = TRUE)
-            }
-        },
-
-        #' @description Change encryption key of a SPS project
-        #'
-        #' @param db_name  database path
-        keyChange = function(db_name="config/sps.db"){
-            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
-            con <- private$dbConnect(db_name)
-            if(is.null(con)){
-                spserror("Can't find db.")
-            } else {
-                old_value <- tryCatch(
-                    RSQLite::dbGetQuery(con,
-                        "SELECT `value`
-                         FROM `sps_raw`
-                         WHERE (`info` = 'key')") %>% dplyr::pull() ,
-                    error = function(e){
-                        spswarn(e)
-                        return(NULL)
-                    }
-                )
-                if(length(old_value) == 0) msg("Not a standard sps db", "error")
-                key <- private$genkey()
-                key_encode <- key %>% serialize(NULL)
-                res <- RSQLite::dbSendStatement(con, glue(
-                    "UPDATE sps_raw SET value=x'{glue_collapse(key_encode)}'",
-                    "WHERE info='key'"))
-                if(RSQLite::dbGetRowsAffected(res) != 0){
-                    spsinfo("You new key has been generated and saved in db")
-                    msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"),
-                        "SPS-INFO", "orange")
-                } else {spserror("Update key failed")}
-                RSQLite::dbClearResult(res)
-            }
-        },
-
-        #' @description Get encryption key from db of a SPS project
-        #'
-        #' @param db_name  database path
-        keyGet = function(db_name="config/sps.db"){
-            key <- self$queryValue(table = 'sps_raw', SELECT="value",
-                                   WHERE="info='key'", db_name) %>%
-                dplyr::pull() %>% unlist() %>% unserialize()
-                spsinfo(glue("OpenSSL key found md5",
-                             "{glue_collapse(key$pubkey$fingerprint)}"))
-            key
-        },
-
-        #' @description Encrypt raw data or a file with key from a SPS project
-        #'
-        #' @param data  raw vector or a file path
-        #' @param db_name  database path
-        #' @param out_path if provided, encrypted data will be write to a file
-        #' @param overwrite if `out_path` file exists, overwrite?
-        encrypt = function(data, out_path=NULL,
-                           overwrite = FALSE, db_name="config/sps.db"){
-            if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
-                spserror(glue("File {normalizePath(out_path)} exists"))
-            }
-            key <- self$keyGet()
-            data_ecpt <- openssl::encrypt_envelope(data, key$pubkey)
-            class(data_ecpt) <- c(class(data_ecpt), "sps_ecpt")
-            spsinfo("Data encrypted")
-            if(is.null(out_path)) return(data_ecpt)
-            else saveRDS(data_ecpt, out_path)
-            spsinfo(glue("File write to {normalizePath(out_path)}"))
-            return(invisible(out_path))
-        },
-
-        #' @description Decrypt raw data or a file with key from a SPS project
-        #'
-        #' @param data  raw vector or a file path
-        #' @param out_path if provided, encrypted data will be write to a file
-        #' @param overwrite if `out_path` file exists, overwrite?
-        #' @param db_name  database path
-        decrypt = function(data, out_path=NULL,
-                           overwrite = FALSE, db_name="config/sps.db"){
-            if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
-                spserror(glue("File {normalizePath(out_path)} exists"))
-            }
-
-            data <- tryCatch({
-                if (is.raw(data)) {data}
-                else if (all(is.character(data) & length(data) == 1)) {
-                    content <- readRDS(normalizePath(data, mustWork = TRUE))
-                    spsinfo("File read into memory")
-                    content
-                }
-                else {spserror("data must be raw or a valid file")}
-                }, error = function(e){
-                    spswarn(e)
-                    spserror("Not a standard SPS encrypted object")
-                })
-            if(!inherits(data, "sps_ecpt"))
-                spserror("Not a standard SPS encrypted object")
-            key <- self$keyGet()
-            data_dcpt <- tryCatch({
-                suppressWarnings(
-                    openssl::decrypt_envelope(
-                        data$data,
-                        iv = data$iv,
-                        session =data$session,
-                        key = key))
-                },  error = function(e){
-                    spswarn(e)
-                    spserror("Cannot decrypt this file")
-                })
-            spsinfo("Data decrypted")
-            if(is.null(out_path)) return(data_dcpt)
-            else {
-                writeBin(object = data_dcpt, con = out_path)
-            }
-            spsinfo(glue("File write to {normalizePath(out_path)}"))
-            return(invisible(out_path))
-        }
-    )
-)
+##' SPS database functions
+##'
+##' @description Initiate this container at global level.
+##' Methods in this class can help admin to
+##' manage general information of SPS. For now it only stores some meta data and
+##' the encryption key pairs. You can use this database to store
+##' other useful things, like user password hash, IP, browsing info ...
+##'
+##' A SQLite database by default is created inside `config` directory.
+##' If not, you
+##' can use `createDb` method to create one. On initiation, this class checks
+##' if the default db is there and gives warnings if not.
+##'
+##' One instance of this class is created by the [spsEncryption] super class in
+##' *global.R*, normal users don't need to change anything.
+##' @export
+##' @examples
+##' dir.create("config", showWarnings = FALSE)
+##' mydb <- spsDb$new()
+##' mydb$createDb()
+##' mydb$queryValue("sps_meta")
+##' mydb$queryInsert("sps_meta", value = "'new1', '1'")
+##' mydb$queryValue("sps_meta")
+##' mydb$queryInsert("sps_meta", value = c("'new2'", "'2'"))
+##' mydb$queryValue("sps_meta")
+##' mydb$queryUpdate("sps_meta", value = '234',
+##'                  col = "value", WHERE = "info = 'new1'")
+##' mydb$queryValue("sps_meta")
+##' \dontrun{
+##'     library(dplyr)
+##'     mydb$queryValueDp(
+##'         "sps_meta",
+##'         dp_expr="filter(., info %in% c('new1', 'new2') %>% select(2)")
+##' }
+##' mydb$queryDel("sps_meta", WHERE = "value = '234'")
+#spsDb <- R6::R6Class("spsDb",
+#    public = list(
+#        #' @description initialize a new class object
+#        initialize = function(){
+#            spsinfo("Created SPS database method container", verbose = TRUE)
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            fail_msg <- c("Can't find default SPS db. ",
+#                          "Use `createDb` method",
+#                          " to create new or be careful ",
+#                          "to change default db_name ",
+#                          "when you use other methods")
+#            con <- private$dbConnect("config/sps.db")
+#
+#            if(is.null(con)){
+#                spswarn(fail_msg)
+#            } else if(!all(c("sps_raw", "sps_meta") %in%
+#                           RSQLite::dbListTables(con))){
+#                spsinfo("Connected, but tables missing, seems like a new db.",
+#                        TRUE)
+#                spsinfo("Use CreateDb method to create tables", TRUE)
+#            } else {
+#                spsinfo("Default SPS-db found and is working")
+#            }
+#        },
+#
+#        #' @description Create a SPS database
+#        #'
+#        #' @param db_name database path, you need to
+#        #' manually create parent directory
+#        #' if not exists
+#        createDb = function(db_name="config/sps.db"){
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            if(!dir.exists(dirname(db_name)))
+#                dir.create(dirname(db_name), recursive = TRUE)
+#            con <- private$dbConnect(db_name)
+#            if(is.null(con)){
+#                spserror("Can't create db. Make sure your wd is writeable")
+#            } else {
+#                spsinfo("Creating SPS db...", TRUE)
+#                sps_meta <- dplyr::tribble(
+#                    ~info, ~value,
+#                    "creation_date",
+#                    as.character(format(Sys.time(), "%Y%m%d%H%M%S")),
+#                )
+#                RSQLite::dbWriteTable(con, 'sps_meta',
+#                                      sps_meta, overwrite = TRUE)
+#                spsinfo("Db write meta")
+#                key <- private$genkey()
+#                key_encode <- key %>% serialize(NULL)
+#                sps_raw <- dplyr::tribble(
+#                    ~info, ~value,
+#                    "key", key_encode,
+#                )
+#                RSQLite::dbWriteTable(con, 'sps_raw', sps_raw, overwrite = TRUE)
+#                spsinfo("Key generated and stored in db")
+#                msg(c(glue("Db created at '{db_name}'. "),
+#                      "DO NOT share this file with others"),
+#                    "SPS-DANGER", "red")
+#                msg(glue("Key md5 {glue_collapse(key$pubkey$fingerprint)}"),
+#                    "SPS-INFO", "orange")
+#            }
+#        },
+#
+#        #' @description Query database
+#        #'
+#        #' @param db_name  database path
+#        #' @param table  table name
+#        #' @param SELECT  SQL select grammar
+#        #' @param WHERE SQL select where
+#        #' @return query result, usually a dataframe
+#        queryValue = function(table, SELECT="*",
+#                              WHERE="1", db_name="config/sps.db"){
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            con <- private$dbConnect(db_name)
+#            if(is.null(con)){
+#                spserror("Can't find db.")
+#            } else {
+#                results <- RSQLite::dbGetQuery(con, glue("
+#                    SELECT {SELECT}
+#                    FROM {table}
+#                    WHERE {WHERE}
+#                "))
+#                spsinfo("Query sent")
+#                return(results)
+#            }
+#        },
+#
+#        #' @description Query database with [dplyr] grammar
+#        #'
+#        #' Only supports simple selections, like comparison, %in%, `between()`,
+#        #' `is.na()`, etc. Advanced selections like wildcard,
+#        #' using outside dplyr functions like `[stringr::str_detect()]`,
+#        #'  `[base::grepl()]` are not supported.
+#        #'
+#        #' @param db_name  database path
+#        #' @param table  table name
+#        #' @param dp_expr dplyr chained expression, must use '.' in first
+#        #' component of the chain expression
+#        #' @return query result, usually a tibble
+#        queryValueDp = function(table, dp_expr="select(., everything())",
+#                                 db_name="config/sps.db"){
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            con <- private$dbConnect(db_name)
+#            if(is.null(con)){
+#                msg("Can't find db.", "error")
+#            } else {
+#                results <- dplyr::tbl(con, table) %>%
+#                    {rlang::eval_tidy(rlang::parse_expr(dp_expr))} %>%
+#                    dplyr::collect()
+#                spsinfo("Query sent")
+#                return(results)
+#            }
+#        },
+#
+#        #' @description update(modify) the value in db
+#        #'
+#        #' @param db_name  database path
+#        #' @param table  table name
+#        #' @param value  new value
+#        #' @param col  which column
+#        #' @param WHERE SQL where statement, conditions to select rows
+#        queryUpdate =  function(table, value, col,
+#                                WHERE="1", db_name="config/sps.db"){
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            con <- private$dbConnect(db_name)
+#            if(is.null(con)){
+#                spserror("Can't find db.")
+#            } else {
+#                res <- RSQLite::dbSendStatement(con, glue(
+#                    "UPDATE {table} SET {col}={value} WHERE {WHERE}"))
+#                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
+#                    spsinfo("No row updated", verbose = TRUE)
+#                } else {
+#                    spsinfo(glue("Updated {aff_rows} rows"), verbose = TRUE)
+#                }
+#                RSQLite::dbClearResult(res)
+#            }
+#        },
+#
+#        #' @description delete value in db
+#        #'
+#        #' @param db_name  database path
+#        #' @param table  table name
+#        #' @param WHERE SQL where statement, conditions to select rows
+#        queryDel =  function(table, WHERE="1", db_name="config/sps.db"){
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            con <- private$dbConnect(db_name)
+#            if(is.null(con)){
+#                spserror("Can't find db.")
+#            } else {
+#                res <- RSQLite::dbSendStatement(con, glue(
+#                    "DELETE FROM {table} WHERE {WHERE}"))
+#                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
+#                    spsinfo("No row deleted", verbose = TRUE)
+#                } else {
+#                    spsinfo(glue("Deleted {aff_rows} rows"), verbose = TRUE)
+#                }
+#                RSQLite::dbClearResult(res)
+#            }
+#        },
+#
+#        #' @description Insert value to db
+#        #'
+#        #' @param db_name  database path
+#        #' @param table  table name
+#        #' @param value  new values for the entire row
+#        #' @param WHERE SQL where statement, conditions to select rows
+#        queryInsert =  function(table, value, db_name="config/sps.db"){
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            con <- private$dbConnect(db_name)
+#            if(is.null(con)){
+#                msg("Can't find db.", "error")
+#            } else {
+#                value <- glue_collapse(value, sep = ", ")
+#                res <- RSQLite::dbSendStatement(con, glue(
+#                    "INSERT INTO {table} VALUES ({value})"))
+#                if({aff_rows <- RSQLite::dbGetRowsAffected(res)} == 0){
+#                    spswarn("No row inserted")
+#                } else {
+#                    spsinfo(glue("Inerted {aff_rows} rows"), verbose = TRUE)
+#                }
+#                RSQLite::dbClearResult(res)
+#            }
+#        }
+#    ),
+#    private = list(
+#        dbConnect = function(db_name){
+#            if(!is.character(db_name) | length(db_name) != 1)
+#                spserror("Invalid db name")
+#            con <- tryCatch(
+#                RSQLite::dbConnect(
+#                    RSQLite::SQLite(),
+#                    normalizePath(db_name, mustWork = FALSE)
+#                ),
+#                error = function(e){
+#                    spswarn(e)
+#                    return(NULL)
+#                }
+#            )
+#            spsinfo("Db connected")
+#            return(con)
+#        },
+#        genkey = function(){
+#            return(openssl::rsa_keygen())
+#        }
+#    )
+#)
+#
+##' SPS encryption functions
+##'
+##' @description
+##' Methods in this class can help admin to encrypt files been output from sps.
+##' For now it is only used to encypt and decrypt snapshots.
+##' This class requires the SPS database. This class inherits all functions from
+##' the [spsDb] class, so there is no need to initiate the `spsDb` container.
+##'
+##' This class is required to run a SPS app. This class needs to be initialized
+##' global level. This has already been written in *global.R* for you.
+##' @export
+##' @examples
+##' dir.create("config", showWarnings = FALSE)
+##' spsOption('verbose', TRUE)
+##' my_ecpt <- spsEncryption$new()
+##' my_ecpt$createDb()
+##' my_ecpt$keyChange()
+##' # imagine a file has one line "test"
+##' writeLines(text = "test", con = "test.txt")
+##' # encrypt the file
+##' my_ecpt$encrypt("test.txt", "test.bin", overwrite = TRUE)
+##' # decrypt the file
+##' my_ecpt$decrypt("test.bin", "test_decpt.txt", overwrite = TRUE)
+##' # check the decrypted file content
+##' readLines('test_decpt.txt')
+#spsEncryption <- R6::R6Class(
+#    "spsencrypt",
+#    inherit = spsDb,
+#    public = list(
+#        #' @description initialize a new class container
+#        initialize = function(){
+#            spsinfo("Created SPS encryption method container", verbose = TRUE)
+#            spsinfo("This container inherits all functions from spsDb class")
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            fail_msg <- c("Can't create default SPS db. ",
+#                          "Default name 'config/sps.db'. Use `createDb` method",
+#                          " to create new or be careful ",
+#                          "to change default db_name ",
+#                          "when you use other methods")
+#            con <- private$dbConnect("config/sps.db")
+#
+#            if(is.null(con)){
+#                spswarn(fail_msg)
+#            } else if(!all(c("sps_raw", "sps_meta") %in%
+#                           RSQLite::dbListTables(con))){
+#                spsinfo("Connected, but tables missing, seems like a new db.")
+#            } else {
+#                spsinfo("Default SPS-db found and is working", verbose = TRUE)
+#            }
+#        },
+#
+#        #' @description Change encryption key of a SPS project
+#        #'
+#        #' @param db_name  database path
+#        keyChange = function(db_name="config/sps.db"){
+#            on.exit(if(!is.null(con)) RSQLite::dbDisconnect(con))
+#            con <- private$dbConnect(db_name)
+#            if(is.null(con)){
+#                spserror("Can't find db.")
+#            } else {
+#                old_value <- tryCatch(
+#                    RSQLite::dbGetQuery(con,
+#                        "SELECT `value`
+#                         FROM `sps_raw`
+#                         WHERE (`info` = 'key')") %>% dplyr::pull() ,
+#                    error = function(e){
+#                        spswarn(e)
+#                        return(NULL)
+#                    }
+#                )
+#                if(length(old_value) == 0) msg("Not a standard sps db", "error")
+#                key <- private$genkey()
+#                key_encode <- key %>% serialize(NULL)
+#                res <- RSQLite::dbSendStatement(con, glue(
+#                    "UPDATE sps_raw SET value=x'{glue_collapse(key_encode)}'",
+#                    "WHERE info='key'"))
+#                if(RSQLite::dbGetRowsAffected(res) != 0){
+#                    spsinfo("You new key has been generated and saved in db")
+#                    msg(glue("md5 {glue_collapse(key$pubkey$fingerprint)}"),
+#                        "SPS-INFO", "orange")
+#                } else {spserror("Update key failed")}
+#                RSQLite::dbClearResult(res)
+#            }
+#        },
+#
+#        #' @description Get encryption key from db of a SPS project
+#        #'
+#        #' @param db_name  database path
+#        keyGet = function(db_name="config/sps.db"){
+#            key <- self$queryValue(table = 'sps_raw', SELECT="value",
+#                                   WHERE="info='key'", db_name) %>%
+#                dplyr::pull() %>% unlist() %>% unserialize()
+#                spsinfo(glue("OpenSSL key found md5",
+#                             "{glue_collapse(key$pubkey$fingerprint)}"))
+#            key
+#        },
+#
+#        #' @description Encrypt raw data or a file with key from a SPS project
+#        #'
+#        #' @param data  raw vector or a file path
+#        #' @param db_name  database path
+#        #' @param out_path if provided, encrypted data will be write to a file
+#        #' @param overwrite if `out_path` file exists, overwrite?
+#        encrypt = function(data, out_path=NULL,
+#                           overwrite = FALSE, db_name="config/sps.db"){
+#            if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
+#                spserror(glue("File {normalizePath(out_path)} exists"))
+#            }
+#            key <- self$keyGet()
+#            data_ecpt <- openssl::encrypt_envelope(data, key$pubkey)
+#            class(data_ecpt) <- c(class(data_ecpt), "sps_ecpt")
+#            spsinfo("Data encrypted")
+#            if(is.null(out_path)) return(data_ecpt)
+#            else saveRDS(data_ecpt, out_path)
+#            spsinfo(glue("File write to {normalizePath(out_path)}"))
+#            return(invisible(out_path))
+#        },
+#
+#        #' @description Decrypt raw data or a file with key from a SPS project
+#        #'
+#        #' @param data  raw vector or a file path
+#        #' @param out_path if provided, encrypted data will be write to a file
+#        #' @param overwrite if `out_path` file exists, overwrite?
+#        #' @param db_name  database path
+#        decrypt = function(data, out_path=NULL,
+#                           overwrite = FALSE, db_name="config/sps.db"){
+#            if (!is.null(out_path) & file.exists(out_path) & !overwrite) {
+#                spserror(glue("File {normalizePath(out_path)} exists"))
+#            }
+#
+#            data <- tryCatch({
+#                if (is.raw(data)) {data}
+#                else if (all(is.character(data) & length(data) == 1)) {
+#                    content <- readRDS(normalizePath(data, mustWork = TRUE))
+#                    spsinfo("File read into memory")
+#                    content
+#                }
+#                else {spserror("data must be raw or a valid file")}
+#                }, error = function(e){
+#                    spswarn(e)
+#                    spserror("Not a standard SPS encrypted object")
+#                })
+#            if(!inherits(data, "sps_ecpt"))
+#                spserror("Not a standard SPS encrypted object")
+#            key <- self$keyGet()
+#            data_dcpt <- tryCatch({
+#                suppressWarnings(
+#                    openssl::decrypt_envelope(
+#                        data$data,
+#                        iv = data$iv,
+#                        session =data$session,
+#                        key = key))
+#                },  error = function(e){
+#                    spswarn(e)
+#                    spserror("Cannot decrypt this file")
+#                })
+#            spsinfo("Data decrypted")
+#            if(is.null(out_path)) return(data_dcpt)
+#            else {
+#                writeBin(object = data_dcpt, con = out_path)
+#            }
+#            spsinfo(glue("File write to {normalizePath(out_path)}"))
+#            return(invisible(out_path))
+#        }
+#    )
+#)
 
 

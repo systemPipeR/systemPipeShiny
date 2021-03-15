@@ -16,3 +16,5 @@ _pkgdown\.yml
 ^SPS_20*
 ^_pkgdown/
 ^index.md$
+^inst/depend
+^inst/remote_resouce

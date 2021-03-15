@@ -288,8 +288,6 @@ vs_rnaseq_degUI <- function(id){
 }
 
 
-#' @importFrom UpSetR fromList upset
-#' @importFrom tidyr drop_na
 vs_rnaseq_degServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -470,7 +468,6 @@ vs_rnaseq_degServer <- function(id, shared){
                 dplyr::filter(plot_data, cmp == x) %>% dplyr::pull(genes)
             })
             names(up_list) <- input$upset_choose
-            UpSetR::fromList(up_list)
             shinyCatch(blocking_level = "error", {
                 UpSetR::upset(UpSetR::fromList(up_list), order.by="freq")
             })
