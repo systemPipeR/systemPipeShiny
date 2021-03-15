@@ -1,6 +1,6 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
-Version: 1.1.12
+Version: 1.1.20
 Date: 2021-02-05
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
@@ -13,71 +13,70 @@ Description: systemPipeShiny (SPS) extends the widely used systemPipeR (SPR) wor
 Depends:
     R (>= 4.0.0),
     shiny (>= 1.5.0),
-    shinyTree
+    spsUtil,
+    spsComps (>= 0.1.1),
+    drawer
 Imports:
-    DESeq2,
-    DOT,
     DT,
-    R6,
-    R.utils,
-    RSQLite,
-    Rtsne,
-    SummarizedExperiment,
-    UpSetR,
     assertthat,
-    ape,
     bsplus,
-    callr,
-    colourpicker,
     crayon,
     dplyr,
-    esquisse,
-    fs,
     ggplot2,
-    ggtree,
     glue,
-    glmpca,
-    grid,
-    httr,
-    markdown,
     magrittr,
     methods,
-    networkD3,
-    openssl,
     plotly,
-    pheatmap,
-    pushbar,
-    readr,
-    rhandsontable,
     rlang,
     rstudioapi,
     shinyAce,
     shinyFiles,
     shinyWidgets,
     shinydashboard,
-    shinydashboardPlus,
+    shinydashboardPlus (>= 2.0.0),
     shinyjqui,
     shinyjs,
     shinytoastr,
     stringr,
     stats,
     styler,
-    systemPipeR,
-    systemPipeRdata,
     tibble,
-    tidyr,
     utils,
     vroom (>= 1.3.1),
-    yaml,
-    zip
+    yaml
 Suggests:
     testthat,
     BiocStyle,
     knitr, 
-    rmarkdown
+    rmarkdown,
+    systemPipeR,
+    systemPipeRdata,
+    networkD3,
+    rhandsontable,
+    zip,
+    callr,
+    pushbar,
+    fs,
+    openssl,
+    readr,
+    R.utils,
+    DOT,
+    shinyTree,
+    DESeq2,
+    SummarizedExperiment,
+    glmpca,
+    pheatmap,
+    grid,
+    ape,
+    ggtree,
+    Rtsne,
+    UpSetR,
+    tidyr,
+    esquisse,
+    cicerone
 VignetteBuilder: knitr
 biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
-License: Artistic-2.0
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 BugReports: https://github.com/systemPipeR/systemPipeShiny/issues

@@ -6,7 +6,6 @@
 ## values inside if you used default settings when creating the tab.
 
 ## UI for vs_esquisse
-#' @importFrom esquisse esquisseContainer esquisserUI
 vs_esqUI <- function(id) {
     ns <- NS(id)
     desc <- "
@@ -55,7 +54,7 @@ vs_esqUI <- function(id) {
                     h3("Load table"),
                     column(
                         3,
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 12,
                             radioGroupButtons(
                                 inputId = ns("source_df"),
@@ -79,13 +78,13 @@ vs_esqUI <- function(id) {
                             clearableTextInput(
                                 ns("df_comment"), "File comments", value = "#")
                         ),
-                        boxPlus(
+                        box(
                             closable = FALSE, width = 12,
                             title = "Confirm to use this table",
                             actionButton(ns("add_df"), "Confirm")
                         )
                     ),
-                    boxPlus(
+                    box(
                         closable = FALSE, width = 9,
                         DT::DTOutput(ns("df_out"))
                     )
@@ -134,7 +133,6 @@ vs_esqUI <- function(id) {
 }
 
 ## server for vs_esq
-#' @importFrom esquisse esquisserServer
 vs_esqServer <- function(id, shared) {
     module <- function(input, output, session) {
         ns <- session$ns

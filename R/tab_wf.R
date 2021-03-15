@@ -1,12 +1,11 @@
 # WF main page UI
-#' @importFrom bsplus bs_accordion bs_append
 wfUI <- function(id){
     ns <- NS(id)
     desc <-
     '
     Workflow management guides you step by step to prepare a data analysis workflow,
     and enbles you to run some simple workflows directly from this app. The
-    workflow will be prepared in [systemPipeR (SPR)](https://systempipe.org/)
+    workflow will be prepared in [systemPipeR (SPR)](https://systempipe.org/spr)
     format and it can be used in other similar compatible workflow environments.
 
     `WARNING: This module will allow users to access some server files and run
@@ -36,8 +35,8 @@ wfUI <- function(id){
     the workflow fail. Some SPR workflow configs require you to have the workflow
     folder as the current working directory.
 
-    You can read more details about workflow management in the
-    [vignette](https://systempipe.org/systemPipeShiny/articles/systemPipeShiny.html#workflow-management)
+    You can read more details about workflow management at
+    [our website](https://systempipe.org/spr/)
     '
     tagList(
         tags$head(
@@ -76,7 +75,7 @@ wfUI <- function(id){
         hexPanel(ns("poweredby"), "THIS TAB IS POWERED BY:",
                  hex_imgs = c(
                      "img/sps_small.png",
-                     "https://github.com/tgirke/systemPipeR/blob/gh-pages/images/systemPipeR_site.png?raw=true",
+                     "https://raw.githubusercontent.com/systemPipeR/systemPipeR.github.io/main/static/images/systemPipeR.png",
                      "img/cwl.png"
                  ),
                  hex_titles = c("SystemPipeShiny", "SystemPipeR", "Common Workflow Language"),
@@ -177,8 +176,7 @@ wfServer <- function(id, shared){
         }, ignoreInit = TRUE)
         # session end call back
         session$onEnded(function(){
-            setwd(spsOption("app_path"))
-            if(!isolate(shared$wf$spr_loaded)) try(detach("package:systemPipeR", unload = TRUE), silent = TRUE)
+            "" ## nothing for now
         })
     }
     moduleServer(id, module)

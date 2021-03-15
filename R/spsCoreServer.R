@@ -1,18 +1,21 @@
 # SPS core server functions, can only be used under SPS framework
 
 #' SPS main server function
-# @importFrom pushbar setup_pushbar
 #' @importFrom rlang parse_expr eval_tidy
 #' @importFrom shinyjs removeClass toggleClass hide show
 #' @noRd
-spsServer <- function(tabs, server_expr) {
+spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide) {
     spsinfo("Start to create server function")
+    spsinfo("Resolve default tabs server")
+
+    spsinfo("Load custom tabs servers")
     tab_modules <- if(nrow(tabs) > 0) {
         names(tabs[['tab_id']]) <- tabs[['tab_id']]
         lapply(tabs[['tab_id']], function(x){
             glue('{x}Server("{x}", shared)') %>% rlang::parse_expr()
         })
     } else list(empty = substitute(spsinfo("No custom server to load.")))
+
     function(input, output, session) {
         # add a container to communicate tabs
         spsinfo("Start to load server")
@@ -20,55 +23,68 @@ spsServer <- function(tabs, server_expr) {
         shared <- reactiveValues()
         # core tabs
         spsinfo("Loading core tabs server")
-        core_dashboardServer("core_dashboard", shared)
+        if (spsOption('tab_welcome')) rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)("core_welcome", shared)
 
-        # core_rightServer("core_right", shared)
-        core_canvasServer("core_canvas", shared)
-        core_aboutServer("core_about", shared)
-        # modules
-        module_mainServer("module_main", shared)
-        if(spsOption("module_wf")) {
-            spsinfo("Loading workflow module server"); wfServer("wf", shared)
-            core_topServer("core_top", shared) # top is now part of workflow module
-        }
-        if(spsOption("module_rnaseq")) {
-            spsinfo("Loading core RNAseq module server"); vs_rnaseqServer("vs_rnaseq", shared)
-        }
-        if(spsOption("module_ggplot")) {
-            spsinfo("Loading ggplot module server"); vs_esqServer("vs_esq", shared)
-        }
+        any_module <- any(spsOption("module_wf"), spsOption("module_rnaseq"), spsOption("module_ggplot"))
+        if (any_module) rlang::env_get(sps_env, 'module_mainServer', module_mainServer)("module_main", shared)
 
-        # VS tabs
-        spsinfo("Loading vs tabs server")
-        vs_mainServer("vs_main", shared)
-        mapply(function(module, name){
-            spsinfo(glue("Loading server for {name}"))
-            rlang::eval_tidy(module)
-        },
+        if (spsOption('tab_vs_main')) {
+            rlang::env_get(sps_env, 'vs_mainServer', vs_mainServer)("vs_main", shared)
+            # VS tabs
+            spsinfo("Loading custom tabs server")
+            mapply(function(module, name){
+                spsinfo(glue("Loading server for {name}"))
+                rlang::eval_tidy(module)
+            },
             SIMPLIFY = FALSE,
             module = tab_modules,
             name = names(tab_modules))
+        }
+
+        if (spsOption('tab_canvas')) rlang::env_get(sps_env, 'core_canvasServer', core_canvasServer)("core_canvas", shared)
+        if (spsOption('tab_about')) rlang::env_get(sps_env, 'core_aboutServer', core_aboutServer)("core_about", shared)
+
+        # modules
+        if(!is.null(mod_missings[['wf']]) && length(mod_missings[['wf']]) == 0) {
+            spsinfo("Loading workflow module server"); wfServer("wf", shared)
+            core_topServer("core_top", shared) # top is now part of workflow module
+        }
+        if(!is.null(mod_missings[['rna']]) && length(mod_missings[['rna']]) == 0) {
+            spsinfo("Loading core RNAseq module server"); vs_rnaseqServer("vs_rnaseq", shared)
+        }
+        if(!is.null(mod_missings[['ggplot']]) && length(mod_missings[['ggplot']]) == 0) {
+            spsinfo("Loading ggplot module server"); vs_esqServer("vs_esq", shared)
+        }
+
+        # load guides
+        guide_content <- guide[['guide_content']]
+        guide_names <- names(guide_content)
+        lapply(seq_along(guide_content), function(i) {
+            observeEvent(input[[guide_names[i]]], {
+                guide_content[[i]]$init(session = session)$start(session = session)
+            })
+        })
+        if(!emptyIsFalse(checkNameSpace('cicerone'))) {
+            shinyjs::onclick('toapp', {
+                cicerone::Cicerone$new(overlay_click_next =TRUE)$step(
+                    "app-main .messages-menu",
+                    "Welcome",
+                    "If you are new to the app, you can start with a tutorial by clicking here.
+                    You can customize your own tutorials too!",
+                    "left")$
+                    init(session = session)$
+                    start(session = session)
+            })
+        }
 
         # global server logic, usually no need to change below
         ## pushbar set up
-        # spsinfo("Add push bar")
-        # pushbar::setup_pushbar()
         ## loading screening
         spsinfo("Add loading screen logic")
         serverLoadingScreen(input, output, session)
         ## for workflow control panel
-        spsinfo("Reslove workflow tabs progress tracker")
-        shinyjs::removeClass(id = "wf-panel", asis = TRUE, class = "tab-pane")
         spsinfo("Loading other logic...")
-        observeEvent(input$left_sidebar, {
-            shinyjs::toggleClass(
-                id = "wf-panel",
-                class = "shinyjs-hide",
-                asis = TRUE,
-                condition = !str_detect(input$left_sidebar, "^wf_"))
-        })
 
-        output$wf_panel <- wfProgressPanel(shared)
         # spsWarnings(session)
         # TODO admin page, come back in next release
         spsinfo("Loading admin panel server")
@@ -83,19 +99,7 @@ spsServer <- function(tabs, server_expr) {
             output$page_admin <- renderUI(adminUI())
         })
 
-    # observeEvent(input$reload, ignoreInit = TRUE, {
-    #     sps_options <- getOption('sps')
-    #     sps_options[['loading_screen']] = isolate(input$change)
-    #     options(sps = sps_options)
-    #     server_file <- readLines("server.R", skipNul = FALSE)
-    #     server_file[3] <-
-    #         glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
-    #     writeLines(server_file, "server.R")
-    #     ui_file <- readLines("ui.R", skipNul = FALSE)
-    #     ui_file[3] <-
-    #         glue("# last change date: {format(Sys.time(), '%Y%m%d%H%M%S')}")
-    #     writeLines(ui_file, "ui.R")
-    # })
+
         spsinfo("Loading user defined expressions")
         # additional user expressions
         rlang::eval_tidy(server_expr)
@@ -132,178 +136,6 @@ spsWarnings <- function(session){
                        ),
                        type = "error"
         )
-    }
-}
-
-
-#' Load tabular files as tibbles to server
-#' @description load a file to server end. It's designed to be used with the
-#' input file source switch button(see it in a SPS new template data tab).
-#' It uses [vroom::vroom] to load the file. In SPS, this
-#' function is usually combined as downstream of  [dynamicFileServer()]
-#' function on on the server side to
-#' read the file into R. This loading function only works for parsing
-#' tabular data, use [vroom::vroom()] internally.
-#' @param choice where this file comes from, from 'upload' or example 'eg'?
-#' @param data_init a tibble to return if `upload_path` or `eg_path` is not
-#' provided. Return a 8x8 empty tibble if not provided
-#' @param upload_path when `choice` is "upload", where to load the file, will
-#' return `data_init` if this param is not provided
-#' @param eg_path when `choice` is "eg", where to load the file, will
-#' return `data_init` if this param is not provided
-#' @param comment comment characters when load the file,
-#' see help file of `vroom`
-#' @param delim delimiter characters when load the file,
-#' see help file of `vroom`
-#' @param col_types columns specifications, see help file of `vroom`
-#' @param ... other params for vroom, see help file of `vroom`
-#' @details This is function is wrapped by the [shinyCatch()] function, so it
-#' will show loading information both on console and on UI. This function
-#' prevents errors to crash the Shiny app, so any kind of file upload will not
-#' crash the app. To show message on UI, [useSps()] must be used in Shiny UI
-#' function, see examples.
-#' @return returns a tibble or `NULL` if parsing is unsuccessful
-#' @export
-#' @importFrom shinyAce is.empty
-#' @importFrom dplyr as_tibble
-#' @importFrom vroom vroom
-#' @examples
-#' if(interactive()){
-#'     library(shinyWidgets)
-#'     # change value to 'local' to see the difference
-#'     spsOption("mode", value = "server")
-#'     ui <- fluidPage(
-#'         useSps(),
-#'         shinyWidgets::radioGroupButtons(
-#'             inputId = "data_source", label = "Choose your data file source:",
-#'             selected = "upload",
-#'             choiceNames = c("Upload", "Example"),
-#'             choiceValues = c("upload", "eg")
-#'         ),
-#'         dynamicFile("data_path", label = "input file"),
-#'         dataTableOutput("df")
-#'     )
-#'
-#'     server <- function(input, output, session) {
-#'         tmp_file <- tempfile(fileext = ".csv")
-#'         write.csv(iris, file = tmp_file)
-#'         upload_path <- dynamicFileServer(input, session, "data_path")
-#'         data_df <- reactive({
-#'             loadDF(choice = input$data_source,
-#'                    upload_path = upload_path()$datapath,
-#'                    delim = ",", eg_path = tmp_file)
-#'         })
-#'         output$df <- renderDataTable(data_df())
-#'     }
-#'     shinyApp(ui, server)
-#' }
-loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
-                   comment = "#", delim = "\t",
-                   col_types = vroom::cols(), ...){
-    df <- shinyCatch({
-        choice <- match.arg(choice, c("upload", "eg"))
-        if(!inherits(data_init, "data.frame")){
-            data_init <- data.frame(matrix("", 8,8), stringsAsFactors = FALSE) %>%
-                tibble::as_tibble()
-        }
-        else {data_init}
-        if(!any(class(data_init) %in% c("tbl_df", "tbl", "data.frame"))) {
-            stop("data_init need to be dataframe or tibble")
-        }
-        data_init <- dplyr::as_tibble(data_init)
-        if (choice == "upload" & shinyAce::is.empty(upload_path))
-            return(data_init)
-        if (choice == "eg" & shinyAce::is.empty(eg_path))
-            return(data_init)
-        upload_path <- switch(choice,
-                              "upload" = upload_path,
-                              "eg" = eg_path,
-        )
-        df <- shinyCatch(vroom::vroom(
-            upload_path,  delim = delim, comment = comment,
-            col_types = col_types, ...
-        ))
-        if(is.null(df)){msg("Can't read file, return empty", "error")}
-        if(!names(df) %>% validUTF8() %>% all()){
-            msg("non UTF-8 coding detected, return empty", "error")}
-        df
-    })
-    return(df)
-}
-
-#' Validate expressions
-#' @description this function is usually used on server side to validate input
-#' dataframe or some expression
-#' @param expr the expression to validate data or other things. It should
-#' return `TRUE` if pass or use `stop("your message")` if fail. Other types of
-#' return are acceptable but not recommended. As long as it is not empty or
-#' `FALSE` by the `emptyIsFalse()` function, it will return `TRUE`
-#' @param vd_name validate title
-#' @param pass_msg string, if pass, what message do you want to show
-#' @param fail_msg string, optional, if your expression does not contain the
-#' use of `stop()`  for failure and only returns `FALSE` or other empty values,
-#' this message will show and generate `shiny reactive stop`
-#' @param shiny you can use this function outside shiny,
-#' see `shinyCatch()` for more
-#' @param verbose bool, show pass message? Default follows project verbose
-#' setting
-#' @seealso \code{\link{shinyCatch}}, \code{\link{emptyIsFalse}}
-#' @return If expression returns empty or `FALSE` make it `shiny reactive stop`
-#' and no final return, else `TRUE`.
-#' @export
-#'
-#' @examples
-#' spsOption("verbose", TRUE)
-#' if(interactive()){
-#'     ui <- fluidPage(
-#'         useSps(),
-#'         actionButton("vd1", "validate1"),
-#'         actionButton("vd2", "validate2")
-#'     )
-#'     server <- function(input, output, session) {
-#'         mydata <- datasets::iris
-#'         observeEvent(input$vd1, {
-#'             spsValidate({
-#'                 is.data.frame(mydata)
-#'             }, vd_name = "Is df")
-#'             print("continue other things")
-#'         })
-#'         observeEvent(input$vd2, {
-#'             spsValidate({
-#'                 nrow(mydata) > 200
-#'             }, vd_name = "more than 200 rows")
-#'             print("other things blocked")
-#'         })
-#'     }
-#'     shinyApp(ui, server)
-#' }
-#' # outside shiny example
-#' mydata2 <- list(a = 1, b = 2)
-#' spsValidate({(mydata2)}, "Not empty", shiny = FALSE)
-#' try(spsValidate(is.data.frame(mydata2),
-#'                 "is dataframe?",
-#'                 shiny = FALSE),
-#'     silent = TRUE)
-spsValidate <- function(expr,
-                        vd_name="validation",
-                        pass_msg = glue("{vd_name} passed"),
-                        fail_msg = glue("{vd_name} failed"),
-                        shiny = TRUE,
-                        verbose = spsOption('verbose')){
-    result <- shinyCatch(expr,
-                         blocking_level = "error",
-                         shiny = shiny) %>% emptyIsFalse()
-    if(result){
-        if(verbose){
-            spsinfo(pass_msg, TRUE)
-            if(shiny){
-                shinytoastr::toastr_success(
-                    pass_msg, position = "bottom-right", timeOut = 3000)
-            }
-        }
-        return(TRUE)
-    } else {
-        shinyCatch(stop(fail_msg), blocking_level = 'error', shiny = shiny)
     }
 }
 

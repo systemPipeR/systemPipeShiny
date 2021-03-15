@@ -1,5 +1,5 @@
 temp_dir <- tempdir()
-systemPipeShiny::quiet(systemPipeShiny::spsInit(app_path = temp_dir,
+spsUtil::quiet(systemPipeShiny::spsInit(app_path = temp_dir,
                                                 project_name = "test_tabs",
                                                 open_files = FALSE,
                                                 overwrite = TRUE,
@@ -7,7 +7,7 @@ systemPipeShiny::quiet(systemPipeShiny::spsInit(app_path = temp_dir,
 app_path <- file.path(temp_dir, "test_tabs")
 
 test_that("admin page test", {
-    expect_s3_class(systemPipeShiny:::adminUI(), "shiny.tag")
+    expect_s3_class(systemPipeShiny:::adminUI(), "shiny.tag.list")
 })
 
 test_that("about tab test", {
@@ -20,12 +20,12 @@ test_that("canvas test", {
 })
 
 test_that("core_dashboard test", {
-    expect_s3_class(core_dashboardUI("a"), "shiny.tag.list")
-    expect_null(testServer(core_dashboardServer, {}))
+    expect_s3_class(core_welcomeUI("a"), "shiny.tag.list")
+    expect_null(testServer(core_welcomeServer, {}))
 })
 
 test_that("core_top test", {
-    expect_s3_class(core_topUI("a"), "shiny.tag.list")
+    expect_s3_class(core_topUI("a"), "shiny.tag")
     expect_null(testServer(core_topServer, {}))
 })
 

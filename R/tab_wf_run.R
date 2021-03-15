@@ -25,7 +25,7 @@ wf_runUI <- function(id){
         **Most SPR workflows needs to run in *Unix-like* system. Windows will fail to run except the example workflow**
         '),
             spsHr(),
-            boxPlus(
+            box(
                 width = 8,
                 collapsible = FALSE,
                 closable = FALSE,
@@ -59,7 +59,7 @@ wf_runUI <- function(id){
                         spsLoader())
                 )
             ),
-            boxPlus(
+            box(
                 title = "Required files in task",
                 width = 4,
                 closable = FALSE,
@@ -80,8 +80,6 @@ wf_runUI <- function(id){
 }
 
 # server
-#' @importFrom  zip zip
-#' @importFrom  callr r_session
 wf_runServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -96,48 +94,48 @@ wf_runServer <- function(id, shared){
                 condition = input$choose_wf != "eg")
         })
         ####### run page shortcut
-        observeEvent(input$set, ignoreInit = TRUE, {
-            shared$wf$all_ready <- TRUE
-            shared$wf$env_path <- "."
-            shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
-            shared$wf$rs$supervise(TRUE)
-            shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
-            shared$wf$rs_info$created <- TRUE
-            shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
-            shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SYSproject", shared$wf$rs_info$log_name)
-            shared$wf$rs_info$rs_dir <- file.path(shared$wf$env_path, "results", paste0("rs", shared$wf$rs_info$pid))
-            spsOption("console_width",  getOption("width"))
-            options(width = 80)
-            dir.create(dirname(shared$wf$rs_info$log_path), recursive = TRUE, showWarnings = FALSE)
-            dir.create(shared$wf$rs_info$rs_dir, recursive = TRUE, showWarnings = FALSE)
-            if(!file.exists(shared$wf$rs_info$log_path)) file.create(shared$wf$rs_info$log_path)
-            addResourcePath("rs", shared$wf$rs_info$rs_dir)
-            # init r session settings
-            shared$wf$rs$call(function(log_path, rs_dir) {
-                options(device = function(){
-                    png(file.path(.rs_dir, paste0("plot", stringr::str_pad(.plot_num, 3, pad = "0"), "_%03d.png")))
-                    if(dev.cur() == 1) dev.new()
-                    dev.control("enable")
-                    .plot_num <<- .plot_num + 1
-                })
-                .rs_dir <<- rs_dir
-                .plot_num <<- 1
-                .cur_plot <<- NULL
-                log_file <- file(log_path, "awt")
-                sink(log_file, append = TRUE, type = "o")
-                sink(log_file, append = TRUE, type = "m")
-            }, args = list(
-                log_path = shared$wf$rs_info$log_path,
-                rs_dir = shared$wf$rs_info$rs_dir
-            ))
-            while(shared$wf$rs$poll_process(1000) == "timeout") next
-            shared$wf$rs$read()
-            # everything done, open session
-            shinyjs::runjs('pushbar.__proto__.handleKeyEvent = function(){return false};') # disable ESC key
-            pushbar::pushbar_open(id = "core_top-wf_push")
-            shared$wf$wd_old <- spsOption("app_path")
-            setwd(shared$wf$env_path)
-        })
+        # observeEvent(input$set, ignoreInit = TRUE, {
+        #     shared$wf$all_ready <- TRUE
+        #     shared$wf$env_path <- "."
+        #     shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
+        #     shared$wf$rs$supervise(TRUE)
+        #     shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
+        #     shared$wf$rs_info$created <- TRUE
+        #     shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
+        #     shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SYSproject", shared$wf$rs_info$log_name)
+        #     shared$wf$rs_info$rs_dir <- file.path(shared$wf$env_path, "results", paste0("rs", shared$wf$rs_info$pid))
+        #     spsOption("console_width",  getOption("width"))
+        #     options(width = 80)
+        #     dir.create(dirname(shared$wf$rs_info$log_path), recursive = TRUE, showWarnings = FALSE)
+        #     dir.create(shared$wf$rs_info$rs_dir, recursive = TRUE, showWarnings = FALSE)
+        #     if(!file.exists(shared$wf$rs_info$log_path)) file.create(shared$wf$rs_info$log_path)
+        #     addResourcePath("rs", shared$wf$rs_info$rs_dir)
+        #     # init r session settings
+        #     shared$wf$rs$call(function(log_path, rs_dir) {
+        #         options(device = function(){
+        #             png(file.path(.rs_dir, paste0("plot", stringr::str_pad(.plot_num, 3, pad = "0"), "_%03d.png")))
+        #             if(dev.cur() == 1) dev.new()
+        #             dev.control("enable")
+        #             .plot_num <<- .plot_num + 1
+        #         })
+        #         .rs_dir <<- rs_dir
+        #         .plot_num <<- 1
+        #         .cur_plot <<- NULL
+        #         log_file <- file(log_path, "awt")
+        #         sink(log_file, append = TRUE, type = "o")
+        #         sink(log_file, append = TRUE, type = "m")
+        #     }, args = list(
+        #         log_path = shared$wf$rs_info$log_path,
+        #         rs_dir = shared$wf$rs_info$rs_dir
+        #     ))
+        #     while(shared$wf$rs$poll_process(1000) == "timeout") next
+        #     shared$wf$rs$read()
+        #     # everything done, open session
+        #     shinyjs::runjs('pushbar.__proto__.handleKeyEvent = function(){return false};') # disable ESC key
+        #     pushbar::pushbar_open(id = "core_top-wf_push")
+        #     shared$wf$wd_old <- spsOption("app_path")
+        #     setwd(shared$wf$env_path)
+        # })
         ########
         # right side display in task files
         observeEvent(shared$wf$all_ready,{
@@ -229,16 +227,4 @@ wf_runServer <- function(id, shared){
     }
     moduleServer(id, module)
 }
-#
-# r_out <- list()
-# r_cmd <- rlang::parse_exprs('print(1)\nSys.sleep(1)\nprint(2)')
-#
-# capture.output( %>% {
-#     for(i in seq_along(r_cmd)){
-#         r_out[[i]] <-
-#         eval_tidy(i)
-#     }
-# })
-#
 
-# echo "string" | out-file -encoding ASCII file.txt

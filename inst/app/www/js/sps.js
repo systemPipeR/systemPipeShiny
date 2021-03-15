@@ -34,89 +34,12 @@ $(document).ready(() =>{
 });
 
 
-// js for clearableTextInput
-clearText = function(clear_input_id){
-  var textInput = document.getElementById(clear_input_id);
-  var clearBtn = textInput.nextElementSibling;
-  var textInputBox = textInput.parentElement;
-  textInput.onkeyup = function(){
-    clearBtn.style.visibility = (this.value.length) ? "visible" : "hidden";
-  };
-  clearBtn.onclick = function(){
-    this.style.visibility = "hidden";
-    textInput.value = "";
-    Shiny.setInputValue(clear_input_id, "");
-  };
-  textInput.addEventListener("focus", () =>{
-    textInputBox.classList.add("text-input-focused");
-  }, false);
-  textInput.addEventListener("blur", () =>{
-    textInputBox.classList.remove("text-input-focused");
-  }, false);
-};
-
 
 // change fileInput color to bs primary
 // change text bar in file input local mode to read only
 $(document).ready(() =>{
   $('.btn-file').removeClass('btn-default').addClass('btn-primary');
   $(".sps-file input").attr("readonly", true);
-});
-
-
-// change canvas size based on plot distance to bottom
-stretchCanvas = () =>{
-    $(document).on("resize", ".sps-canvas", ()=>{
-        var canvas_plots = $(".sps-plot-canvas");
-        var container = canvas_plots.parents(".sps-canvas");
-        var doc_height = $(document).height();
-        var div_dis = canvas_plots.map(function(){
-            return  doc_height - $(this).offset().top - $(this).height();
-            });
-        var min_dis = Math.min(...div_dis);
-        var h = 0;
-        if(min_dis < window.innerHeight/4) {
-            h = container.height() + window.innerHeight/2;
-            container.height(h);
-        }
-        if(min_dis > window.innerHeight/2) {
-            h = container.height() - window.innerHeight/4;
-            container.height(h);
-        }
-    });
-};
-
-// change plot tab size based on distance to bottom
-stretchPlotTab = (id) =>{
-    $("#" + id).parents(".sps-plot-container").resize(() => {
-      var stretch_elem = $("#" + id);
-      var container = stretch_elem.parents(".tab-pane");
-      var div_dis = $(document).height() - stretch_elem.offset().top - stretch_elem.height();
-      var h = 0;
-      if(div_dis < window.innerHeight/4) {
-          h = container.height() + window.innerHeight/2;
-          container.height(h);
-      }
-      if(div_dis > window.innerHeight/2) {
-          h = container.height() - window.innerHeight/4;
-          container.height(h);
-      }
-    });
-};
-
-
-// bs3 popover and tooltips on button with hover
-$(document).ready(function(){
-    $('[pop-toggle="hover"]').popover({
-        trigger : 'hover'
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-});
-// popover to work on dynamically added elements
-$(document).on("DOMNodeInserted", '[pop-toggle="hover"]', function(){
-    $(this).popover({
-        trigger : 'hover'
-    });
 });
 
 
@@ -157,13 +80,15 @@ $(function() {
 });
 
 
-// general height matcher
-function heightMatcher(div1, div2){
-    return $(function(){
-      var rb = new ResizeObserver(entries => {
-        $(div1).height(entries[0].contentRect.height);
-      });
-      rb.observe($(div2).get(0));
-    });
-}
+// notification click
+$(function(){
+    let notificationTrigger = false;
+    $('li.notifications-menu:contains("Notifications") a.dropdown-toggle').click(function(){
+        if (!notificationTrigger){
+            $(this).find('i').removeClass('fa-warning').addClass('fa-check');
+            $(this).find('span').text('0').removeClass('label-warning').addClass('label-success');
+            notificationTrigger = true;
+        }
+    })
+})
 

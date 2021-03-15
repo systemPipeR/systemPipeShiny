@@ -6,15 +6,17 @@ wf_setupUI <- function(id){
         '
         #### Set up a workflow environment
         To run a SPR workflow, a workflow environment is required. The
-        environment is a directory containing all required files, like the targets
-        file, the workflow file, and all other
-        [parameter files](https://systempipe.org/docs/systemPipeR/#directory-structure).
+        environment is a directory containing all required files, like the
+        [targets file](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-targets-file),
+        the [workflow file](https://systempipe.org/spr/systempiper/templates/),
+        and all other
+        [parameter files](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container).
 
         The directory structure looks like this image below:
 
-        ![spr-structure](https://systempipe.org/assets/images/doc/SYSdir.png)
+        ![spr-structure](https://systempipe.org/spr/systempiper/gettingstarted/SYSdir.png)
 
-        Read more about this [workflow structure](https://systempipe.org/docs/systemPipeR/#directory-structure).
+        Read more about this [workflow structure](https://systempipe.org/spr/systempiper/gettingstarted/#directory-structure).
 
         #### Template workflows
         SPR has some preconfigured workflows that you can generate in SPS with
@@ -22,9 +24,7 @@ wf_setupUI <- function(id){
         **5**. *ChipSeq*. You can also choose an **6**. *existing* SPR workflow directory or create
         an **7**. *empty* SPR workflow directory.
 
-        **1**. Example is a very tiny workflow with only 2 steps, one commandline
-        step, one R step. You need to have a default terminal which has `echo`
-        to work, bash for Linux or Mac and powershell for Windows for example.
+        **1**. Example is a very tiny workflow. It basically just list the `session info`.
 
         - All choices except "existing" will directly use the targets file and workflow
         file inside the SPR project folder as default or you can upload a new one.
@@ -42,7 +42,7 @@ wf_setupUI <- function(id){
         '),
         spsHr(),
         # column(1),
-        boxPlus(
+        box(
             width = 12,
             collapsible = FALSE,
             closable = FALSE,
@@ -191,7 +191,7 @@ wf_setupUI <- function(id){
             fixed = FALSE,
             cursor = "default",
             h4("Workflow Generation Progress", style="text-align: center"), br(),
-            progressBar(
+            shinyWidgets::progressBar(
                 id = ns("gen_wf_pg"), value = 0,
                 title = "", total = 6
             )
@@ -200,7 +200,6 @@ wf_setupUI <- function(id){
 }
 
 # server
-#' @importFrom systemPipeRdata genWorkenvir
 wf_setupServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

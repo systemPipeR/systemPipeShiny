@@ -1,8 +1,7 @@
-######################### SPS main function #############################
+
 # Initiation, creating tabs etc.
 
-
-#' @import shiny shinyTree
+#' @import shiny spsUtil spsComps drawer
 #' @importFrom plotly plotlyOutput
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom shinyWidgets pickerInput
@@ -15,7 +14,7 @@
 #' @importFrom shinytoastr toastr_success
 #' @importFrom methods is
 #' @importFrom DT DTOutput
-#' @importFrom shinyWidgets radioGroupButtons pickerInput
+#' @importFrom shinyWidgets radioGroupButtons pickerInput progressBar updateProgressBar
 #' @importFrom stringr str_split str_remove_all str_replace_all str_which
 #' @importFrom stringr str_remove str_which str_extract str_replace str_sort
 #' @importFrom stringr str_detect str_pad
@@ -26,8 +25,15 @@
 #' @importFrom stats relevel
 #' @importFrom utils capture.output write.csv read.delim
 #' @importFrom dplyr count
+#' @importFrom shinytoastr toastr_warning toastr_error
 NULL
 
+utils::globalVariables(c(
+    ".", ".module_pkgs"
+))
+
+
+######################### SPS main functions #############################
 
 #' SystemPipeShiny app main function
 #' @param tabs custom visualization tab IDs that you want to display, in a character
@@ -57,6 +63,7 @@ NULL
 #'     )
 #' }
 sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
+    # check tabs
     assert_that(is.character(tabs))
     if(any(duplicated(tabs)))
         spserror(glue("You input duplicated tab IDs: ",
@@ -83,12 +90,23 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
         spsinfo("Using default tabs")
         tabs <- dplyr::tibble()
     }
-    ui <- spsUI(tabs)
+    # check for required module pkgs
+    missings <- checkModulePkgs()
+    if(missings %>% unlist %>% length() > 0) spswarn("You have missing packages, some modules will not be loaded")
+
+    # check guide
+    spsinfo("check guide")
+    guide <- parseGuide()
+
+    # load UI
+    ui <- spsUI(tabs, missings, sps_env, guide)
     spsinfo("UI created")
+    # load server
     server_expr <- rlang::enexpr(server_expr)
-    server <- spsServer(tabs, server_expr)
+    server <- spsServer(tabs, server_expr, missings, sps_env, guide)
     spsinfo("Server functions created")
     spsinfo("App starts ...", verbose = TRUE)
+    # return in a list to be called
     list(ui = ui, server = server)
 }
 
@@ -100,8 +118,9 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
 #' @param app_path path, a directory where do you want to create this project,
 #' must exist.
 #' @param project_name Your project name, default is `SPS_` + `time`
-#' @param database_name project database name, recommend to use the default
-#'  name: "sps.db". It is used to store app meta information, see [spsDb()]
+#' @param database_name deprecated in current version.
+#' project database name, recommend to use the default
+#'  name: "sps.db". It is used to store app meta information.
 #' @param overwrite bool, overwrite the `app_path` if there is a folder that
 #' has the same name as `project_name`?
 #' @param change_wd bool, when creation is done, change working directory into
@@ -110,7 +129,10 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
 #' @param open_files bool, If `change_wd == TRUE` and you are also in Rstudio,
 #' it will open up *global.R* for you
 #' @param colorful bool, should message from this function be colorful?
-#' @details Make sure you have write permission to `app_path`
+#' @details Make sure you have write permission to `app_path`.
+#'
+#' The database in not used in current version.
+#'
 #' @importFrom rstudioapi isAvailable navigateToFile
 #' @export
 #' @return creates the project folder
@@ -155,12 +177,12 @@ spsInit <- function(app_path=getwd(),
     copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, overwrite, verbose)
     copySPSfiles("app/app_ez/server.R", project_dir, FALSE, overwrite, verbose)
 
-    spsinfo("Create SPS database", TRUE)
-    suppressWarnings(
-        spsDb$new()$createDb(db_name=file.path(project_dir,
-                                               "config",
-                                               database_name))
-    )
+    # spsinfo("Create SPS database", TRUE)
+    # suppressWarnings(
+    #     spsDb$new()$createDb(db_name=file.path(project_dir,
+    #                                            "config",
+    #                                            database_name))
+    # )
     if(change_wd) {
         spsinfo(glue("Change working directory to {project_dir}"))
         setwd(project_dir)
@@ -171,6 +193,8 @@ spsInit <- function(app_path=getwd(),
     msg("SPS project setup done!", "SPS-INFO", "green")
 }
 
+
+################### Internal setups ###########################
 
 #' Pre start SPS checks
 #'
@@ -267,22 +291,97 @@ resolveOptions <- function(app_path = getwd()){
     options(sps = sps_defaults)
 }
 
-#' Print SPS default options
+#' Print SPS options
 #' @description  Make sure you have created the app directory and it
-#' has *config/config.yaml* file
+#' has *config/config.yaml* file.
+#'
+#' [spsOptDefaults] prints out all default and other avaliable values for
+#' each option. [spsOptions] print all current set option values.
+#'
+#' Note: the [spsUtil::spsOption] is used to get or set a **single** option value.
+#' [spsOptions] is used to print **all** current option values. If you need to
+#' set all values at once, use the *global.R* file under SPS project root.
 #' @param app_path path, where is the app directory
 #'
 #' @export
-#' @return cat to console the default options
+#' @return cat to console SPS option values
 #' @examples
 #' if(interactive()){
+#'     # start a SPS project
 #'     spsInit(open_files = FALSE)
 #'     viewSpsDefaults()
+#'     # change a few options
+#'     options(sps = list(
+#'         mode = "server",
+#'         warning_toast = TRUE,
+#'         loading_screen = FALSE,
+#'         loading_theme = "vhelix",
+#'         use_crayon = TRUE
+#'     ))
+#'     # view current options
+#'     spsOptions()
 #' }
-viewSpsDefaults <- function(app_path = getwd()){
+spsOptDefaults <- function(app_path = getwd()){
     sps_defaults <- verifyConfig(app_path)[[1]]
-    cat(glue("{names(sps_defaults)}: {sps_defaults}\n\n"))
+    option_names <- names(sps_defaults)
+    for (i in seq_along(sps_defaults)) {
+        option_names[i] %>% crayon::blue$bold() %>% {cat(., ":\n", sep = "")}
+        cat(crayon::green$bold("    Default: ")); cat(sps_defaults[[i]][['default']], "\n")
+        cat(crayon::green$bold("    Other: ")); cat(sps_defaults[[i]][['other']], "\n")
+    }
+    cat("* means any value will be accepted\n")
 }
+
+#' @rdname spsOptDefaults
+#' @param show_legend bool, show the color legend?
+#' @importFrom crayon green blue make_style chr
+#'
+#' @return
+#' @export
+#'
+spsOptions <- function(app_path = getwd(), show_legend = TRUE){
+    sps_defaults <- verifyConfig(app_path)[[2]]
+    default_names <- names(sps_defaults)
+    sps_values <- getOption("sps")
+    option_names <- names(sps_values)
+    cat(crayon::green$bold("Current project option settings:"), "\n")
+    for (i in seq_along(sps_values)) {
+        if(option_names[i] %in% default_names) {
+            title_color <- crayon::blue$bold
+            title_suffix <- ""
+            if(identical(sps_values[[i]], sps_defaults[[option_names[i]]])){
+                value_color <- crayon::green$bold
+                value_suffix <- ""
+            }  else {
+                value_color <- crayon::chr
+                value_suffix <- "+"
+            }
+        } else {
+            title_suffix <- "*"
+            title_color <-  crayon::make_style("orange")$bold
+            value_color <-  crayon::make_style("orange")
+            value_suffix <- "+"
+        }
+        paste0(option_names[i], title_suffix) %>% title_color() %>% {cat(., ":\n", sep = "")}
+        cat("    ", value_color(paste0(sps_values[[i]]), value_suffix), "\n", sep = "")
+    }
+    if(show_legend){
+        cat(
+            "********\nOption legend:\n",
+            crayon::blue$bold("    known options    "),
+            crayon::make_style("orange")$bold("    Hidden/custom options* and values+\n"),
+            "Value legend:\n",
+            crayon::green$bold("    same as default values    "),
+            "    different from defaults+",
+            sep = ""
+        )
+    }
+}
+
+
+
+
+
 
 #' Check sps tab file on start
 #' @importFrom vroom vroom cols col_character
@@ -354,41 +453,6 @@ copySPSfiles <- function(file_path,
     spsinfo(glue("File(s) copied for {app_path}"), verbose)
 }
 
-
-#' Get or set SPS options
-#'
-#' @param opt string, length 1, what option you want to get or set
-#' @param value if this is not `NULL`, this function will set the
-#' option you choose to this value
-#' @param empty_is_false bool, when trying to get an option value, if the
-#' option is `NULL`, `NA`, `""` or length is 0, return `FALSE`?
-#' @return return the option value if value exists; return `FALSE` if the value
-#' is empty, like `NULL`, `NA`, `""`; return `NULL` if `empty_is_false = FALSE`;
-#'  see [emptyIsFalse]
-#'
-#'  If `value != NULL` will set the option to this new value, no returns.
-#' @export
-#' @seealso [viewSpsDefaults()] for options you can view or set
-#' @examples
-#' spsOption("test1", 1)
-#' spsOption("test1")
-#' spsOption("test2")
-#' spsOption("test2", empty_is_false = FALSE)
-spsOption <- function(opt, value = NULL, empty_is_false = TRUE){
-    assert_that(is.character(opt) & length(opt) == 1)
-    if(not_empty(value))
-        options(sps = getOption('sps') %>% {.[[opt]] <- value; .})
-    else {
-        get_value <- getOption('sps')[[opt]]
-        if(!emptyIsFalse(get_value)){
-            if(empty_is_false) FALSE
-            else get_value
-        }
-        else get_value
-    }
-}
-
-
 #' View SPS project 'config/tabs.csv' information
 #'
 #' @param return_type one of 'print', 'data', 'colnames', or a specified column
@@ -429,3 +493,83 @@ spsTabInfo <- function(return_type = "print", n_print = 40, app_path = getwd()){
         }
            )
 }
+
+# declaim pkg check var
+.module_pkgs <- list(
+    wf = sort(c(
+        'systemPipeR',
+        'systemPipeRdata',
+        'networkD3',
+        'rhandsontable',
+        'zip',
+        'callr',
+        'pushbar',
+        'fs',
+        'readr',
+        'R.utils',
+        'DOT',
+        'shinyTree',
+        "openssl"
+    )),
+    rna = sort(c(
+        'DESeq2',
+        'systemPipeR',
+        'SummarizedExperiment',
+        'glmpca',
+        'pheatmap',
+        'grid',
+        'ape',
+        'ggtree',
+        'Rtsne',
+        'UpSetR',
+        'tidyr'
+    )),
+    ggplot = sort(c(
+        'esquisse'
+    ))
+)
+
+
+checkModulePkgs <- function(){
+    list(
+        wf = checkModulePkgs_internal("module_wf", .module_pkgs[['wf']], "workflow"),
+        rna = checkModulePkgs_internal("module_rnaseq", .module_pkgs[['rna']], "RNA-Seq"),
+        ggplot = checkModulePkgs_internal("module_ggplot", .module_pkgs[['ggplot']], "Quick ggplot")
+    )
+}
+
+checkModulePkgs_internal <- function(module_name, pkgs, mol_title){
+    if(spsOption(module_name)){
+        missings <- spsUtil::checkNameSpace(pkgs, quietly = TRUE)
+        missing_str <- glue_collapse(missings, '", "')
+        if(emptyIsFalse(missings)){
+            spswarn(c('You are loading the ', mol_title, ' module but missing packages: "',
+                      missing_str, '", run:'))
+            cat(glue(
+                '
+                if (!requireNamespace("BiocManager", quietly=TRUE))
+                    install.packages("BiocManager")
+                BiocManager::install(c("{missing_str}"))\n
+                '
+            ))
+        }
+        glue(
+        '
+        ```r
+        if (!requireNamespace("BiocManager", quietly=TRUE))
+            install.packages("BiocManager")
+        BiocManager::install(c("{missing_str}"))
+        ```
+        '
+        )
+    } else NULL
+}
+
+
+
+
+
+
+
+
+

@@ -216,7 +216,6 @@ vs_rnaseq_glmUI <- function(id){
 }
 
 #' @importFrom ggplot2 ggplot aes aes_string geom_point coord_fixed ggtitle ggsave
-#' @importFrom glmpca glmpca
 #' @importFrom plotly ggplotly
 vs_rnaseq_glmServer <- function(id, shared){
     module <- function(input, output, session){
@@ -416,7 +415,7 @@ vs_rnaseq_pcaUI <- function(id){
     )
 }
 
-#' @importFrom DESeq2 plotPCA
+
 vs_rnaseq_pcaServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -624,6 +623,7 @@ vs_rnaseq_mdsUI <- function(id){
         )
     )
 }
+
 vs_rnaseq_mdsServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -762,8 +762,7 @@ vs_rnaseq_heatmapUI <- function(id){
     )
 }
 
-#' @importFrom pheatmap pheatmap
-#' @importFrom grid grid.draw
+
 vs_rnaseq_heatmapServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -982,8 +981,6 @@ vs_rnaseq_dendroUI <- function(id){
     )
 }
 
-#' @importFrom ape as.phylo
-#' @importFrom ggtree ggtree
 vs_rnaseq_dendroServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
@@ -1013,6 +1010,7 @@ vs_rnaseq_dendroServer <- function(id, shared){
     }
     moduleServer(id, module)
 }
+
 ############ vs_rnaseq_tsne sub tab ####################
 vs_rnaseq_tsneUI <- function(id){
     ns <- NS(id)
@@ -1196,7 +1194,7 @@ vs_rnaseq_tsneUI <- function(id){
     )
 }
 
-#' @importFrom Rtsne Rtsne
+
 vs_rnaseq_tsneServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns

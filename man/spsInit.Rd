@@ -21,8 +21,9 @@ must exist.}
 
 \item{project_name}{Your project name, default is \code{SPS_} + \code{time}}
 
-\item{database_name}{project database name, recommend to use the default
-name: "sps.db". It is used to store app meta information, see \code{\link[=spsDb]{spsDb()}}}
+\item{database_name}{deprecated in current version.
+project database name, recommend to use the default
+name: "sps.db". It is used to store app meta information.}
 
 \item{overwrite}{bool, overwrite the \code{app_path} if there is a folder that
 has the same name as \code{project_name}?}
@@ -45,7 +46,9 @@ To run a SPS app, you need to first create a SPS project, a
 directory contains the required files.
 }
 \details{
-Make sure you have write permission to \code{app_path}
+Make sure you have write permission to \code{app_path}.
+
+The database in not used in current version.
 }
 \examples{
 if(interactive()){
