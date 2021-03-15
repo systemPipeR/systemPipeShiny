@@ -1,3 +1,12 @@
+
+title:
+    default: 'systemPipeShiny'
+    other: ['*']
+
+title_logo:
+    default: "img/sps_small.png"
+    other: ['*']
+
 mode:
     default: local
     other: [server]
@@ -53,10 +62,6 @@ module_ggplot:
     other: [false]
 
 tab_welcome:
-    default: true
-    other: [false]
-
-tab_module_main:
     default: true
     other: [false]
 

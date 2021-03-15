@@ -93,12 +93,17 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
     # check for required module pkgs
     missings <- checkModulePkgs()
     if(missings %>% unlist %>% length() > 0) spswarn("You have missing packages, some modules will not be loaded")
+
+    # check guide
+    spsinfo("check guide")
+    guide <- parseGuide()
+
     # load UI
-    ui <- spsUI(tabs, missings, sps_env)
+    ui <- spsUI(tabs, missings, sps_env, guide)
     spsinfo("UI created")
     # load server
     server_expr <- rlang::enexpr(server_expr)
-    server <- spsServer(tabs, server_expr, missings, sps_env)
+    server <- spsServer(tabs, server_expr, missings, sps_env, guide)
     spsinfo("Server functions created")
     spsinfo("App starts ...", verbose = TRUE)
     # return in a list to be called

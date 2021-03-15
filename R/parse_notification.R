@@ -8,7 +8,7 @@ parseNote <- function(url = spsOption('note_url')){
         spswarn("Notification url needs to be a single string")
         return(NULL)
     }
-    if (stringr::str_starts(url, "http")){
+    if (!stringr::str_starts(url, "http")){
         spswarn("Notification url needs to start with 'http(s)'")
         return(NULL)
     }
@@ -16,9 +16,9 @@ parseNote <- function(url = spsOption('note_url')){
         spswarn(glue("Cannot reach notification url: {url}"))
         return(NULL)
     }
-    notes <- shinyCatch(yaml::read_yaml(url))
-    if(is.null(notes)) return(NULL)
-    # notes <- yaml::read_yaml("../inst/remote_resource/notifications.yaml")
+    notes <- shinyCatch(yaml::read_yaml(url) %>% lapply(`[[`, 'note'))
+    if(is.null(notes)) {spswarn("url no problem, but cannot load notification file format."); return(NULL)}
+    # notes <- yaml::read_yaml("../inst/remote_resource/notifications.yaml") %>% lapply(`[[`, 'note')
     mapply(function(note, index){
         if(!.checkNoteExpire(note[['expire']])) return(NULL)
         if(!.checkNotePkg(note[['type']], note[['pkg_name']], note[['version']])) return(NULL)

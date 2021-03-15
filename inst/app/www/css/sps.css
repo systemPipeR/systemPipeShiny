@@ -36,14 +36,25 @@ systemPipeShiny CSS Styles
 */
 
 /*buttons, default is too ugly*/
-.sps .btn-default(:not(.drawer)){
+.sps .btn-default{
   color: #fff;
   background-color: var(--primary);
   border-color: #2e6da4;
 }
 
-.sps .btn-default(:not(.drawer)):hover{
+.sps .btn-default:hover{
   background-color: #4c92cf;
+}
+
+/*fix drawer buttons*/
+.sps .drawer .btn-default{
+  color: black;
+  background-color: transparent;
+  border-color: initial;
+}
+
+.sps .drawer .btn-default:hover{
+  background-color: initial;
 }
 
 /*widget user in shinydashboardplus*/

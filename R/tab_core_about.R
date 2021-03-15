@@ -22,61 +22,74 @@ core_aboutUI <- function(id){
             }
         ), spsHr(),
         h3("Developers"),
+
         fluidRow(
-            shinydashboard::box(
-                title = HTML('<a href="https://github.com/lz100">Le Zhang</a>'),
-                subtitle = "Student",
-                type = 2,
+            shinydashboardPlus::userBox(
+                title = shinydashboardPlus::userDescription(
+                    title = HTML('<a href="https://github.com/lz100">Le Zhang</a>'),
+                    subtitle = br(),
+                    type = 2,
+                    image = "https://avatars0.githubusercontent.com/u/35240440?s=460&v=4",
+                ),
                 width = 3,
-                src = "https://avatars0.githubusercontent.com/u/35240440?s=460&v=4",
-                closable = FALSE,
-                collapsible = FALSE
+                collapsible = FALSE,
+                'Student'
             ),
-            shinydashboard::box(
-                title = HTML('<a href="https://github.com/dcassol">Daniela Cassol</a>'),
-                subtitle = "Postdoc",
-                type = 2,
+            shinydashboardPlus::userBox(
+                title = shinydashboardPlus::userDescription(
+                    title = HTML('<a href="https://github.com/dcassol">Daniela Cassol</a>'),
+                    subtitle = br(),
+                    type = 2,
+                    image = "https://avatars2.githubusercontent.com/u/12722576?s=400&v=4",
+                ),
                 width = 3,
-                src = "https://avatars2.githubusercontent.com/u/12722576?s=400&v=4",
-                closable = FALSE,
-                collapsible = FALSE
+                collapsible = FALSE,
+                'Postdoc'
             ),
-            shinydashboard::box(
-                title =  HTML('<a href="https://github.com/mathrj">Ponmathi Ramasamy</a>'),
-                subtitle = "Student",
+            shinydashboardPlus::userBox(
+                title = shinydashboardPlus::userDescription(
+                    title = HTML('<a href="https://github.com/mathrj">Ponmathi Ramasamy</a>'),
+                    subtitle = br(),
+                    type = 2,
+                    image = "https://avatars2.githubusercontent.com/u/45085174?s=400&v=4",
+                ),
                 width = 3,
-                type = 2,
-                src = "https://avatars2.githubusercontent.com/u/45085174?s=400&v=4",
-                closable = FALSE,
-                collapsible = FALSE
+                collapsible = FALSE,
+                'Student'
             ),
-            shinydashboard::box(
-                title = HTML('<a href="https://github.com/jianhaizhang">Jianhai Zhang</a>'),
-                subtitle = "Student",
-                type = 2,
+            shinydashboardPlus::userBox(
+                title = shinydashboardPlus::userDescription(
+                    title = HTML('<a href="https://github.com/jianhaizhang">Jianhai Zhang</a>'),
+                    subtitle = br(),
+                    type = 2,
+                    image = "https://avatars0.githubusercontent.com/u/22919387?s=400&v=4",
+                ),
                 width = 3,
-                src = "https://avatars0.githubusercontent.com/u/22919387?s=400&v=4",
-                closable = FALSE,
-                collapsible = FALSE
+                collapsible = FALSE,
+                'Student'
             ),
-            shinydashboard::box(
-                title = HTML('<a href="https://github.com/gdmosher">Gordon Mosher</a>'),
-                subtitle = "Student",
-                type = 2,
+            shinydashboardPlus::userBox(
+                title = shinydashboardPlus::userDescription(
+                    title = HTML('<a href="https://github.com/gdmosher">Gordon Mosher</a>'),
+                    subtitle = br(),
+                    type = 2,
+                    image = "https://avatars0.githubusercontent.com/u/8660309?s=460&v=4",
+                ),
                 width = 3,
-                src = "https://avatars0.githubusercontent.com/u/8660309?s=460&v=4",
-                closable = FALSE,
-                collapsible = FALSE
+                collapsible = FALSE,
+                'Student'
             ),
-            shinydashboard::box(
-                title = HTML('<a href="https://girke.bioinformatics.ucr.edu">Thomas Girke</a>'),
-                subtitle = "PI",
-                type = 2,
+            shinydashboardPlus::userBox(
+                title = shinydashboardPlus::userDescription(
+                    title = HTML('<a href="https://girke.bioinformatics.ucr.edu">Thomas Girke</a>'),
+                    subtitle = br(),
+                    type = 2,
+                    image = "https://avatars3.githubusercontent.com/u/1336916?s=400&v=4",
+                ),
                 width = 3,
-                src = "https://avatars3.githubusercontent.com/u/1336916?s=400&v=4",
-                closable = FALSE,
-                collapsible = FALSE
-            )
+                collapsible = FALSE,
+                'PI'
+            ),
         ), spsHr(),
         markdown('### [Read the manual](https://systempipe.org/sps/)'),
         br()

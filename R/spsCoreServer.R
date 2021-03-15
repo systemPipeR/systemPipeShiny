@@ -4,14 +4,9 @@
 #' @importFrom rlang parse_expr eval_tidy
 #' @importFrom shinyjs removeClass toggleClass hide show
 #' @noRd
-spsServer <- function(tabs, server_expr, mod_missings, sps_env) {
+spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide) {
     spsinfo("Start to create server function")
     spsinfo("Resolve default tabs server")
-    core_welcomeServer <- rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)
-    module_mainServer <- rlang::env_get(sps_env, 'module_mainServer', module_mainServer)
-    vs_mainServer <- rlang::env_get(sps_env, 'vs_mainServer', vs_mainServer)
-    core_canvasServer <- rlang::env_get(sps_env, 'core_canvasServer', core_canvasServer)
-    core_aboutServer <- rlang::env_get(sps_env, 'core_aboutServer', core_aboutServer)
 
     spsinfo("Load custom tabs servers")
     tab_modules <- if(nrow(tabs) > 0) {
@@ -28,34 +23,59 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env) {
         shared <- reactiveValues()
         # core tabs
         spsinfo("Loading core tabs server")
-        core_welcomeServer("core_welcome", shared)
+        if (spsOption('tab_welcome')) rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)("core_welcome", shared)
 
-        # core_rightServer("core_right", shared)
-        core_canvasServer("core_canvas", shared)
-        core_aboutServer("core_about", shared)
-        # modules
-        module_mainServer("module_main", shared)
-        if(length(mod_missings[['wf']]) == 0) {
-            spsinfo("Loading workflow module server"); wfServer("wf", shared)
-            core_topServer("core_top", shared) # top is now part of workflow module
-        }
-        if(length(mod_missings[['rna']]) == 0) {
-            spsinfo("Loading core RNAseq module server"); vs_rnaseqServer("vs_rnaseq", shared)
-        }
-        if(length(mod_missings[['ggplot']]) == 0) {
-            spsinfo("Loading ggplot module server"); vs_esqServer("vs_esq", shared)
-        }
+        any_module <- any(spsOption("module_wf"), spsOption("module_rnaseq"), spsOption("module_ggplot"))
+        if (any_module) rlang::env_get(sps_env, 'module_mainServer', module_mainServer)("module_main", shared)
 
-        # VS tabs
-        spsinfo("Loading vs tabs server")
-        vs_mainServer("vs_main", shared)
-        mapply(function(module, name){
-            spsinfo(glue("Loading server for {name}"))
-            rlang::eval_tidy(module)
-        },
+        if (spsOption('tab_vs_main')) {
+            rlang::env_get(sps_env, 'vs_mainServer', vs_mainServer)("vs_main", shared)
+            # VS tabs
+            spsinfo("Loading custom tabs server")
+            mapply(function(module, name){
+                spsinfo(glue("Loading server for {name}"))
+                rlang::eval_tidy(module)
+            },
             SIMPLIFY = FALSE,
             module = tab_modules,
             name = names(tab_modules))
+        }
+
+        if (spsOption('tab_canvas')) rlang::env_get(sps_env, 'core_canvasServer', core_canvasServer)("core_canvas", shared)
+        if (spsOption('tab_about')) rlang::env_get(sps_env, 'core_aboutServer', core_aboutServer)("core_about", shared)
+
+        # modules
+        if(!is.null(mod_missings[['wf']]) && length(mod_missings[['wf']]) == 0) {
+            spsinfo("Loading workflow module server"); wfServer("wf", shared)
+            core_topServer("core_top", shared) # top is now part of workflow module
+        }
+        if(!is.null(mod_missings[['rna']]) && length(mod_missings[['rna']]) == 0) {
+            spsinfo("Loading core RNAseq module server"); vs_rnaseqServer("vs_rnaseq", shared)
+        }
+        if(!is.null(mod_missings[['ggplot']]) && length(mod_missings[['ggplot']]) == 0) {
+            spsinfo("Loading ggplot module server"); vs_esqServer("vs_esq", shared)
+        }
+
+        # load guides
+        guide_content <- guide[['guide_content']]
+        guide_names <- names(guide_content)
+        lapply(seq_along(guide_content), function(i) {
+            observeEvent(input[[guide_names[i]]], {
+                guide_content[[i]]$init(session = session)$start(session = session)
+            })
+        })
+        if(!emptyIsFalse(checkNameSpace('cicerone'))) {
+            shinyjs::onclick('toapp', {
+                cicerone::Cicerone$new(overlay_click_next =TRUE)$step(
+                    "app-main .messages-menu",
+                    "Welcome",
+                    "If you are new to the app, you can start with a tutorial by clicking here.
+                    You can customize your own tutorials too!",
+                    "left")$
+                    init(session = session)$
+                    start(session = session)
+            })
+        }
 
         # global server logic, usually no need to change below
         ## pushbar set up
@@ -63,16 +83,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env) {
         spsinfo("Add loading screen logic")
         serverLoadingScreen(input, output, session)
         ## for workflow control panel
-        spsinfo("Reslove workflow tabs progress tracker")
-        shinyjs::removeClass(id = "wf-panel", asis = TRUE, class = "tab-pane")
         spsinfo("Loading other logic...")
-        observeEvent(input$left_sidebar, {
-            shinyjs::toggleClass(
-                id = "wf-panel",
-                class = "shinyjs-hide",
-                asis = TRUE,
-                condition = !str_detect(input$left_sidebar, "^wf_"))
-        })
 
         # spsWarnings(session)
         # TODO admin page, come back in next release

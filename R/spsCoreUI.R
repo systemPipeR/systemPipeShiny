@@ -17,9 +17,15 @@
 #' @noRd
 # @examples
 # spsUI()
-spsUI <- function(tabs, module_missings, sps_env){
+spsUI <- function(tabs, mod_missings, sps_env, guide){
     spsinfo("Start to generate UI")
     addResourcePath("sps", "www")
+
+    spsinfo("parse title and logo")
+    sps_title <- spsOption("title")
+    if(!(is.character(sps_title) && length(sps_title) == 1)) spserror("Value for option 'title' is incorrect")
+    sps_logo <- spsOption("title_logo")
+    if(!(is.character(sps_logo) && length(sps_logo) == 1)) spserror("Value for option 'title_logo' is incorrect")
 
     spsinfo("resolve default tabs UI")
     core_welcomeUI <- rlang::env_get(sps_env, 'core_welcomeUI', core_welcomeUI)
@@ -28,33 +34,42 @@ spsUI <- function(tabs, module_missings, sps_env){
     core_canvasUI <- rlang::env_get(sps_env, 'core_canvasUI', core_canvasUI)
     core_aboutUI <- rlang::env_get(sps_env, 'core_aboutUI', core_aboutUI)
 
-    spsinfo("Loading custom tab UI ...")
-    menu_tab <- if(nrow(tabs) > 0){
-        lapply(seq_len(nrow(tabs)), function(x){
-            shinydashboard::menuItem(text = tabs$tab_labels[x],
-                                     tabName = tabs$tab_id[x])
-        }) %>% tagList()
-    } else tagList()
-    tab_items <- c(tabs[['tab_id']]) %>% {.[. != ""]} %>%
-        lapply(function(x){
-            tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
-            spsinfo(glue("Loading UI for {x}"))
-            shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
-        })
+    if(spsOption("tab_vs_main")) {
+        spsinfo("Loading custom tab UI ...")
+        menu_tab <- if(nrow(tabs) > 0){
+            lapply(seq_len(nrow(tabs)), function(x){
+                shinydashboard::menuItem(text = tabs$tab_labels[x],
+                                         tabName = tabs$tab_id[x])
+            }) %>% tagList()
+        } else tagList()
+        tab_items <- c(tabs[['tab_id']]) %>% {.[. != ""]} %>%
+            lapply(function(x){
+                tab_ui <- glue('{x}UI("{x}")') %>% rlang::parse_expr()
+                spsinfo(glue("Loading UI for {x}"))
+                shinydashboard::tabItem(tabName = x, rlang::eval_tidy(tab_ui))
+            })
+    } else {
+        spsinfo("You choose not to load custom tabs", TRUE)
+    }
+
 
     # header
     spsinfo("Loading notifications from developer...")
     notes <- parseNote()
+
+    spsinfo("Loading guide UI")
+
     spsinfo("Create UI header ...")
     dashboardHeader <- shinydashboardPlus::dashboardHeader(
         title = tagList(
-            span(class = "logo-lg", "systemPipeShiny"),
-            img(src = "img/sps_small.png")
+            span(class = "logo-lg", sps_title),
+            img(src = sps_logo, height = "25", width = "25")
         ),
         leftUi = tagList(
-            if(length(module_missings[['wf']]) == 0) core_topUI("core_top")  else div(),
+            if(!is.null(mod_missings[['wf']]) && length(mod_missings[['wf']]) == 0) core_topUI("core_top")  else div(),
             div(notes[['modals']])
         ),
+        guide[['guide_ui']],
         shinydashboard::dropdownMenu(
             type = "notifications", badgeStatus = if(emptyIsFalse(notes[['items']])) "warning" else "success" ,
             icon = if(emptyIsFalse(notes[['items']])) icon("warning") else icon("check"),
@@ -71,16 +86,13 @@ spsUI <- function(tabs, module_missings, sps_env){
         spsOption("module_ggplot"))
     # start to load tabs
     dashboardSidebar <-  shinydashboardPlus::dashboardSidebar(
-
-        shinydashboard::sidebarSearchForm(textId = "searchText",
-                                          buttonId = "searchButton",
-                                          label = "Search..."),
+        br(),
+        # shinydashboard::sidebarSearchForm(textId = "searchText",
+        #                                   buttonId = "searchButton",
+        #                                   label = "Search..."),
         shinydashboard::sidebarMenu(
             id = "left_sidebar",
-            shinydashboard::menuItem("Welcome",
-                                     tabName = "core_welcome",
-                                     icon = icon("sitemap")
-            ),
+            if(spsOption("tab_welcome")) shinydashboard::menuItem("Welcome", tabName = "core_welcome", icon = icon("sitemap")) else "",
             if (any_module) {
                 shinydashboard::menuItem(
                     text = "Modules",
@@ -109,22 +121,9 @@ spsUI <- function(tabs, module_missings, sps_env){
                 ""
             }
             ,
-            shinydashboard::menuItem(
-                "Custom tabs",
-                icon = icon("images"),
-                tabName = "vs_main",
-                menu_tab ## add tabs sidebar
-            ),
-            shinydashboard::menuItem(
-                "Canvas",
-                tabName = "core_canvas",
-                icon = icon("paint-brush")
-            ),
-            shinydashboard::menuItem(
-                "About",
-                icon = icon("info"),
-                tabName = "core_about"
-            )
+            if(spsOption("tab_vs_main")) shinydashboard::menuItem("Custom tabs", icon = icon("images"), tabName = "vs_main", menu_tab) else "",
+            if(spsOption("tab_canvas")) shinydashboard::menuItem("Canvas", tabName = "core_canvas", icon = icon("paint-brush")) else "",
+            if(spsOption("tab_about")) shinydashboard::menuItem("About", icon = icon("info"), tabName = "core_about") else ""
         )
     )
     # body
@@ -132,38 +131,36 @@ spsUI <- function(tabs, module_missings, sps_env){
     sps_tabs <- shinydashboard::tabItems(
 
         # VS tabs
-        shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")),
+        if(spsOption("tab_vs_main")) shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")) else missingTab(),
         # core tabs
-        shinydashboard::tabItem(tabName = "module_main", module_mainUI("module_main")),
-        shinydashboard::tabItem(tabName = "core_welcome",
-                                core_welcomeUI("core_welcome")),
-        shinydashboard::tabItem(tabName = "core_canvas",
-                                core_canvasUI("core_canvas")),
-        shinydashboard::tabItem(tabName = "core_about",
-                                core_aboutUI("core_about")),
+        if(any_module) shinydashboard::tabItem(tabName = "module_main", module_mainUI("module_main")) else missingTab(),
+        if(spsOption("tab_welcome")) shinydashboard::tabItem(tabName = "core_welcome", core_welcomeUI("core_welcome")) else missingTab(),
+        if(spsOption("tab_canvas")) shinydashboard::tabItem(tabName = "core_canvas", core_canvasUI("core_canvas")) else missingTab(),
+        if(spsOption("tab_about")) shinydashboard::tabItem(tabName = "core_about", core_aboutUI("core_about")) else missingTab(),
         #  modules
         shinydashboard::tabItem(
             tabName = "wf",
-            if(length(module_missings[['wf']]) == 0) wfUI("wf") else modMissingUI(module_missings[['wf']])
+            if(!is.null(mod_missings[['wf']]) && length(mod_missings[['wf']]) == 0) wfUI("wf") else modMissingUI(mod_missings[['wf']])
         ),
         shinydashboard::tabItem(
             tabName = "vs_rnaseq",
-            if(length(module_missings[['rna']]) == 0) vs_rnaseqUI("vs_rnaseq") else modMissingUI(module_missings[['rna']])
+            if(!is.null(mod_missings[['rna']]) && length(mod_missings[['rna']]) == 0) vs_rnaseqUI("vs_rnaseq") else modMissingUI(mod_missings[['rna']])
         ),
         shinydashboard::tabItem(
             tabName = "vs_esq",
-            if(length(module_missings[['ggplot']]) == 0) vs_esqUI("vs_esq") else modMissingUI(module_missings[['ggplot']])
+            if(!is.null(mod_missings[['ggplot']]) && length(mod_missings[['ggplot']]) == 0) vs_esqUI("vs_esq") else modMissingUI(mod_missings[['ggplot']])
         )
     )
-    sps_tabs$children <- append(sps_tabs$children, tab_items)
+    if(spsOption("tab_vs_main")) sps_tabs$children <- append(sps_tabs$children, tab_items)
     spsinfo("Add tab content to body ...")
     dashboardBody <- shinydashboard::dashboardBody(
         class = "sps",
         tags$head(
-            tags$link(rel="shortcut icon", href="img/sps_small.png"),
+            tags$link(rel="shortcut icon", href=sps_logo),
             shinyWidgets::useSweetAlert(),
             shinytoastr::useToastr(),
             shinyjs::useShinyjs(),
+            if(!emptyIsFalse(checkNameSpace('cicerone'))) cicerone::use_cicerone() else div(),
             tags$script(src="sps/js/sps.js"),
             tags$link(rel="stylesheet", href = "sps/css/sps.css")
         ),
@@ -181,7 +178,7 @@ spsUI <- function(tabs, module_missings, sps_env){
     mainUI <- shinydashboardPlus::dashboardPage(
         header = dashboardHeader,
         sidebar = dashboardSidebar,
-        title = "systemPipeShiny",
+        title = sps_title,
         body =  dashboardBody #,rightsidebar = rightsidebar
     )
     # merge everything together
@@ -212,3 +209,4 @@ modMissingUI <- function(install_md){
     } else div()
 }
 
+missingTab <- function(){div(class = "tab-pane")}

@@ -14,7 +14,7 @@ Depends:
     R (>= 4.0.0),
     shiny (>= 1.5.0),
     spsUtil,
-    spsComps,
+    spsComps (>= 0.1.1),
     drawer
 Imports:
     DT,
@@ -33,7 +33,7 @@ Imports:
     shinyFiles,
     shinyWidgets,
     shinydashboard,
-    shinydashboardPlus,
+    shinydashboardPlus (>= 2.0.0),
     shinyjqui,
     shinyjs,
     shinytoastr,
@@ -72,7 +72,8 @@ Suggests:
     Rtsne,
     UpSetR,
     tidyr,
-    esquisse
+    esquisse,
+    cicerone
 VignetteBuilder: knitr
 biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
 License: GPL (>= 3)

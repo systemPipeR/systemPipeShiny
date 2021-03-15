@@ -79,3 +79,16 @@ $(function() {
   }, 1000);
 });
 
+
+// notification click
+$(function(){
+    let notificationTrigger = false;
+    $('li.notifications-menu:contains("Notifications") a.dropdown-toggle').click(function(){
+        if (!notificationTrigger){
+            $(this).find('i').removeClass('fa-warning').addClass('fa-check');
+            $(this).find('span').text('0').removeClass('label-warning').addClass('label-success');
+            notificationTrigger = true;
+        }
+    })
+})
+

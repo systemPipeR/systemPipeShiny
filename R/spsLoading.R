@@ -35,7 +35,7 @@ spsUIuser <- function(mainUI){
                 mainUI
             ),
             div(id = "loading-screen",
-                style="height: 100vh; width: 100vw; overflow: hidden;",
+                style="height: 100%; width: 100vw; overflow: hidden;",
                 sytle="z-index:100; position:absolute;",
                 tags$style('
                     #toapp{

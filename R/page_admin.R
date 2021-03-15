@@ -4,7 +4,7 @@
 #' @noRd
 adminUI <- function(){
     ns <- NS("admin")
-    shinydashboardPlus::dashboardPagePlus(
+    shinydashboardPlus::dashboardPage(
         title = "Admin Panel",
         header = shinydashboard::dashboardHeader(
 
