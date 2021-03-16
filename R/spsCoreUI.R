@@ -160,7 +160,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide){
             shinyWidgets::useSweetAlert(),
             shinytoastr::useToastr(),
             shinyjs::useShinyjs(),
-            if(!emptyIsFalse(checkNameSpace('cicerone'))) cicerone::use_cicerone() else div(),
+            if(!emptyIsFalse(checkNameSpace('cicerone', TRUE))) cicerone::use_cicerone() else div(),
             tags$script(src="sps/js/sps.js"),
             tags$link(rel="stylesheet", href = "sps/css/sps.css")
         ),

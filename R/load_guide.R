@@ -15,8 +15,9 @@ parseGuide <- function(){
 .validateGuide <- function(){
     if (emptyIsFalse(checkNameSpace("cicerone", quietly = TRUE))) {
         spswarn('No guide is loaded, please install "cicerone" package from CRAN')
-
+        return(FALSE)
     }
+
     if (!exists('guide_ui')) {
         spswarn('No guide is loaded, object "guide_ui" is not found')
         return(FALSE)

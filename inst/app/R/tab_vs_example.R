@@ -3,11 +3,12 @@
 ## Author:
 
 # vs_example UI
-vs_exampleUI<- spsEzUI(
+vs_exampleUI <- spsEzUI(
     desc = "
     This example tab is created by the `spsNewTab` function.
+    Read more about tabs in SPS on [our website](https://systempipe.org/sps/adv_features/tabs/).
 
-    #### Write some Description of this tab in markdown format
+    #### Write some description of this tab in markdown format
     - you should ...
         1. eg 1.
         2. eg 2.
@@ -37,7 +38,7 @@ vs_exampleUI<- spsEzUI(
 )
 
 # vs_example server
-vs_exampleServer <-spsEzServer(
+vs_exampleServer <- spsEzServer(
     plot_code = {
         # data passed from data loading is a reactiveValues object, data stored in `mydata$data`
         plot_data <- mydata$data

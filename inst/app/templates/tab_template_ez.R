@@ -3,11 +3,11 @@
 ## Author: #@author@#
 
 # #@tab_id@# UI
-#@tab_id@#UI<- spsEzUI(
+#@tab_id@#UI <- spsEzUI(
     desc = "
     This tab is created by the `spsNewTab` function.
 
-    #### Write some Description of this tab in markdown format
+    #### Write some description of this tab in markdown format
     - you should ...
         1. eg 1.
         2. eg 2.
@@ -37,7 +37,7 @@
 )
 
 # #@tab_id@# server
-#@tab_id@#Server <-spsEzServer(
+#@tab_id@#Server <- spsEzServer(
     plot_code = {
         # data passed from data loading is a reactiveValues object, data stored in `mydata$data`
         plot_data <- mydata$data

@@ -71,8 +71,14 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
     sps_env <- new.env(parent = globalenv())
     r_folder <- file.path(app_path, "R")
     lapply(file.path(r_folder, list.files(r_folder, "\\.[rR]$")),
-           function(x) source(x, local = sps_env)) %>%
-        invisible()
+           function(x) withCallingHandlers(
+               source(x, local = sps_env),
+               error = function(e) {
+                   spswarn(c("Error on sourcing ", x))
+                   spswarn(e)
+                   if(spsOption('traceback')) printTraceback(sys.calls())
+            })
+    )  %>% invisible()
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
     attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = FALSE)
     tab_info <- checkSps(app_path)

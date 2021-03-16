@@ -81,3 +81,6 @@ note_url:
     default: 'https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/inst/remote_resource/notifications.yaml'
     other: ['*']
 
+trackback:
+    default: false
+    other: [true]

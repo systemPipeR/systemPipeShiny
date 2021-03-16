@@ -54,7 +54,7 @@ spsCoreTabReplace <- function(
         @{kword}@UI <- function(id){
             ns <- NS(id)
             tagList(
-                # add your UI below
+                # add your UI code below
             )
         }
 
@@ -62,7 +62,7 @@ spsCoreTabReplace <- function(
         @{kword}@Server <- function(id, shared){
             module <- function(input, output, session, shared){
                 ns <- session$ns
-                # add your server below
+                # add your server code below
             }
             moduleServer(id, module)
         }

@@ -57,14 +57,14 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide) {
         }
 
         # load guides
-        guide_content <- guide[['guide_content']]
-        guide_names <- names(guide_content)
-        lapply(seq_along(guide_content), function(i) {
-            observeEvent(input[[guide_names[i]]], {
-                guide_content[[i]]$init(session = session)$start(session = session)
+        if(!emptyIsFalse(checkNameSpace('cicerone', TRUE))) {
+            guide_content <- guide[['guide_content']]
+            guide_names <- names(guide_content)
+            lapply(seq_along(guide_content), function(i) {
+                observeEvent(input[[guide_names[i]]], {
+                    guide_content[[i]]$init(session = session)$start(session = session)
+                })
             })
-        })
-        if(!emptyIsFalse(checkNameSpace('cicerone'))) {
             shinyjs::onclick('toapp', {
                 cicerone::Cicerone$new(overlay_click_next =TRUE)$step(
                     "app-main .messages-menu",
