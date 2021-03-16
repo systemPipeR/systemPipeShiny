@@ -73,7 +73,7 @@ screenshots" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.20</span>
       </span>
     </div>
 
@@ -114,12 +114,12 @@ screenshots" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate gallery by only providing tab names</h1>
-    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsCoreUI.R'><code>R/spsCoreUI.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/R/spsUIcollections.R'><code>R/spsUIcollections.R</code></a></small>
     <div class="hidden name"><code>genGallery.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A fast way in SPS to generate a <a href='gallery.html'>gallery</a> to display plot tab
+    <p>A fast way in SPS to generate a gallery to display plot tab
 screenshots</p>
     </div>
 
@@ -174,19 +174,19 @@ to see tab information</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>require a SPS project and the config/tabs.csv file. If you want to
-use gallery outside a SPS project, use <code><a href='gallery.html'>gallery()</a></code></p>
+use gallery outside a SPS project, use <a href='https://rdrr.io/pkg/spsComps/man/gallery.html'>spsComps::gallery</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
     <span class='fu'><a href='spsInit.html'>spsInit</a></span><span class='op'>(</span><span class='op'>)</span>
-    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
+    <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'>fluidPage</span><span class='op'>(</span>
         <span class='fu'>genGallery</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"plot_example1"</span><span class='op'>)</span><span class='op'>)</span>,
         <span class='fu'>genGallery</span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"plot"</span><span class='op'>)</span>
     <span class='op'>)</span>
     <span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
 
     <span class='op'>}</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
+    <span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>
