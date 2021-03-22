@@ -87,16 +87,14 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide) {
 
         # spsWarnings(session)
         # TODO admin page, come back in next release
-        spsinfo("Loading admin panel server")
-        admin_url <- reactive({
-            names(getQueryString())
-        })
+        spsinfo("Loading admin panel server functions")
+        admin_url <- reactive(names(getQueryString()))
         observe({
             req(spsOption('admin_page'))
             req(admin_url() == spsOption('admin_url'))
             shinyjs::hide("page_user", asis = TRUE)
-            shinyjs::show("page_admin", asis = TRUE)
-            output$page_admin <- renderUI(adminUI())
+            shinyjs::show("admin-login_page", asis = TRUE)
+            adminServer(input, output, session,shared)
         })
 
 

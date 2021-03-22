@@ -43,7 +43,7 @@ spsCoreTabReplace <- function(
             "about" = "core_about"
     )
 
-    file_out <- glue('tab_{kword}.R')
+    file_out <- file.path("R", glue('tab_{kword}.R'))
     if(file.exists(file_out) && !overwrite) spserror("File exists, abort.")
     if(file.exists(file_out) && overwrite) spswarn("Over write template.")
 
@@ -69,7 +69,7 @@ spsCoreTabReplace <- function(
 
         '
     )
-    writeLines(file_content, file.path(file_out))
+    writeLines(file_content, file_out)
     msg(glue('File {file_out} created'), level = "SUCCESS", .other_color = "green")
     if(rstudioapi::isAvailable() && open_file){
         spsinfo("Now opens the file for you")

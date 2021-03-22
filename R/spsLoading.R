@@ -12,16 +12,6 @@ spsUIwrapper <- function(mainUI){
     )
 }
 
-#' Internal functional to render admin UI
-#' @noRd
-spsUIadmin <- function(){
-    uiOutput(
-        "page_admin", container = fluidPage,
-        style = "margin-left: -2em; margin-right: -2em; height:100vh;",
-        class = "shinyjs-hide"
-    )
-}
-
 # Internal functional to render user UI
 spsUIuser <- function(mainUI){
     fluidPage(
@@ -57,22 +47,6 @@ spsUIuser <- function(mainUI){
                     icon = icon("angle-double-right"),
                     size = "lg"),
                 renderLoading(),
-                # if(spsOption('loading_particles')) {
-                #     if (!requireNamespace("particlesjs", quietly = TRUE)){
-                #         msg(c("Option loading_particles is `true` but package",
-                #               "particlesjs is not installed. Try",
-                #               "`remotes::install_github",
-                #               "('dreamRs/particlesjs')`"),
-                #             "SPS-WARING", "orange")
-                #         div()
-                #     } else {
-                #         particlesjs::particles(
-                #             target_id ="loading-screen",
-                #             element_id = "particles",
-                #             config = "www/loading_themes/particlesjs-config.json"
-                #         )
-                #     }
-                # }
             )
         )}
         else

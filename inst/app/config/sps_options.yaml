@@ -11,11 +11,11 @@ mode:
     default: local
     other: [server]
 
-loading_screen:
+login_screen:
     default: true
     other: [false]
 
-loading_theme:
+login_theme:
     default: vhelix
     other: ["*"]
 

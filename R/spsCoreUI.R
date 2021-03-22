@@ -28,6 +28,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide){
     if(!(is.character(sps_logo) && length(sps_logo) == 1)) spserror("Value for option 'title_logo' is incorrect")
 
     spsinfo("resolve default tabs UI")
+    print( rlang::env_get(sps_env, 'core_welcomeUI', "AAAA"))
     core_welcomeUI <- rlang::env_get(sps_env, 'core_welcomeUI', core_welcomeUI)
     module_mainUI <- rlang::env_get(sps_env, 'module_mainUI', module_mainUI)
     vs_mainUI <- rlang::env_get(sps_env, 'vs_mainUI', vs_mainUI)

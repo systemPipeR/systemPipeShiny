@@ -14,8 +14,8 @@ library(magrittr) # load pipes
 # title_logo: logo to display when dashboard is collapsed and on website tab - url of an image
 # mode: running mode - "local", "server"
 # warning_toast: toast pop-up message when you are under some dangerous options - TRUE, FALSE
-# loading_screen: to show loading screen? - TRUE, FALSE
-# loading_theme: loading screen themes, loading_screen need be TRUE - "vhelix"
+# login_screen: to show login screen? - TRUE, FALSE
+# login_theme: login screen themes, loading_screen need be TRUE - "vhelix"
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # admin_url: admin_page query url - "admin"
@@ -28,8 +28,8 @@ options(sps = list(
     title_logo = "img/sps_small.png",
     mode = "local",
     warning_toast = FALSE,
-    loading_screen = TRUE,
-    loading_theme = "vhelix",
+    login_screen = TRUE,
+    login_theme = "vhelix",
     use_crayon = TRUE,
     verbose = FALSE,
     admin_page = FALSE,
@@ -57,7 +57,15 @@ options(shiny.maxRequestSize = 30*1e6)
 # options(shiny.error = browser)
 # options(shiny.autoreload = FALSE) # takes some computer power, you may consider turn it off
 
-####### Main App Function Starts #########
+##  account information
+## PLEASE use following to add your own accounts and remove the default accounts for deployment
+# mydb <- spsAccount$new()
+# mydb$accList()
+# mydb$accAdd(acc_name = "XXX", acc_pass = "$xxxx", role = "admin")
+# mydb$accRemove("admin")
+# mydb$accRemove("user")
+
+####### SPS Main App Function Starts #########
 
 sps_app <- sps(
     tabs = c("vs_example"),
