@@ -60,7 +60,7 @@ cat("</style>")
 ```
 
 ```{r logo, echo=FALSE, out.width='50%', fig.align='center', eval=TRUE}
-knitr::include_graphics(path = "../inst/app/www/img/sps.png")
+knitr::include_graphics(path = "../inst/app/www/img/logo.png")
 ```
 
 # Introduction

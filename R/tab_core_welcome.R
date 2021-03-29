@@ -9,7 +9,7 @@ core_welcomeUI <- function(id){
             class = "text-main",
             style = "padding-left: 15px;",
             tags$img(
-                src = 'img/sps.png',
+                src = 'img/logo.png',
                 class = "home-logo",
                 style = 'height: 300px; margin: 0 auto; display: block;'
             ),

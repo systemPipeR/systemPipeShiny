@@ -15,7 +15,7 @@ library(magrittr) # load pipes
 # mode: running mode - "local", "server"
 # warning_toast: toast pop-up message when you are under some dangerous options - TRUE, FALSE
 # login_screen: to show login screen? - TRUE, FALSE
-# login_theme: login screen themes, loading_screen need be TRUE - "vhelix"
+# login_theme: login screen themes, login_screen need be TRUE - "random"
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # admin_url: admin_page query url - "admin"
@@ -29,7 +29,7 @@ options(sps = list(
     mode = "local",
     warning_toast = FALSE,
     login_screen = TRUE,
-    login_theme = "vhelix",
+    login_theme = "global",
     use_crayon = TRUE,
     verbose = FALSE,
     admin_page = FALSE,
@@ -74,4 +74,3 @@ sps_app <- sps(
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }
 )
-

@@ -532,7 +532,7 @@ vs_rnaseq_degServer <- function(id, shared){
                 countmat <- shared$rnaseq$trans_table[rownames(shared$rnaseq$trans_table) %in% degs, ]
                 rownames(anno) <- colnames(countmat)
                 # find samples and filter matrix
-                if(input$heat_only_cmp){
+                if(emptyIsFalse(input$heat_only_cmp)){
                     keep_conditions <- stringr::str_split(input$heat_choose, "_") %>% unlist()
                     anno <- anno[anno$Conditions %in% keep_conditions, , drop = FALSE]
                     keep_samples <- rownames(anno)

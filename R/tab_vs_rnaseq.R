@@ -37,7 +37,7 @@ vs_rnaseqUI <- function(id){
         br(), br(), spsHr(),
         hexPanel(ns("poweredby"), "THIS TAB IS POWERED BY:",
                  hex_imgs = c(
-                     "img/sps.png",
+                     "img/logo.png",
                      "https://raw.githubusercontent.com/systemPipeR/systemPipeR.github.io/main/static/images/systemPipeR.png",
                      "https://mikelove.github.io/assets/DESeq2.png"),
                  hex_titles = c("SystemPipeShiny", "SystemPipeR", "DESeq2"),

@@ -279,6 +279,7 @@ wf_cwlServer <- function(id, shared){
         targets_path <- reactiveVal(NULL)
         observeEvent(c(shared$wf$targets_path, shared$wf$flags$targets_ready,
                        input$source_targets), {
+            req(input$source_targets)
             if(emptyIsFalse(shared$wf$targets_path)){
                 targets_path(shared$wf$targets_path)
             } else {
@@ -313,6 +314,7 @@ wf_cwlServer <- function(id, shared){
         data_cwl <- reactiveValues()
         upload_path_cwl <- dynamicFileServer(input, session, id = "cwl_upload")
         observeEvent(c(upload_path_cwl(), input$source_cwl), {
+            req(input$source_cwl)
             if(input$source_cwl == "eg"){
                 data_cwl$path <- file.path("data", "hisat2.cwl")
             } else {
@@ -336,6 +338,7 @@ wf_cwlServer <- function(id, shared){
         data_cwl_input <- reactiveValues()
         upload_path_cwl_input <- dynamicFileServer(input, session, id = "cwl_input_upload")
         observeEvent(c(upload_path_cwl_input(), input$source_cwl_input), {
+            req(input$source_cwl_input)
             if(input$source_cwl_input == "eg"){
                 data_cwl_input$path <- file.path("data", "hisat2.yml")
             } else {

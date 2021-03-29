@@ -1,16 +1,18 @@
 
+
 spsUIadmin <- function(){
+    spsinfo("Loading admin page UI")
     div(
-        class = "sps-admin",
+        class = "sps-page",
+        id = "page-admin-wrapper",
         adminLoginUI(),
         tags$head(
             tags$script(src="sps/js/sps_admin.js"),
             tags$script(src="sps/js/micro.js"),
-            tags$link(rel="stylesheet", href = "sps/css/sps_admin.css")
+            tags$link(rel="stylesheet", href = "sps/css/sps_login.css")
         ),
         uiOutput(
             outputId = "page_admin", container = div,
-            style = "margin-right: -2em; height:auto;",
             class = "shinyjs-hide skin-blue"
         )
     )
@@ -21,13 +23,13 @@ adminServer <- function(input, output, session, shared) {
     observeEvent(1, once = TRUE, {
         shared$admin$log_success <- FALSE
     })
+    spsinfo("Loading admin page server")
     adminLoginServer("admin", shared)
     observeEvent(shared$admin$log_success, {
         req(isTRUE(shared$admin$log_success))
-        shinyjs::hide("admin-login_page", asis = TRUE)
+        shinyjs::hide("admin-login_page", asis = TRUE, anim = TRUE)
         output$page_admin <- renderUI(adminUI())
-        shinyjs::show("page_admin", asis = TRUE)
-        output$page_admin <- renderUI(adminUI())
+        shinyjs::show("page_admin", asis = TRUE, anim = TRUE)
         shinyjs::runjs("$('body').trigger('admin-displayed')")
         admin_infoServer("admin-info", shared)
         admin_usersServer("admin-users", shared)

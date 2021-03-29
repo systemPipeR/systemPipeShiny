@@ -460,7 +460,7 @@ spsEncryption <- R6::R6Class(
 #' A default user account "user", with password "user", and a default admin account
 #' "admin"  with password "admin" are create for you.
 #'
-#' For deploy, PLEASE create your own accounts and DELETE the default ones.
+#' For app deployment, PLEASE create your own accounts and DELETE the default ones.
 #' @export
 #' @examples
 #' dir.create("config", showWarnings = FALSE)
@@ -616,6 +616,7 @@ spsAccount <- R6::R6Class(
             role <- match.arg(role, c("user", "admin"))
 
             # find acc name
+            if(inherits( try(private$checkAcc(acc_name)), "try-error")) return(FALSE)
             acc <- try(private$findAcc(acc_name))
             if(inherits(acc, "try-error")) return(FALSE)
 

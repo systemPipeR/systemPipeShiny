@@ -491,7 +491,7 @@ core_topServer <- function(id, shared){
                     err <- rs_out$error %>% utils::capture.output()
                     for(i in err) insertUI(selector = paste0("#", ns("output")), ui = p(class = "text-danger", paste0(i)))
                     toastr_error(title = "ERROR", message = "Check console output", position = "bottom-right", timeOut = 3000)
-                    if(input$stop_on_err){
+                    if(emptyIsFalse(input$stop_on_err)){
                         code_que(list())
                     }
                 }

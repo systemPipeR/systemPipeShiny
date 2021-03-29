@@ -115,10 +115,43 @@
   }
 })(jQuery);
 
-$(window).ready(function() {
+  // listen to mouse move
+$(function() {
   var canvas = $("<canvas />");
-  canvas.attr({ width: 300, height: $("#helix").height()});
-  canvas.css({ position: "relative", top: 0, left: 0, maxWidth: $("#helix").width()});
+  canvas.attr({ height: $("#helix").height()});
   $("#helix").append(canvas);
   canvas.DoubleHelix({fps: 30, fgColor:'117,199,255'});
+
+  var angle, angleRaw, x, y;
+  var el = $('#helix');
+  document.getElementById('particles-js').addEventListener("mousemove", function (e) {
+    x = e.clientX - window.innerWidth / 2;
+    y = window.innerHeight / 2 - e.clientY;
+    angleRaw = Math.atan(x/ y);
+
+    if (y < 0) {
+        angle = Math.PI + angleRaw;
+    } else if (x < 0 && y > 0) {
+        angle = 2 * Math.PI + angleRaw;
+    } else {
+        angle = angleRaw;
+    }
+    el.css('transform', `rotate(${angle}rad)`);
+  });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,7 +2,6 @@ adminLoginUI <- function(){
     ns <- NS("admin")
     div(
         id = ns("login_page"),
-        style= "display:none",
         div(id = ns("bg")),
             tags$label(
                 class = "about-micro",
@@ -49,14 +48,13 @@ adminLoginUI <- function(){
 
 adminLoginServer <- function(id, shared) {
     module <- function(input, output, session) {
-        db <- quiet(spsAccount$new())
         attempt <- reactiveVal(0)
         observeEvent(input$login_click, {
             shinyjs::hide("login-alert")
             req(input$login_uname)
             req(input$login_pass)
             req(attempt() < 3)
-            res <- db$accMatch(input$login_uname, input$login_pass, role = "admin", match_role = TRUE)
+            res <- shared$db$accMatch(input$login_uname, input$login_pass, role = "admin", match_role = TRUE)
             if (res) {
                 shared$admin$log_success <- TRUE
             } else {
