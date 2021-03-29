@@ -80,7 +80,7 @@ $(function() {
 });
 
 
-// notification click
+// notification and guide on click
 $(function(){
     let notificationTrigger = false;
     $('li.notifications-menu:contains("Notifications") a.dropdown-toggle').click(function(){
@@ -88,6 +88,13 @@ $(function(){
             $(this).find('i').removeClass('fa-warning').addClass('fa-check');
             $(this).find('span').text('0').removeClass('label-warning').addClass('label-success');
             notificationTrigger = true;
+        }
+    })
+    let guideTrigger = false;
+        $('li.messages-menu:contains("Choose a guide") a.dropdown-toggle').click(function(){
+        if (!guideTrigger){
+            $(this).find('span').text('0').removeClass('label-primary').addClass('label-success');
+            guideTrigger = true;
         }
     })
 })

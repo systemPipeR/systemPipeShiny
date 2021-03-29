@@ -4,7 +4,12 @@
 \alias{sps}
 \title{SystemPipeShiny app main function}
 \usage{
-sps(tabs = "", server_expr = NULL, app_path = getwd())
+sps(
+  tabs = "",
+  server_expr = NULL,
+  login_message = shiny::h3("User login"),
+  app_path = getwd()
+)
 }
 \arguments{
 \item{tabs}{custom visualization tab IDs that you want to display, in a character
@@ -15,7 +20,11 @@ to run. This will run after the default server expressions. It means you can
 have access to internal server expression objects, like the
 \code{\link[shiny:reactiveValues]{shiny::reactiveValues()}}
 object \code{shared}. You can also overwrite other values. Read "shared object" in
-vignette.}
+manual.}
+
+\item{login_message}{a shiny tag that will be displayed on the top of login panel,
+default is a H3 title with text "User login", \code{shiny::h3("User login")}. If you
+need more information, you can do something like \verb{div(h3("Login"), p("Some more message))}.}
 
 \item{app_path}{SPS project path}
 }
@@ -28,6 +37,14 @@ SystemPipeShiny app main function
 \details{
 You must set the project root as working directory for this
 function to find required files.
+
+\subsection{About this function}{
+
+Usually you call this function inside the \emph{global.R} file when SPS initialization
+is done. This function does not contain too many options. Most choices are
+controlled by SPS options which are also listed in \emph{global.R} (some lines before
+calling this function in that file).
+}
 }
 \examples{
 if(interactive()){

@@ -225,3 +225,24 @@ reactiveStop <- function(message = "\r              ", class = NULL){
     stop(cond)
 }
 
+
+# print error trace back
+printTraceback <- function(calls){
+    calls <- calls[c(-length(calls), -length(calls) + 1)]
+    trace_files <- findTraceFile(calls)
+    paste0(
+        crayon::green$bold(seq_along(calls)), ". ",
+        as.character(calls), " ",
+        crayon::blue$bold(trace_files)
+    ) %>% cat(sep = "\n")
+}
+
+# find errors trace back file and line
+findTraceFile <- function(calls) {
+    lapply(calls, function(ca) {
+        if (!is.null(srcref <- attr(ca, "srcref"))) {
+            srcfile <- attr(srcref, "srcfile")
+            glue('{srcfile$filename}#{srcref[1]}')
+        } else ""
+    })
+}

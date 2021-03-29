@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
-Version: 1.1.20
-Date: 2021-02-05
+Version: 1.1.30
+Date: 2021-04-01
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danicassol@gmail.com"),
@@ -43,7 +43,10 @@ Imports:
     tibble,
     utils,
     vroom (>= 1.3.1),
-    yaml
+    yaml,
+    R6,
+    RSQLite,
+    openssl
 Suggests:
     testthat,
     BiocStyle,
@@ -57,7 +60,6 @@ Suggests:
     callr,
     pushbar,
     fs,
-    openssl,
     readr,
     R.utils,
     DOT,

@@ -43,7 +43,10 @@ utils::globalVariables(c(
 #' have access to internal server expression objects, like the
 #' [shiny::reactiveValues()]
 #' object `shared`. You can also overwrite other values. Read "shared object" in
-#' vignette.
+#' manual.
+#' @param login_message a shiny tag that will be displayed on the top of login panel,
+#' default is a H3 title with text "User login", `shiny::h3("User login")`. If you
+#' need more information, you can do something like `div(h3("Login"), p("Some more message))`.
 #' @param app_path SPS project path
 #' @details You must set the project root as working directory for this
 #' function to find required files.
@@ -51,7 +54,12 @@ utils::globalVariables(c(
 #' @importFrom rlang enexpr
 #' @export
 #' @return a list contains the UI and  server
-#'
+#' @details
+#' #### About this function
+#' Usually you call this function inside the *global.R* file when SPS initialization
+#' is done. This function does not contain too many options. Most choices are
+#' controlled by SPS options which are also listed in *global.R* (some lines before
+#' calling this function in that file).
 #' @examples
 #' if(interactive()){
 #'     spsInit()
@@ -62,7 +70,14 @@ utils::globalVariables(c(
 #'         }
 #'     )
 #' }
-sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
+sps <- function(
+    tabs = "",
+    server_expr=NULL,
+    login_message = shiny::h3("User login"),
+    app_path = getwd()
+    ){
+    # check login message
+    stopifnot(inherits(login_message, "shiny.tag"))
     # check tabs
     assert_that(is.character(tabs))
     if(any(duplicated(tabs)))
@@ -71,8 +86,14 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
     sps_env <- new.env(parent = globalenv())
     r_folder <- file.path(app_path, "R")
     lapply(file.path(r_folder, list.files(r_folder, "\\.[rR]$")),
-           function(x) source(x, local = sps_env)) %>%
-        invisible()
+           function(x) withCallingHandlers(
+               source(x, local = sps_env),
+               error = function(e) {
+                   spswarn(c("Error on sourcing ", x))
+                   spswarn(e)
+                   if(spsOption('traceback')) printTraceback(sys.calls())
+            })
+    )  %>% invisible()
     if(any(search() %>% str_detect("^sps_env$"))) detach("sps_env")
     attach(sps_env, name = "sps_env", pos = 2, warn.conflicts = FALSE)
     tab_info <- checkSps(app_path)
@@ -99,15 +120,16 @@ sps <- function(tabs = "", server_expr=NULL, app_path = getwd()){
     guide <- parseGuide()
 
     # load UI
-    ui <- spsUI(tabs, missings, sps_env, guide)
+    ui <- spsUI(tabs, missings, sps_env, guide, login_message)
     spsinfo("UI created")
+    mainUI <- if (!is.null(ui[['login']])) ui[['main']] else NULL
     # load server
     server_expr <- rlang::enexpr(server_expr)
-    server <- spsServer(tabs, server_expr, missings, sps_env, guide)
+    server <- spsServer(tabs, server_expr, missings, sps_env, guide, mainUI)
     spsinfo("Server functions created")
     spsinfo("App starts ...", verbose = TRUE)
     # return in a list to be called
-    list(ui = ui, server = server)
+    list(ui = if (is.null(ui[['login']])) ui[['main']] else ui[['login']], server = server)
 }
 
 
@@ -238,7 +260,7 @@ verifyConfig <- function(app_path) {
 # spsInit()
 # options(sps = list(mode = c("asas", "sas"),
 #                    place = "here", time = c("now", "then"),
-#                    loading_screen = FALSE))
+#                    login_screen = FALSE))
 # resolveOptions()
 resolveOptions <- function(app_path = getwd()){
     ops <- options()$sps
@@ -314,8 +336,8 @@ resolveOptions <- function(app_path = getwd()){
 #'     options(sps = list(
 #'         mode = "server",
 #'         warning_toast = TRUE,
-#'         loading_screen = FALSE,
-#'         loading_theme = "vhelix",
+#'         login_screen = FALSE,
+#'         login_theme = "vhelix",
 #'         use_crayon = TRUE
 #'     ))
 #'     # view current options

@@ -1,6 +1,7 @@
 ############################### SPS UIs#########################################
 # Can only be used inside SPS framework
 
+
 #' Generate SPS main UI
 #'
 #' @param tabs custom tabs
@@ -17,7 +18,7 @@
 #' @noRd
 # @examples
 # spsUI()
-spsUI <- function(tabs, mod_missings, sps_env, guide){
+spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
     spsinfo("Start to generate UI")
     addResourcePath("sps", "www")
 
@@ -119,8 +120,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide){
                 )
             } else {
                 ""
-            }
-            ,
+            },
             if(spsOption("tab_vs_main")) shinydashboard::menuItem("Custom tabs", icon = icon("images"), tabName = "vs_main", menu_tab) else "",
             if(spsOption("tab_canvas")) shinydashboard::menuItem("Canvas", tabName = "core_canvas", icon = icon("paint-brush")) else "",
             if(spsOption("tab_about")) shinydashboard::menuItem("About", icon = icon("info"), tabName = "core_about") else ""
@@ -156,13 +156,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide){
     dashboardBody <- shinydashboard::dashboardBody(
         class = "sps",
         tags$head(
-            tags$link(rel="shortcut icon", href=sps_logo),
-            shinyWidgets::useSweetAlert(),
-            shinytoastr::useToastr(),
-            shinyjs::useShinyjs(),
-            if(!emptyIsFalse(checkNameSpace('cicerone'))) cicerone::use_cicerone() else div(),
-            tags$script(src="sps/js/sps.js"),
-            tags$link(rel="stylesheet", href = "sps/css/sps.css")
+            tags$script(src="sps/js/sps.js")
         ),
         spsComps::spsGoTop(),
         disconUI(),
@@ -181,11 +175,30 @@ spsUI <- function(tabs, mod_missings, sps_env, guide){
         title = sps_title,
         body =  dashboardBody #,rightsidebar = rightsidebar
     )
+    # HTML dependencies
+    core_head <- tags$head(
+        tags$link(rel="shortcut icon", href=sps_logo),
+        shinyWidgets::useSweetAlert(),
+        shinytoastr::useToastr(),
+        shinyjs::useShinyjs(),
+        if(!emptyIsFalse(checkNameSpace('cicerone', TRUE))) cicerone::use_cicerone() else div(),
+        tags$link(rel="stylesheet", href = "sps/css/sps.css")
+    )
+
     # merge everything together
     spsinfo("Add overlay loading screen, admin panel.
             Merge everything to app container ...")
-    spsUIwrapper(mainUI)
+    if(spsOption('login_screen')) {
+        list(
+            login = fluidPage(class = "sps-page", core_head, spsUIuser(login_message), uiOutput("spsUIadmin")),
+            main = mainUI
+        )
+    } else {
+        list(main = fluidPage(class = "sps-page", core_head, mainUI, uiOutput("spsUIadmin")))
+    }
+
 }
+
 
 
 disconUI <- function(){

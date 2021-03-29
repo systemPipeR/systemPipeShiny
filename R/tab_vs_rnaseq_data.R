@@ -220,6 +220,7 @@ vs_rnaseq_dataServer <- function(id, shared){
         })
         # targets header
         observeEvent(c(targets_path(), input$source_targets), {
+            req(input$source_targets)
             if(input$source_targets == "eg"){
                 targets_path <- file.path("data", "targetsPE.txt")
             } else targets_path <- targets_path()$datapath

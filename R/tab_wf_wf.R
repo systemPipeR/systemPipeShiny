@@ -208,6 +208,7 @@ wf_wfServer <- function(id, shared){
         })
         # resolve path
         rmd_file_path <- reactive({
+            req(input$wf_source)
             if (input$wf_source == "default") shared$wf$wf_path
             else input$rmd_file$datapath
         })
@@ -221,6 +222,7 @@ wf_wfServer <- function(id, shared){
         })
         # get selected steps
         rmd_tree_selected <- reactive({
+            req(input$wf_source)
             if (input$wf_source == "upload" & is.null(rmd_file_path())) {
                 NULL
             } else {
@@ -370,7 +372,7 @@ wf_wfServer <- function(id, shared){
             )
         })
         observeEvent(input$confirm_next, {
-            if(input$confirm_next){
+            if(emptyIsFalse(input$confirm_next)){
                 shinyjs::runjs("$('#wf-wf_panel-4-heading > h4').trigger('click');")
             } else {
                 shinyjs::runjs("$('#wf-wf_panel-3-heading > h4').trigger('click');")

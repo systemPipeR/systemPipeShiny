@@ -17,7 +17,7 @@
         ),
         tabTitle("Title for #@tab_displayname@#"), spsHr(),
         hexPanel(ns("poweredby"), "POWERED BY:",
-                 hex_imgs = c("img/sps.png"),
+                 hex_imgs = c("img/logo.png"),
                  hex_titles = c("SystemPipeShiny"), ys = c("-10")),
         renderDesc(id = ns("desc"), desc),
         div(style = "text-align: center;",

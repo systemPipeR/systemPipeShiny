@@ -1,3 +1,45 @@
+
+
+spsUIadmin <- function(){
+    spsinfo("Loading admin page UI")
+    div(
+        class = "sps-page",
+        id = "page-admin-wrapper",
+        adminLoginUI(),
+        tags$head(
+            tags$script(src="sps/js/sps_admin.js"),
+            tags$script(src="sps/js/micro.js"),
+            tags$link(rel="stylesheet", href = "sps/css/sps_login.css")
+        ),
+        uiOutput(
+            outputId = "page_admin", container = div,
+            class = "shinyjs-hide skin-blue"
+        )
+    )
+}
+
+
+adminServer <- function(input, output, session, shared) {
+    observeEvent(1, once = TRUE, {
+        shared$admin$log_success <- FALSE
+    })
+    spsinfo("Loading admin page server")
+    adminLoginServer("admin", shared)
+    observeEvent(shared$admin$log_success, {
+        req(isTRUE(shared$admin$log_success))
+        shinyjs::hide("admin-login_page", asis = TRUE, anim = TRUE)
+        output$page_admin <- renderUI(adminUI())
+        shinyjs::show("page_admin", asis = TRUE, anim = TRUE)
+        shinyjs::runjs("$('body').trigger('admin-displayed')")
+        admin_infoServer("admin-info", shared)
+        admin_usersServer("admin-users", shared)
+    })
+}
+
+
+
+
+
 #' Admin page UI
 #' Internal func
 #' @importFrom shinyWidgets materialSwitch
@@ -5,24 +47,30 @@
 adminUI <- function(){
     ns <- NS("admin")
     shinydashboardPlus::dashboardPage(
-        title = "Admin Panel",
+        title = "Admin",
         header = shinydashboard::dashboardHeader(
-
+            title = tagList(
+                span(class = "logo-lg", "Admin Panel"),
+                img(src = spsOption('title_logo'), height = "25", width = "25")
+            )
         ),
-        sidebar = shinydashboard::dashboardSidebar(
-
+        sidebar = shinydashboardPlus::dashboardSidebar(
+            br(),
+            shinydashboard::sidebarMenu(
+                id = ns(id = "left_sidebar"),
+                shinydashboard::menuItem("General info", icon = icon("server"), tabName = ns("info")),
+                shinydashboard::menuItem("Users", icon = icon("users"), tabName = ns("users"))
+            )
         ),
         body =  shinydashboard::dashboardBody(
-            HTML('<h1>Developing<span class="label label-default
-                 bg-olive">Next Release</span></h1>'),
-            p("Coming in next release"),
-            actionButton("reload", "test button"),
-            shinyWidgets::materialSwitch(
-                inputId = "change",
-                label = "Some switch",
-                value = TRUE,
-                status = "success",
-                right = TRUE
+            class = "sps",
+            tags$head(
+
+            ),
+            spsComps::spsGoTop(),
+            shinydashboard::tabItems(
+                shinydashboard::tabItem(tabName = ns("info"), admin_infoUI(ns("info"))),
+                shinydashboard::tabItem(tabName = ns("users"), admin_usersUI(ns("users")))
             )
         )
     )

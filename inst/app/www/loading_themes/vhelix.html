@@ -8,19 +8,58 @@
   -->
     <meta charset="utf-8" />
     <title>Welcome to systemPipeShiny</title>
-    <style src="vhelix.css"></style>
-    <link rel="stylesheet" href="loading_themes/vhelix.css">
      <!-- jQuery loaded from other place, add here if run independently -->
-    <script src="loading_themes/double-helix.js"></script>
-    <script src="loading_themes/particles.min.js"></script>
+
   </head>
 
   <body>
     <div class="helix-main">
-        <img src="img/sps.png"/>
         <div id="helix"></div>
     </div>
     <div id="particles-js"></div>
+      <canvas id="login_canvas"></canvas>
+    <div id="canvas-desc">
+        <h2>Move mouse, the helix will rotate</h3>
+    </div>
+    <style>
+      #canvas-desc {
+        z-index: 2;
+        position: absolute;
+        display: block;
+        right: 10%;
+        bottom: 10%;
+        color: #999;
+        user-select: none;
+      }
+    </style>
+    <script src="loading_themes/double-helix.js"></script>
+    <script src="loading_themes/particles.min.js"></script>
+    <style>
+    #particles-js {
+        position : absolute;
+        height:100%;
+        width: 95%;
+        z-index:0;
+        top: 0%;
+    }
+
+    #helix{
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        //transition:  transform 0.8s ease-in-out;
+    }
+
+    #helix canvas{
+        overflow: hidden;
+        width: 30vmin;
+        max-height: 80vmin;
+    }
+    </style>
     <script>
         particlesJS("particles-js", {
   "particles": {

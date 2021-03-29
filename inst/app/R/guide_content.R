@@ -1,5 +1,4 @@
 #################### Define your custom SPS tutorials ##########################
-
 # use `shinydashboardPlus::messageItem` to add your tutorials UI to this list
 guide_ui <- list(
     ## An example is provided below
@@ -13,9 +12,9 @@ guide_ui <- list(
 
 # use `cicerone::Cicerone$new()` to add your tutorials content to this list
 # See help `?cicerone::Cicerone`
-# the item names should match the `inputId` in UI
-guide_content <- list(
-    ## An example is provided below
+# A named list, each item's name must match the `inputId` in UI to trigger it in app.
+guide_content <- try(list(
+    ## An example is provided below, replace or add your own to the list
     guide_main = cicerone::Cicerone$new(overlay_click_next = TRUE)$
         step(el = "sidebarItemExpanded",
              title = "SPS tabs",
@@ -25,7 +24,7 @@ guide_content <- list(
              "Default modules",
              "Click here to go to the SPS modules main tab. Here you can see
              what different modules are.",
-            "right-center")$
+             "right-center")$
         step("sidebarItemExpanded .treeview a[href='#shiny-tab-vs_main']",
              "Custom visualization tabs",
              "Click here for the your custom visualization tabs.",
@@ -47,4 +46,4 @@ guide_content <- list(
              "We will send out notifications to users when there is change or update.
              You can also customize the notifications.",
              "left")
-)
+), silent = TRUE) # Continue with errors here, SPS checks errors later

@@ -270,6 +270,7 @@ wf_targetServer <- function(id, shared){
             }
         })
         observeEvent(input$sweet_changetarget_confirm, ignoreNULL = TRUE,{
+            req(input$target_source)
             if (isTRUE(input$sweet_changetarget_confirm)) {
                 # load target file
                 t.df(shinyCatch({

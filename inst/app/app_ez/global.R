@@ -14,22 +14,22 @@ library(magrittr) # load pipes
 # title_logo: logo to display when dashboard is collapsed and on website tab - url of an image
 # mode: running mode - "local", "server"
 # warning_toast: toast pop-up message when you are under some dangerous options - TRUE, FALSE
-# loading_screen: to show loading screen? - TRUE, FALSE
-# loading_theme: loading screen themes, loading_screen need be TRUE - "vhelix"
+# login_screen: to show login screen? - TRUE, FALSE
+# login_theme: login screen themes, login_screen need be TRUE - "random"
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # admin_url: admin_page query url - "admin"
 # note_url: User notification broadcast file url - http(s) address
-## to load some default modules:
-# tab_welcome ~ module_wf: whether to load the corresponding tab or module? - TRUE, FALSE
+# tab_welcome -- module_wf: whether to load the corresponding tab or module? - TRUE, FALSE
+# traceback: for expressions wrapped inside `spsComps::shinyCatch`, show full traceback if error? TRUE, FALSE
 
 options(sps = list(
     title = "systemPipeShiny",
     title_logo = "img/sps_small.png",
     mode = "local",
     warning_toast = FALSE,
-    loading_screen = TRUE,
-    loading_theme = "vhelix",
+    login_screen = TRUE,
+    login_theme = "global",
     use_crayon = TRUE,
     verbose = FALSE,
     admin_page = FALSE,
@@ -41,7 +41,8 @@ options(sps = list(
     tab_about = TRUE,
     module_wf = TRUE,
     module_rnaseq = TRUE,
-    module_ggplot = TRUE
+    module_ggplot = TRUE,
+    traceback = FALSE
 ))
 
 
@@ -56,7 +57,15 @@ options(shiny.maxRequestSize = 30*1e6)
 # options(shiny.error = browser)
 # options(shiny.autoreload = FALSE) # takes some computer power, you may consider turn it off
 
-####### Main App Function Starts #########
+##  account information
+## PLEASE use following to add your own accounts and remove the default accounts for deployment
+# mydb <- spsAccount$new()
+# mydb$accList()
+# mydb$accAdd(acc_name = "XXX", acc_pass = "$xxxx", role = "admin")
+# mydb$accRemove("admin")
+# mydb$accRemove("user")
+
+####### SPS Main App Function Starts #########
 
 sps_app <- sps(
     tabs = c("vs_example"),
@@ -65,4 +74,3 @@ sps_app <- sps(
         msg("Custom expression runs -- Hello World", "GREETING", "green")
     }
 )
-

@@ -426,7 +426,7 @@ vs_rnaseq_normalServer <- function(id, shared){
         observeEvent(input$confirm_process , {
             updateSpsTimeline(session, "rna_status1", 1, TRUE)
             shinyjs::runjs(glue("$('#{ns('rna_status2')}').css('border-left', '6px solid #5cb85c');"))
-
+            req(input$trans_options)
             if(input$trans_options == "raw"){
                 shinyjs::runjs("$('#vs_rnaseq-normal-main_panel-1-heading > h4').trigger('click');")
             } else {
@@ -477,6 +477,7 @@ vs_rnaseq_normalServer <- function(id, shared){
                 type = "success"
             )
             # enable tabs and show plot options
+            req(input$trans_method)
             if(input$trans_method == "raw"){
                 shared$rnaseq$panel_enable <-
                     if (shared$rnaseq$deg_ready) c(1, 2, 8)
@@ -641,15 +642,15 @@ vs_rnaseq_normalServer <- function(id, shared){
                 files <- c("SPS_deseq2_transformed_counts.csv", "SPS_deseq2_DEG_summary.csv", "SPS_deseq2_DEG_SummarizedExperiment.rds")
                 dir.create(dir_path, recursive = TRUE, showWarnings = FALSE)
                 shinyCatch({
-                    if(input$check_trans) {
+                    if(emptyIsFalse(input$check_trans)) {
                         pg$set(20, message = "write transformed counts")
                         write.csv(shared$rnaseq$trans_table, file.path(dir_path, files[1]), quote = FALSE)
                     }
-                    if(input$check_deg_csv) {
+                    if(emptyIsFalse(input$check_deg_csv)) {
                         pg$set(40, message = "write DEG summary")
                         write.csv(shared$rnaseq$data[['deg_summary']], file.path(dir_path, files[2]), quote = FALSE)
                     }
-                    if(input$check_deg_rds) {
+                    if(emptyIsFalse(input$check_deg_rds)) {
                         pg$set(60, message = "write DEG Rds")
                         saveRDS(shared$rnaseq$data[['deg_tables']], file.path(dir_path, files[3]))
                     }

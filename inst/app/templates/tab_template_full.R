@@ -3,13 +3,13 @@
 ## Author: #@author@#
 
 # #@tab_id@# UI
-#@tab_id@#UI<- function(id){
+#@tab_id@#UI <- function(id){
     ns <- NS(id)
     ### change tab description ###----
     desc <- "
     This tab is created by the `spsNewTab` function.
 
-    #### Write some Description of this tab in markdown format
+    #### Write some description of this tab in markdown format
     - you should ...
         1. eg 1.
         2. eg 2.

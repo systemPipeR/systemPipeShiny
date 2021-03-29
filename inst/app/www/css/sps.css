@@ -35,6 +35,12 @@
 systemPipeShiny CSS Styles
 */
 
+.sps-page.container-fluid{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
 /*buttons, default is too ugly*/
 .sps .btn-default{
   color: #fff;
@@ -92,7 +98,11 @@ systemPipeShiny CSS Styles
 /*blink class*/
 
 .sps-blink {
-  animation: blinking 1.5s linear infinite;
+  animation: blinking 2s linear infinite;
+}
+
+.sps-blink:hover {
+  animation: none;
 }
 
 @keyframes blinking {
