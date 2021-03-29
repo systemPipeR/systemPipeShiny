@@ -39,8 +39,8 @@ if(interactive()){
     options(sps = list(
         mode = "server",
         warning_toast = TRUE,
-        loading_screen = FALSE,
-        loading_theme = "vhelix",
+        login_screen = FALSE,
+        login_theme = "vhelix",
         use_crayon = TRUE
     ))
     # view current options

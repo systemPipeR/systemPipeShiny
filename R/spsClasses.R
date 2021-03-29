@@ -1,6 +1,6 @@
 ######################## SPS R6 Classes #######################
 
-#' Imports for database handling classes
+# Imports for database handling classes
 #' @importFrom R6 R6Class
 #' @importFrom RSQLite dbDisconnect dbListTables dbWriteTable dbGetQuery
 #' @importFrom RSQLite dbSendStatement dbGetRowsAffected
@@ -8,6 +8,8 @@
 #' @importFrom dplyr tribble tbl collect pull
 #' @importFrom openssl rsa_keygen encrypt_envelope decrypt_envelope
 NULL
+
+
 #' SPS database functions
 #'
 #' @description Initiate this container at global level.
@@ -23,7 +25,6 @@ NULL
 #'
 #' One instance of this class is created by the [spsAccount] super class in
 #' *global.R*, normal users don't need to change anything.
-#' @details
 #' @export
 #' @examples
 #' dir.create("config", showWarnings = FALSE)
@@ -293,7 +294,7 @@ spsDb <- R6::R6Class("spsDb",
 #' # check the decrypted file content
 #' readLines('test_decpt.txt')
 spsEncryption <- R6::R6Class(
-    "spsencrypt",
+    "spsEncryption",
     inherit = spsDb,
     public = list(
         #' @description initialize a new class container

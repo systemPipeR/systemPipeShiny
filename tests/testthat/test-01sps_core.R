@@ -21,7 +21,7 @@ test_that("test SPS setup function", {
 
 # test_that("SPS classes", {
 #     sps_enc <<- spsEncryption$new()
-#     expect_s3_class(sps_enc, "spsencrypt")
+#     expect_s3_class(sps_enc, "spsEncryption")
 # })
 
 sps <- suppressWarnings(sps())
@@ -44,7 +44,7 @@ test_that("SPS options", {
     expect_equal(
         normalizePath(app_path, winslash = "/"),
         normalizePath(spsOption("app_path"), winslash = "/"))
-    expect_length(getOption("sps"), 19)
+    expect_length(getOption("sps"), 20)
     expect_invisible(spsUtil::quiet(spsOptDefaults()))
 })
 
