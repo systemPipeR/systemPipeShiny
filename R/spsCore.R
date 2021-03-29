@@ -199,12 +199,12 @@ spsInit <- function(app_path=getwd(),
     copySPSfiles("app/app_ez/ui.R", project_dir, FALSE, overwrite, verbose)
     copySPSfiles("app/app_ez/server.R", project_dir, FALSE, overwrite, verbose)
 
-    # spsinfo("Create SPS database", TRUE)
-    # suppressWarnings(
-    #     spsDb$new()$createDb(db_name=file.path(project_dir,
-    #                                            "config",
-    #                                            database_name))
-    # )
+    spsinfo("Create SPS database", TRUE)
+    suppressWarnings(
+        spsDb$new()$createDb(db_name=file.path(project_dir,
+                                               "config",
+                                               database_name))
+    )
     if(change_wd) {
         spsinfo(glue("Change working directory to {project_dir}"))
         setwd(project_dir)
