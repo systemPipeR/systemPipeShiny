@@ -17,15 +17,15 @@
 ## uncomment and add following to global.R when deploy:
 ##########################################################################
 ## Workflow module
-# requireNamespace("DOT"); requireNamespace("networkD3"); requireNamespace("pushbar");
-# requireNamespace("readr"); requireNamespace("rhandsontable"); requireNamespace("shinyTree");
-# requireNamespace("systemPipeR"); requireNamespace("systemPipeRdata"); requireNamespace("zip");
+# requireNamespace("DOT"); requireNamespace("networkD3"); requireNamespace("pushbar")
+# requireNamespace("readr"); requireNamespace("rhandsontable"); requireNamespace("shinyTree")
+# requireNamespace("systemPipeR"); requireNamespace("systemPipeRdata"); requireNamespace("zip")
 ## RNA-Seq module
-# requireNamespace("DESeq2"); requireNamespace("Rtsne"); requireNamespace("SummarizedExperiment");
-# requireNamespace("UpSetR"); requireNamespace("ape"); requireNamespace("ggtree");
-# requireNamespace("glmpca"); requireNamespace("pheatmap"); requireNamespace("systemPipeR");
+# requireNamespace("DESeq2"); requireNamespace("Rtsne"); requireNamespace("SummarizedExperiment")
+# requireNamespace("UpSetR"); requireNamespace("ape"); requireNamespace("ggtree")
+# requireNamespace("glmpca"); requireNamespace("pheatmap"); requireNamespace("systemPipeR")
 ## Quick ggplot module
-
+# requireNamespace("esquisse")
 ########################
 ## Set up your account:
 ########################
