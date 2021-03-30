@@ -15,7 +15,7 @@ Besides, SPS provides many developers' tool that are distributed as [separate pa
 SPS has provided a variety of options to change how it work. Here are some examples.
 
 | Type and link| option changed | notes |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) |  |  |
 | [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny/) |  |  |
 | [Login enabled](https://tgirke.shinyapps.io/systemPipeShiny_loading/) | `login_screen = TRUE; login_theme = "empty"` | no modules installed |
