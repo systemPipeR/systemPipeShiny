@@ -6,7 +6,6 @@ $(function(){
         var checkDash;
         checkDash = setInterval(function() {
             if ($('script[src*="shinydashboardPlus"]').length > 0) {
-              console.log("displayed")
               $(window).trigger("resize");
               $('a[href="#shiny-tab-core_welcome"]').trigger('click');
               clearInterval(checkDash);

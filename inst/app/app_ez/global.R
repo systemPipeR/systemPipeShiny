@@ -13,7 +13,7 @@ library(magrittr) # load pipes
 # title: dashboard and website title - any string
 # title_logo: logo to display when dashboard is collapsed and on website tab - url of an image
 # mode: running mode - "local", "server"
-# warning_toast: toast pop-up message when you are under some dangerous options (not useful in current version)- TRUE, FALSE
+# warning_toast: some warning messages to check potential risks - TRUE, FALSE
 # login_screen: to show login screen? - TRUE, FALSE
 # login_theme: login screen themes, login_screen need be TRUE - "random"
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE

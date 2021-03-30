@@ -618,7 +618,7 @@ spsAccount <- R6::R6Class(
 
             # find acc name
             if(inherits( try(private$checkAcc(acc_name)), "try-error")) return(FALSE)
-            acc <- try(private$findAcc(acc_name))
+            acc <- try(private$findAcc(acc_name), silent = TRUE)
             if(inherits(acc, "try-error")) return(FALSE)
 
             # match pass
