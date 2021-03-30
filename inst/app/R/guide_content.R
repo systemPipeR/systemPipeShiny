@@ -41,7 +41,8 @@ guide_content <- try(list(
              "Take a look at the change log, get a link of the manual and other
              information here.",
              "right-center")$
-        step("app-main .notifications-menu",
+        step(".main-header .notifications-menu",
+             is_id = FALSE,
              "Notifications",
              "We will send out notifications to users when there is change or update.
              You can also customize the notifications.",
