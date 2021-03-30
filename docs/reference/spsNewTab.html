@@ -73,7 +73,7 @@ creation functions will be deprecated by next Bioconductor major release." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.30</span>
       </span>
     </div>
 
@@ -189,7 +189,7 @@ not write the file and will not register the tab</p></td>
     </tr>
     <tr>
       <th>reformat</th>
-      <td><p>bool, whether to use <a href='https://rdrr.io/pkg/styler/man/style_file.html'>styler::style_file</a> reformat the code</p></td>
+      <td><p>bool, whether to use <a href='https://styler.r-lib.org/reference/style_file.html'>styler::style_file</a> reformat the code</p></td>
     </tr>
     <tr>
       <th>open_file</th>
@@ -220,23 +220,23 @@ not write the file and will not register the tab</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='spsInit.html'>spsInit</a></span><span class='op'>(</span>change_wd <span class='op'>=</span> <span class='cn'>FALSE</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-16 02:08:54 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2021-03-16 02:08:54 Overwrite things in /home/runner/work/systemPipeShiny/systemPipeShiny/docs/reference/SPS_20210316</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-16 02:08:54 Now copy files</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2021-03-16 02:08:54 SPS project setup done!</span><span></div><div class='input'><span class='fu'>spsNewTab</span><span class='op'>(</span><span class='st'>"vs_newtab_ez"</span>, app_path <span class='op'>=</span> <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: One or more parsing issues, see `problems()` for details</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-16 02:08:54 Write to file SPS_20210316/R/tab_vs_newtab_ez.R</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-16 02:08:54 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2021-03-16 02:08:54 New tab created!</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS] 2021-03-16 02:08:54 To load this new tab: `sps(tabs = c("vs_newtab_ez")`</span><span></div><div class='input'><span class='fu'>spsNewTab</span><span class='op'>(</span><span class='st'>"vs_newtab_full"</span>, template <span class='op'>=</span> <span class='st'>"full"</span>,
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-30 02:32:28 Start to create a new SPS project</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: </span><span style='color: #FFAF00;font-weight: bold;'>[SPS-WARNING] 2021-03-30 02:32:28 Overwrite things in /home/runner/work/systemPipeShiny/systemPipeShiny/docs/reference/SPS_20210330</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-30 02:32:28 Now copy files</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-INFO] 2021-03-30 02:32:28 SPS project setup done!</span><span></div><div class='input'><span class='fu'>spsNewTab</span><span class='op'>(</span><span class='st'>"vs_newtab_ez"</span>, app_path <span class='op'>=</span> <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: One or more parsing issues, see `problems()` for details</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-30 02:32:28 Write to file SPS_20210330/R/tab_vs_newtab_ez.R</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-30 02:32:28 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2021-03-30 02:32:28 New tab created!</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS] 2021-03-30 02:32:28 To load this new tab: `sps(tabs = c("vs_newtab_ez")`</span><span></div><div class='input'><span class='fu'>spsNewTab</span><span class='op'>(</span><span class='st'>"vs_newtab_full"</span>, template <span class='op'>=</span> <span class='st'>"full"</span>,
 app_path <span class='op'>=</span> <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: One or more parsing issues, see `problems()` for details</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-16 02:08:54 Write to file SPS_20210316/R/tab_vs_newtab_full.R</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-16 02:08:54 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2021-03-16 02:08:54 New tab created!</span><span>
-#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS] 2021-03-16 02:08:54 To load this new tab: `sps(tabs = c("vs_newtab_full")`</span><span></div><div class='input'><span class='fu'>spsNewTab</span><span class='op'>(</span><span class='st'>"vs_newtab_pre"</span>, preview <span class='op'>=</span> <span class='cn'>TRUE</span>,
+</div><div class='output co'>#&gt; <span class='warning'>Warning: One or more parsing issues, see `problems()` for details</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-30 02:32:28 Write to file SPS_20210330/R/tab_vs_newtab_full.R</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #0000BB;font-weight: bold;'>[SPS-INFO] 2021-03-30 02:32:28 Now register your new tab to config/tab.csv</span><span></span></div><div class='output co'>#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS-SUCCESS] 2021-03-30 02:32:28 New tab created!</span><span>
+#&gt; </span><span style='color: #00BB00;font-weight: bold;'>[SPS] 2021-03-30 02:32:28 To load this new tab: `sps(tabs = c("vs_newtab_full")`</span><span></div><div class='input'><span class='fu'>spsNewTab</span><span class='op'>(</span><span class='st'>"vs_newtab_pre"</span>, preview <span class='op'>=</span> <span class='cn'>TRUE</span>,
 app_path <span class='op'>=</span> <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"SPS_{format(Sys.time(), '%Y%m%d')}"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: One or more parsing issues, see `problems()` for details</span></div><div class='output co'>#&gt; ######################SPS My custom plotting tab tab######################
-#&gt; ## creation date: 2021-03-16 02:08:54
+#&gt; ## creation date: 2021-03-30 02:32:28
 #&gt; ## Author: 
 #&gt; 
 #&gt; # vs_newtab_pre UI
-#&gt; vs_newtab_preUI&lt;- spsEzUI(
+#&gt; vs_newtab_preUI &lt;- spsEzUI(
 #&gt;     desc = "
 #&gt;     This tab is created by the `spsNewTab` function.
 #&gt; 
-#&gt;     #### Write some Description of this tab in markdown format
+#&gt;     #### Write some description of this tab in markdown format
 #&gt;     - you should ...
 #&gt;         1. eg 1.
 #&gt;         2. eg 2.
@@ -266,7 +266,7 @@ app_path <span class='op'>=</span> <span class='fu'>glue</span><span class='fu'>
 #&gt; )
 #&gt; 
 #&gt; # vs_newtab_pre server
-#&gt; vs_newtab_preServer &lt;-spsEzServer(
+#&gt; vs_newtab_preServer &lt;- spsEzServer(
 #&gt;     plot_code = {
 #&gt;         # data passed from data loading is a reactiveValues object, data stored in `mydata$data`
 #&gt;         plot_data &lt;- mydata$data
