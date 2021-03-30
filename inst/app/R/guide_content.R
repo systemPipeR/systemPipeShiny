@@ -1,6 +1,6 @@
 #################### Define your custom SPS tutorials ##########################
 # use `shinydashboardPlus::messageItem` to add your tutorials UI to this list
-guide_ui <- list(
+guide_ui <- try(list(
     ## An example is provided below
     shinydashboardPlus::messageItem(
         inputId = "guide_main",
@@ -8,7 +8,7 @@ guide_ui <- list(
         icon = icon('home'),
         message = "Brief introduction"
     )
-)
+))
 
 # use `cicerone::Cicerone$new()` to add your tutorials content to this list
 # See help `?cicerone::Cicerone`
@@ -41,7 +41,8 @@ guide_content <- try(list(
              "Take a look at the change log, get a link of the manual and other
              information here.",
              "right-center")$
-        step("app-main .notifications-menu",
+        step(".main-header .notifications-menu",
+             is_id = FALSE,
              "Notifications",
              "We will send out notifications to users when there is change or update.
              You can also customize the notifications.",

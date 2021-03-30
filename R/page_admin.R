@@ -31,6 +31,10 @@ adminServer <- function(input, output, session, shared) {
         output$page_admin <- renderUI(adminUI())
         shinyjs::show("page_admin", asis = TRUE, anim = TRUE)
         shinyjs::runjs("$('body').trigger('admin-displayed')")
+    })
+    observeEvent(input[['adminUI_loaded']], {
+        req(isTRUE(input[['adminUI_loaded']]))
+        req(isTRUE(shared$admin$log_success))
         admin_infoServer("admin-info", shared)
         admin_usersServer("admin-users", shared)
     })

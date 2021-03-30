@@ -25,19 +25,32 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
         shared$db <- quiet(spsAccount$new())
 
         # render mainUI on login
-        ## login screening
-        spsinfo("Add login screen logic")
-        userServer(input, output, session, shared, mainUI)
-        ## if login successful
-        observeEvent(input$userUI_loaded, {
-            req(input$userUI_loaded)
-            req(!emptyIsFalse(shared$user$server_loaded))
-            req(isTRUE(shared$user$log_success))
+
+        ## if login successful or no login required
+        nologin <- reactiveVal(FALSE)
+        observeEvent(1, once = TRUE, {
+            if (spsOption('login_screen')) {
+                spsinfo("Add login screen logic")
+                userServer(input, output, session, shared, mainUI)
+            } else {
+                nologin(TRUE)
+            }
+        })
+
+        observeEvent(c(input$userUI_loaded, nologin()), {
+            if (spsOption('login_screen')) {
+                req(input$userUI_loaded)
+                req(!emptyIsFalse(shared$user$server_loaded))
+                req(isTRUE(shared$user$log_success))
+                updateProgressBar(session, "user-pg", 50 , title = "UI loading done, start to load server", status = "info")
+                on.exit({
+                    shinyjs::hideElement('user-pg-panel',  asis = TRUE, anim = TRUE)
+                })
+            } else {
+                req(isTRUE(nologin()))
+            }
+
             # core tabs
-            updateProgressBar(session, "user-pg", 50 , title = "UI loading done, start to load server", status = "info")
-            on.exit({
-                shinyjs::hideElement('user-pg-panel',  asis = TRUE, anim = TRUE)
-            })
             spsinfo("Loading core tabs server")
             if (spsOption('tab_welcome')) rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)("core_welcome", shared)
 
@@ -59,7 +72,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
 
             if (spsOption('tab_canvas')) rlang::env_get(sps_env, 'core_canvasServer', core_canvasServer)("core_canvas", shared)
             if (spsOption('tab_about')) rlang::env_get(sps_env, 'core_aboutServer', core_aboutServer)("core_about", shared)
-            updateProgressBar(session, "user-pg", 75 , title = "Loaed core servers", status = "primary")
+            if (spsOption('login_screen')) updateProgressBar(session, "user-pg", 75 , title = "Loaed core servers", status = "primary")
             # modules
             if(!is.null(mod_missings[['wf']]) && length(mod_missings[['wf']]) == 0) {
                 spsinfo("Loading workflow module server"); wfServer("wf", shared)
@@ -71,7 +84,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             if(!is.null(mod_missings[['ggplot']]) && length(mod_missings[['ggplot']]) == 0) {
                 spsinfo("Loading ggplot module server"); vs_esqServer("vs_esq", shared)
             }
-            updateProgressBar(session, "user-pg", 100 , title = "Loading complete", status = "success")
+            if (spsOption('login_screen')) updateProgressBar(session, "user-pg", 100 , title = "Loading complete", status = "success")
             shared$user$server_loaded <- TRUE
         })
 
@@ -87,14 +100,15 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             observeEvent(shared$user$server_loaded, {
                 req(shared$user$server_loaded)
                 cicerone::Cicerone$new(overlay_click_next =TRUE)$step(
-                    "page_user .messages-menu",
+                    ".navbar-static-top .messages-menu",
+                    is_id = FALSE,
                     "Welcome",
                     "If you are new to the app, you can start with a tutorial by clicking here.
                     You can customize your own tutorials too!",
                     "left")$
-                    init(session = session)$
-                    start(session = session)
-            }, ignoreInit = TRUE)
+                    init()$
+                    start()
+            })
         }
 
 
@@ -109,6 +123,10 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             adminServer(input, output, session,shared)
         })
 
+        if (spsOption('warning_toast')) {
+            spsinfo("check for potential risks")
+            spsWarnings(session, shared)
+        }
 
         spsinfo("Loading user defined expressions")
         # additional user expressions
@@ -125,26 +143,32 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
 #' @noRd
 #' @return
 #' @importFrom shinyWidgets sendSweetAlert
-spsWarnings <- function(session){
+spsWarnings <- function(session, shared){
     sps_warnings <- list()
-    # if(spsOption('eg_tab')) {
-    #     msg("Developer mode is on. you shouldn't deploy app with this mode",
-    #         "SPS-DANGER", "red")
-    #     sps_warnings[['eg_tab']] <- h4("You are on developer mode")
-    # }
-    if(getQueryString() == "admin"){
+    accs <-  quiet(db$accList()[['account']])
+    if ('admin' %in% accs) {
+        msg("The admin account is still 'admin', consider change it.",
+            "SPS-DANGER", "red")
+        sps_warnings[['admin']] <- tags$li("Change default admin account")
+    }
+    if ('user' %in% accs) {
+        msg("The default user account is still 'user', consider change it.",
+            "SPS-DANGER", "red")
+        sps_warnings[['user']] <- tags$li("Change default user account")
+    }
+    if(spsOption('admin_url') == "admin"){
         msg("You admin page url is default, consider to change it",
             "SPS-DANGER", "red")
-        sps_warnings[['admin']] <- h4("Change default admin page url")
+        sps_warnings[['admin_url']] <- tags$li("Change default admin page url")
     }
 
     if(spsOption('warning_toast')){
-        shinyWidgets::sendSweetAlert(session = session, html = TRUE,
-                       '<p style="color:var(--danger)">DANGER</p>',
-                       div(class = "sps-warning",
-                           tagList(sps_warnings)
-                       ),
-                       type = "error"
+        shinyWidgets::sendSweetAlert(
+            session = session, html = TRUE,  type = "error",
+            '<p style="color:var(--danger)">DANGER: Fix these issues before deployment</p>',
+            tags$ul(class = "sps-warning",
+                    tagList(sps_warnings)
+            )
         )
     }
 }
