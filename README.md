@@ -14,13 +14,13 @@ Besides, SPS provides many developers' tool that are distributed as [separate pa
 ## Demos
 SPS has provided a variety of options to change how it work. Here are some examples.
 
-| Type and link | Description | option changed | notes |
+| Type and link| option changed | notes |
 | --- | --- | --- | --- |
-| [Full](https://tgirke.shinyapps.io/systemPipeShiny/) | Default full installation |  |  |
-| [Min](https://tgirke.shinyapps.io/systemPipeShiny/) | Minimum installation |  |  |
-| [Login](https://tgirke.shinyapps.io/systemPipeShiny_loading/) | Login feature enabled | `login_screen = TRUE; login_theme = "empty"` | no modules installed |
-| [Login theme](https://tgirke.shinyapps.io/systemPipeShiny_loading_theme/) | Login and login themes | `login_screen = TRUE` | no modules installed |
-| [Admin panel](https://tgirke.shinyapps.io/systemPipeShiny_loading/?admin) | App admin page | `admin_page = TRUE` | simply add "?admin" to the end of URL of demos |
+| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) |  |  |
+| [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny/) |  |  |
+| [Login enabled](https://tgirke.shinyapps.io/systemPipeShiny_loading/) | `login_screen = TRUE; login_theme = "empty"` | no modules installed |
+| [Login and login themes](https://tgirke.shinyapps.io/systemPipeShiny_loading_theme/) | `login_screen = TRUE` | no modules installed |
+| [App admin page](https://tgirke.shinyapps.io/systemPipeShiny_loading/?admin) | `admin_page = TRUE` | simply add "?admin" to the end of URL of demos |
 
 For the login required demos, the app account name is **"user"** password **"user"**.
 
