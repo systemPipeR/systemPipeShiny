@@ -194,6 +194,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
             main = mainUI
         )
     } else {
+        mainUI <- div(id = "page-user-wrapper", mainUI)
         list(main = fluidPage(class = "sps-page", core_head, mainUI, uiOutput("spsUIadmin")))
     }
 

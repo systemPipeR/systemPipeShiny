@@ -21,6 +21,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
         spsinfo("Start to load server")
         spsinfo("Creating shared object")
         shared <- reactiveValues()
+        load_admin <- reactiveVal(FALSE)
         spsinfo("Creating SPS db inside shared")
         shared$db <- quiet(spsAccount$new())
 
@@ -38,6 +39,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
         })
 
         observeEvent(c(input$userUI_loaded, nologin()), {
+            req(!isTRUE(load_admin()))
             if (spsOption('login_screen')) {
                 req(input$userUI_loaded)
                 req(!emptyIsFalse(shared$user$server_loaded))
@@ -118,15 +120,18 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
         observe({
             req(spsOption('admin_page'))
             req(admin_url() == spsOption('admin_url'))
-            shinyjs::hide("page-user-wrapper", asis = TRUE)
+            load_admin(TRUE)
+            shinyjs::runjs('$("#page-user-wrapper").remove();')
             output$spsUIadmin <- renderUI(spsUIadmin())
-            adminServer(input, output, session,shared)
-        })
+            adminServer(input, output, session, shared)
+        }, priority = 99)
 
-        if (spsOption('warning_toast')) {
-            spsinfo("check for potential risks")
-            spsWarnings(session, shared)
-        }
+        observeEvent(1, once = TRUE, {
+            if (spsOption('warning_toast')) {
+                spsinfo("check for potential risks")
+                spsWarnings(session, shared)
+            }
+        })
 
         spsinfo("Loading user defined expressions")
         # additional user expressions
@@ -145,7 +150,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
 #' @importFrom shinyWidgets sendSweetAlert
 spsWarnings <- function(session, shared){
     sps_warnings <- list()
-    accs <-  quiet(db$accList()[['account']])
+    accs <-  quiet(shared$db$accList()[['account']])
     if ('admin' %in% accs) {
         msg("The admin account is still 'admin', consider change it.",
             "SPS-DANGER", "red")

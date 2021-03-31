@@ -27,10 +27,9 @@ adminServer <- function(input, output, session, shared) {
     adminLoginServer("admin", shared)
     observeEvent(shared$admin$log_success, {
         req(isTRUE(shared$admin$log_success))
-        shinyjs::hide("admin-login_page", asis = TRUE, anim = TRUE)
+        shinyjs::runjs('$("#admin-login_page").remove();')
         output$page_admin <- renderUI(adminUI())
         shinyjs::show("page_admin", asis = TRUE, anim = TRUE)
-        shinyjs::runjs("$('body').trigger('admin-displayed')")
     })
     observeEvent(input[['adminUI_loaded']], {
         req(isTRUE(input[['adminUI_loaded']]))

@@ -10,11 +10,11 @@ if(interactive() & Sys.getenv("RSTUDIO", "") == "1"){
     })()
 
     cat("Check if test folder exists...\n")
-    dirs = list.dirs(recursive = FALSE)
-    dirs = grep(x = dirs, pattern = "SPS_20", value = TRUE)
-    if(length(dirs) > 0){
+    .dirs = list.dirs(recursive = FALSE)
+    .dirs = grep(x = .dirs, pattern = "SPS_20", value = TRUE)
+    if(length(.dirs) > 0){
         cat("To use the test dir, use Ctrl+shift+h or run:\n")
-        cat(paste0("setwd('", normalizePath(dirs[1]), "')\n"))
+        cat(paste0("setwd('", normalizePath(.dirs[1]), "')\n"))
     } else {
         cat("For developers, you may want to create a test instance by `systemPipeShiny::spsInit()`\n")
     }
