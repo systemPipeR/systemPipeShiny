@@ -38,10 +38,10 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             }
         })
 
-        observeEvent(c(input$userUI_loaded, nologin()), {
+        observeEvent(c(shared$user$ui_loaded, nologin()), {
             req(!isTRUE(load_admin()))
             if (spsOption('login_screen')) {
-                req(input$userUI_loaded)
+                req(shared$user$ui_loaded)
                 req(!emptyIsFalse(shared$user$server_loaded))
                 req(isTRUE(shared$user$log_success))
                 updateProgressBar(session, "user-pg", 50 , title = "UI loading done, start to load server", status = "info")

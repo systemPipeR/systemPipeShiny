@@ -1,15 +1,10 @@
 
 
 $(function(){
+    // dash resize on ui rendering
     $('body').on('admin-displayed', ()=>{
-        var checkDash;
-        checkDash = setInterval(function() {
-            if ($('script[src*="shinydashboardPlus"]').length > 0) {
-              $(window).trigger("resize");
-              $('a[href="#shiny-tab-admin-info"]').trigger('click');
-              clearInterval(checkDash);
-            }
-        }, 100);
+      $(window).trigger("resize");
+      $('#page_admin ul.sidebar-menu > li:first-of-type a').trigger('click')
     });
 });
 

@@ -22,17 +22,24 @@ spsUIadmin <- function(){
 adminServer <- function(input, output, session, shared) {
     observeEvent(1, once = TRUE, {
         shared$admin$log_success <- FALSE
+        shared$admin$ui_loaded <- FALSE
     })
+    ui_sent <- reactiveVal(FALSE)
     spsinfo("Loading admin page server")
     adminLoginServer("admin", shared)
     observeEvent(shared$admin$log_success, {
         req(isTRUE(shared$admin$log_success))
+        req(isFALSE(ui_sent()))
         shinyjs::runjs('$("#admin-login_page").remove();')
         output$page_admin <- renderUI(adminUI())
+        waitInput({shared$admin$ui_loaded <- TRUE})
         shinyjs::show("page_admin", asis = TRUE, anim = TRUE)
+        shinyjs::runjs("$('body').trigger('admin-displayed')")
+        ui_sent(TRUE)
     })
-    observeEvent(input[['adminUI_loaded']], {
-        req(isTRUE(input[['adminUI_loaded']]))
+
+    observeEvent(shared$admin$ui_loaded, {
+        req(isTRUE(shared$admin$ui_loaded))
         req(isTRUE(shared$admin$log_success))
         admin_infoServer("admin-info", shared)
         admin_usersServer("admin-users", shared)
@@ -66,9 +73,9 @@ adminUI <- function(){
             )
         ),
         body =  shinydashboard::dashboardBody(
-            class = "sps",
+            class = "",
             tags$head(
-
+                tags$link(rel="stylesheet", href = "sps/css/sps_admin.css")
             ),
             spsComps::spsGoTop(),
             shinydashboard::tabItems(

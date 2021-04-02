@@ -2,15 +2,23 @@
 admin_infoUI <- function(id){
     ns <- NS(id)
     tagList(
-        tabTitle("App general information"),
+        tabTitle("App server information"),
         spsHr(),
         br(),
         fluidRow(
             shinydashboard::infoBoxOutput(ns("uptime")),
             shinydashboard::infoBoxOutput(ns("cpu_now")),
+            shinydashboard::infoBoxOutput(ns("cpu_temp")),
             shinydashboard::infoBoxOutput(ns("ram_now")),
             shinydashboard::infoBoxOutput(ns("disk_now"))
-        )
+        ),
+        spsHr(), h3("Details"),
+        div(id = ns("detail_panel"), tabsetPanel(
+            id = "asas",
+            tabPanel("CPU", p("Assd")),
+            tabPanel("RAM", p("Assd")),
+            tabPanel("Disk", p("Assd"))
+        ))
     )
 }
 
@@ -30,20 +38,32 @@ admin_infoServer <- function(id, shared){
         return(paste(round(pass_time), "days"))
     }
 
-    cpuString <- function(){
+    getCPU <- function(){
         if(Sys.info()[['sysname']] != "Linux") return("Only on Linux")
-        cpu_now <- try(system("top -bn 2 -d 0.5 | grep '^%Cpu' | tail -n 1 | awk '{print $2+$4+$6\"%\"}'",
-                              intern = TRUE, timeout = 1))
+        cpu_file <- system.file("app", "bash", "get_cpu.sh", package = "systemPipeShiny")
+        cpu_now <- try(system(paste("bash", cpu_file, "0.5"), intern = TRUE))
         if (inherits(cpu_now, "try-error") || length(cpu_now) == 0) return("Cannot get it")
-        return(cpu_now)
+        cpu_strings <- stringr::str_split(cpu_now, "-")
+        cpu_strings %>% unlist() %>%
+            matrix(nrow=length(cpu_strings), byrow=TRUE) %>%
+            tibble::as_tibble() %>%
+            dplyr::mutate(V2 = as.numeric(V2))
+    }
+    cpuString <- function(cpu_df){
+        if (is.character(cpu_df)) return(cpu_df)
+        return(paste0(round(cpu_df[1, 2], 2), "%"))
     }
 
-    ramString <- function(){
+
+    getRAM <- function(){
         if(Sys.info()[['sysname']] != "Linux") return("Only on Linux")
-        ram_now <- try(system("free -h | grep Mem | awk '{print $3 \"/\" $2}'",
-                              intern = TRUE, timeout = 1))
+        ram_now <- try(system("free --mega | egrep \"Mem|Swap\" | awk '{print $3 \"\\n\" $2}'", intern = TRUE))
         if (inherits(ram_now, "try-error") || length(ram_now) == 0) return("Cannot get it")
-        return(ram_now)
+        return(as.numeric(ram_now))
+    }
+    ramString <- function(ram_now){
+        if (is.character(ram_now)) return(ram_now)
+        return(paste0(round(ram_now[1]/1024, 1), "G/", round(ram_now[2]/1024, 1), "G"))
     }
 
     diskString <- function(){
@@ -56,6 +76,21 @@ admin_infoServer <- function(id, shared){
         return(disk_now)
     }
 
+    getTemp <- function(){
+        if(Sys.info()[['sysname']] != "Linux") return("Only on Linux")
+        temp_now <- try(system('cat /sys/class/thermal/thermal_zone*/temp', intern = TRUE))
+        if (inherits(temp_now, "try-error") || length(temp_now) == 0) return("Cannot get it")
+        temp_type <- try(system('cat /sys/class/thermal/thermal_zone*/type', intern = TRUE))
+        if (inherits(temp_type, "try-error") || length(temp_type) == 0) return("Cannot get it")
+        tibble::tibble(
+            type = c("average", temp_type),
+            temp = c(round(mean(as.numeric(temp_now))/1000, 2), as.numeric(temp_now)/1000))
+    }
+
+    tempString <- function(temp_now){
+        if (is.character(temp_now)) return(temp_now)
+        return(HTML(paste0(temp_now[1, 2], "&#176;C")))
+    }
     module <- function(input, output, session){
         ns <- session$ns
         observe({
