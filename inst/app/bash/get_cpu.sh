@@ -53,7 +53,7 @@ do
     CPU_Percentage=$(awk "BEGIN {print ($totald - $idled)/$totald*100}")
 
     if [[ "$cpu" == "cpu" ]]; then
-        echo "total-"$CPU_Percentage
+        echo "average-"$CPU_Percentage
     else
         echo $cpu"-"$CPU_Percentage
     fi

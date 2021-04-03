@@ -22,7 +22,45 @@ admin_infoUI <- function(id){
     )
 }
 
-
+# library(shiny)
+#
+# ui <- fluidPage(
+#     plotly::plotlyOutput("p1")
+# )
+#
+# aaa <- getCPU()
+#
+#
+# nrow(aaa)
+# p1 <- plot_ly(df, type = 'scatter', mode = 'lines')
+# for(i in seq_len(nrow(aaa))) {
+#     p1 <- p1 %>% add_trace(x= seq(30), y = 0, name = aaa[['V1']][i])
+# }
+#
+# server <- function(input, output, session) {
+#     df <- data.frame(x= 1:10, y1=1, y2 =2)
+#     p1_proxy <- plotlyProxy("p1")
+#
+#     output$p1 <- renderPlotly({
+#         p1 %>% layout(
+#             xaxis = list(title = "", showticklabels = FALSE),
+#             yaxis = list(title = "CPU Usage (%)", range = c(0, 100))) %>%
+#             toWebGL()
+#     })
+#     observe({
+#         invalidateLater(2000)
+#         lapply(aaa[['V2']], list)
+#         aaa <- getCPU()
+#         plotlyProxy("p1", session) %>%
+#             plotlyProxyInvoke("extendTraces",
+#                               list(y = lapply(aaa[['V2']], list)),
+#                               Reduce(append, seq_len(nrow(aaa)), list()),
+#                               30
+#             )
+#     })
+# }
+#
+# shinyApp(ui, server)
 
 ## server
 admin_infoServer <- function(id, shared){
@@ -46,7 +84,7 @@ admin_infoServer <- function(id, shared){
         cpu_strings <- stringr::str_split(cpu_now, "-")
         cpu_strings %>% unlist() %>%
             matrix(nrow=length(cpu_strings), byrow=TRUE) %>%
-            tibble::as_tibble() %>%
+            {quiet(tibble::as_tibble(.))} %>%
             dplyr::mutate(V2 = as.numeric(V2))
     }
     cpuString <- function(cpu_df){
