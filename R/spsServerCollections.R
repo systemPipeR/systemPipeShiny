@@ -9,7 +9,7 @@
 
 waitInput <- function(expr, session = getDefaultReactiveDomain()) {
     observeEvent(once = TRUE, reactiveValuesToList(session$input), {
-        print("loaded")
+        # print("loaded")
         force(expr)
     }, ignoreInit = TRUE)
 }

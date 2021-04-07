@@ -576,7 +576,7 @@ spsAccount <- R6::R6Class(
             key <- quiet(self$keyGet())
             new_pass <- openssl::sha256(acc_pass, key)
 
-            db$queryUpdate(
+            self$queryUpdate(
                 table = "sps_account", col = "pass",
                 WHERE = glue("account='{acc_name}'"),
                 value = glue("'{new_pass}'")
@@ -595,7 +595,7 @@ spsAccount <- R6::R6Class(
 
             role <- match.arg(role, c("user", "admin"))
 
-            db$queryUpdate(table = "sps_account", col = "role", WHERE = glue("account='{acc_name}'"), value = glue("'{role}'"))
+            self$queryUpdate(table = "sps_account", col = "role", WHERE = glue("account='{acc_name}'"), value = glue("'{role}'"))
             spsinfo(glue('Account {acc_name} role changed.'), TRUE)
         },
 

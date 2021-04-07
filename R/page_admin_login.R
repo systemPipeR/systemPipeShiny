@@ -57,6 +57,7 @@ adminLoginServer <- function(id, shared) {
             res <- shared$db$accMatch(input$login_uname, input$login_pass, role = "admin", match_role = TRUE)
             if (res) {
                 shared$admin$log_success <- TRUE
+                shared$admin$current_user <- input$login_uname
             } else {
                 shared$admin$log_success <- FALSE
                 spsinfo(glue("Fail login attempt with username: {input$login_uname}"))

@@ -54,7 +54,6 @@ admin_usersServer <- function(id, shared){
         db <- quiet(spsAccount$new())
         observeEvent(1, once = TRUE, {
             shared$admin$users$acc_event <- 0
-            shared$admin$current_user <- "admin"
         })
         # render and update user table---------
         accs <- reactive({
@@ -105,7 +104,6 @@ admin_usersServer <- function(id, shared){
         # change password ----------
         pass_user <- reactiveVal()
         observeEvent(input$change_pass, {
-
             req(input$change_pass)
             pass_user(stringr::str_remove(input$change_pass, "^.*-"))
             shinyWidgets::confirmSweetAlert(
@@ -124,7 +122,6 @@ admin_usersServer <- function(id, shared){
         observeEvent(input$confirm_pass, ignoreInit = TRUE, {
             req(input$confirm_pass)
             if (input$pass_first != input$pass_second) shinyCatch(stop("Two passwords not matching"), blocking_level = "error")
-
             shinyCatch(db$accPassChange(pass_user(), input$pass_first), blocking_level = "error")
             shinytoastr::toastr_success("Password changed", position = "bottom-right", timeOut = 2000)
         })

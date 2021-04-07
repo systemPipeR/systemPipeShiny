@@ -1,10 +1,12 @@
 #########################################
-## If you use some bioconductor package:
+## If you use some bioconductor package,
+## uncomment and run the next lin in console
+## before deploy to shinyapps.io
 ########################################
 # options(repos = BiocManager::repositories())
 
 ## if you use develop version of bioconductor packages, do following:
-## if current release is 3.12 and you want use 3.13 devel
+## E.g. current release is 3.12 and you want use 3.13 devel
 # repos <- BiocManager::repositories()
 # devel <- "3.13"
 # repos[length(repos) + 1] <- paste0("https://bioconductor.org/packages/", devel, "/bioc")
@@ -14,18 +16,22 @@
 
 ###########################################################################
 ## If you are using some SPS modules, pick what modules you prefer,
-## uncomment and add following to global.R when deploy:
+## uncomment and copy following by your needs to "global.R" file in deployment:
 ##########################################################################
 ## Workflow module
 # requireNamespace("DOT"); requireNamespace("networkD3"); requireNamespace("pushbar")
 # requireNamespace("readr"); requireNamespace("rhandsontable"); requireNamespace("shinyTree")
 # requireNamespace("systemPipeR"); requireNamespace("systemPipeRdata"); requireNamespace("zip")
+
 ## RNA-Seq module
 # requireNamespace("DESeq2"); requireNamespace("Rtsne"); requireNamespace("SummarizedExperiment")
 # requireNamespace("UpSetR"); requireNamespace("ape"); requireNamespace("ggtree")
 # requireNamespace("glmpca"); requireNamespace("pheatmap"); requireNamespace("systemPipeR")
+
 ## Quick ggplot module
 # requireNamespace("esquisse")
+
+
 ########################
 ## Set up your account:
 ########################

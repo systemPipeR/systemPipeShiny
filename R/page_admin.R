@@ -23,6 +23,7 @@ adminServer <- function(input, output, session, shared) {
     observeEvent(1, once = TRUE, {
         shared$admin$log_success <- FALSE
         shared$admin$ui_loaded <- FALSE
+        shared$admin$current_user <- NULL
     })
     ui_sent <- reactiveVal(FALSE)
     spsinfo("Loading admin page server")
@@ -38,6 +39,8 @@ adminServer <- function(input, output, session, shared) {
         ui_sent(TRUE)
     })
 
+    observe({shared$topInput[['admin-left_sidebar']] <- input[['admin-left_sidebar']]
+    })
     observeEvent(shared$admin$ui_loaded, {
         req(isTRUE(shared$admin$ui_loaded))
         req(isTRUE(shared$admin$log_success))
@@ -67,7 +70,7 @@ adminUI <- function(){
         sidebar = shinydashboardPlus::dashboardSidebar(
             br(),
             shinydashboard::sidebarMenu(
-                id = ns(id = "left_sidebar"),
+                id = ns("left_sidebar"),
                 shinydashboard::menuItem("General info", icon = icon("server"), tabName = ns("info")),
                 shinydashboard::menuItem("Users", icon = icon("users"), tabName = ns("users"))
             )
