@@ -3,8 +3,10 @@
 $(function(){
     // dash resize on ui rendering
     $('body').on('user-displayed', ()=>{
-      $(window).trigger("resize");
-      $('#page_user ul.sidebar-menu > li:first-of-type a').trigger('click')
+        setTimeout(function() {
+            $(window).trigger("resize");
+            $('#page_user ul.sidebar-menu > li:first-of-type a').trigger('click')
+        }, 1000);
     });
 });
 

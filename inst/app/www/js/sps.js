@@ -99,3 +99,12 @@ $(function(){
     })
 })
 
+// add target blank
+$(()=>{
+  $('.sps a:contains("{blk}")').each(function(){
+    $(this)
+      .text($(this).text().replace("{blk}", ""))
+      .attr("target", "_blank");
+  });
+});
+
