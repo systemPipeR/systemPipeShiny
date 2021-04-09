@@ -27,6 +27,7 @@
 #' @importFrom dplyr count
 #' @importFrom shinytoastr toastr_warning toastr_error
 #' @importFrom htmltools doRenderTags
+#' @importFrom shinydashboardPlus box
 NULL
 
 utils::globalVariables(c(

@@ -72,6 +72,9 @@ if (!requireNamespace("remotes", quietly=TRUE))
 remotes::install("systemPipeR/systemPipeShiny", dependencies=TRUE)
 ```
 
+Similarly, `remotes::install("systemPipeR/systemPipeShiny")` for the minimum develop
+version. 
+
 ### Linux
 
 If you are on Linux, you may also need the following libraries **before installing SPS**.

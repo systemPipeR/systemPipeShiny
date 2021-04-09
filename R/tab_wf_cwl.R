@@ -32,7 +32,7 @@ wf_cwlUI <- function(id){
         ***
 
         In the latest version of SPR, all command line tools and their running
-        commands are defined in the [Common Workflow Language](https://www.commonwl.org/) (CWL) files.
+        commands are defined in the [Common Workflow Language{blk}](https://www.commonwl.org/) (CWL) files.
 
         There are two files required to run command line in CWL:
 
@@ -40,7 +40,7 @@ wf_cwlUI <- function(id){
         - *.yaml* or *.yml* is the input file, and it defines the input variables
         that are used in *.cwl* file.
 
-        Both are in [yaml](https://yaml.org/) format.
+        Both are in [yaml{blk}](https://yaml.org/) format.
 
         #### CWL in SPR
 
@@ -56,7 +56,7 @@ wf_cwlUI <- function(id){
         variables. When the `renderWF` function is run in SPR, these variables
         will be replaced by the designated columns in the targets file:
 
-        For example, I have a record in my *.yml*
+        For example, we have a record in my *.yml*
 
         ```
         fq1:
@@ -64,22 +64,21 @@ wf_cwlUI <- function(id){
           path: _FASTQ_PATH1_
         ```
 
-        I have a targets file with columns like this
+        We have a targets file with columns like this
 
         | FileName1 | FileName2 |...|
-        |:---:|:---:|:---:|...
-        | f1_1      | f2_1      |...
-        | f1_2      | f2_2      |...
-        | f1_x      | f2_x      |...
-        | ...       | ...       |...
+        |:---:|:---:|:---:|
+        | f1_1      | f2_1      |...|
+        | f1_2      | f2_2      |...|
+        | f1_x      | f2_x      |...|
+        | ...       | ...       |...|
 
-
-        When I run `renderWF`
+        When we run `renderWF`
 
         ```
         args <- renderWF(args, inputvars = c(FileName1 = "_FASTQ_PATH1_"))
         ```
-        I am saying to replace the `_FASTQ_PATH1_` records in *.yml* with `FileName1`
+        We am saying to replace the `_FASTQ_PATH1_` records in *.yml* with `FileName1`
         column from my targets file. Internally, SPR will treat the input yaml as the following
         when parse the CWL commands:
 
@@ -90,7 +89,7 @@ wf_cwlUI <- function(id){
         ```
 
         #### Read more
-        Read more how CWL works in SPR on [our website](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container)
+        Read more how CWL works in SPR on [our website{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container)
         '),
         spsHr(),
         box(

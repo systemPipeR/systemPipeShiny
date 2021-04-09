@@ -14,9 +14,10 @@ core_aboutUI <- function(id){
                 includeMarkdown("https://raw.githubusercontent.com/lz100/systemPipeShiny/master/NEWS.md")
             } else {
                 div(
-                    h3("Cannot download SPS updates"),
+                    h3("Cannot load SPS updates"),
                     p("Visit here:"),
                     tags$a(href="https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md",
+                           target="_blank",
                            "https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md")
                 )
             }
@@ -26,7 +27,7 @@ core_aboutUI <- function(id){
         fluidRow(
             shinydashboardPlus::userBox(
                 title = shinydashboardPlus::userDescription(
-                    title = HTML('<a href="https://github.com/lz100">Le Zhang</a>'),
+                    title = HTML('<a target="_blank" href="https://github.com/lz100">Le Zhang</a>'),
                     subtitle = br(),
                     type = 2,
                     image = "https://avatars0.githubusercontent.com/u/35240440?s=460&v=4",
@@ -37,7 +38,7 @@ core_aboutUI <- function(id){
             ),
             shinydashboardPlus::userBox(
                 title = shinydashboardPlus::userDescription(
-                    title = HTML('<a href="https://github.com/dcassol">Daniela Cassol</a>'),
+                    title = HTML('<a target="_blank" href="https://github.com/dcassol">Daniela Cassol</a>'),
                     subtitle = br(),
                     type = 2,
                     image = "https://avatars2.githubusercontent.com/u/12722576?s=400&v=4",
@@ -48,7 +49,7 @@ core_aboutUI <- function(id){
             ),
             shinydashboardPlus::userBox(
                 title = shinydashboardPlus::userDescription(
-                    title = HTML('<a href="https://github.com/mathrj">Ponmathi Ramasamy</a>'),
+                    title = HTML('<a target="_blank" href="https://github.com/mathrj">Ponmathi Ramasamy</a>'),
                     subtitle = br(),
                     type = 2,
                     image = "https://avatars2.githubusercontent.com/u/45085174?s=400&v=4",
@@ -59,7 +60,7 @@ core_aboutUI <- function(id){
             ),
             shinydashboardPlus::userBox(
                 title = shinydashboardPlus::userDescription(
-                    title = HTML('<a href="https://github.com/jianhaizhang">Jianhai Zhang</a>'),
+                    title = HTML('<a target="_blank" href="https://github.com/jianhaizhang">Jianhai Zhang</a>'),
                     subtitle = br(),
                     type = 2,
                     image = "https://avatars0.githubusercontent.com/u/22919387?s=400&v=4",
@@ -70,7 +71,7 @@ core_aboutUI <- function(id){
             ),
             shinydashboardPlus::userBox(
                 title = shinydashboardPlus::userDescription(
-                    title = HTML('<a href="https://github.com/gdmosher">Gordon Mosher</a>'),
+                    title = HTML('<a target="_blank" href="https://github.com/gdmosher">Gordon Mosher</a>'),
                     subtitle = br(),
                     type = 2,
                     image = "https://avatars0.githubusercontent.com/u/8660309?s=460&v=4",
@@ -81,7 +82,7 @@ core_aboutUI <- function(id){
             ),
             shinydashboardPlus::userBox(
                 title = shinydashboardPlus::userDescription(
-                    title = HTML('<a href="https://girke.bioinformatics.ucr.edu">Thomas Girke</a>'),
+                    title = HTML('<a target="_blank" href="https://girke.bioinformatics.ucr.edu">Thomas Girke</a>'),
                     subtitle = br(),
                     type = 2,
                     image = "https://avatars3.githubusercontent.com/u/1336916?s=400&v=4",
@@ -91,7 +92,7 @@ core_aboutUI <- function(id){
                 'PI'
             ),
         ), spsHr(),
-        markdown('### [Read the manual](https://systempipe.org/sps/)'),
+        markdown('### [Read the manual{blk}](https://systempipe.org/sps/)'),
         br()
     )
 }

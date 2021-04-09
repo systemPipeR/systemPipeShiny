@@ -268,7 +268,6 @@ core_topUI <- function(id){
 
 ## server
 
-#' @importFrom shinydashboard box
 #' @importFrom shinyWidgets actionBttn confirmSweetAlert
 #' @importFrom shinyjs toggleState
 #' @noRd

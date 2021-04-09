@@ -52,7 +52,7 @@ wf_runUI <- function(id){
                             "Clicking here zips everything in current workflow folder and allow you
                             to run the workflow elsewhere. You can even run the workflow here to produce
                             some simple results and then quit the session and come to here to download
-                            everything including results. Current limit is 300Mb.",
+                            everything including results. Current limit is 300MB.",
                             "top"
                         ),
                     div(id = ns("loading_down"), style = "display: none;",

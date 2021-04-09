@@ -17,8 +17,8 @@ vs_rnaseq_degUI <- function(id){
     case, you have the chance to refilter the DEGs. Just change the settings and
     click **Refilter**. You should see results updates in *DEG summary* section.
     2. Once you are satisfied with filters, you can make a `volcano plot`  a
-    `upset plot` and a `Bland-Altman plot (MA) plot` in the lower part of this
-    tab.
+    `upset plot`, a `Bland-Altman plot (MA) plot` and a `DEG gene based heatmap`
+    in the lower part of this tab.
     '
     tagList(
         renderDesc(ns("desc"), desc),

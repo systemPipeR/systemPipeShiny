@@ -5,7 +5,7 @@ wfUI <- function(id){
     '
     Workflow management guides you step by step to prepare a data analysis workflow,
     and enbles you to run some simple workflows directly from this app. The
-    workflow will be prepared in [systemPipeR (SPR)](https://systempipe.org/spr)
+    workflow will be prepared in [systemPipeR (SPR){blk}](https://systempipe.org/spr)
     format and it can be used in other similar compatible workflow environments.
 
     `WARNING: This module will allow users to access some server files and run
@@ -36,7 +36,7 @@ wfUI <- function(id){
     folder as the current working directory.
 
     You can read more details about workflow management at
-    [our website](https://systempipe.org/spr/)
+    [our website{blk}](https://systempipe.org/spr/)
     '
     tagList(
         tags$head(
@@ -124,12 +124,12 @@ wfServer <- function(id, shared){
         }, once = TRUE)
         # status change
         observeEvent(shared$wf$flags, {
-            updateSpsTimeline(session, "wf_status", 1, shared$wf$flags$env_ready)
+            updateSpsTimeline(session, "wf_status", 1, as.logical(shared$wf$flags$env_ready))
             shinyjs::toggleCssClass("wf-wf_panel-0", "panel-success", asis = TRUE, shared$wf$flags$env_ready)
-            updateSpsTimeline(session, "wf_status", 2, shared$wf$flags$targets_ready)
+            updateSpsTimeline(session, "wf_status", 2,  as.logical(shared$wf$flags$targets_ready))
             shinyjs::toggleCssClass("wf-wf_panel-1", "panel-success", asis = TRUE, shared$wf$flags$targets_ready)
-            updateSpsTimeline(session, "wf_status", 3, shared$wf$flags$wf_ready)
-            shinyjs::toggleCssClass("wf-wf_panel-2", "panel-success", asis = TRUE, shared$wf$flags$wf_ready)
+            updateSpsTimeline(session, "wf_status", 3,  as.logical(shared$wf$flags$wf_ready))
+            shinyjs::toggleCssClass("wf-wf_panel-2", "panel-success", asis = TRUE,  as.logical(shared$wf$flags$wf_ready))
 
         }, ignoreInit = TRUE)
         # hide step 2,3,5 if 1 is not ready

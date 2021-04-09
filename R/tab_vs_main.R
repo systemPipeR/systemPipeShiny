@@ -25,14 +25,14 @@ vs_mainUI <- function(id){
           you the full app code, so you can make more customization.
 
         #### Higher level customization
-        SPS is built on [Shiny Modules](https://shiny.rstudio.com/articles/modules.html),
+        SPS is built on [Shiny Modules{blk}](https://shiny.rstudio.com/articles/modules.html),
         so after register the new tab to SPS, you can change the content to whatever
         you want, as long as it is a legal Shiny module.
 
         #### More instructions
-        Read more instructions about [SPS tabs](https://systempipe.org/sps/adv_features/tabs/)
+        Read more instructions about [SPS tabs{blk}](https://systempipe.org/sps/adv_features/tabs/)
         and your custom new tabs on
-        [our website](https://systempipe.org/sps/adv_features/tabs/#add-a-new-custom-tab)
+        [our website{blk}](https://systempipe.org/sps/adv_features/tabs/#add-a-new-custom-tab)
 
         '),
         spsHr(),

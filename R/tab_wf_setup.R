@@ -7,16 +7,16 @@ wf_setupUI <- function(id){
         #### Set up a workflow environment
         To run a SPR workflow, a workflow environment is required. The
         environment is a directory containing all required files, like the
-        [targets file](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-targets-file),
-        the [workflow file](https://systempipe.org/spr/systempiper/templates/),
+        [targets file{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-targets-file),
+        the [workflow file{blk}](https://systempipe.org/spr/systempiper/templates/),
         and all other
-        [parameter files](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container).
+        [parameter files{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container).
 
         The directory structure looks like this image below:
 
         ![spr-structure](https://systempipe.org/spr/systempiper/gettingstarted/SYSdir.png)
 
-        Read more about this [workflow structure](https://systempipe.org/spr/systempiper/gettingstarted/#directory-structure).
+        Read more about this [workflow structure{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#directory-structure).
 
         #### Template workflows
         SPR has some preconfigured workflows that you can generate in SPS with
