@@ -13,26 +13,47 @@
 # version: string, required if type == 'package', such as "1.0.0"
 # mssage: string, optional, the text body of the notification. Be careful with indentations.
 - note:
+    type: general
+    pkg_name:
+    version:
+    title: Notification broadcasting
+    expire: 2099-01-01
+    icon:
+    status:
+    message: |
+        ## SPS notifications
+        What you are looking at is the SPS notification broadcasting system. It
+        display messages to your users by reading a remote `yaml` file stored
+        online. SPS will fetch the content of this file and translate it to different
+        notes you can see here. So you do not need to re-deploy the app every time
+        there is a new notification.
+        1. You can customize your own notifications by
+           using [this file as template](https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/inst/remote_resource/notifications.yaml).
+        2. After the modification, place this file in public accessible location, like
+           Github, do not inlcude this file in app deployment.
+        3. During app deployment, indicate the URL of this file in `global.R`
+           file, `note_url:` option.
+
+
+- note:
     type: package
     pkg_name: systemPipeShiny
-    version: 1.1.21
-    title: SPS 1.1.20 available
-    expire: 2021-04-01
+    version: 1.1.35
+    title: SPS 1.1.35 available
+    expire: 2021-06-01
     icon:
     status: info
     message: |
         ## New version of SPS
-        **This new version is required to install to fix current bugs.**
-        SPS 1.1.20 has come out. In this version, we have enabled many new features,
+        SPS 1.1.35 has come out. In this version, we have enabled many new features,
         and fix bugs that are caused by other dependencies.
         Read the change log on [github](https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md)
         or [our website](https://systempipe.org/sps/funcs/sps/news/index.html)
 
         ## New features
-        1. Notification system: what you are looking right now is the notification system.
-           You have the option to write your own notifications, read the manual.
-        2. Tutorials, you can define your own tutorials now. They can be opened
-           from top right.
+        1. Login feature, login themes added.
+        2. Admin panel: app statistics, user control and more.
+
 
 - note:
     type: general

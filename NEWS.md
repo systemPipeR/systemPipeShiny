@@ -66,7 +66,7 @@
 
 ## Major change
 
--   3 default modules complete: `workflow`, `RNAseq`,`quick ggplot`. Details of these modules updated in our website: [<https://systempipe.org/sps>](https://systempipe.org/sps){.uri}.
+-   3 default modules complete: `workflow`, `RNAseq`,`quick ggplot`. Details of these modules updated in our website: [\<https://systempipe.org/sps\>](https://systempipe.org/sps){.uri}.
 
 -   Separation of SPS smaller functions into 3 different packages. We hope these packages can help people in their own Shiny app, or other R projects.
 
