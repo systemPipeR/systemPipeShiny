@@ -8,7 +8,7 @@ module_mainUI <- function(id){
         ### Use modules in SPS
         Under current version of SPS, there are 3 pre-built modules.
 
-        1. **Workflow**: Choose, design, and run [systemPipeR](http://www.bioconductor.org/packages/devel/bioc/vignettes/systemPipeR/inst/doc/systemPipeR.html)
+        1. **Workflow**: Choose, design, and run [systemPipeR{blk}](http://www.bioconductor.org/packages/devel/bioc/vignettes/systemPipeR/inst/doc/systemPipeR.html)
            workflows with guided and interactive manner.
         2. **RNA-Seq**: perform downstream RNAseq analysis, like clustering, DEG, plotting, and more.
         3. **Quick {ggplot}**: Make ggplots from any tabular-like datasets users provide.
@@ -18,7 +18,7 @@ module_mainUI <- function(id){
         for the next module, please contact us.
 
         You can start by building a custom tab. When your tabs are enriched with
-        functionalities, submit an issue or pull request to our [Github](https://github.com/systemPipeR/systemPipeShiny).
+        functionalities, submit an issue or pull request to our [Github{blk}](https://github.com/systemPipeR/systemPipeShiny).
         We can make your tabs the next SPS default module.
         '),
         spsHr(),

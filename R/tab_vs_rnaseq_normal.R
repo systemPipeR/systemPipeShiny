@@ -10,7 +10,7 @@ vs_rnaseq_normalUI <- function(id){
     methods you can choose from:
 
     1. `raw`: DESeq2 `estimateSizeFactors` normalization and take log2(n + 1). This option can plot GLM-PCA
-    2. `rlog`, `vst`: Read [DESeq2 docs](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#how-do-i-use-vst-or-rlog-data-for-differential-testing)
+    2. `rlog`, `vst`: Read [DESeq2 docs{blk}](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#how-do-i-use-vst-or-rlog-data-for-differential-testing)
     for the method. There are good to remove batch effects. Results can plot PCA, dendrogram, MDS, heatmap and t-SNE.
     3. If you are familar with R and want to continue other analysis after these, simple stop SPS and there is a `spsRNA_trans` object
        stored in your R environment. `raw` method gives you a normalized count table. Other two methods give you a `DESeq2` class object.
@@ -23,7 +23,7 @@ vs_rnaseq_normalUI <- function(id){
 
     A tool-tip will show up on the left side when your mouse hovers on an option.
     For full explaination of these options, read
-    [DESeq2 documents](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
+    [DESeq2 documents{blk}](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
 
     1. After the calculation, you can go to the *DEG report* sub-tab to filter results and make plots.
     2. Similar to count transformation, DEG analysis will also store a global object called `spsDEG`.

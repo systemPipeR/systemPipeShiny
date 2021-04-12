@@ -6,7 +6,7 @@ core_canvasUI <- function(id){
     ### About this tab
     This is the SPS canavs. You can make scientific figures from this tab.
 
-    Read more instructions, view the video guide and more on [our website](https://systempipe.org/sps/dev/drawer/)
+    Read more instructions, view the video guide and more on [our website{blk}](https://systempipe.org/sps/dev/drawer/)
 
     ### Use canvas
     To start with tab, you need to prepare a plot by clicking the

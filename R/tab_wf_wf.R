@@ -14,7 +14,7 @@ wf_wfUI <- function(id){
             #### Workflow files
             In SPR, workflows are defined as Rmarkdown files,
             you can read details and obtain them
-            [here](https://systempipe.org/spr/systempiper/templates/). This step can
+            [here{blk}](https://systempipe.org/spr/systempiper/templates/). This step can
             help you choose/ skip some steps. Make a workflow diagram to see how
             the order SPR execute the workflow and take a preview of the
             final report. If you just want to use the defaults, simply clicking
@@ -57,7 +57,7 @@ wf_wfUI <- function(id){
             "Save New Rmd".
 
             #### more detailed manual
-            A manual with screenshots and details is on [our website](https://systempipe.org/sps/modules/workflow/)
+            A manual with screenshots and details is on [our website{blk}](https://systempipe.org/sps/modules/workflow/)
             '),
             spsHr(),
             box(
@@ -156,19 +156,18 @@ wf_wfUI <- function(id){
                        box(title = "Workflow steps selected",
                                width = 12,
                                closable  = FALSE,
-                               enable_sidebar = TRUE,
                                sidebar_title = "Workflow diagram legend",
                                sidebar_background = "#337ab7",
-                               sidebar_start_open = TRUE,
                                collapsible = TRUE,
-                               sidebar_width = 25,
-                               sidebar_content = div(
+                               sidebar =  shinydashboardPlus::boxSidebar(
+                                   width = 25, background = "#337ab7",
+                                   startOpen = TRUE, icon = icon("sliders-h"),
                                    h3("Diagram Legend"),
                                    p("This part uses systemPipeR::plotWF function"),
                                    tags$ul(
                                        tags$li("Gray colored steps are steps without any code chunks, only text"),
                                        tags$li("steps with 'NA' means unknown number of samples in this step.
-                                               If it is real case in SPR, you should see something like
+                                               If it is a real case in SPR, you should see something like
                                                '10/10' all samples passed this step or '10/20' only half passed.")
                                     )
                                ),

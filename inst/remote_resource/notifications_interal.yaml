@@ -1,17 +1,5 @@
-############ Create remote messages to notify users in the app #################
-## When app starts, it will first try to load this file from online.
-## You should place this file somewhere publically reachable online, like Github.
-## This file should not be included in your app eployment.
-## Add the url of this file to the SPS option `note_url` in "global.R" file
-
-# type: one of 'package' or 'general', required
-# expire: note will be displayed before the date, required, YYYY-MM-DD format
-# title: string, required
-# icon: any font-awesome icon name, default is the "info-circle"
-# status: one of primary, success, info, warning, danger, default is "primary"
-# pkg_name: string, required if type == 'package', such as "systemPipeShiny"
-# version: string, required if type == 'package', such as "1.0.0"
-# mssage: string, optional, the text body of the notification. Be careful with indentations.
+# In file is used for demo deployment
+# For your own notification template, use https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/inst/remote_resource/notifications.yaml
 - note:
     type: general
     pkg_name:
@@ -38,7 +26,7 @@
 - note:
     type: package
     pkg_name: systemPipeShiny
-    version: 1.1.35
+    version: 1.1.36
     title: SPS 1.1.35 available
     expire: 2021-06-01
     icon:

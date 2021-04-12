@@ -3,24 +3,13 @@
 $(function(){
     // dash resize on ui rendering
     $('body').on('user-displayed', ()=>{
-        var checkDash;
-        checkDash = setInterval(function() {
-            if ($('script[src*="shinydashboardPlus"]').length > 0) {
-              $(window).trigger("resize");
-              $('a[href="#shiny-tab-core_welcome"]').trigger('click');
-              clearInterval(checkDash);
-            }
-        }, 100);
+        setTimeout(function() {
+            $(window).trigger("resize");
+            $('#page_user ul.sidebar-menu > li:first-of-type a').trigger('click')
+        }, 1000);
     });
 });
 
-$(document).on('shiny:value', function(e) {
-    if (e.name === "page_user") {
-        setTimeout(function() {
-            Shiny.setInputValue("userUI_loaded", true, {priority: "event"});
-        }, 1000);
-    }
-})
 
 // display login box
 $(function(){

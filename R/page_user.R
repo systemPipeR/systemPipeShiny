@@ -36,6 +36,7 @@ userServer <- function(input, output, session, shared, mainUI) {
     observeEvent(1, once = TRUE, {
         shared$user$log_success <- FALSE
         shared$user$ui_sent <- FALSE
+        shared$user$ui_loaded <- FALSE
     })
     userLoginServer("user", shared)
     observeEvent(shared$user$log_success, {
@@ -47,6 +48,7 @@ userServer <- function(input, output, session, shared, mainUI) {
         updateProgressBar(session, "user-pg", 0 , title = "Loading UI", status = "danger")
         output$page_user <- renderUI(mainUI)
         updateProgressBar(session, "user-pg", 25 , title = "Send UI to client", status = "warning")
+        waitInput({shared$user$ui_loaded <- TRUE})
         shinyjs::show("page_user", asis = TRUE, anim = TRUE)
         shinyjs::runjs("$('body').trigger('user-displayed')")
         shared$user$ui_sent <- TRUE

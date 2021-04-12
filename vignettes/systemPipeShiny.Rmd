@@ -53,12 +53,6 @@ knitr::opts_chunk$set(
     suppressPackageStartupMessages(library(systemPipeShiny))
 ```
 
-```{r sps-css, results = 'asis', echo=FALSE, eval=TRUE}
-cat("<style>")
-cat(readLines(system.file("app/www/css/sps.css", package = "systemPipeShiny")),sep = "\n")
-cat("</style>")
-```
-
 ```{r logo, echo=FALSE, out.width='50%', fig.align='center', eval=TRUE}
 knitr::include_graphics(path = "../inst/app/www/img/logo.png")
 ```
@@ -93,69 +87,107 @@ SPR makes it easy to design custom functions without any knowledge of Shiny,
 as well as extending the environment in the future with contributions from 
 the community.
 
-An example web instance for testing `SPS` online is available
-[here](https://tgirke.shinyapps.io/systemPipeShiny/){target="_blank"}. At the
-time of writing, there are five interactive tutorials embedded in this instance
-that users can access from the upper-right corner. Each tutorial introduces 
-major functionalities of SPS.
+This vignette only includes the basics of SPS. For **full documentations** of SPS, 
+visit our website at: <https://systempipe.org/sps>.
+
+# Demos
+
+SPS has provided a variety of options to change how it work. Here are some examples. At the time of writing, there a interactive tutorial (guide) embedded in the demos
+that users can access from the upper-right corner. The tutorial introduces 
+major functionalities of SPS. 
+
+| Type and link| option changed | notes |
+| --- | --- | --- |
+| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | full app |
+| [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | no modules installed |
+| [Login enabled](https://tgirke.shinyapps.io/systemPipeShiny_loading/) | `login_screen = TRUE; login_theme = "empty"` | no modules installed |
+| [Login and login themes](https://tgirke.shinyapps.io/systemPipeShiny_loading_theme/) | `login_screen = TRUE; login_theme = "random"` | no modules installed |
+| [App admin page](https://tgirke.shinyapps.io/systemPipeShiny_loading/?admin) | `admin_page = TRUE` | or simply add "?admin" to the end of URL of demos |
+
+For the login required demos, the app account name is **"user"** password **"user"**.
+
+For the admin login, account name **"admin"**, password **"admin"**.
+
 
 # Installation
 
-The `systemPipeShiny` package can be installed from a user's R console as follows.
+### Full
 
-```{r, eval=FALSE}
+``` r
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("systemPipeShiny", dependencies=TRUE)
+
+```
+This will install **all** required packages including suggested packages that 
+are required by the core modules. Be aware, it will take quite some time if you 
+are installing on Linux where only source installation is available. Windows and Mac
+binary installations will be much faster. 
+
+### Minimum
+
+To install the package, please use the `BiocManager::install` command:
+
+``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 BiocManager::install("systemPipeShiny")
 
-# or use "pak"
-if (!requireNamespace("pak", quietly=TRUE))
-    install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
-pak::pkg_install("systemPipeShiny")
-
 ```
 
-If the user's OS is Linux then one may need to install the following dependencies 
-**before** installing SPS.
-The following example applies to Ubuntu.
+By the minimum installation, all the 3 core modules are not installed. You 
+can still start the app, and When you start the app and click on these modules, 
+it will tell to enable these modules, what packages and command you need to run. 
+Just follow the instructions. So, install as you need.
 
-```{bash, eval=FALSE}
-sudo apt-get install -y libcurl4-openssl-dev
-sudo apt-get install -y libssl-dev
-sudo apt-get install -y libv8-dev
-# other dependencies
-sudo apt-get install -y libicu-dev
-sudo apt-get install -y pandoc
-sudo apt-get install -y make
-sudo apt-get install -y libglpk-dev
-sudo apt-get install -y libgmp3-dev
-sudo apt-get install -y zlib1g-dev
+### Most recent 
+
+To obtain the most recent updates immediately, one can install it directly from 
+[GitHub](https://github.com/systemPipeR/systemPipeShiny) as follow:
+
+``` r
+if (!requireNamespace("remotes", quietly=TRUE))
+    install.packages("remotes")
+remotes::install("systemPipeR/systemPipeShiny", dependencies=TRUE)
 ```
 
-Most likely you only need to install first 3, *libcurl4-openssl-dev* may not be 
-required for Ubuntu > 18.04. In case any other problem happens, try to install 
-other system dependencies.
+### Linux
 
-On other Linux distributions, the install commands may be slightly different. 
+If you are on Linux, you may also need the following libraries **before installing SPS**.
+Different distributions 
+may have different commands, but the following commands are examples for Ubuntu:
+
+```
+sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install libv8-dev
+sudo apt-get install libxm12-dev
+sudo apt-get install libssl-dev
+```
 
 # Main functionalities 
 
-Currently, `SPS` includes 3 main functional categories (*Fig 1*): 
+Currently, `SPS` includes 5 main functional categories (*Fig 1*): 
 
- 1. Some pre-defined modules include: 
+ 1. Pre-defined modules include (open-box ready): 
     a. A workbench for designing and configuring data analysis workflows, 
     b. Downstream analysis and visualization tools for RNA-Seq, and 
     c. A space to make quick ggplots. 
- 2. A section with user custom tabs: users define their own shiny tabs.  
+ 2. A section with user custom tabs: users define their own SPS tabs.  
  3. An image editing tab "Canvas" which allows users to edit plots made from 
     the previous two categories. 
+ 4. Login / admin feature: deploy-ready app security and management toolkits.
+ 5. Deep customization: user defined app tabs, looking, notification, tutorials, 
+    and more. 
 
 Besides, SPS provides many functions to extend the default Shiny development, like 
-more UI components, server functions. Also, SPS has some useful general R ulitlies
-like error catching, logging, and more. 
+more UI components, server functions and useful general R ulitlieslike error catching,
+logging, and more. These functionalitlies are distributed as 
+SPS supporting packages: [spsComps](https://github.com/lz100/spsComps),
+[drawer](https://github.com/lz100/drawer), and [spsUtil](https://github.com/lz100/spsUtil).
+
 
 <center id="sps_structure">
-![SPS_structure](./img/sps_structure.jpg)
+![SPS_structure](./img/sps_structure.png)
 </center>
 **Figure 1.** Design of `systemPipeShiny.` 
 

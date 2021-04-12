@@ -39,7 +39,7 @@ core_welcomeUI <- function(id){
             modules is built by some smaller units, we call them *\"subtabs\"*. Under
             current version of SPS, there are 3 pre-built modules.
 
-            1. **Workflow**: Choose, design, and run [systemPipeR](https://systempipe.org/spr/)
+            1. **Workflow**: Choose, design, and run [systemPipeR{blk}](https://systempipe.org/spr/)
                workflows with guided and interactive manner.
             2. **RNA-Seq**: perform downstream RNAseq analysis, like clustering, DEG, plotting, and more.
             3. **Quick {ggplot}**: Make ggplots from any tabular-like datasets users provide.
@@ -66,7 +66,7 @@ core_welcomeUI <- function(id){
             *****
 
             ### Users' manual
-            Visit [our website](https://systempipe.org/sps/) for details!
+            Visit [our website{blk}](https://systempipe.org/sps/) for details!
 
             *****
 
@@ -74,7 +74,7 @@ core_welcomeUI <- function(id){
             As a shiny framework. SPS provides a lot of functions to help developers to
             add more or customize SPS components and outside the SPS framework, like
             users own shiny Apps. These developer tools are provided in supporting
-            packages. Read [this section on our website](https://systempipe.org/sps/dev) for more details.
+            packages. Read [this section on our website{blk}](https://systempipe.org/sps/dev) for more details.
             ") %>%
                 div(class = "sps-dash"),
             spsHr(),
@@ -85,10 +85,10 @@ core_welcomeUI <- function(id){
                 '
                 | Package | Description | Documents | Function reference | Demo |
                 | --- | --- | --- | :---: | --- |
-                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/sps_small.png?raw=true" align="right" height="30" width="30"/>[systemPipeShiny](https://github.com/systemPipeR/systemPipeShiny) | SPS main package |[website](https://systempipe.org/sps/)|[link](https://systempipe.org/sps/funcs/sps/reference/)  | [demo](https://tgirke.shinyapps.io/systemPipeShiny/)|
-                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/spscomps.png?raw=true" align="right" height="30" width="30" />[spsComps](https://github.com/lz100/spsComps) | SPS UI and server components |[website](https://systempipe.org/sps/dev/spscomps/)|[link](https://systempipe.org/sps/funcs/spscomps/reference/)  | [demo](https://lezhang.shinyapps.io/spsComps)|
-                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/drawer.png?raw=true" align="right" height="30" width="30" />[drawer](https://github.com/lz100/drawer) | SPS interactive image editing tool |[website](https://systempipe.org/sps/dev/drawer/)|[link](https://systempipe.org/sps/funcs/drawer/reference/)  | [demo](https://lezhang.shinyapps.io/drawer)|
-                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/spsutil.png?raw=true" align="right" height="30" width="30" />[spsUtil](https://github.com/lz100/spsUtil) | SPS utility functions |[website](https://systempipe.org/sps/dev/spsutil/)|[link](https://systempipe.org/sps/funcs/spsutil/reference/)  | NA|
+                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/sps_small.png?raw=true" align="right" height="30" width="30"/>[systemPipeShiny{blk}](https://github.com/systemPipeR/systemPipeShiny) | SPS main package |[website{blk}](https://systempipe.org/sps/)|[link{blk}](https://systempipe.org/sps/funcs/sps/reference/)  | [demo{blk}](https://tgirke.shinyapps.io/systemPipeShiny/)|
+                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/spscomps.png?raw=true" align="right" height="30" width="30" />[spsComps{blk}](https://github.com/lz100/spsComps) | SPS UI and server components |[website{blk}](https://systempipe.org/sps/dev/spscomps/)|[link{blk}](https://systempipe.org/sps/funcs/spscomps/reference/)  | [demo{blk}](https://lezhang.shinyapps.io/spsComps)|
+                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/drawer.png?raw=true" align="right" height="30" width="30" />[drawer{blk}](https://github.com/lz100/drawer) | SPS interactive image editing tool |[website{blk}](https://systempipe.org/sps/dev/drawer/)|[link{blk}](https://systempipe.org/sps/funcs/drawer/reference/)  | [demo{blk}](https://lezhang.shinyapps.io/drawer)|
+                |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/spsutil.png?raw=true" align="right" height="30" width="30" />[spsUtil{blk}](https://github.com/lz100/spsUtil) | SPS utility functions |[website{blk}](https://systempipe.org/sps/dev/spsutil/)|[link{blk}](https://systempipe.org/sps/funcs/spsutil/reference/)  | NA|
                 '
                 )
             )

@@ -5,3 +5,11 @@
 # spsDebounce <- function(value, millis=1500){
 #     shiny::debounce(function(){value}, millis)
 # }
+
+
+waitInput <- function(expr, session = getDefaultReactiveDomain()) {
+    observeEvent(once = TRUE, reactiveValuesToList(session$input), {
+        # print("loaded")
+        force(expr)
+    }, ignoreInit = TRUE)
+}
