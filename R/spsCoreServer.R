@@ -37,8 +37,9 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
                 nologin(TRUE)
             }
         })
-
+        main_server_loaded <- reactiveVal(FALSE) # prevent server to load many times
         observeEvent(c(shared$user$ui_loaded, nologin()), {
+            req(!main_server_loaded())
             req(!isTRUE(load_admin()))
             if (spsOption('login_screen')) {
                 req(shared$user$ui_loaded)
@@ -51,7 +52,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             } else {
                 req(isTRUE(nologin()))
             }
-
+            print("loaded once")
             # core tabs
             spsinfo("Loading core tabs server")
             if (spsOption('tab_welcome')) rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)("core_welcome", shared)
@@ -88,6 +89,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             }
             if (spsOption('login_screen')) updateProgressBar(session, "user-pg", 100 , title = "Loading complete", status = "success")
             shared$user$server_loaded <- TRUE
+            main_server_loaded(TRUE)
         })
 
         # load guides

@@ -1,3 +1,9 @@
+# systemPipeShiny 1.1.40
+
+## Bug fix
+
+-   Fix a bug when that loads the server twice
+
 # systemPipeShiny 1.1.35
 
 ## Major change

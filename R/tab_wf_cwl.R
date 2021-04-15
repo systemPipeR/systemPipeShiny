@@ -272,7 +272,7 @@ wf_cwlServer <- function(id, shared){
             )
         })
         observeEvent(input$source_targets, {
-            shinyjs::toggleElement(id = "targets_upload", anim = TRUE)
+            shinyjs::toggleElement(id = "targets_upload", anim = TRUE, condition = input$source_targets =="upload")
         })
         # path resolve
         targets_path <- reactiveVal(NULL)
@@ -308,7 +308,7 @@ wf_cwlServer <- function(id, shared){
         })
         ## cwl file
         observeEvent(input$source_cwl, {
-            shinyjs::toggleElement(id = "cwl_upload", anim = TRUE)
+            shinyjs::toggleElement(id = "cwl_upload", anim = TRUE, condition = input$source_cwl =="upload")
         })
         data_cwl <- reactiveValues()
         upload_path_cwl <- dynamicFileServer(input, session, id = "cwl_upload")
@@ -332,7 +332,7 @@ wf_cwlServer <- function(id, shared){
         ## cwl input file
         cwl_input_path <-
             observeEvent(input$source_cwl_input, {
-                shinyjs::toggleElement(id = "cwl_input_upload", anim = TRUE)
+                shinyjs::toggleElement(id = "cwl_input_upload", anim = TRUE, condition = input$source_cwl_input =="upload")
             })
         data_cwl_input <- reactiveValues()
         upload_path_cwl_input <- dynamicFileServer(input, session, id = "cwl_input_upload")

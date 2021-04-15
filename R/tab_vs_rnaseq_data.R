@@ -216,7 +216,7 @@ vs_rnaseq_dataServer <- function(id, shared){
         tab_id <- "data"
         targets_path <- dynamicFileServer(input, session, id = "targets_upload")
         observeEvent(input$source_targets, {
-            shinyjs::toggleElement(id = "targets_upload", anim = TRUE)
+            shinyjs::toggleElement(id = "targets_upload", anim = TRUE, condition = input$source_targets =="upload")
         })
         # targets header
         observeEvent(c(targets_path(), input$source_targets), {
@@ -298,7 +298,7 @@ vs_rnaseq_dataServer <- function(id, shared){
         })
         # load count table
         observeEvent(input$source_count, {
-            shinyjs::toggleElement(id = "count_upload", anim = TRUE)
+            shinyjs::toggleElement(id = "count_upload", anim = TRUE, condition = input$source_count =="upload")
         })
         count_path <- dynamicFileServer(input, session, id = "count_upload")
         data_count <- reactive({
