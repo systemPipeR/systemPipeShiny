@@ -1,5 +1,11 @@
 # systemPipeShiny 1.1.40
 
+## Minor change
+
+-   Option `warning_toast` now also checks if you are on "local" mode.
+
+-   Deleted some unwanted entries in reference generating `yaml` file.
+
 ## Bug fix
 
 -   Fix a bug when that loads the server twice

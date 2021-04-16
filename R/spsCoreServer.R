@@ -52,7 +52,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             } else {
                 req(isTRUE(nologin()))
             }
-            print("loaded once")
+            # print("loaded once")
             # core tabs
             spsinfo("Loading core tabs server")
             if (spsOption('tab_welcome')) rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)("core_welcome", shared)
@@ -169,6 +169,11 @@ spsWarnings <- function(session, shared){
         sps_warnings[['admin_url']] <- tags$li("Change default admin page url")
     }
 
+    if(spsOption('mode') == "local"){
+        msg("'local' mode is not recommended for deployment, consider 'server' mode",
+            "SPS-DANGER", "red")
+        sps_warnings[['mode']] <- tags$li("'local' mode is not recommended for deployment")
+    }
     if(spsOption('warning_toast')){
         shinyWidgets::sendSweetAlert(
             session = session, html = TRUE,  type = "error",

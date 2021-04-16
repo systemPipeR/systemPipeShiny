@@ -38,6 +38,7 @@ SystemPipeShiny app main function
 You must set the project root as working directory for this
 function to find required files.
 
+
 \subsection{About this function}{
 
 Usually you call this function inside the \emph{global.R} file when SPS initialization
