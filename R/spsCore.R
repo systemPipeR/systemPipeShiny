@@ -364,6 +364,9 @@ spsOptDefaults <- function(app_path = getwd()){
 #' @export
 #'
 spsOptions <- function(app_path = getwd(), show_legend = TRUE){
+    if(!file.exists(glue("{app_path}/config/sps_options.yaml"))) {
+        spserror(glue("{app_path}/config/sps_options.yaml does not exist"))
+    }
     sps_defaults <- verifyConfig(app_path)[[2]]
     default_names <- names(sps_defaults)
     sps_values <- getOption("sps")

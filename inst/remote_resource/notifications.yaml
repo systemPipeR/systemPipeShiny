@@ -1,7 +1,7 @@
 ############ Create remote messages to notify users in the app #################
 ## When app starts, it will first try to load this file from online.
 ## You should place this file somewhere publically reachable online, like Github.
-## This file should not be included in your app eployment.
+## This file should not be included in your app deployment.
 ## Add the url of this file to the SPS option `note_url` in "global.R" file
 
 # type: one of 'package' or 'general', required
@@ -11,7 +11,7 @@
 # status: one of primary, success, info, warning, danger, default is "primary"
 # pkg_name: string, required if type == 'package', such as "systemPipeShiny"
 # version: string, required if type == 'package', such as "1.0.0"
-# mssage: string, optional, the text body of the notification. Be careful with indentations.
+# message: string, optional, the text body of the notification. Be careful with indentations.
 - note:
     type: general
     pkg_name:

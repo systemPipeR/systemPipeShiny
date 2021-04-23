@@ -100,10 +100,9 @@ vs_esqUI <- function(id) {
                         fluidRow(
                             canvasBtn(ns("esq-plooooooot"))
                         ),
-                        esquisse::esquisserUI(
+                        esquisse::esquisse_ui(
                             id = ns("esq"),
                             header = FALSE,
-                            choose_data = FALSE,
                             container = esquisse::esquisseContainer(height = "700px")
                         )
                     ),
@@ -203,7 +202,15 @@ vs_esqServer <- function(id, shared) {
                 type = "success",
                 text = div(
                     h3("Continue to make plots?"),
-                    HTML("Or manually click <span class='text-info'>2. Make a ggplot</span> panel")
+                    HTML("Or manually click <span class='text-info'>2. Make a ggplot</span> panel"),
+                    if(packageVersion("esquisse") > "1.0.1") {
+                        tags$b(
+                            class = "text-danger", style = "display:block",
+                            "There are known bugs of {esquisse}. If you see 'object
+                            not found' issue, install the most recent develop version and restart R.",
+                            p('remotes::install_github("dreamRs/datamods"); remotes::install_github("dreamRs/esquisse")')
+                        )
+                    }
                 )
             )
             updateSpsTimeline(session, "df_status", 2, TRUE)
@@ -222,7 +229,7 @@ vs_esqServer <- function(id, shared) {
         })
 
         # start esquisse
-        callModule(module = esquisse::esquisserServer, id = "esq", data = mydata)
+        esquisse::esquisse_server(id = "esq", data_rv = mydata)
     }
     moduleServer(id, module)
 }
