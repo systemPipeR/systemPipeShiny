@@ -20,7 +20,7 @@
 # spsUI()
 spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
     spsinfo("Start to generate UI")
-    addResourcePath("sps", "www")
+    addResourcePath("sps", file.path(spsOption("app_path"), "www"))
 
     spsinfo("parse title and logo")
     sps_title <- spsOption("title")

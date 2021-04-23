@@ -43,7 +43,7 @@ spsCoreTabReplace <- function(
             "about" = "core_about"
     )
 
-    file_out <- file.path("R", glue('tab_{kword}.R'))
+    file_out <- file.path(app_path, "R", glue('tab_{kword}.R'))
     if(file.exists(file_out) && !overwrite) spserror("File exists, abort.")
     if(file.exists(file_out) && overwrite) spswarn("Over write template.")
 

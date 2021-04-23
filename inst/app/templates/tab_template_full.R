@@ -174,7 +174,7 @@
         # load table ----
         df_path <- dynamicFileServer(input, session, id = "df_upload")
         observeEvent(input$source_df, {
-            shinyjs::toggleElement(id = "df_upload", anim = TRUE)
+            shinyjs::toggleElement(id = "df_upload", anim = TRUE, condition = input$source_df =="upload")
         })
 
         data_df <- reactive({

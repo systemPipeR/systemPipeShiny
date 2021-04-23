@@ -12,11 +12,11 @@ mode:
     other: [server]
 
 login_screen:
-    default: true
-    other: [false]
+    default: false
+    other: [true]
 
 login_theme:
-    default: vhelix
+    default: random
     other: ["*"]
 
 # Use pure js instead unless this pkg is pushed to CRAN
@@ -38,16 +38,16 @@ verbose:
     other: [true]
 
 admin_page:
-    default: false
-    other: [true]
+    default: true
+    other: [false]
 
 admin_url:
     default: admin
     other: ["*"]
 
 warning_toast:
-    default: true
-    other: [false]
+    default: false
+    other: [true]
 
 module_wf:
     default: true

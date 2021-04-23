@@ -1,3 +1,25 @@
+# systemPipeShiny 1.1.40
+
+## Minor change
+
+-   Option `warning_toast` now also checks if you are on "local" mode.
+
+-   Deleted some unwanted entries in reference generating `yaml` file.
+
+-   Fix some typos.
+
+-   More informative error message when the config file cannot be found for `spsOptions`
+
+-   Add some `.onLoad` methods so users can use the `spsOption` to get default values on package load.
+
+-   Updated `essquise` functions
+
+## Bug fix
+
+-   Fix a bug when that loads the server twice
+-   Fix some default option values
+-   Fix a bug on `addResourcePath` when the working directory and app directory is not the same.
+
 # systemPipeShiny 1.1.35
 
 ## Major change
