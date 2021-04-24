@@ -39,7 +39,7 @@ core_welcomeUI <- function(id){
             modules is built by some smaller units, we call them *\"subtabs\"*. Under
             current version of SPS, there are 3 pre-built modules.
 
-            1. **Workflow**: Choose, design, and run [systemPipeR{blk}](https://systempipe.org/spr/)
+            1. **Workflow**: Choose, design, and run [systemPipeR{blk}](https://systempipe.org/sp/)
                workflows with guided and interactive manner.
             2. **RNA-Seq**: perform downstream RNAseq analysis, like clustering, DEG, plotting, and more.
             3. **Quick {ggplot}**: Make ggplots from any tabular-like datasets users provide.

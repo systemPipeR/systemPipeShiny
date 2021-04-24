@@ -7,16 +7,16 @@ wf_setupUI <- function(id){
         #### Set up a workflow environment
         To run a SPR workflow, a workflow environment is required. The
         environment is a directory containing all required files, like the
-        [targets file{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-targets-file),
-        the [workflow file{blk}](https://systempipe.org/spr/systempiper/templates/),
+        [targets file{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-targets-file),
+        the [workflow file{blk}](https://systempipe.org/sp/spr/templates/),
         and all other
-        [parameter files{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container).
+        [parameter files{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container).
 
         The directory structure looks like this image below:
 
-        ![spr-structure](https://systempipe.org/spr/systempiper/gettingstarted/SYSdir.png)
+        ![spr-structure](https://systempipe.org/sp/spr/gettingstarted/SYSdir.png)
 
-        Read more about this [workflow structure{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#directory-structure).
+        Read more about this [workflow structure{blk}](https://systempipe.org/sp/spr/gettingstarted/#directory-structure).
 
         #### Template workflows
         SPR has some preconfigured workflows that you can generate in SPS with
@@ -223,7 +223,18 @@ wf_setupServer <- function(id, shared){
                 condition = input$choose_wf == "exist")
         })
         # resolve dir path input
-        roots <- c(current=getwd(), Home = normalizePath("~", mustWork = FALSE), shinyFiles::getVolumes()())
+
+        if(spsOption("is_demo")) {
+            dir_name <- paste0(sample(letters, 6), collapse = "")
+            temp_dir <- file.path(tempdir(), dir_name)
+            dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
+            roots <- temp_dir
+            names(roots) <- dir_name
+            updateTextInput(session, "dir_show", placeholder = temp_dir)
+        } else {
+            roots <- c(current=getwd(), Home = normalizePath("~", mustWork = FALSE), shinyFiles::getVolumes()())
+        }
+
         shinyFiles::shinyDirChoose(input, 'wf_path', roots = roots, session = session)
         wf_path(getwd())
         observeEvent(input[['wf_path']], {

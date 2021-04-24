@@ -235,11 +235,9 @@ checkSps <- function(app_path = getwd()) {
 #' @importFrom yaml yaml.load_file
 #' @noRd
 verifyConfig <- function(app_path) {
-    sps_options <-
-        yaml::yaml.load_file(glue("{app_path}/config/sps_options.yaml"))
+    sps_options <- yaml::yaml.load_file(glue("{app_path}/config/sps_options.yaml"))
     # can't use vapply, mix types of returns
-    sps_defaults <- lapply(names(sps_options),
-                           function(x) sps_options[[x]][['default']])
+    sps_defaults <- lapply(names(sps_options), function(x) sps_options[[x]][['default']])
     names(sps_defaults) <- names(sps_options)
     vapply(seq_along(sps_defaults),
            function(x) if(length(sps_defaults[x]) != 1)

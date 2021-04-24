@@ -1,5 +1,11 @@
 # systemPipeShiny 1.1.40
 
+## Major change
+
+-   Add `is_demo` option: only affect workflow module right now. Lock users inside a temp folder when using the WF module and give users a new temp folder every time they refresh. This will prevent directory exist problem if many users are using a same deploy instance.
+
+-   Add `welcome_guide` option: whether to enable the welcome guide which highlights the guide dropdown menu.
+
 ## Minor change
 
 -   Option `warning_toast` now also checks if you are on "local" mode.
@@ -14,11 +20,16 @@
 
 -   Updated `essquise` functions
 
+-   Add more guides.
+
+-   Removed the scroll to top button by `shinyDashboardPlus`, we have our own "go top" button.
+
 ## Bug fix
 
 -   Fix a bug when that loads the server twice
 -   Fix some default option values
 -   Fix a bug on `addResourcePath` when the working directory and app directory is not the same.
+-   Fix links not working caused by website change
 
 # systemPipeShiny 1.1.35
 

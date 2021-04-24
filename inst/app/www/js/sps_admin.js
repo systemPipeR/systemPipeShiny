@@ -6,6 +6,8 @@ $(function(){
       setTimeout(function() {
         $('#page_admin ul.sidebar-menu > li:first-of-type a').trigger('click')
         $(window).trigger("resize");
+        // remove default go top button
+        $('.wrapper i.fa.fa-chevron-up').parent().remove();
       }, 1000);
     });
 });

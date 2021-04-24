@@ -84,3 +84,11 @@ note_url:
 traceback:
     default: false
     other: [true]
+
+is_demo:
+    default: false
+    other: [true]
+
+welcome_guide:
+    default: true
+    other: [false]

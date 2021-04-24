@@ -5,7 +5,7 @@ wfUI <- function(id){
     '
     Workflow management guides you step by step to prepare a data analysis workflow,
     and enbles you to run some simple workflows directly from this app. The
-    workflow will be prepared in [systemPipeR (SPR){blk}](https://systempipe.org/spr)
+    workflow will be prepared in [systemPipeR (SPR){blk}](https://systempipe.org/sp)
     format and it can be used in other similar compatible workflow environments.
 
     `WARNING: This module will allow users to access some server files and run
@@ -36,7 +36,7 @@ wfUI <- function(id){
     folder as the current working directory.
 
     You can read more details about workflow management at
-    [our website{blk}](https://systempipe.org/spr/)
+    [our website{blk}](https://systempipe.org/sp/)
     '
     tagList(
         tags$head(
