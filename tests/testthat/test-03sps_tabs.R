@@ -19,10 +19,11 @@ test_that("canvas test", {
     expect_null(testServer(core_canvasServer, {}))
 })
 
-test_that("core_dashboard test", {
-    expect_s3_class(core_welcomeUI("a"), "shiny.tag.list")
-    expect_null(testServer(core_welcomeServer, {}))
-})
+## muterd before spsComps 0.2
+# test_that("core_dashboard test", {
+#     expect_s3_class(core_welcomeUI("a"), "shiny.tag.list")
+#     expect_null(testServer(core_welcomeServer, {}))
+# })
 
 test_that("core_top test", {
     expect_s3_class(core_topUI("a"), "shiny.tag")
