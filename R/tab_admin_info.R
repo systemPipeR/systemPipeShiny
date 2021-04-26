@@ -101,8 +101,14 @@ admin_infoServer <- function(id, shared){
     swapString <- function(ram_now){
         if (is.character(ram_now)) return(c(ram_now, "aqua"))
         ram_frac <- ram_now[3] / ram_now[4]
-        color <- if (ram_frac > 0.8) "red" else if (ram_frac > 0.45) "orange" else "olive"
-        return(c(paste0(round(ram_now[3]/1024, 1), "G/", round(ram_now[4]/1024, 1), "G"), color))
+        if(is.na(ram_frac)) {
+            color <- "blue"
+            swap_text <- "No swap enabled on this server"
+        } else {
+            color <- if (ram_frac > 0.8) "red" else if (ram_frac > 0.45) "orange" else "olive"
+            swap_text <- paste0(round(ram_now[3]/1024, 1), "G/", round(ram_now[4]/1024, 1), "G")
+        }
+        return(c(swap_text, color))
     }
 
     diskString <- function(){
