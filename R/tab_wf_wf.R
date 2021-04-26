@@ -145,7 +145,6 @@ wf_wfUI <- function(id){
                                                icon("redo-alt"))
                            ),
                            hr(),
-                           h4("Search steps in the box below"),
                            p("When steps are chosen, you can plot steps and preview
                              report document."),
                            shinyTree::shinyTree(ns("rmd_tree"), checkbox = TRUE)

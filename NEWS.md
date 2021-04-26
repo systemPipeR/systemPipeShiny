@@ -6,6 +6,8 @@
 
 -   Add `welcome_guide` option: whether to enable the welcome guide which highlights the guide dropdown menu.
 
+-   Rewrite welcome tab with a gallery to show all SPS features.
+
 ## Minor change
 
 -   Option `warning_toast` now also checks if you are on "local" mode.
@@ -24,12 +26,15 @@
 
 -   Removed the scroll to top button by `shinyDashboardPlus`, we have our own "go top" button.
 
+-   Add assertions to `spsInit`.
+
 ## Bug fix
 
 -   Fix a bug when that loads the server twice
 -   Fix some default option values
 -   Fix a bug on `addResourcePath` when the working directory and app directory is not the same.
 -   Fix links not working caused by website change
+-   Fix code in `spsInit` overwrite all current SPS options.
 
 # systemPipeShiny 1.1.35
 

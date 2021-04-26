@@ -26,6 +26,10 @@ For the login required demos, the app account name is **"user"** password **"use
 
 For the admin login, account name **"admin"**, password **"admin"**.
 
+**Please DO NOT delete or change password when you are using the admin features.**
+_shinyapp.io_ will reset the app once a while, but this will affect other people 
+who are trying the demo simultaneously. 
+
 ## [Documents](https://systempipe.org/sps/)
 
 To see all the details of SPS, read the user manual on [our website](https://systempipe.org/sps/).
