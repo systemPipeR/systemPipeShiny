@@ -4,14 +4,14 @@ core_welcomeUI <- function(id){
     ns <- NS(id)
     tagList(
         tabTitle("Welcome to systemPipeShiny"),
-        tags$style(".sps-dash .desc-body.collapse:not(.in) {height: 400px;}"),
+        # tags$style(".sps-dash .desc-body.collapse:not(.in) {height: 400px;}"),
         fluidRow(
             class = "text-main",
             style = "padding-left: 15px;",
             tags$img(
                 src = 'img/logo.png',
                 class = "home-logo",
-                style = 'height: 300px; margin: 0 auto; display: block;'
+                style = 'height: 200px; margin: 0 auto; display: block;'
             ),
             spsHr(),
             renderDesc(id = ns("desc"), desc =
@@ -30,7 +30,8 @@ core_welcomeUI <- function(id){
             functionalities with community and/or private data.
 
             ## To start
-            Start using this by choosing a **module** or a **custom tab**.
+            Start using SPS by choosing a **module** or a **custom tab** from the
+            left sidebar.
 
             *****
 
@@ -39,7 +40,7 @@ core_welcomeUI <- function(id){
             modules is built by some smaller units, we call them *\"subtabs\"*. Under
             current version of SPS, there are 3 pre-built modules.
 
-            1. **Workflow**: Choose, design, and run [systemPipeR{blk}](https://systempipe.org/spr/)
+            1. **Workflow**: Choose, design, and run [systemPipeR{blk}](https://systempipe.org/sp/)
                workflows with guided and interactive manner.
             2. **RNA-Seq**: perform downstream RNAseq analysis, like clustering, DEG, plotting, and more.
             3. **Quick {ggplot}**: Make ggplots from any tabular-like datasets users provide.
@@ -57,16 +58,25 @@ core_welcomeUI <- function(id){
             *****
 
             ### SPS Canvas
-            SPS Canvas is a unique tab which contains a unique **image editor**. It allows users to
-             \"screenshot\" plots from other modules/ tabs and send to this Canvas to do further
+            SPS Canvas is a unique tab which contains an unique **image editor**. It allows users to
+             \"screenshot\" plots from other modules/tabs and send to this workbench to do further
             image editing and make a scientific figure.
 
-            Simply click on the `To Canvas` button in various modules\ tabs will take a screenshot.
+            Simply click on the `To Canvas` button in various modules/tabs will take a screenshot.
 
             *****
 
             ### Users' manual
             Visit [our website{blk}](https://systempipe.org/sps/) for details!
+
+            *****
+
+            ### Browser compatibility
+            App is tested on the recent versions of Chrome and Firefox, should also work on latest
+            Edge and may work on Safari. IE is not supported.
+
+            Also, please disable some privacy extensions/plugins that will block
+            HTML5 canvas figerprint or drag and drop.
 
             *****
 
@@ -77,6 +87,74 @@ core_welcomeUI <- function(id){
             packages. Read [this section on our website{blk}](https://systempipe.org/sps/dev) for more details.
             ") %>%
                 div(class = "sps-dash"),
+            spsHr(),
+            gallery(
+                texts = c(
+                    "App structure",
+                    "User login",
+                    "Loading themes",
+                    "Workflow module",
+                    "Workflow metadata",
+                    "Workflow step selection & desgin",
+                    "Workflow Execution",
+                    "RNAseq normalization",
+                    "RNAseq DEG",
+                    "RNAseq plots",
+                    "Canvas Module",
+                    "Admin login",
+                    "Admin app stats",
+                    "Admin user control",
+                    "Customizable notifications",
+                    "Customizable interactive tutorials",
+                    "Logging and error handling"
+
+
+                ),
+                hrefs = c(
+                    "https://systempipe.org/sps/intro/",
+                    "https://systempipe.org/sps/adv_features/login/#main-app-login",
+                    "https://systempipe.org/sps/adv_features/login/#main-app-login",
+                    "https://systempipe.org/sps/modules/workflow/",
+                    "https://systempipe.org/sps/modules/workflow/#2-prepare-a-target-file",
+                    "https://systempipe.org/sps/modules/workflow/#3-prepare-a-workflow-file",
+                    "https://systempipe.org/sps/modules/workflow/#5-run-or-finish-workflow-preparation",
+                    "https://systempipe.org/sps/modules/rnaseq/",
+                    "https://systempipe.org/sps/modules/rnaseq/#deg-report",
+                    "https://systempipe.org/sps/modules/rnaseq/#plot-options",
+                    "https://systempipe.org/sps/canvas/",
+                    "https://systempipe.org/sps/adv_features/login/#admin-page",
+                    "https://systempipe.org/sps/adv_features/login/#app-information",
+                    "https://systempipe.org/sps/adv_features/login/#account-control",
+                    "https://systempipe.org/sps/adv_features/notification/",
+                    "https://systempipe.org/sps/adv_features/guide/",
+                    "https://systempipe.org/sps/adv_features/debug/"
+
+                ),
+                images = c(
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/content/en/sps/img/sps_structure.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/user_login.png?raw=true",
+                    "https://systempipe.org/sps/adv_features/login_theme.gif",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_main.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_targets.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_wf.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_run.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_normalize.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_deg.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_heatmap.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/canvas.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_login.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_server_info.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_user_control.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/sps_notification.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/sps_guide.png?raw=true",
+                    "https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/logging.png?raw=true"
+                ),
+                title = "Gallery of SPS Features",
+                enlarge = TRUE,
+                enlarge_method = "modal",
+                image_frame_size = 2,
+                target_blank = TRUE
+            ),
             spsHr(),
             column(
                 12, class = "desc-table",

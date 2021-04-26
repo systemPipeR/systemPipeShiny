@@ -1,25 +1,12 @@
 .onLoad <- function(libname, pkgname) {
-    #setup options
-    options(sps = list(
-        title = "systemPipeShiny",
-        title_logo = "img/sps_small.png",
-        mode = "local",
-        warning_toast = FALSE,
-        login_screen = FALSE,
-        login_theme = "random",
-        use_crayon = TRUE,
-        verbose = FALSE,
-        admin_page = TRUE,
-        admin_url = "admin",
-        note_url = 'https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/inst/remote_resource/notifications.yaml',
-        tab_welcome = TRUE,
-        tab_vs_main = TRUE,
-        tab_canvas = TRUE,
-        tab_about = TRUE,
-        module_wf = TRUE,
-        module_rnaseq = TRUE,
-        module_ggplot = TRUE,
-        traceback = FALSE
-    ))
+    #default options
+    sps_options <- try(yaml::yaml.load_file(system.file(package = "systemPipeShiny", "app", "config", "sps_options.yaml")), silent = TRUE)
+    if (inherits(sps_options, "try-error")) {
+        spswarn("Cannot set some SPS default options on load. Your package installation may have problems.")
+        return(invisible())
+    }
+    sps_defaults <- lapply(names(sps_options), function(x) sps_options[[x]][['default']])
+    names(sps_defaults) <- names(sps_options)
+    options(sps = sps_defaults)
     invisible()
 }

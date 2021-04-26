@@ -6,11 +6,12 @@ vs_mainUI <- function(id){
         renderDesc(id = ns("desc"),
         '
         ### Use custom tabs in SPS
-        This is the custom tab module. The main purpose is to help
+        This is the custom visualization main tab. The main purpose here is to help
         you **do data visualization (VS) by quickly generating some plots**.
 
         Here are some example tabs you can play with, and more importantly, you
-        can build your own tabs by using the `spsNewTab` function. This function
+        can build your own tabs by using the [`spsNewTab`{blk}](https://systempipe.org/sps/funcs/sps/reference/spsNewTab.html)
+        function. This function
         will give you a template and register the tab to the app. Then you can load
         your tab by pass your new tab ID to the `sps` main function as an argument` vstabs = c("your_new_tab_id")`
         in the *global.R* file.
@@ -37,7 +38,7 @@ vs_mainUI <- function(id){
         '),
         spsHr(),
         br(),
-        genGallery(type = "plot", title = "All current custom plotting tabs")
+        genGallery(type = "plot", title = "All current custom data visualization tabs")
     )
 }
 

@@ -22,7 +22,8 @@ library(magrittr) # load pipes
 # note_url: User notification broadcast file url - http(s) address
 # tab_welcome -- module_wf: whether to load the corresponding tab or module? - TRUE, FALSE
 # traceback: for expressions wrapped inside `spsComps::shinyCatch`, show full traceback if error? TRUE, FALSE
-
+# is_demo: useful if deploy the app as a demo - TRUE, FALSE
+# welcome_guide: enable the welcome guide which show you where is guide dropdown menu? - TRUE, FALSE
 options(sps = list(
     title = "systemPipeShiny",
     title_logo = "img/sps_small.png",
@@ -42,8 +43,16 @@ options(sps = list(
     module_wf = TRUE,
     module_rnaseq = TRUE,
     module_ggplot = TRUE,
-    traceback = FALSE
+    traceback = FALSE,
+    is_demo = FALSE,
+    welcome_guide = TRUE
 ))
+
+## An alternative is to comment above and use `spsOption` to overwrite single options, eg:
+# spsOption("mode", "server")
+
+## use `spsOptions` to check current settings
+# spsOptions()
 
 
 ## other useful shiny options

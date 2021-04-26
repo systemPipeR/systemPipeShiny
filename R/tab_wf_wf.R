@@ -14,7 +14,7 @@ wf_wfUI <- function(id){
             #### Workflow files
             In SPR, workflows are defined as Rmarkdown files,
             you can read details and obtain them
-            [here{blk}](https://systempipe.org/spr/systempiper/templates/). This step can
+            [here{blk}](https://systempipe.org/sp/spr/templates/). This step can
             help you choose/ skip some steps. Make a workflow diagram to see how
             the order SPR execute the workflow and take a preview of the
             final report. If you just want to use the defaults, simply clicking
@@ -145,7 +145,6 @@ wf_wfUI <- function(id){
                                                icon("redo-alt"))
                            ),
                            hr(),
-                           h4("Search steps in the box below"),
                            p("When steps are chosen, you can plot steps and preview
                              report document."),
                            shinyTree::shinyTree(ns("rmd_tree"), checkbox = TRUE)
@@ -286,7 +285,7 @@ wf_wfServer <- function(id, shared){
 
         observeEvent(input$wf_render_md, ignoreInit = TRUE, {
             output$wf_md_ui <- renderUI({
-                includeMarkdown(rmd_file_temp())
+                includeMarkdown(isolate(rmd_file_temp()))
             })
         })
         output$down_rmd <- downloadHandler(

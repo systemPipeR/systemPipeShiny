@@ -103,6 +103,7 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             })
             observeEvent(shared$user$server_loaded, {
                 req(shared$user$server_loaded)
+                req(spsOption("welcome_guide"))
                 cicerone::Cicerone$new(overlay_click_next =TRUE)$step(
                     ".navbar-static-top .messages-menu",
                     is_id = FALSE,

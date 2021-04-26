@@ -89,7 +89,7 @@ wf_cwlUI <- function(id){
         ```
 
         #### Read more
-        Read more how CWL works in SPR on [our website{blk}](https://systempipe.org/spr/systempiper/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container)
+        Read more how CWL works in SPR on [our website{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container)
         '),
         spsHr(),
         box(

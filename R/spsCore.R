@@ -173,7 +173,20 @@ spsInit <- function(app_path=getwd(),
                     open_files = TRUE,
                     colorful = TRUE
 ){
-    options(sps=list(verbose = verbose, use_crayon = colorful))
+    stopifnot(dir.exists(app_path))
+    stopifnot(is.character(project_name) && length(project_name) == 1)
+    stopifnot(is.character(database_name) && length(database_name) == 1)
+    stopifnot(is.logical(overwrite) && length(overwrite) == 1)
+    stopifnot(is.logical(change_wd) && length(change_wd) == 1)
+    stopifnot(is.logical(verbose) && length(verbose) == 1)
+    stopifnot(is.logical(open_files) && length(open_files) == 1)
+    stopifnot(is.logical(colorful) && length(colorful) == 1)
+
+    opts_old <- list(
+        verbose = spsOption("verbose"),
+        colorful = spsOption("use_crayon")
+    )
+    spsOption("verbose", verbose); spsOption("use_crayon", colorful)
     if(is.writeable(app_path))
         spsinfo("Start to create a new SPS project", TRUE)
     else spserror(glue("{app_path} is not writeable."))
@@ -215,6 +228,7 @@ spsInit <- function(app_path=getwd(),
         }
     }
     msg("SPS project setup done!", "SPS-INFO", "green")
+    spsOption("verbose", opts_old$verbose); spsOption("use_crayon", opts_old$colorful)
 }
 
 
@@ -235,11 +249,9 @@ checkSps <- function(app_path = getwd()) {
 #' @importFrom yaml yaml.load_file
 #' @noRd
 verifyConfig <- function(app_path) {
-    sps_options <-
-        yaml::yaml.load_file(glue("{app_path}/config/sps_options.yaml"))
+    sps_options <- yaml::yaml.load_file(glue("{app_path}/config/sps_options.yaml"))
     # can't use vapply, mix types of returns
-    sps_defaults <- lapply(names(sps_options),
-                           function(x) sps_options[[x]][['default']])
+    sps_defaults <- lapply(names(sps_options), function(x) sps_options[[x]][['default']])
     names(sps_defaults) <- names(sps_options)
     vapply(seq_along(sps_defaults),
            function(x) if(length(sps_defaults[x]) != 1)
@@ -447,10 +459,10 @@ checkTabs <- function(app_path, warn_img = TRUE){
     no_img <- tab_info$tab_id[tab_info$type_sub == "plot" &
                               tab_info$image == ""]
     if(length(no_img) > 0 & warn_img){
-        spswarn(glue("These plot tabs has no image path:
+        spswarn(glue("These custom tabs has no image path:
                   '{paste(no_img, collapse = ', ')}'
                   It is recommended to add an image. It will be used ",
-                  "to generate gallery. Now an empty image is used for ",
+                  "to generate gallery on the custom visualization main tab. Now an empty image is used for ",
                   "these tabs' gallery."))
     }
     spsinfo("tab.csv info check pass")
