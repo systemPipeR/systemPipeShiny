@@ -1,11 +1,23 @@
 ## UI
 admin_infoUI <- function(id){
     ns <- NS(id)
+    notes <- ""
+    if(Sys.info()[['sysname']] == "Linux") {
+        kernal <- try(system('uname -r | egrep -o "^[0-9]+\\.[0-9]+\\.[0-9]+"', intern = TRUE), silent = TRUE)
+        if (inherits(kernal, "try-error") || length(kernal) == 0) {
+            notes <- "Warning: Cannot determine server kernal version, info may not be displayed"
+        } else if (as.package_version(kernal) < "5.3.0") {
+            notes <- "Warning: Linux kernal version too old, some info may not be detected."
+        }
+    } else {
+        notes <- "You are not using a Linux system. This part is useful for Shiny apps to deploy on a Linux server."
+    }
     tagList(
         tags$head(
             tags$script(src = "sps/js/sps_admin_info.js")
         ),
         tabTitle("App server information"),
+        tags$b(class="text-danger", notes), br(),
         spsHr(),
         br(),
         fluidRow(
@@ -58,7 +70,7 @@ admin_infoServer <- function(id, shared){
     getCPU <- function(interval = 0.5){
         if(Sys.info()[['sysname']] != "Linux") return("Only on Linux")
         cpu_file <- system.file("app", "bash", "get_cpu.sh", package = "systemPipeShiny")
-        cpu_now <- try(system(paste("bash", cpu_file, interval), intern = TRUE, timeout = 2))
+        cpu_now <- try(system(paste("bash", cpu_file, interval), intern = TRUE, timeout = 2), silent = TRUE)
         if (inherits(cpu_now, "try-error") || length(cpu_now) == 0) return("Cannot get it")
         cpu_strings <- stringr::str_split(cpu_now, "-")
         cpu_strings %>% unlist() %>%
@@ -67,7 +79,7 @@ admin_infoServer <- function(id, shared){
             dplyr::mutate(V2 = as.numeric(V2))
     }
     cpuString <- function(cpu_df){
-        if (is.character(cpu_df)) return(cpu_df)
+        if (is.character(cpu_df)) return(c(cpu_df, "aqua"))
         cpu <- round(cpu_df[1, 2], 2)
         color <- if (cpu > 80) "red" else if (cpu > 45) "orange" else "olive"
         return(c(paste0(cpu, "%"), color))
@@ -76,21 +88,27 @@ admin_infoServer <- function(id, shared){
 
     getRAM <- function(){
         if(Sys.info()[['sysname']] != "Linux") return("Only on Linux")
-        ram_now <- try(system("free --mega | egrep \"Mem|Swap\" | awk '{print $3 \"\\n\" $2}'", intern = TRUE, timeout = 1))
+        ram_now <- try(system("free --mega | egrep \"Mem|Swap\" | awk '{print $3 \"\\n\" $2}'", intern = TRUE, timeout = 1), silent = TRUE)
         if (inherits(ram_now, "try-error") || length(ram_now) == 0) return("Cannot get it")
         return(as.numeric(ram_now))
     }
     ramString <- function(ram_now){
-        if (is.character(ram_now)) return(ram_now)
+        if (is.character(ram_now)) return(c(ram_now), "aqua")
         ram_frac <- ram_now[1] / ram_now[2]
         color <- if (ram_frac > 0.8) "red" else if (ram_frac > 0.45) "orange" else "olive"
         return(c(paste0(round(ram_now[1]/1024, 1), "G/", round(ram_now[2]/1024, 1), "G"), color))
     }
     swapString <- function(ram_now){
-        if (is.character(ram_now)) return(ram_now)
+        if (is.character(ram_now)) return(c(ram_now, "aqua"))
         ram_frac <- ram_now[3] / ram_now[4]
-        color <- if (ram_frac > 0.8) "red" else if (ram_frac > 0.45) "orange" else "olive"
-        return(c(paste0(round(ram_now[3]/1024, 1), "G/", round(ram_now[4]/1024, 1), "G"), color))
+        if(is.na(ram_frac)) {
+            color <- "blue"
+            swap_text <- "No swap enabled on this server"
+        } else {
+            color <- if (ram_frac > 0.8) "red" else if (ram_frac > 0.45) "orange" else "olive"
+            swap_text <- paste0(round(ram_now[3]/1024, 1), "G/", round(ram_now[4]/1024, 1), "G")
+        }
+        return(c(swap_text, color))
     }
 
     diskString <- function(){
@@ -105,9 +123,9 @@ admin_infoServer <- function(id, shared){
 
     getTemp <- function(){
         if(Sys.info()[['sysname']] != "Linux") return("Only on Linux")
-        temp_now <- try(system('cat /sys/class/thermal/thermal_zone*/temp', intern = TRUE, timeout = 1))
+        temp_now <- try(system('cat /sys/class/thermal/thermal_zone*/temp', intern = TRUE, timeout = 1), silent = TRUE)
         if (inherits(temp_now, "try-error") || length(temp_now) == 0) return("Cannot get it")
-        temp_type <- try(system('cat /sys/class/thermal/thermal_zone*/type', intern = TRUE, timeout = 1))
+        temp_type <- try(system('cat /sys/class/thermal/thermal_zone*/type', intern = TRUE, timeout = 1), silent = TRUE)
         if (inherits(temp_type, "try-error") || length(temp_type) == 0) return("Cannot get it")
         tibble::tibble(
             type = c("average", temp_type),
@@ -115,7 +133,7 @@ admin_infoServer <- function(id, shared){
     }
 
     tempString <- function(temp_now){
-        if (is.character(temp_now)) return(temp_now)
+        if (is.character(temp_now)) return(list(temp_now, "aqua"))
         color <- if (temp_now[1, 2] > 80) "red" else if (temp_now[1, 2] > 60) "orange" else "olive"
         return(list(HTML(paste0(temp_now[1, 2], "&#176;C")), color))
     }

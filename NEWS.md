@@ -35,6 +35,7 @@
 -   Fix a bug on `addResourcePath` when the working directory and app directory is not the same.
 -   Fix links not working caused by website change
 -   Fix code in `spsInit` overwrite all current SPS options.
+-   Fix errors on admin page when server stats cannot be found, better text and warning messages
 
 # systemPipeShiny 1.1.35
 
