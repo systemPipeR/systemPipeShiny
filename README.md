@@ -16,7 +16,7 @@ SPS has provided a variety of options to change how it work. Here are some examp
 
 | Type and link| option changed | notes |
 | --- | --- | --- |
-| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | full app |
+| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | full app, may take longer (~15s) to load |
 | [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny_min/) | [See installation](#installation) | no modules installed |
 | [Login enabled](https://tgirke.shinyapps.io/systemPipeShiny_loading/) | `login_screen = TRUE; login_theme = "empty"` | no modules installed |
 | [Login and login themes](https://tgirke.shinyapps.io/systemPipeShiny_loading_theme/) | `login_screen = TRUE; login_theme = "random"` | no modules installed |
@@ -26,9 +26,9 @@ For the login required demos, the app account name is **"user"** password **"use
 
 For the admin login, account name **"admin"**, password **"admin"**.
 
-**Please DO NOT delete or change password when you are using the admin features.**
-_shinyapp.io_ will reset the app once a while, but this will affect other people 
-who are trying the demo simultaneously. 
+**Please DO NOT delete or change password when you are trying the admin features.**
+Although _shinyapps.io_ will reset the app once a while, this will affect other people 
+who are viewing the demo simultaneously. 
 
 ## [Documents](https://systempipe.org/sps/)
 
@@ -161,4 +161,5 @@ issues or for suggesting new features to be implemented.
 
 We'd love to hear from all users and developers. Submit your pull request if you 
 have new thoughts or improvements. 
+
 
