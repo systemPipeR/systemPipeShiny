@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
-Version: 1.1.38
-Date: 2021-04-23
+Version: 1.1.39
+Date: 2021-04-27
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danicassol@gmail.com"),
@@ -75,7 +75,7 @@ Suggests:
     Rtsne,
     UpSetR,
     tidyr,
-    esquisse,
+    esquisse (>= 1.0.0),
     cicerone
 VignetteBuilder: knitr
 biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering

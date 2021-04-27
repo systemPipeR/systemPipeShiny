@@ -36,6 +36,7 @@
 -   Fix links not working caused by website change
 -   Fix code in `spsInit` overwrite all current SPS options.
 -   Fix errors on admin page when server stats cannot be found, better text and warning messages
+-   Fix new version of `essquise` introduced errors
 
 # systemPipeShiny 1.1.35
 
