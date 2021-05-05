@@ -1,6 +1,6 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
-Version: 1.1.39
+Version: 1.1.40
 Date: 2021-04-27
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
@@ -13,8 +13,8 @@ Description: systemPipeShiny (SPS) extends the widely used systemPipeR (SPR) wor
 Depends:
     R (>= 4.0.0),
     shiny (>= 1.5.0),
-    spsUtil,
-    spsComps (>= 0.1.1),
+    spsUtil (>= 0.1.2),
+    spsComps (>= 0.2.0),
     drawer
 Imports:
     DT,

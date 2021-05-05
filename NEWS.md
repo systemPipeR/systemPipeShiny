@@ -28,6 +28,8 @@
 
 -   Add assertions to `spsInit`.
 
+-   Add some screenshots to readme.
+
 ## Bug fix
 
 -   Fix a bug when that loads the server twice
