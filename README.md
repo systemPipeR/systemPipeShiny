@@ -9,7 +9,7 @@
 [systemPipeR](http://www.bioconductor.org/packages/release/bioc/html/systemPipeR.html) workflow 
 environment with data visualization and a versatile graphical user interface. 
 SPS can work as a general framework to build custom web apps on data analysis and visualization.
-Besides, SPS provides many developers' tool that are distributed as [separate packages](#other-packages-in-systempipeshiny). 
+Besides, SPS provides many developer tools that are distributed as [separate packages](#other-packages-in-systempipeshiny). 
 
 ## Demos
 SPS has provided a variety of options to change how it work. Here are some examples.
