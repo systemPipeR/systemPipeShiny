@@ -118,7 +118,7 @@ run following in console to start the app.
 shiny::runApp()
 ```
 
-### options
+### [options](https://systempipe.org/sps/adv_features/config/#app-options)
 Change some of the options listed in `global.R` will change how the app behave. Here
 is a quick look and their defaults of these options:
 
