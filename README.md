@@ -11,24 +11,26 @@ environment with data visualization and a versatile graphical user interface.
 SPS can work as a general framework to build custom web apps on data analysis and visualization.
 Besides, SPS provides many developer tools that are distributed as [separate packages](#other-packages-in-systempipeshiny). 
 
+![design](https://systempipe.org/sps/img/sps_structure.png)
+
 ## Demos
 SPS has provided a variety of options to change how it work. Here are some examples.
 
 | Type and link| option changed | notes |
 | --- | --- | --- |
-| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | full app |
-| [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | no modules installed |
+| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | full app, may take longer (~15s) to load |
+| [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny_min/) | [See installation](#installation) | no modules installed |
 | [Login enabled](https://tgirke.shinyapps.io/systemPipeShiny_loading/) | `login_screen = TRUE; login_theme = "empty"` | no modules installed |
 | [Login and login themes](https://tgirke.shinyapps.io/systemPipeShiny_loading_theme/) | `login_screen = TRUE; login_theme = "random"` | no modules installed |
-| [App admin page](https://tgirke.shinyapps.io/systemPipeShiny_loading/?admin) | `admin_page = TRUE` | or simply add "?admin" to the end of URL of demos |
+| [App admin page](https://tgirke.shinyapps.io/systemPipeShiny_loading/?admin) | `admin_page = TRUE` | use the link or simply add "?admin" to the end of URL of any demos |
 
 For the login required demos, the app account name is **"user"** password **"user"**.
 
 For the admin login, account name **"admin"**, password **"admin"**.
 
-**Please DO NOT delete or change password when you are using the admin features.**
-_shinyapp.io_ will reset the app once a while, but this will affect other people 
-who are trying the demo simultaneously. 
+**Please DO NOT delete or change password when you are trying the admin features.**
+Although _shinyapps.io_ will reset the app once a while, this will affect other people 
+who are viewing the demo simultaneously. 
 
 ## [Documents](https://systempipe.org/sps/)
 
@@ -116,7 +118,7 @@ run following in console to start the app.
 shiny::runApp()
 ```
 
-### options
+### [options](https://systempipe.org/sps/adv_features/config/#app-options)
 Change some of the options listed in `global.R` will change how the app behave. Here
 is a quick look and their defaults of these options:
 
@@ -154,6 +156,38 @@ options(sps = list(
 |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/spsutil.png?raw=true" align="right" height="30" width="30" />[spsUtil](https://github.com/lz100/spsUtil) | SPS utility functions |[website](https://systempipe.org/sps/dev/spsutil/)|[link](https://systempipe.org/sps/funcs/spsutil/reference/)  | NA|
 
 
+## Screenshots of SPS
+##### Loading screens
+![loading screens](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/loading_theme.gif?raw=true)
+
+##### Workflow module
+
+![WF](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_main.png?raw=true)
+
+##### Workflow Execution
+![WF run](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_run.png?raw=true)
+
+##### RNASeq module
+![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_deg.png?raw=true)
+
+![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_heatmap.png?raw=true)
+
+##### Canvas 
+![canvas](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/canvas.png?raw=true)
+
+##### Canvas 
+![canvas](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/canvas.png?raw=true)
+
+##### Admin
+![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_login.png?raw=true)
+
+![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_server_info.png?raw=true)
+
+![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_user_control.png?raw=true)
+
+##### Debugging
+![Debugging](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/logging.png?raw=true)
+
 ## Contact & contributions
  
 Please use https://github.com/systemPipeR/systemPipeShiny/issues for reporting bugs, 
@@ -161,4 +195,5 @@ issues or for suggesting new features to be implemented.
 
 We'd love to hear from all users and developers. Submit your pull request if you 
 have new thoughts or improvements. 
+
 

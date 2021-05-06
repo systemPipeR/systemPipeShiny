@@ -17,16 +17,15 @@ spsUtil::quiet(systemPipeShiny::spsInit(app_path = temp_dir,
                                                 change_wd = TRUE))
 app_path <- file.path(temp_dir, "test_funcs")
 
-## muterd before spsComps 0.2
-# expect_s3_class(genGallery(type = "plot"), "shiny.tag")
-#
-# expect_s3_class(genHrefTable(
-#     list(
-#         row1 = c("core_canvas", "core_about"),
-#         row2 =  "plot")
-#     ),
-#     "shiny.tag"
-# )
+expect_s3_class(genGallery(type = "plot"), "shiny.tag")
+
+expect_s3_class(genHrefTable(
+    list(
+        row1 = c("core_canvas", "core_about"),
+        row2 =  "plot")
+    ),
+    "shiny.tag"
+)
 
 ############################# skip bioc and cran checks #######################
 if(!interactive()) skip("Skip on checks")

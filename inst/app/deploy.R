@@ -22,6 +22,7 @@
 # requireNamespace("DOT"); requireNamespace("networkD3"); requireNamespace("pushbar")
 # requireNamespace("readr"); requireNamespace("rhandsontable"); requireNamespace("shinyTree")
 # requireNamespace("systemPipeR"); requireNamespace("systemPipeRdata"); requireNamespace("zip")
+# requireNamespace("callr")
 
 ## RNA-Seq module
 # requireNamespace("DESeq2"); requireNamespace("Rtsne"); requireNamespace("SummarizedExperiment")

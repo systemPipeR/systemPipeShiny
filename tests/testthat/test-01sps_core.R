@@ -14,23 +14,22 @@ test_that("test SPS setup function", {
                 "server.R not there")
     expect_true(file.exists(file.path(app_path, "config", "tabs.csv")),
                 "tabs.csv not there")
-    # expect_true(file.exists(file.path(app_path, "config", "sps.db")),
-    #             "sps.db not there")
+    expect_true(file.exists(file.path(app_path, "config", "sps.db")),
+                "sps.db not there")
 })
 
 
-# test_that("SPS classes", {
-#     sps_enc <<- spsEncryption$new()
-#     expect_s3_class(sps_enc, "spsEncryption")
-# })
+test_that("SPS classes", {
+    sps_enc <<- spsEncryption$new()
+    expect_s3_class(sps_enc, "spsEncryption")
+})
 
-## muted the test before spsComps 0.2
-# sps <- suppressWarnings(sps())
-# test_that("SPS main UI and server", {
-#     expect_length(sps, 2)
-#     expect_s3_class(sps$ui, "shiny.tag.list")
-#     expect_type(sps$server, "closure")
-# })
+sps <- suppressWarnings(sps())
+test_that("SPS main UI and server", {
+    expect_length(sps, 2)
+    expect_s3_class(sps$ui, "shiny.tag.list")
+    expect_type(sps$server, "closure")
+})
 
 test_that("servers", {
         expect_true(exists("core_aboutServer"))

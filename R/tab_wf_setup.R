@@ -231,12 +231,13 @@ wf_setupServer <- function(id, shared){
             roots <- temp_dir
             names(roots) <- dir_name
             updateTextInput(session, "dir_show", placeholder = temp_dir)
+            wf_path(temp_dir)
         } else {
+            wf_path(getwd())
             roots <- c(current=getwd(), Home = normalizePath("~", mustWork = FALSE), shinyFiles::getVolumes()())
         }
 
         shinyFiles::shinyDirChoose(input, 'wf_path', roots = roots, session = session)
-        wf_path(getwd())
         observeEvent(input[['wf_path']], {
             req(is.list(input[['wf_path']]))
             dir_selected <- shinyFiles::parseDirPath(roots, input[['wf_path']])

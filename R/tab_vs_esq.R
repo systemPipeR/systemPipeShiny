@@ -98,7 +98,7 @@ vs_esqUI <- function(id) {
                         id = ns("esq_container"),
                         style = "display:none",
                         fluidRow(
-                            canvasBtn(ns("esq-plooooooot"))
+                            canvasBtn(ns("esq-plooooooot-plot"))
                         ),
                         esquisse::esquisse_ui(
                             id = ns("esq"),
@@ -203,7 +203,7 @@ vs_esqServer <- function(id, shared) {
                 text = div(
                     h3("Continue to make plots?"),
                     HTML("Or manually click <span class='text-info'>2. Make a ggplot</span> panel"),
-                    if(packageVersion("esquisse") > "1.0.1") {
+                    if(utils::packageVersion("esquisse") <= "1.0.1") {
                         tags$b(
                             class = "text-danger", style = "display:block",
                             "There are known bugs of {esquisse}. If you see 'object
