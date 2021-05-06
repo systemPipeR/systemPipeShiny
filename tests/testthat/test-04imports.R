@@ -24,55 +24,50 @@ test_that("DT snap", {
 })
 
 
-# test_that("R6 class", {
-#     testR6 <- R6::R6Class(
-#         classname = "testR6",
-#         public = list(
-#             initialize = function(){
-#                 message("create a new R6")
-#             },
-#             addList = function(num){
-#                 private$my_list[[length(private$my_list) + 1]] <- num
-#             },
-#             showList = function(){
-#                 return(private$my_list)
-#             }
-#         ),
-#         private = list(
-#             my_list = list()
-#         )
-#     )
-#     expect_message(testR6$new())
-#     newR6 <- testR6$new()
-#     expect_type(newR6$showList(), "list")
-#     newR6$addList(5)
-#     newR6$addList(5)
-#     expect_length(newR6$showList(), 2)
-# })
-
-
-# test_that("colourInput", {
-#     skip_on_bioc()
-#     expect_snapshot_output(colourpicker::colourInput("a", "a"))
-# })
+test_that("R6 class", {
+    testR6 <- R6::R6Class(
+        classname = "testR6",
+        public = list(
+            initialize = function(){
+                message("create a new R6")
+            },
+            addList = function(num){
+                private$my_list[[length(private$my_list) + 1]] <- num
+            },
+            showList = function(){
+                return(private$my_list)
+            }
+        ),
+        private = list(
+            my_list = list()
+        )
+    )
+    expect_message(testR6$new())
+    newR6 <- testR6$new()
+    expect_type(newR6$showList(), "list")
+    newR6$addList(5)
+    newR6$addList(5)
+    expect_length(newR6$showList(), 2)
+})
 
 
 
-# test_that("blue  green  make_style  red funcs", {
-#     skip_on_bioc()
-#     if(crayon::has_color()){
-#         expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
-#         expect_equal(crayon::green$bold("a"),  "\033[32m\033[1ma\033[22m\033[39m")
-#         expect_equal(crayon::red$bold("a"), "\033[31m\033[1ma\033[22m\033[39m")
-#         expect_equal(crayon::make_style("orange")$bold("a"), "\033[38;5;214m\033[1ma\033[22m\033[39m")
-#
-#     } else {
-#         expect_equal(crayon::blue$bold("a"), remove_ANSI("\033[34m\033[1ma\033[22m\033[39m"))
-#         expect_equal(crayon::green$bold("a"),  remove_ANSI("\033[32m\033[1ma\033[22m\033[39m"))
-#         expect_equal(crayon::red$bold("a"), remove_ANSI("\033[31m\033[1ma\033[22m\033[39m"))
-#         expect_equal(crayon::make_style("orange")$bold("a"), remove_ANSI("\033[38;5;214m\033[1ma\033[22m\033[39m"))
-#     }
-# })
+
+test_that("blue  green  make_style  red funcs", {
+    skip_on_bioc()
+    if(crayon::has_color()){
+        expect_equal(crayon::blue$bold("a"), "\033[34m\033[1ma\033[22m\033[39m")
+        expect_equal(crayon::green$bold("a"),  "\033[32m\033[1ma\033[22m\033[39m")
+        expect_equal(crayon::red$bold("a"), "\033[31m\033[1ma\033[22m\033[39m")
+        expect_equal(crayon::make_style("orange")$bold("a"), "\033[38;5;214m\033[1ma\033[22m\033[39m")
+
+    } else {
+        expect_equal(crayon::blue$bold("a"), remove_ANSI("\033[34m\033[1ma\033[22m\033[39m"))
+        expect_equal(crayon::green$bold("a"),  remove_ANSI("\033[32m\033[1ma\033[22m\033[39m"))
+        expect_equal(crayon::red$bold("a"), remove_ANSI("\033[31m\033[1ma\033[22m\033[39m"))
+        expect_equal(crayon::make_style("orange")$bold("a"), remove_ANSI("\033[38;5;214m\033[1ma\033[22m\033[39m"))
+    }
+})
 
 test_that("dplyr funcs", {
     df <- dplyr::as_tibble(iris)

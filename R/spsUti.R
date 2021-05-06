@@ -173,6 +173,7 @@ findTabInfo <- function(tab_ids=NULL, type = NULL,
     } else {
          suppressMessages(
              vroom::vroom(tab_file, comment = "#", na = character(),
+                          col_types = "cccccncc",
                           altrep = FALSE))
     }
     # if(!spsOption('dev')){
