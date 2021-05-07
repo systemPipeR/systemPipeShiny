@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.30</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.40</span>
       </span>
     </div>
 
@@ -115,13 +115,175 @@
       <small>Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="systempipeshiny-1140" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.40">
+<a href="#systempipeshiny-1140" class="anchor"></a>systemPipeShiny 1.1.40</h1>
+<div id="major-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-change" class="anchor"></a>Major change</h2>
+<ul>
+<li><p>Add <code>is_demo</code> option: only affect workflow module right now. Lock users inside a temp folder when using the WF module and give users a new temp folder every time they refresh. This will prevent directory exist problem if many users are using a same deploy instance.</p></li>
+<li><p>Add <code>welcome_guide</code> option: whether to enable the welcome guide which highlights the guide dropdown menu.</p></li>
+<li><p>Rewrite welcome tab with a gallery to show all SPS features.</p></li>
+</ul>
+</div>
+<div id="minor-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-change" class="anchor"></a>Minor change</h2>
+<ul>
+<li><p>Option <code>warning_toast</code> now also checks if you are on “local” mode.</p></li>
+<li><p>Deleted some unwanted entries in reference generating <code>yaml</code> file.</p></li>
+<li><p>Fix some typos.</p></li>
+<li><p>More informative error message when the config file cannot be found for <code>spsOptions</code></p></li>
+<li><p>Add some <code>.onLoad</code> methods so users can use the <code>spsOption</code> to get default values on package load.</p></li>
+<li><p>Updated <code>essquise</code> functions</p></li>
+<li><p>Add more guides.</p></li>
+<li><p>Removed the scroll to top button by <code>shinyDashboardPlus</code>, we have our own “go top” button.</p></li>
+<li><p>Add assertions to <code>spsInit</code>.</p></li>
+<li><p>Add some screenshots to readme.</p></li>
+</ul>
+</div>
+<div id="bug-fix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>Bug fix</h2>
+<ul>
+<li>Fix a bug when that loads the server twice</li>
+<li>Fix some default option values</li>
+<li>Fix a bug on <code>addResourcePath</code> when the working directory and app directory is not the same.</li>
+<li>Fix links not working caused by website change</li>
+<li>Fix code in <code>spsInit</code> overwrite all current SPS options.</li>
+<li>Fix errors on admin page when server stats cannot be found, better text and warning messages</li>
+<li>Fix new version of <code>essquise</code> introduced errors</li>
+<li>Fix a warning in <code>vroom</code> due to the column type problem</li>
+</ul>
+</div>
+</div>
+    <div id="systempipeshiny-1135" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.35">
+<a href="#systempipeshiny-1135" class="anchor"></a>systemPipeShiny 1.1.35</h1>
+<div id="major-change-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-change-1" class="anchor"></a>Major change</h2>
+<ul>
+<li>
+<p>Login feature added:</p>
+<ul>
+<li><p>Users can choose whether to enable the login or not in <code>global.R</code>SPS options.</p></li>
+<li><p>There are also the login loading screen feature which can be turned on and off.</p></li>
+<li><p>There are 3 different login loading screens right now and users can interact with them.</p></li>
+</ul>
+</li>
+<li><p>Website updated. <a href="https://systempipe.org/sps" class="uri">https://systempipe.org/sps</a></p></li>
+<li>
+<p>Updates on the admin panel:</p>
+<ul>
+<li><p>App information: added live charts for CPU, temperature, and RAM</p></li>
+<li><p>User control: admins now can add/delete/change users directly from this tab, instead of only from command line.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="minor-change-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-change-1" class="anchor"></a>Minor change</h2>
+<ul>
+<li>Add<code>target="_blank"</code> to all external links in the app, so when they are clicked, it will open in a new tab.</li>
+</ul>
+</div>
+<div id="bug-fix-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix-1" class="anchor"></a>Bug fix</h2>
+<ul>
+<li><p>FIx bugs due to login page caused server not loading</p></li>
+<li><p>Add 1s delay in javascript after login to resize the page so the dashboard can be displayed normal.</p></li>
+<li><p>Fix a table rendering bug in workflow cwl step markdown text.</p></li>
+</ul>
+</div>
+</div>
+    <div id="systempipeshiny-1130" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.30">
+<a href="#systempipeshiny-1130" class="anchor"></a>systemPipeShiny 1.1.30</h1>
+<div id="major-change-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-change-2" class="anchor"></a>Major change</h2>
+<ul>
+<li><p>new <code>spsAccount</code> class. This class is associated with login management , which allows users to create/delete user/admin accounts, change password, change roles.</p></li>
+<li><p>Deprecated the <code>spsPlotContainer</code> class since we rewrite the Canvas feature and move to a separate package {drawer}.</p></li>
+<li><p>New <code>spsCoreTabReplace</code>, which allows users to overwrite the default core tabs.</p></li>
+<li>
+<p>A lot more SPS options.</p>
+<ul>
+<li><p>Users can now choose whether to load or not load certain tabs on start, even for default core tabs. Combining the <code>spsCoreTabReplace</code> function, now users can customize everything of the original app.</p></li>
+<li><p>Users can change the app title, and logo image.</p></li>
+</ul>
+</li>
+<li>
+<p>Admin panel added to app. Users now can visit the admin panel by adding “<code>?user_definded_string</code>” to the end of the url. Default is “<code>admin</code>”. Login with an admin account is required. Users can use the <code>spsAccount</code> class to add/change an admin account before starting the app.</p>
+<ul>
+<li><p>App information: a tab displays current SPS app server information, like CPU, RAM, size, etc.</p></li>
+<li><p>User control: a tab to see account information of current SPS app.</p></li>
+</ul>
+</li>
+<li><p>Changed the way to install modules. Default modules, workflow, RNAseq and quick ggplot dependency packages are not installed by default, unless you use <code>dependency = TRUE</code> in installation command. It means all these dependencies are moved from <code>Imports</code> to the <code>Suggests</code> class. This helps to save quite some time on SPS package installation. Users install these packages based on their needs. When users loads these modules but depend packages are not fully installed, app will not crash, instead, a warning message with install instructions will be displayed on both console and app UI.</p></li>
+<li><p>Based on the module installation change, module loading methods are also changed. Module server functions are only called if users set the option to load them. In previous versions, the server functions are still loaded, just hide the unloaded module UI. This saves a lot of time on app starting time, roughly from &gt; 10s to &lt; 3s if none of the default modules are loaded.</p></li>
+</ul>
+</div>
+<div id="bug-fix-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix-2" class="anchor"></a>Bug fix</h2>
+<ul>
+<li><p>update all links to our new website: <a href="https://systempipe.org/sps" class="uri">https://systempipe.org/sps</a></p></li>
+<li><p>Fix some bugs in the guide system</p></li>
+</ul>
+</div>
+</div>
+    <div id="systempipeshiny-1120" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.20">
+<a href="#systempipeshiny-1120" class="anchor"></a>systemPipeShiny 1.1.20</h1>
+<div id="major-change-3" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-change-3" class="anchor"></a>Major change</h2>
+<ul>
+<li><p>3 default modules complete: <code>workflow</code>, <code>RNAseq</code>,<code>quick ggplot</code>. Details of these modules updated in our website: <a href="https://systempipe.org/sps">&lt;https://systempipe.org/sps&gt;</a>{.uri}.</p></li>
+<li>
+<p>Separation of SPS smaller functions into 3 different packages. We hope these packages can help people in their own Shiny app, or other R projects.</p>
+<ul>
+<li><p><a href="https://github.com/lz100/spsComps">spsComps</a>: SPS components, all new Shiny custom components and utility functions that are used in Shiny server side.</p></li>
+<li><p><a href="https://github.com/lz100/drawer">drawer</a>: the redesign of Canvas, purely front-end image editing tool.</p></li>
+<li><p><a href="https://github.com/lz100/spsUtil">spsUtil</a>: SPS utilities, general useful utility functions that can be used with/without Shiny.</p></li>
+</ul>
+</li>
+<li>
+<p>Redesigned the new tab feature. Now users use <code>spsNewTab</code> function to create their new custom visualization tab. The old <code>newSpsTab</code> function is deprecated. Easier syntax and templates are used. By default it will use the “<em>simple</em>” template which wraps 90% of the shiny code from users so they can focus on the plotting code. There is also the “<em>full</em>” template which expose all the Shiny code to users.</p>
+<ul>
+<li>New <code>spsEzUI</code> and <code>spsEzServer</code> functions are used in the “simple” template to wrap complex Shiny code.</li>
+</ul>
+</li>
+<li><p>New <code>spsOptDefaults</code>, which prints out all the default SPS options and current values of these options on console.</p></li>
+<li><p>New notification system. Developers can write some notifications which stores in a remote location and when app starts, it will try to download and parse this file to notifications messages to broadcast to users. This way, developers can send messages to users often without re-deploy the app. The notification will appear on the top right corner.</p></li>
+<li><p>The interactive guide is back. After a few versions of tests, we added the guide system back. This time, developers can customize their own guides. A <code>guide_content.R</code> file is created when a SPS project initialize. It is stored in <code>R</code> of folder relate to the project root. The guide will also be displayed on the app top right corner.</p></li>
+</ul>
+</div>
+<div id="minor-change-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-change-2" class="anchor"></a>Minor change</h2>
+<ul>
+<li>updated all unit test to testthat v3 format.</li>
+</ul>
+</div>
+<div id="bug-fix-3" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix-3" class="anchor"></a>Bug fix</h2>
+<ul>
+<li><p>fix bugs due to shiny updates to 1.6.0</p></li>
+<li><p>Fix all bugs caused by <a href="https://github.com/RinteRface/shinydashboardPlus">shinydashboardPlus</a> v2.0 updates.</p></li>
+</ul>
+</div>
+</div>
     <div id="systempipeshiny-1110" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.10">
 <a href="#systempipeshiny-1110" class="anchor"></a>systemPipeShiny 1.1.10</h1>
-<p>Changes made from 1.1.0 to 1.1.10 <!--#   YYYY.MM.DD --></p>
-<div id="20201124" class="section level2">
-<h2 class="hasAnchor">
-<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201124'>#20201124</a>" class="anchor"></a>2020.11.24</h2>
+<p>Changes made from 1.1.0 to 1.1.05 <!--#   YYYY.MM.DD --></p>
 <div id="workflow-module-r-session" class="section level3">
 <h3 class="hasAnchor">
 <a href="#workflow-module-r-session" class="anchor"></a>Workflow module R session</h3>
@@ -132,59 +294,34 @@
 <li>Standard out/error and plots are captured in the workflow folder. Users can download them in the bundle on step 5 <em>Workflow Run.</em>
 </li>
 <li>Plots will be displayed on the plots panel. Now supports plots that opens R <code>device</code> (base and ggplot), html widget plots are not supported as this moment.</li>
-</ul>
-</div>
-<div id="general-ui" class="section level3">
-<h3 class="hasAnchor">
-<a href="#general-ui" class="anchor"></a>General UI</h3>
-<ul>
 <li>A new shiny disconnection popup for SPS. Besides the gray layer on shiny disconnection, a panel will be displayed to users to indicate the problem. Similar to what shows on a shiny server, but more informative and also works locally.</li>
+<li>Results of this session can be downloaded by closing the session and go back to <em>step 5</em> of workflow module and there is a button to download all in a zipped file.</li>
 </ul>
 </div>
 <div id="rnaseq-module" class="section level3">
 <h3 class="hasAnchor">
 <a href="#rnaseq-module" class="anchor"></a>RNAseq module</h3>
 <ul>
-<li>redesigned the UI and server logic. Plots for DEG analysis and Canvas connections will be added soon.</li>
+<li>redesigned the UI and server logic. Plots for DEG analysis and Canvas connections.</li>
+<li>
+<a href="https://bioconductor.org/packages/SummarizedExperiment">SummarizedExperiment</a> supports. Now it returns <code>SummarizedExperiment</code> objects to global environment once the normalization or DEG calculation is done.</li>
 </ul>
 </div>
-</div>
-<div id="20201030" class="section level2">
-<h2 class="hasAnchor">
-<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201030'>#20201030</a>" class="anchor"></a>2020.10.30</h2>
-<div id="general-ui-1" class="section level3">
+<div id="general-ui" class="section level3">
 <h3 class="hasAnchor">
-<a href="#general-ui-1" class="anchor"></a>General UI</h3>
+<a href="#general-ui" class="anchor"></a>General UI</h3>
 <ul>
 <li>Added a “Go Top” button on the right bottom corner, clicking on this button will automatically scroll to the top of the page. This button only shows up when client has &gt; 50px scroll height.</li>
 </ul>
 </div>
-</div>
-<div id="20201030-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201030'>#20201030</a>-1" class="anchor"></a>2020.10.30</h2>
 <div id="workflow-module-cwl-tab" class="section level3">
 <h3 class="hasAnchor">
 <a href="#workflow-module-cwl-tab" class="anchor"></a>Workflow module CWL tab</h3>
 <ul>
 <li>Now the CWL file and CWL input file can be be edited. The edits will be imported to CWL parser every one second. Now this is a very useful place to test or write new CWL scripts.</li>
-</ul>
-</div>
-</div>
-<div id="20201027" class="section level2">
-<h2 class="hasAnchor">
-<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201027'>#20201027</a>" class="anchor"></a>2020.10.27</h2>
-<div id="workflow-module-cwl-tab-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#workflow-module-cwl-tab-1" class="anchor"></a>Workflow module CWL tab</h3>
-<ul>
 <li>Now this tab has a dynamically rendered dropdown panel which allows users to choose which column for the targets table to map to the variables in CWL input file.</li>
 </ul>
 </div>
-</div>
-<div id="20201027-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201027'>#20201027</a>-1" class="anchor"></a>2020.10.27</h2>
 <div id="workflow-module-fully-functioning" class="section level3">
 <h3 class="hasAnchor">
 <a href="#workflow-module-fully-functioning" class="anchor"></a>Workflow module fully functioning</h3>
@@ -193,10 +330,6 @@
 <li><p>Other systemPipeR preconfiged workflows will cause problems because formatting issues that will cause errors in <code><a href="https://rdrr.io/pkg/systemPipeR/man/runWF.html">systemPipeR::runWF</a></code> function, not introduced by SPS. Please wait the updates on systemPipeR to fix this. You can still use SPS to prepare files for all workflows. That means, step 1-4 will work, step 5 will give you errors if you choose a workflow which is not “Example”.</p></li>
 </ul>
 </div>
-</div>
-<div id="20201022" class="section level2">
-<h2 class="hasAnchor">
-<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201022'>#20201022</a>" class="anchor"></a>2020.10.22</h2>
 <div id="rework-on-the-workflow-part" class="section level3">
 <h3 class="hasAnchor">
 <a href="#rework-on-the-workflow-part" class="anchor"></a>Rework on the workflow part</h3>
@@ -226,10 +359,6 @@
 </li>
 </ul>
 </div>
-</div>
-<div id="20201009" class="section level2">
-<h2 class="hasAnchor">
-<a href="<a href='https://github.com/systemPipeR/systemPipeShiny/issues/20201009'>#20201009</a>" class="anchor"></a>2020.10.09</h2>
 <div id="change-on-visualization" class="section level3">
 <h3 class="hasAnchor">
 <a href="#change-on-visualization" class="anchor"></a>Change on visualization</h3>
@@ -242,7 +371,6 @@
 </ul>
 </li>
 </ul>
-</div>
 </div>
 </div>
   </div>
