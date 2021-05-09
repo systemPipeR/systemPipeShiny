@@ -38,6 +38,9 @@ To see all the details of SPS, read the user manual on [our website](https://sys
 
 ## Installation
 
+SPS is under heavy development. We recommend to install the develop version 
+([most recent](#most-recent)) for the latest features. 
+
 ### Full
 
 ``` r
@@ -62,10 +65,11 @@ BiocManager::install("systemPipeShiny")
 
 ```
 
-By the minimum installation, all the 3 core modules are not installed. You 
-can still start the app, and When you start the app and click on these modules, 
-it will tell to enable these modules, what packages and command you need to run. 
-Just follow the instructions. So, install as you need.
+By the minimum installation, all the 3 core modules are **not** installed. You 
+can still start the app, and when you start the app and click on these modules, 
+it will tell to enable these modules, what packages to install and waht 
+command you need to run. 
+Just follow the instructions. Install as you need.
 
 ### Most recent 
 
