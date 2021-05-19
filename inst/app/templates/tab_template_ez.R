@@ -23,7 +23,10 @@
     plot_control =  shiny::tagList(
         # add some UI to toggle different plot options in a `tagList`
         # this example adds a text input to allow users to modify plot title,
-        # see server code on how we can use it
+        # see server code on how we can use it.
+        # remember to add `ns('ID')` around your ID. All tabs in SPS are built on
+        # top of Shiny modules, use `ns()` to indicate namespace. This function
+        # is not found when you write it, but will be valid once SPS runs it.
         shiny::fluidRow(
             class = "center-child",
             clearableTextInput(

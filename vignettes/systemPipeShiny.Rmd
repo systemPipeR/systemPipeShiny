@@ -92,22 +92,25 @@ visit our website at: <https://systempipe.org/sps>.
 
 # Demos
 
-SPS has provided a variety of options to change how it work. Here are some examples. At the time of writing, there a interactive tutorial (guide) embedded in the demos
+SPS has provided a variety of options to change how it work. Here are some examples. At the time of writing, there is an interactive tutorial (guide) embedded in the demos
 that users can access from the upper-right corner. The tutorial introduces 
 major functionalities of SPS. 
 
 | Type and link| option changed | notes |
 | --- | --- | --- |
-| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | full app |
-| [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | no modules installed |
+| [Default full installation](https://tgirke.shinyapps.io/systemPipeShiny/) | [See installation](#installation) | full app, may take longer (~15s) to load |
+| [Minimum installation](https://tgirke.shinyapps.io/systemPipeShiny_min/) | [See installation](#installation) | no modules installed |
 | [Login enabled](https://tgirke.shinyapps.io/systemPipeShiny_loading/) | `login_screen = TRUE; login_theme = "empty"` | no modules installed |
 | [Login and login themes](https://tgirke.shinyapps.io/systemPipeShiny_loading_theme/) | `login_screen = TRUE; login_theme = "random"` | no modules installed |
-| [App admin page](https://tgirke.shinyapps.io/systemPipeShiny_loading/?admin) | `admin_page = TRUE` | or simply add "?admin" to the end of URL of demos |
+| [App admin page](https://tgirke.shinyapps.io/systemPipeShiny_loading/?admin) | `admin_page = TRUE` | use the link or simply add "?admin" to the end of URL of any demos |
 
 For the login required demos, the app account name is **"user"** password **"user"**.
 
 For the admin login, account name **"admin"**, password **"admin"**.
 
+**Please DO NOT delete or change password when you are trying the admin features.**
+Although _shinyapps.io_ will reset the app once a while, this will affect other people 
+who are viewing the demo simultaneously. 
 
 # Installation
 
@@ -135,10 +138,11 @@ BiocManager::install("systemPipeShiny")
 
 ```
 
-By the minimum installation, all the 3 core modules are not installed. You 
-can still start the app, and When you start the app and click on these modules, 
-it will tell to enable these modules, what packages and command you need to run. 
-Just follow the instructions. So, install as you need.
+By the minimum installation, all the 3 core modules are **not** installed. You 
+can still start the app, and when you start the app and click on these modules, 
+it will tell to enable these modules, what packages to install and waht 
+command you need to run. 
+Just follow the instructions. Install as you need.
 
 ### Most recent 
 
@@ -150,6 +154,9 @@ if (!requireNamespace("remotes", quietly=TRUE))
     install.packages("remotes")
 remotes::install("systemPipeR/systemPipeShiny", dependencies=TRUE)
 ```
+
+Similarly, `remotes::install("systemPipeR/systemPipeShiny")` for the minimum develop
+version. 
 
 ### Linux
 
@@ -621,7 +628,7 @@ options.
 
 To read the detailed advanced features, please to go our [website](https://systempipe.org/sps/).
 
-# Version Information
+# Session Information
 
 ```{r sessionInfo, eval=TRUE}
 sessionInfo()

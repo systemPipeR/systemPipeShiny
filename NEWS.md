@@ -8,6 +8,8 @@
 
 -   Rewrite welcome tab with a gallery to show all SPS features.
 
+-   `loadDF`, `dynamicFile` and `dynamicFileServer` added back to this mainframe work package instead of `spsComps`, because these dependencies have already been using in `SPS`. Leave these functions in `spsComps` will introduce extra dependencies, and these functions are not too frequently used outside the framework.
+
 ## Minor change
 
 -   Option `warning_toast` now also checks if you are on "local" mode.
