@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.40</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.41</span>
       </span>
     </div>
 
@@ -125,6 +125,7 @@
 <li><p>Add <code>is_demo</code> option: only affect workflow module right now. Lock users inside a temp folder when using the WF module and give users a new temp folder every time they refresh. This will prevent directory exist problem if many users are using a same deploy instance.</p></li>
 <li><p>Add <code>welcome_guide</code> option: whether to enable the welcome guide which highlights the guide dropdown menu.</p></li>
 <li><p>Rewrite welcome tab with a gallery to show all SPS features.</p></li>
+<li><p><code>loadDF</code>, <code>dynamicFile</code> and <code>dynamicFileServer</code> added back to this mainframe work package instead of <code>spsComps</code>, because these dependencies have already been using in <code>SPS</code>. Leave these functions in <code>spsComps</code> will introduce extra dependencies, and these functions are not too frequently used outside the framework.</p></li>
 </ul>
 </div>
 <div id="minor-change" class="section level2">
