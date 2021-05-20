@@ -1,3 +1,6 @@
+# systemPipeShiny 1.3.0
+- Update version number to 1.3.0 per Bioconductor regulation. 
+
 # systemPipeShiny 1.1.40
 
 ## Major change
