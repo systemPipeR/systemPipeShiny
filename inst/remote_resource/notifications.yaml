@@ -33,26 +33,24 @@
            Github, do not inlcude this file in app deployment.
         3. During app deployment, indicate the URL of this file in `global.R`
            file, `note_url:` option.
+        
+        Read more details on [our website](https://systempipe.org/sps/adv_features/notification/).
 
 
 - note:
     type: package
     pkg_name: systemPipeShiny
-    version: 1.1.35
-    title: SPS 1.1.35 available
-    expire: 2021-06-01
+    version: 1.3.0
+    title: SPS 1.3.0 available
+    expire: 2021-09-01
     icon:
     status: info
     message: |
         ## New version of SPS
-        SPS 1.1.35 has come out. In this version, we have enabled many new features,
+        SPS 1.3.0 has come out. In this version, we have enabled many new features,
         and fix bugs that are caused by other dependencies.
         Read the change log on [github](https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md)
         or [our website](https://systempipe.org/sps/funcs/sps/news/index.html)
-
-        ## New features
-        1. Login feature, login themes added.
-        2. Admin panel: app statistics, user control and more.
 
 
 - note:
@@ -60,7 +58,7 @@
     pkg_name:
     version:
     title: Manual updated
-    expire: 2021-06-01
+    expire: 2021-09-01
     icon:
     status:
     message: |
@@ -73,31 +71,18 @@
 - note:
     type: package
     pkg_name: spsComps
-    version: 0.1.9.99
-    title: spsComps 0.2.0 preview available
-    expire: 2021-05-01
+    version: 0.3.0
+    title: spsComps 0.3.0 preview available
+    expire: 2021-07-01
     icon:
     status:
     message: |
-        ## spsComps 0.2.0 preview
-        **SPS will not be affected if you don't install this new version.**
+        ## spsComps 0.3.0 
 
         [spsComps](https://github.com/lz100/spsComps)
-        v0.2 preview is on [Github](https://github.com/lz100/spsComps).
-        use `remotes::install_github("lz100/spsComps")` to install.
+        v0.3 is on [Github](https://github.com/lz100/spsComps) and CRAN.
 
         ## New features
-
-        ### Animations and animated icons
-
-        new functions to add animations to any Shiny UI component from both UI
-        and server.
-
-        There is also an enhanced `icon` function that can also be animated.
-
-        ### HTML Loaders
-        New loaders functions available to add loaders to indicate busy status from
-        both UI and server.
 
         See all new features in [change log](https://systempipe.org/sps/funcs/spscomps/news/index.html)
         and [demo](https://lezhang.shinyapps.io/spsComps)
