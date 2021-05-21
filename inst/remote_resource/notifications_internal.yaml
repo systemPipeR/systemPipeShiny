@@ -71,8 +71,8 @@
 - note:
     type: package
     pkg_name: spsComps
-    version: 0.3.0
-    title: spsComps 0.3.0 preview available
+    version: 0.9.9
+    title: spsComps 0.3.0 available
     expire: 2021-07-01
     icon:
     status:
