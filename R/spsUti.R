@@ -247,3 +247,18 @@ findTraceFile <- function(calls) {
         } else ""
     })
 }
+
+
+# icon checker, internal func modified from shiny
+validateIcon <- function(icon){
+    if (!inherits(icon, "shiny.tag") || !icon$name == "i") {
+        stop("Invalid icon. Use Shiny's 'icon()' function to generate a valid icon")
+    }
+}
+
+
+
+
+
+
+
