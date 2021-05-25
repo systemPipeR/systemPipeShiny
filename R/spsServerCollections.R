@@ -223,7 +223,7 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
 dynamicFile <- function(id, title = "Select your file:",
                         label = "Browse", icon = NULL, style = "",
                         multiple = FALSE){
-    icon <- if(shinyAce::is.empty(icon)) icon("upload")
+    icon <- if(shinyAce::is.empty(icon)) icon("upload") else icon
     if (spsOption('mode') == "local") {
         div(class = "form-group shiny-input-container sps-file",
             tags$label(class="control-label", `for`=id, title),
