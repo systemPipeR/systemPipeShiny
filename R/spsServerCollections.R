@@ -134,15 +134,15 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
 #' system that serves the Shiny app. If you deploy the app on places like shinyapps.io,
 #' users can only choose files from server.
 #'
-#' On the other hand, `server` mode uses original shiny default upload component.
+#' On the other hand, `server` mode uses original but enhanced shiny default upload component.
 #' Users can upload files from local to server. So users do not have access to
 #' server end file system if you deploy it online. However, the limitations are:
 #'
-#' 1. not ideal for large files, default limit is 30MB, and there is no break point
+#' 1. not ideal for large files, default limit is 30MB, and there is no break-point
 #' upload.
 #' 2. If you are running the app on your own computer, local end and server end is
 #' the same, which is your computer. Using `server` mode will make a copy of your
-#' existing file to temp location which is a waste of time and storage.
+#' existing file to temp location and this is a waste of time and storage.
 #'
 #' To set up options:
 #'
@@ -157,9 +157,13 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
 #' module, but DO NOT use `ns()` to wrap the id on server side
 #' @param title element title
 #' @param label upload button label
-#' @param icon button icon, only works for `local` mode
+#' @param icon button icon, an object create by [shiny::icon]
 #' @param style additional button style, only works for `local` mode
 #' @param multiple bool, are multiple files allowed?
+#' @param buttonType string, Bootstrap button markup (color).
+#' Default in SPS is 'primary', other valid values include 'info', 'success', 'default',
+#' 'warning', 'danger'.
+#' @param placeholder string, text to display before the file is uploaded
 #' @importFrom shinyAce is.empty
 #' @importFrom shinyFiles shinyFilesButton
 #' @return a Shiny upload component on UI
@@ -172,9 +176,9 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @examples
 #' # Simple example
 #' if(interactive()){
-#'     options(sps = list(mode='server')) # Change the mode to 'local' to see difference
+#'     spsOption("mode", value = "server") # Change the value to 'local' to see difference
 #'     ui <- fluidPage(
-#'         dynamicFile("server_file", "server"),
+#'         dynamicFile(id = "server_file", label = "server"),
 #'         verbatimTextOutput("server_out")
 #'     )
 #'
@@ -220,33 +224,49 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
 #'     }
 #'     shinyApp(ui = ui, server = server)
 #' }
-dynamicFile <- function(id, title = "Select your file:",
-                        label = "Browse", icon = NULL, style = "",
-                        multiple = FALSE){
+dynamicFile <- function(
+    id, title = "Select your file:",
+    label = "Browse", icon = NULL,
+    style = "", multiple = FALSE,
+    buttonType = "primary",
+    placeholder = "No file selected"
+    ){
+    # assertions
+    stopifnot(is.character(id) && length(id) == 1)
+    stopifnot(is.character(title) && length(title) == 1)
+    stopifnot(is.character(label) && length(label) == 1)
+    stopifnot(is.character(style) && length(style) == 1)
+    stopifnot(is.character(buttonType) && length(buttonType) == 1)
+    stopifnot(is.character(placeholder) && length(placeholder) == 1)
+    stopifnot(is.logical(multiple) && length(multiple) == 1)
     icon <- if(shinyAce::is.empty(icon)) icon("upload") else icon
+    validateIcon(icon)
+
     if (spsOption('mode') == "local") {
         div(class = "form-group shiny-input-container sps-file",
             tags$label(class="control-label", `for`=id, title),
             div(class="input-group",
-                tags$label(class="input-group-btn input-group-prepend",
-                           shinyFiles::shinyFilesButton(id, label,
-                                                        title = title, multiple = multiple,
-                                                        buttonType = "btn btn-primary",
-                                                        icon = icon,
-                                                        style = style)
+                tags$label(
+                    class="input-group-btn input-group-prepend",
+                    shinyFiles::shinyFilesButton(
+                        id, label,
+                        title = title, multiple = multiple,
+                        buttonType = buttonType,
+                        icon = icon,
+                        style = style
+                    )
                 ),
-                textInput(inputId = glue("{id}-text"), label = NULL,
-                          placeholder="No file selected", width = "100%") %>% {
-                              .[['children']][[2]][['attribs']][['readonly']] <- 'true'
-                              .
-                          }
+                textInput(inputId = glue("{id}-text"), label = NULL, placeholder=placeholder, width = "100%") %>%
+                    {
+                      .[['children']][[2]][['attribs']][['readonly']] <- 'true'
+                      .
+                    }
             )
-
         )
-
     } else {
-        fileInput(inputId = id, label = title,
-                  multiple = multiple, buttonLabel = label)
+        tag <- fileInput(inputId = id, label = title, multiple = multiple, buttonLabel = list(icon, label), placeholder = placeholder)
+        tag$children[[2]]$children[[1]]$children[[1]]$attribs$class <- paste0("btn btn-", buttonType ," btn-file")
+        tag
     }
 }
 

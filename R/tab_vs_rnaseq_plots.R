@@ -87,7 +87,35 @@ vs_rnaseq_glmUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Show code",
+                                '
+                                ## glmpca is performed on raw counts
+                                # count_mat is the raw count table
+                                # that you can download from "Normalize Data" sub-tab
+                                # factors is the unique sample name, or experiment groups
+                                nozero <- count_mat[which(rowSums(count_mat) > 0), ]
+                                gpca <- glmpca::glmpca(nozero, L=2)
+                                gpca.dat <- gpca$factors
+                                gpca.dat$condition <- factors
+                                Sample <- factors
+                                p1 <- ggplot2::ggplot(gpca.dat, ggplot2::aes(dim1, dim2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) + ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("GLM-PCA") +
+                                    ggplot2::xlab("PC1") +
+                                    ggplot2::ylab("PC1") +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -260,7 +288,7 @@ vs_rnaseq_glmServer <- function(id, shared){
 vs_rnaseq_pcaUI <- function(id){
     ns <- NS(id)
     desc <-
-    '
+        '
     ## PCA
     A Principal Component Analysis (PCA) plot can be created using the `PCAplot`
     function which uses the `DESeq2` package. The input data frame can be
@@ -287,7 +315,34 @@ vs_rnaseq_pcaUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Show code",
+                                '
+                                ## pca is performed on DESeq2 rlog or vst transformed counts
+                                # RNA_trans is the transformed object
+                                # that you can download from "Normalize Data" sub-tab
+                                # Sample is the unique sample name, or experiment groups
+                                pcaData <- DESeq2::plotPCA(RNA_trans, intgroup = "condition", returnData = TRUE)
+                                percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+                                p1 <- ggplot2::ggplot(pcaData, ggplot2::aes(PC1, PC2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) +
+                                    ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("PCA") +
+                                    ggplot2::xlab(paste0("PC1 ", percentVar[1],"% variance")) +
+                                    ggplot2::ylab(paste0("PC2 ", percentVar[2],"% variance")) +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -482,7 +537,35 @@ vs_rnaseq_mdsUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Show code",
+                                '
+                                # RNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that you can download from "Normalize Data" sub-tab
+                                # Sample is the unique sample name, or experiment groups
+                                d <- stats::cor(SummarizedExperiment::assay(RNA_trans))
+                                distmat <- stats::dist(1 - d)
+                                ## perform MDS
+                                mdsData <- data.frame(stats::cmdscale(distmat))
+                                mds <- cbind(mdsData, as.data.frame(SummarizedExperiment::colData(RNA_trans)))
+
+                                p1 <- ggplot2::ggplot(mdsData, ggplot2::aes(X1, X2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) + ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("Multidimensional Scaling (MDS) plot") +
+                                    ggplot2::xlab("X1") +
+                                    ggplot2::ylab("X2") +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -699,7 +782,27 @@ vs_rnaseq_heatmapUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Show code",
+                                '
+                                # RNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that you can download from "Normalize Data" sub-tab
+                                # Sample is the unique sample name, or experiment groups
+                                anno <- as.data.frame(Sample); colnames(anno) <- "Condition"
+                                sampleDists <- stats::dist(t(SummarizedExperiment::assay(RNA_trans)))
+                                sampleDistMatrix <- as.matrix(sampleDists)
+                                rownames(anno) <- colnames(sampleDistMatrix)
+
+                               pheatmap::pheatmap(
+                                    mat = sampleDistMatrix,
+                                    clustering_distance_rows = sampleDists,
+                                    clustering_distance_cols = sampleDists,
+                                    annotation_col = anno,
+                                    silent = TRUE
+                                )
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -780,7 +883,7 @@ vs_rnaseq_heatmapServer <- function(id, shared){
                 sampleDistMatrix <- as.matrix(sampleDists)
                 rownames(anno) <- colnames(sampleDistMatrix)
 
-               pheatmap::pheatmap(
+                pheatmap::pheatmap(
                     mat = sampleDistMatrix,
                     clustering_distance_rows = sampleDists,
                     clustering_distance_cols = sampleDists,
@@ -836,7 +939,24 @@ vs_rnaseq_dendroUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Show code",
+                                '
+                                # RNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that you can download from "Normalize Data" sub-tab
+                                # that you can download from "Normalize Data" sub-tab
+                                # Sample is the unique sample name, or experiment groups
+                                d <- stats::cor(SummarizedExperiment::colData(RNA_trans))
+                                ## Hierarchical cluster analysis
+                                hc <- stats::hclust(stats::dist(1 - d))
+                                tree <- ape::as.phylo(hc)
+                                ggtree::ggtree(tree) +
+                                    ggtree::geom_tippoint(size=0.5, alpha=0.5) +
+                                    ggtree::geom_tiplab() +
+                                    ggplot2::ggtitle("Hierarchical cluster")
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -1049,7 +1169,33 @@ vs_rnaseq_tsneUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Show code",
+                                '
+                                # RNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that you can download from "Normalize Data" sub-tab
+                                # Sample is the unique sample name, or experiment groups
+                                countDF_uni <- t(unique(SummarizedExperiment::colData(RNA_trans))) # removes duplicates and transpose matrix, samples perspective
+                                tsne_out <- Rtsne::Rtsne(countDF_uni, dims = 2, theta = 0.0, perplexity = 3)
+                                plotdata <- data.frame(dim1 = tsne_out$Y[,1], dim2 = tsne_out$Y[,2])
+
+                                p1 <- ggplot2::ggplot(plotdata, ggplot2::aes(dim1, dim2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) + ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("t-SNE") +
+                                    ggplot2::xlab("Dim 1") +
+                                    ggplot2::ylab("Dim 2") +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(

@@ -1,5 +1,24 @@
+# systemPipeShiny 1.3.10 Dev
+
+## New Feature
+
+-   Add code display buttons to most plots that will show code to reproduce the plot.
+
+-   Add two args `buttonType` and `placeholder` to `dynamicFile`, now users can specify what bootstrap color the button is and use `placeholder` to specify initial text on the upload bar.
+
+    -   Enhanced the original shiny `fileInput`, now users can also specify icon and button bootstrap colors for "server" mode in `dynamicFile`.
+
+## Minor Change
+
+## Bug Fix
+
+-   [\#85](https://github.com/systemPipeR/systemPipeShiny/pull/85) fix `dynamicFile` `icon` not working
+
+    -   Also add some icon validation code
+
 # systemPipeShiny 1.3.0
-- Update version number to 1.3.0 per Bioconductor regulation. 
+
+-   Update version number to 1.3.0 per Bioconductor regulation.
 
 # systemPipeShiny 1.1.40
 
