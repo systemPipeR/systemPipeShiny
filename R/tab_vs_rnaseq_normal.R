@@ -639,20 +639,21 @@ vs_rnaseq_normalServer <- function(id, shared){
                 pg <- shiny::Progress$new()
                 pg$set(0, message = "Check output folder")
                 dir_path <- file.path(tempdir(), "SPS_rnqseq")
-                files <- c("SPS_deseq2_transformed_counts.csv", "SPS_deseq2_DEG_summary.csv", "SPS_deseq2_DEG_SummarizedExperiment.rds")
+                files <- c("SPS_deseq2_transformed_counts.csv", "spsRNA_trans.rds", "SPS_deseq2_DEG_summary.csv", "SPS_deseq2_DEG_SummarizedExperiment.rds")
                 dir.create(dir_path, recursive = TRUE, showWarnings = FALSE)
                 shinyCatch({
                     if(emptyIsFalse(input$check_trans)) {
                         pg$set(20, message = "write transformed counts")
                         write.csv(shared$rnaseq$trans_table, file.path(dir_path, files[1]), quote = FALSE)
+                        saveRDS(spsRNA_trans, file.path(dir_path, files[2]))
                     }
                     if(emptyIsFalse(input$check_deg_csv)) {
                         pg$set(40, message = "write DEG summary")
-                        write.csv(shared$rnaseq$data[['deg_summary']], file.path(dir_path, files[2]), quote = FALSE)
+                        write.csv(shared$rnaseq$data[['deg_summary']], file.path(dir_path, files[3]), quote = FALSE)
                     }
                     if(emptyIsFalse(input$check_deg_rds)) {
                         pg$set(60, message = "write DEG Rds")
-                        saveRDS(shared$rnaseq$data[['deg_tables']], file.path(dir_path, files[3]))
+                        saveRDS(shared$rnaseq$data[['deg_tables']], file.path(dir_path, files[4]))
                     }
                     pg$set(70, message = "check written files")
                     if(!emptyIsFalse(list.files(dir_path))) stop("No file has been written on server")
@@ -660,7 +661,7 @@ vs_rnaseq_normalServer <- function(id, shared){
                 pg$set(80, message = "Start to zip, please wait")
                 zip::zip(
                     zipfile = filename,
-                    files = file.path(dir_path, files[c(input$check_trans, input$check_deg_csv, input$check_deg_rds)]),
+                    files = file.path(dir_path, files[c(input$check_trans, input$check_trans, input$check_deg_csv, input$check_deg_rds)]),
                     mode = 'cherry-pick'
                 )
             },

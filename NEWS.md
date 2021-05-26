@@ -8,13 +8,19 @@
 
     -   Enhanced the original shiny `fileInput`, now users can also specify icon and button bootstrap colors for "server" mode in `dynamicFile`.
 
+## Major Change
+
 ## Minor Change
+
+-   For RNAseq module, the dendrogram plot library changed from {ggtree} package to {ape}. {ggtree} is not very compatible with Shiny under current version. Plot cannot be created, always error, but no error outside Shiny. An issue has submitted to Shiny on Github. We may switch back to ggtree when this is fixed.
 
 ## Bug Fix
 
 -   [\#85](https://github.com/systemPipeR/systemPipeShiny/pull/85) fix `dynamicFile` `icon` not working
 
     -   Also add some icon validation code
+
+-   Fix the admin server tabs get loaded twice. Added a flag to prevent this from happening.
 
 # systemPipeShiny 1.3.0
 
