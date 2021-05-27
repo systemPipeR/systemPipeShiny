@@ -89,7 +89,7 @@ vs_rnaseq_glmUI <- function(id){
                             class = "text-center",
                             canvasBtn(ns('plot_main')), br(),
                             spsCodeBtn(
-                                ns("plot_code"), color = "white", label = "Show code",
+                                ns("plot_code"), color = "white", label = "Plot code",
                                 '
                                 ## glmpca is performed on raw counts
                                 # count_mat is the raw count table
@@ -318,7 +318,7 @@ vs_rnaseq_pcaUI <- function(id){
                             class = "text-center",
                             canvasBtn(ns('plot_main')), br(),
                             spsCodeBtn(
-                                ns("plot_code"), color = "white", label = "Show code",
+                                ns("plot_code"), color = "white", label = "Plot code",
                                 '
                                 ## pca is performed on DESeq2 rlog or vst transformed counts
                                 # spsRNA_trans is the DESeq2 rlog or vst transformed count object
@@ -541,7 +541,7 @@ vs_rnaseq_mdsUI <- function(id){
                             class = "text-center",
                             canvasBtn(ns('plot_main')), br(),
                             spsCodeBtn(
-                                ns("plot_code"), color = "white", label = "Show code",
+                                ns("plot_code"), color = "white", label = "Plot code",
                                 '
                                 # spsRNA_trans is the DESeq2 rlog or vst transformed count object
                                 # that is exported to your global environment if you stop SPS app locally or
@@ -789,7 +789,7 @@ vs_rnaseq_heatmapUI <- function(id){
                             class = "text-center",
                             canvasBtn(ns('plot_main')), br(),
                             spsCodeBtn(
-                                ns("plot_code"), color = "white", label = "Show code",
+                                ns("plot_code"), color = "white", label = "Plot code",
                                 '
                                 # spsRNA_trans is the DESeq2 rlog or vst transformed count object
                                 # that is exported to your global environment if you stop SPS app locally or
@@ -948,7 +948,7 @@ vs_rnaseq_dendroUI <- function(id){
                             class = "text-center",
                             canvasBtn(ns('plot_main')), br(),
                             spsCodeBtn(
-                                ns("plot_code"), color = "white", label = "Show code",
+                                ns("plot_code"), color = "white", label = "Plot code",
                                 '
                                 # spsRNA_trans is the DESeq2 rlog or vst transformed count object
                                 # that is exported to your global environment if you stop SPS app locally or
@@ -1126,7 +1126,7 @@ vs_rnaseq_tsneUI <- function(id){
                             class = "text-center",
                             canvasBtn(ns('plot_main')), br(),
                             spsCodeBtn(
-                                ns("plot_code"), color = "white", label = "Show code",
+                                ns("plot_code"), color = "white", label = "Plot code",
                                 '
                                 # spsRNA_trans is the DESeq2 rlog or vst transformed count object
                                 # that is exported to your global environment if you stop SPS app locally or

@@ -13,6 +13,8 @@
 ## Minor Change
 
 -   For RNAseq module, the dendrogram plot library changed from {ggtree} package to {ape}. {ggtree} is not very compatible with Shiny under current version. Plot cannot be created, always error, but no error outside Shiny. An issue has submitted to Shiny on Github. We may switch back to ggtree when this is fixed.
+-   Small UI optimization for RNAseq module.
+-   Fixed some typo in different tabs.
 
 ## Bug Fix
 
