@@ -109,5 +109,6 @@ $(()=>{
 });
 // remove default go top button
 $(function(){
-    $('.wrapper > div > i.fa.fa-chevron-up').parent().remove()
+     $('.wrapper > div > i.fa.fa-chevron-up').parent().remove()
 })
+
