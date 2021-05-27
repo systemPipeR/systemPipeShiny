@@ -71,7 +71,6 @@ Suggests:
     pheatmap,
     grid,
     ape,
-    ggtree,
     Rtsne,
     UpSetR,
     tidyr,

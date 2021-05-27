@@ -26,7 +26,7 @@
 
 ## RNA-Seq module
 # requireNamespace("DESeq2"); requireNamespace("Rtsne"); requireNamespace("SummarizedExperiment")
-# requireNamespace("UpSetR"); requireNamespace("ape"); requireNamespace("ggtree")
+# requireNamespace("UpSetR"); requireNamespace("ape")
 # requireNamespace("glmpca"); requireNamespace("pheatmap"); requireNamespace("systemPipeR")
 
 ## Quick ggplot module

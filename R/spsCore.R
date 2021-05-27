@@ -558,7 +558,6 @@ spsTabInfo <- function(return_type = "print", n_print = 40, app_path = getwd()){
         'pheatmap',
         'grid',
         'ape',
-        'ggtree',
         'Rtsne',
         'UpSetR',
         'tidyr'
