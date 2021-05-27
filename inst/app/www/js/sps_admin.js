@@ -20,3 +20,8 @@ $(function(){
         }
     });
 })
+
+// remove default go top button
+$(function(){
+    $('.wrapper i.fa.fa-chevron-up').parent().remove()
+})
