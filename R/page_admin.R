@@ -39,13 +39,15 @@ adminServer <- function(input, output, session, shared) {
         ui_sent(TRUE)
     })
 
-    observe({shared$topInput[['admin-left_sidebar']] <- input[['admin-left_sidebar']]
-    })
+    observe({shared$topInput[['admin-left_sidebar']] <- input[['admin-left_sidebar']]})
+    admin_loaded <- reactiveVal(FALSE)
     observeEvent(shared$admin$ui_loaded, {
         req(isTRUE(shared$admin$ui_loaded))
         req(isTRUE(shared$admin$log_success))
+        req(!admin_loaded())
         admin_infoServer("admin-info", shared)
         admin_usersServer("admin-users", shared)
+        admin_loaded(TRUE)
     })
 }
 

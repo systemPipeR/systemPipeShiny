@@ -87,7 +87,36 @@ vs_rnaseq_glmUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Plot code",
+                                '
+                                ## glmpca is performed on raw counts
+                                # count_mat is the raw count table
+                                # that you can download from "Normalize Data" sub-tab.
+                                # Use functions like `read.csv` to read it.
+                                # factors is the unique sample name, or experiment groups
+                                nozero <- count_mat[which(rowSums(count_mat) > 0), ]
+                                gpca <- glmpca::glmpca(nozero, L=2)
+                                gpca.dat <- gpca$factors
+                                gpca.dat$condition <- factors
+                                Sample <- factors
+                                p1 <- ggplot2::ggplot(gpca.dat, ggplot2::aes(dim1, dim2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) + ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("GLM-PCA") +
+                                    ggplot2::xlab("PC1") +
+                                    ggplot2::ylab("PC1") +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -260,7 +289,7 @@ vs_rnaseq_glmServer <- function(id, shared){
 vs_rnaseq_pcaUI <- function(id){
     ns <- NS(id)
     desc <-
-    '
+        '
     ## PCA
     A Principal Component Analysis (PCA) plot can be created using the `PCAplot`
     function which uses the `DESeq2` package. The input data frame can be
@@ -287,7 +316,35 @@ vs_rnaseq_pcaUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Plot code",
+                                '
+                                ## pca is performed on DESeq2 rlog or vst transformed counts
+                                # spsRNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that is exported to your global environment if you stop SPS app locally or
+                                # can be download from "Normalize Data" sub-tab as an RDS file.
+                                # Sample is the unique sample name, or experiment groups (Sample column in your targets file)
+                                pcaData <- DESeq2::plotPCA(spsRNA_trans, intgroup = "condition", returnData = TRUE)
+                                percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+                                p1 <- ggplot2::ggplot(pcaData, ggplot2::aes(PC1, PC2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) +
+                                    ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("PCA") +
+                                    ggplot2::xlab(paste0("PC1 ", percentVar[1],"% variance")) +
+                                    ggplot2::ylab(paste0("PC2 ", percentVar[2],"% variance")) +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -482,7 +539,38 @@ vs_rnaseq_mdsUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Plot code",
+                                '
+                                # spsRNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that is exported to your global environment if you stop SPS app locally or
+                                # can be download from "Normalize Data" sub-tab as an RDS file.
+                                # You can also use the csv format file from download but you
+                                # need to use `read.csv` instead of `SummarizedExperiment::assay` method below.
+                                # Sample is the unique sample name, or experiment groups (Sample column in your targets file)
+                                d <- stats::cor(SummarizedExperiment::assay(RNA_trans))
+                                distmat <- stats::dist(1 - d)
+                                ## perform MDS
+                                mdsData <- data.frame(stats::cmdscale(distmat))
+                                mds <- cbind(mdsData, as.data.frame(Sample))
+
+                                p1 <- ggplot2::ggplot(mdsData, ggplot2::aes(X1, X2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) + ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("Multidimensional Scaling (MDS) plot") +
+                                    ggplot2::xlab("X1") +
+                                    ggplot2::ylab("X2") +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -699,7 +787,29 @@ vs_rnaseq_heatmapUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Plot code",
+                                '
+                                # spsRNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that is exported to your global environment if you stop SPS app locally or
+                                # can be download from "Normalize Data" sub-tab as an RDS file.
+                                # You can also use the csv format file from download but you
+                                # need to use `read.csv` instead of `SummarizedExperiment::assay` method below.
+                                # Sample is the unique sample name, or experiment groups (Sample column in your targets file)
+                                anno <- as.data.frame(Sample); colnames(anno) <- "Condition"
+                                sampleDists <- stats::dist(t(SummarizedExperiment::assay(spsRNA_trans)))
+                                sampleDistMatrix <- as.matrix(sampleDists)
+                                rownames(anno) <- colnames(sampleDistMatrix)
+
+                                pheatmap::pheatmap(
+                                    mat = sampleDistMatrix,
+                                    clustering_distance_rows = sampleDists,
+                                    clustering_distance_cols = sampleDists,
+                                    annotation_col = anno
+                                )
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -780,7 +890,7 @@ vs_rnaseq_heatmapServer <- function(id, shared){
                 sampleDistMatrix <- as.matrix(sampleDists)
                 rownames(anno) <- colnames(sampleDistMatrix)
 
-               pheatmap::pheatmap(
+                pheatmap::pheatmap(
                     mat = sampleDistMatrix,
                     clustering_distance_rows = sampleDists,
                     clustering_distance_cols = sampleDists,
@@ -836,7 +946,30 @@ vs_rnaseq_dendroUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Plot code",
+                                '
+                                # spsRNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that is exported to your global environment if you stop SPS app locally or
+                                # can be download from "Normalize Data" sub-tab as an RDS file.
+                                # You can also use the csv format file from download but you
+                                # need to use `read.csv` instead of `SummarizedExperiment::assay` method below.
+                                d <- stats::cor(SummarizedExperiment::assay(spsRNA_trans))
+                                ## Hierarchical cluster analysis
+                                hc <- stats::hclust(stats::dist(1 - d))
+                                tree <- ape::as.phylo(hc)
+                                # Cut the tree to groups
+                                cls <- cutree(hc, 2) # change the number
+                                p_colors <- hcl.colors(2, palette = "Set 2")[cls]
+                                # one of "phylogram", "fan", "radial", "unrooted", "cladogram"
+                                plot(
+                                    tree, type = "phylogram", no.margin = TRUE, cex = 1,
+                                    edge.color = "steelblue", tip.color = p_colors
+                                )
+                                title("Dendrogram", line = -1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(
@@ -847,33 +980,31 @@ vs_rnaseq_dendroUI <- function(id){
                                 choices = c("pearson", "kendall", "spearman"),
                                 width = "100%"
                             )
-                        ) %>%
-                            bsHoverPopover(
-                                "Correlation Method",
-                                'one of \"pearson\" (default), \"kendall\", or \"spearman\"',
-                                placement = "top"
-                            ),
+                        ),
                         fluidRow(
                             class = "center-child",
                             selectizeInput(
                                 inputId = ns("layout"),
                                 label = "Tree layout",
-                                choices = c('rectangular', 'dendrogram', 'slanted',
-                                            'ellipse', 'roundrect', 'fan',
-                                            'circular', 'inward_circular',
-                                            'radial', 'equal_angle',
-                                            'daylight', 'ape'),
+                                choices = c("phylogram", "fan", "radial", "unrooted", "cladogram"),
                                 width = "100%"
+                            )
+                        ),
+                        fluidRow(
+                            class = "center-child",
+                            numericInput(
+                                inputId = ns("tree_cut"),
+                                label = "Cut the tree",
+                                value = 1,
+                                min = 1
                             )
                         ) %>%
                             bsHoverPopover(
-                                "Correlation Method",
-                                "one of 'rectangular', 'dendrogram', 'slanted',
-                                'ellipse', 'roundrect', 'fan', 'circular',
-                                'inward_circular', 'radial', 'equal_angle',
-                                'daylight' or 'ape'",
+                                "Cut the tree to groups",
+                                "How many groups do you want to cut the tree to?",
                                 placement = "top"
                             ),
+
                         fluidRow(
                             class = "center-child",
                             clearableTextInput(
@@ -889,72 +1020,19 @@ vs_rnaseq_dendroUI <- function(id){
                             ),
                         fluidRow(
                             class = "center-child",
-                            sliderInput(
-                                inputId = ns("title_size"),
-                                label = "Plot title Size",
-                                min = 1,
-                                max = 100,
-                                step = 1,
-                                value = 20,
-                                width = "100%",
-                                ticks = TRUE
-                            )
-                        ) %>%
-                            bsHoverPopover("Plot title size", "", placement = "top"),
-                        fluidRow(
-                            class = "center-child",
-                            clearableTextInput(
-                                inputId = ns("xlab"),
-                                label = "X axis label",
-                                value = ""
+                            numericInput(
+                                inputId = ns("cex"),
+                                label = "Label size",
+                                value = 1,
+                                min = 0.1,
+                                step = 0.1
                             )
                         ) %>%
                             bsHoverPopover(
-                                "X axis label",
-                                "Type your X axis label",
+                                "Label size",
+                                "How large should the labels be",
                                 placement = "top"
-                            ),
-                        fluidRow(
-                            class = "center-child",
-                            sliderInput(
-                                inputId = ns("xlab_size"),
-                                label = "X axis  title size",
-                                min = 1,
-                                max = 100,
-                                step = 1,
-                                value = 16,
-                                width = "100%",
-                                ticks = TRUE
                             )
-                        ) %>%
-                            bsHoverPopover("X axis  title size", "", placement = "top"),
-                        fluidRow(
-                            class = "center-child",
-                            clearableTextInput(
-                                inputId = ns("ylab"),
-                                label = "Y axis label",
-                                value = ""
-                            )
-                        ) %>%
-                            bsHoverPopover(
-                                "Y axis label",
-                                "Type your Y axis label",
-                                placement = "top"
-                            ),
-                        fluidRow(
-                            class = "center-child",
-                            sliderInput(
-                                inputId = ns("ylab_size"),
-                                label = "Y axis  title size",
-                                min = 1,
-                                max = 100,
-                                step = 1,
-                                value = 16,
-                                width = "100%",
-                                ticks = TRUE
-                            )
-                        ) %>%
-                            bsHoverPopover("Y axis  title size", "", placement = "top")
                     )
                 )
             ),
@@ -991,21 +1069,18 @@ vs_rnaseq_dendroServer <- function(id, shared){
                 need(not_empty(shared$rnaseq$trans_table), message = "Count table not transformed")
             )
             ## cor() computes the correlation coefficient
-            d <- stats::cor( shared$rnaseq$trans_table, method = input$cor_method)
+            d <- stats::cor(shared$rnaseq$trans_table, method = input$cor_method)
             ## Hierarchical cluster analysis
             hc <- stats::hclust(stats::dist(1 - d))
             tree <- ape::as.phylo(hc)
-            ggtree::ggtree(tree, color = "steelblue", layout = input$layout) +
-                ggtree::geom_tippoint(size=0.5, alpha=0.5) +
-                ggtree::geom_tiplab() +
-                ggplot2::xlab(input$xlab) +
-                ggplot2::ylab(input$ylab) +
-                ggplot2::ggtitle(input$plot_title)+
-                ggplot2::theme(
-                    plot.title = ggplot2::element_text(size = input$title_size, hjust = 0.5),
-                    axis.title.x = ggplot2::element_text(size = input$xlab_size),
-                    axis.title.y = ggplot2::element_text(size = input$ylab_size)
-                )
+            cls <- cutree(hc, as.numeric(input$tree_cut))
+            p_colors <- hcl.colors(as.numeric(input$tree_cut), palette = "Set 2")[cls]
+
+            plot(
+                tree, type = input$layout,no.margin = TRUE, cex = input$cex,
+                edge.color = "steelblue", tip.color = p_colors
+            )
+            title(input$plot_title, line = -1)
         })
     }
     moduleServer(id, module)
@@ -1049,7 +1124,35 @@ vs_rnaseq_tsneUI <- function(id){
                         fluidRow(
                             style = 'margin-top: 25px;',
                             class = "text-center",
-                            canvasBtn(ns('plot_main'))
+                            canvasBtn(ns('plot_main')), br(),
+                            spsCodeBtn(
+                                ns("plot_code"), color = "white", label = "Plot code",
+                                '
+                                # spsRNA_trans is the DESeq2 rlog or vst transformed count object
+                                # that is exported to your global environment if you stop SPS app locally or
+                                # can be download from "Normalize Data" sub-tab as an RDS file.
+                                # You can also use the csv format file from download but you
+                                # need to use `read.csv` instead of `SummarizedExperiment::assay` method below.
+                                countDF_uni <- t(unique(SummarizedExperiment::assay(spsRNA_trans))) # removes duplicates and transpose matrix, samples perspective
+                                tsne_out <- Rtsne::Rtsne(countDF_uni, dims = 2, theta = 0.0, perplexity = 3)
+                                plotdata <- data.frame(dim1 = tsne_out$Y[,1], dim2 = tsne_out$Y[,2])
+
+                                p1 <- ggplot2::ggplot(plotdata, ggplot2::aes(dim1, dim2)) +
+                                    ggplot2::geom_point(size = 2, ggplot2::aes(color=Sample)) + ggplot2::coord_fixed() +
+                                    ggplot2::ggtitle("t-SNE") +
+                                    ggplot2::xlab("Dim 1") +
+                                    ggplot2::ylab("Dim 2") +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(
+                                        axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                        plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                                        axis.title.x = ggplot2::element_text(size = 12),
+                                        axis.title.y = ggplot2::element_text(size = 12)
+                                    )
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         fluidRow(

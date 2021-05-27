@@ -1201,7 +1201,7 @@ spsEzUI <- function(desc="", tab_title = "Tab Title",
                     )
                 ),
             spsHr(),
-            hexPanel(ns("poweredby"), "THIS MODULE IS POWERED BY:",
+            hexPanel(ns("poweredby"), "THIS TAB IS POWERED BY:",
                      hex_imgs = c(
                          "img/sps_small.png"
                      ),

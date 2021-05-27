@@ -11,7 +11,9 @@ dynamicFile(
   label = "Browse",
   icon = NULL,
   style = "",
-  multiple = FALSE
+  multiple = FALSE,
+  buttonType = "primary",
+  placeholder = "No file selected"
 )
 
 dynamicFileServer(input, session, id, roots = c(root = "default"))
@@ -24,11 +26,17 @@ module, but DO NOT use \code{ns()} to wrap the id on server side}
 
 \item{label}{upload button label}
 
-\item{icon}{button icon, only works for \code{local} mode}
+\item{icon}{button icon, an object create by \link[shiny:icon]{shiny::icon}}
 
 \item{style}{additional button style, only works for \code{local} mode}
 
 \item{multiple}{bool, are multiple files allowed?}
+
+\item{buttonType}{string, Bootstrap button markup (color).
+Default in SPS is 'primary', other valid values include 'info', 'success', 'default',
+'warning', 'danger'.}
+
+\item{placeholder}{string, text to display before the file is uploaded}
 
 \item{input}{shiny server input}
 
@@ -71,15 +79,15 @@ and return the path immediately. It means the file has to exist on the file
 system that serves the Shiny app. If you deploy the app on places like shinyapps.io,
 users can only choose files from server.
 
-On the other hand, \code{server} mode uses original shiny default upload component.
+On the other hand, \code{server} mode uses original but enhanced shiny default upload component.
 Users can upload files from local to server. So users do not have access to
 server end file system if you deploy it online. However, the limitations are:
 \enumerate{
-\item not ideal for large files, default limit is 30MB, and there is no break point
+\item not ideal for large files, default limit is 30MB, and there is no break-point
 upload.
 \item If you are running the app on your own computer, local end and server end is
 the same, which is your computer. Using \code{server} mode will make a copy of your
-existing file to temp location which is a waste of time and storage.
+existing file to temp location and this is a waste of time and storage.
 }
 
 To set up options:
@@ -95,9 +103,9 @@ If you are not sure what mode you are on, use \code{spsUtil::spsOption('mode')} 
 \examples{
 # Simple example
 if(interactive()){
-    options(sps = list(mode='server')) # Change the mode to 'local' to see difference
+    spsOption("mode", value = "server") # Change the value to 'local' to see difference
     ui <- fluidPage(
-        dynamicFile("server_file", "server"),
+        dynamicFile(id = "server_file", label = "server"),
         verbatimTextOutput("server_out")
     )
 

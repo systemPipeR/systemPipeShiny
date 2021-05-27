@@ -105,7 +105,28 @@ vs_rnaseq_degUI <- function(id){
                         fluidRow(
                             class = "text-center",
                             h3("DEG summary plot", class = "text-info"),
-                            canvasBtn(ns('plot_deg_sum')),
+                            canvasBtn(ns('plot_deg_sum')), br(),
+                            spsCodeBtn(
+                                ns("code_deg_sum"), color = "white", label = "Plot code",
+                                '
+                                # SPS_deg_report.csv can be downloaded from "DEG report" tab -> "DEG tables" panel
+                                deg_tbl <- read.csv("SPS_deg_report.csv")
+                                p1 <-  deg_tbl %>%
+                                    dplyr::group_by(cmp, direction) %>%
+                                    dplyr::filter(direction != "Insignificant") %>%
+                                    dplyr::summarise(count =  sum(pass_filter)) %>%
+                                    ggplot2::ggplot() +
+                                    ggplot2::geom_bar(ggplot2::aes(x = count, y = cmp, fill = direction), alpha = 0.5, stat = "identity") +
+                                    ggplot2::ggtitle(paste0("DEG summary")) +
+                                    ggplot2::xlab("Gene Counts") +
+                                    ggplot2::ylab("Comparisions") +
+                                    ggplot2::scale_fill_brewer(palette="Set2") +
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                                   axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'))
+                                plotly::ggplotly(p1)
+                                '
+                            )
                         ),
                         spsHr(),
                         shinyjqui::jqui_resizable(plotly::plotlyOutput(ns('plot_deg_sum'), height = "100%", width = "100%"))
@@ -172,7 +193,47 @@ vs_rnaseq_degUI <- function(id){
                                 options = list(style = "btn-primary")
                             ),
                             spsHr(),
-                            canvasBtn(ns('plot_volc'))
+                            canvasBtn(ns('plot_volc')), br(),
+                            fluidRow(
+                                class = "text-center",
+                                spsCodeBtn(
+                                    class = "text-center",
+                                    ns("code_volc"), color = "white", label = "Plot code",
+                                    '
+                                    # SPS_deg_report.csv can be downloaded from "DEG report" tab -> "DEG tables" panel
+                                    deg_tbl <- read.csv("SPS_deg_report.csv")
+                                    # you need to change the comparision group to a valid group name according to your dataset in the next line
+                                    plot_data <- dplyr::filter(deg_tbl, cmp == "M1_V1")
+                                    directions <- unique(plot_data$direction)
+
+                                    colors <- c()
+                                    if ("Down" %in% directions) colors <- c(colors, \'#66c2a5\') # green
+                                    if ("Insignificant" %in% directions) colors <- c(colors, \'gray\')
+                                    if ("Up" %in% directions) colors <- c(colors, \'#fccdac\') # red
+
+                                    if(!sum(plot_data$pass_filter)) stop("valcano plot has no gene passed the filters")
+                                    # Change the FDR and log folder change value below to the value you used to filter DEGs
+                                    fdr <- 1; lfc <- 0
+                                    p1 <- plot_data %>%
+                                    ggplot2::ggplot(ggplot2::aes(x=log2FoldChange,
+                                                                 y=-log10(as.numeric(padj)),
+                                                                 label=genes),
+                                                    alpha = 0.7) +
+                                    ggplot2::geom_point(ggplot2::aes(color = direction))+
+                                    ggplot2::geom_vline(xintercept = c(-lfc, lfc), linetype=2) +
+                                    ggplot2::geom_hline(yintercept = -log10(fdr), linetype = 2) +
+                                    ggplot2::ggtitle(paste(\'Volcano plot\')) +
+                                    ggplot2::xlab("log2 fold change") +
+                                    ggplot2::ylab("-log10(p-adjust value)") +
+                                    ggplot2::scale_colour_manual(values = colors)+
+                                    ggplot2::theme_minimal() +
+                                    ggplot2::theme(axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                                   axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'))
+
+                                    plotly::ggplotly(p1)
+                                '
+                                )
+                            )
                         ),
                         column(1),
                         column(
@@ -195,7 +256,26 @@ vs_rnaseq_degUI <- function(id){
                                 choices = c(`No comparision yet` = 'nothing')
                             ),
                             spsHr(),
-                            canvasBtn(ns('plot_upset'))
+                            canvasBtn(ns('plot_upset')), br(),
+                            fluidRow(
+                                class = "text-center",
+                                spsCodeBtn(
+                                    class = "text-center",
+                                    ns("code_upset"), color = "white", label = "Plot code",
+                                    '
+                                    # SPS_deg_report.csv can be downloaded from "DEG report" tab -> "DEG tables" panel.
+                                    deg_tbl <- readr::read_csv("SPS_deg_report.csv")
+                                    # specify the comparision groups names below that you want to use in the upset plot
+                                    cmp_groups <- c("M1_A1", "M1_V1")
+                                    plot_data <- deg_tbl %>% dplyr::filter(pass_filter == 1)
+                                    up_list <- lapply(cmp_groups, function(x){
+                                        dplyr::filter(plot_data, cmp == x) %>% dplyr::pull(genes)
+                                    })
+                                    names(up_list) <- cmp_groups
+                                    UpSetR::upset(UpSetR::fromList(up_list), order.by="freq")
+                                    '
+                                )
+                            )
                         ),
                         column(1),
                         column(
@@ -218,7 +298,42 @@ vs_rnaseq_degUI <- function(id){
                                 choices = c(`No comparision yet` = 'nothing')
                             ),
                             spsHr(),
-                            canvasBtn(ns('plot_ma'))
+                            canvasBtn(ns('plot_ma')), br(),
+                            fluidRow(
+                                class = "text-center",
+                                spsCodeBtn(
+                                    class = "text-center",
+                                    ns("code_ma"), color = "white", label = "Plot code",
+                                    '
+                                    # SPS_deg_report.csv can be downloaded from "DEG report" tab -> "DEG tables" panel.
+                                    deg_tbl <- readr::read_csv("SPS_deg_report.csv")
+                                    # specify the comparision groups names below that you want to use in the MA plot
+                                    plot_data <- dplyr::filter(deg_tbl, cmp == "M1_V1") %>%
+                                        tidyr::drop_na()
+                                    directions <- unique(plot_data$direction)
+                                    colors <- c()
+                                    if ("Down" %in% directions) colors <- c(colors, \'#66c2a5\')
+                                    if ("Insignificant" %in% directions) colors <- c(colors, \'gray\')
+                                    if ("Up" %in% directions) colors <- c(colors, \'#fccdac\')
+                                    if(!sum(plot_data$pass_filter)) warning("MA plot has no gene passed the filters")
+                                    # Change the  log folder change value below to the value you used to filter DEGs
+                                    lfc <- 0
+                                    p1 <- plot_data %>%
+                                        ggplot2::ggplot(ggplot2::aes(x = baseMean, y = log2FoldChange)) +
+                                        ggplot2::geom_hline(yintercept = 0, linetype=1) +
+                                        ggplot2::geom_hline(yintercept = c(-lfc, lfc), linetype=2) +
+                                        ggplot2::geom_point(ggplot2::aes(colour = direction), size = 0.5) +
+                                        ggplot2::scale_colour_manual(values = colors) +
+                                        ggplot2::scale_x_continuous(trans = "log10", limits = c(0.1,300000))+
+                                        ggplot2::ggtitle(paste0("Bland-Altman plot"))+
+                                        ggplot2::theme_minimal() +
+                                        ggplot2::theme(axis.line.x = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'),
+                                                   axis.line.y = ggplot2::element_line(colour = \'black\', size=0.5, linetype=\'solid\'))
+
+                                    plotly::ggplotly(p1)
+                                    '
+                                )
+                            )
                         ),
                         column(1),
                         column(
@@ -261,7 +376,18 @@ vs_rnaseq_degUI <- function(id){
                                     placement = "bottom"
                                 ),
                             spsHr(),
-                            canvasBtn(ns('plot_heat'))
+                            canvasBtn(ns('plot_heat')), br(),
+                            fluidRow(
+                                class = "text-center",
+                                spsCodeBtn(
+                                    ns("code_heat"), color = "white", label = "Plot code",
+                                    '
+                                    # DEG table can be downloaded from "DEG report" tab -> "DEG tables" panel.
+                                    # Plotting code is very similar to "Plot Heatmap", refer to that tab
+                                    '
+                                )
+                            )
+
                         ),
                         column(1),
                         column(

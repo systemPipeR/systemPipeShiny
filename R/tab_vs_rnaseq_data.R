@@ -97,8 +97,8 @@ vs_rnaseq_dataUI <- function(id) {
                 title = "1. Confirm to use example targets table or upload a new one",
                 div(
                     fluidRow(
-                        h3("Load targets table"),
-                        HTML('<p>Only <b>SampleName</b> and <b>Factor</b> columns are required.</p>'),
+                        h3("Load targets table", style="padding-left: 30px;"),
+                        HTML('<p style="padding-left: 30px;">Only <b>SampleName</b> and <b>Factor</b> columns are required.</p>'),
                         column(
                             3,
                             box(
@@ -137,11 +137,11 @@ vs_rnaseq_dataUI <- function(id) {
                         )
                     ), spsHr(),
                     fluidRow(
-                        h3("Targets header"),
+                        h3("Targets header", style="padding-left: 15px;"),
                         p("Header with <CMP> in targets file will be used as
                           groups for DEG analysis. The parsed comparision groups
                           are displayed on the right. Please confirm this is the
-                          the desired DEG groups."),
+                          the desired DEG groups.", style="padding-left: 15px;"),
                         box(
                             verbatimTextOutput(ns("targets_header_raw")),
                             title = "Original header lines",
@@ -160,7 +160,7 @@ vs_rnaseq_dataUI <- function(id) {
                 div(
                     style = "background-color: #f5f5f5; margin: 5px;",
                     fluidRow(
-                        h3("Load count table"),
+                        h3("Load count table", style="padding-left: 30px;"),
                         column(
                             3,
                             box(closable = FALSE, width = 12,
