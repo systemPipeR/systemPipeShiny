@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.41</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -115,12 +115,62 @@
       <small>Source: <a href='https://github.com/systemPipeR/systemPipeShiny/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="systempipeshiny-1310-dev" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.10">
+<a href="#systempipeshiny-1310-dev" class="anchor"></a>systemPipeShiny 1.3.10 Dev</h1>
+<div id="new-feature" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-feature" class="anchor"></a>New Feature</h2>
+<ul>
+<li><p>Add code display buttons to most plots that will show code to reproduce the plot.</p></li>
+<li>
+<p>Add two args <code>buttonType</code> and <code>placeholder</code> to <code>dynamicFile</code>, now users can specify what bootstrap color the button is and use <code>placeholder</code> to specify initial text on the upload bar.</p>
+<ul>
+<li>Enhanced the original shiny <code>fileInput</code>, now users can also specify icon and button bootstrap colors for “server” mode in <code>dynamicFile</code>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="major-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-change" class="anchor"></a>Major Change</h2>
+</div>
+<div id="minor-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-change" class="anchor"></a>Minor Change</h2>
+<ul>
+<li>For RNAseq module, the dendrogram plot library changed from {ggtree} package to {ape}. {ggtree} is not very compatible with Shiny under current version. Plot cannot be created, always error, but no error outside Shiny. An issue has submitted to Shiny on Github. We may switch back to ggtree when this is fixed.</li>
+<li>Small UI optimization for RNAseq module.</li>
+<li>Fixed some typo in different tabs.</li>
+</ul>
+</div>
+<div id="bug-fix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
+<ul>
+<li>
+<p><a href="https://github.com/systemPipeR/systemPipeShiny/pull/85"><a href='https://github.com/systemPipeR/systemPipeShiny/issues/85'>#85</a></a> fix <code>dynamicFile</code> <code>icon</code> not working</p>
+<ul>
+<li>Also add some icon validation code</li>
+</ul>
+</li>
+<li><p>Fix the admin server tabs get loaded twice. Added a flag to prevent this from happening.</p></li>
+</ul>
+</div>
+</div>
+    <div id="systempipeshiny-130" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.0">
+<a href="#systempipeshiny-130" class="anchor"></a>systemPipeShiny 1.3.0</h1>
+<ul>
+<li>Update version number to 1.3.0 per Bioconductor regulation.</li>
+</ul>
+</div>
     <div id="systempipeshiny-1140" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.40">
 <a href="#systempipeshiny-1140" class="anchor"></a>systemPipeShiny 1.1.40</h1>
-<div id="major-change" class="section level2">
+<div id="major-change-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-change" class="anchor"></a>Major change</h2>
+<a href="#major-change-1" class="anchor"></a>Major change</h2>
 <ul>
 <li><p>Add <code>is_demo</code> option: only affect workflow module right now. Lock users inside a temp folder when using the WF module and give users a new temp folder every time they refresh. This will prevent directory exist problem if many users are using a same deploy instance.</p></li>
 <li><p>Add <code>welcome_guide</code> option: whether to enable the welcome guide which highlights the guide dropdown menu.</p></li>
@@ -128,9 +178,9 @@
 <li><p><code>loadDF</code>, <code>dynamicFile</code> and <code>dynamicFileServer</code> added back to this mainframe work package instead of <code>spsComps</code>, because these dependencies have already been using in <code>SPS</code>. Leave these functions in <code>spsComps</code> will introduce extra dependencies, and these functions are not too frequently used outside the framework.</p></li>
 </ul>
 </div>
-<div id="minor-change" class="section level2">
+<div id="minor-change-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change" class="anchor"></a>Minor change</h2>
+<a href="#minor-change-1" class="anchor"></a>Minor change</h2>
 <ul>
 <li><p>Option <code>warning_toast</code> now also checks if you are on “local” mode.</p></li>
 <li><p>Deleted some unwanted entries in reference generating <code>yaml</code> file.</p></li>
@@ -144,9 +194,9 @@
 <li><p>Add some screenshots to readme.</p></li>
 </ul>
 </div>
-<div id="bug-fix" class="section level2">
+<div id="bug-fix-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-1" class="anchor"></a>Bug fix</h2>
 <ul>
 <li>Fix a bug when that loads the server twice</li>
 <li>Fix some default option values</li>
@@ -162,9 +212,9 @@
     <div id="systempipeshiny-1135" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.35">
 <a href="#systempipeshiny-1135" class="anchor"></a>systemPipeShiny 1.1.35</h1>
-<div id="major-change-1" class="section level2">
+<div id="major-change-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-change-1" class="anchor"></a>Major change</h2>
+<a href="#major-change-2" class="anchor"></a>Major change</h2>
 <ul>
 <li>
 <p>Login feature added:</p>
@@ -184,16 +234,16 @@
 </li>
 </ul>
 </div>
-<div id="minor-change-1" class="section level2">
+<div id="minor-change-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-1" class="anchor"></a>Minor change</h2>
+<a href="#minor-change-2" class="anchor"></a>Minor change</h2>
 <ul>
 <li>Add<code>target="_blank"</code> to all external links in the app, so when they are clicked, it will open in a new tab.</li>
 </ul>
 </div>
-<div id="bug-fix-1" class="section level2">
+<div id="bug-fix-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-1" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-2" class="anchor"></a>Bug fix</h2>
 <ul>
 <li><p>FIx bugs due to login page caused server not loading</p></li>
 <li><p>Add 1s delay in javascript after login to resize the page so the dashboard can be displayed normal.</p></li>
@@ -204,9 +254,9 @@
     <div id="systempipeshiny-1130" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.30">
 <a href="#systempipeshiny-1130" class="anchor"></a>systemPipeShiny 1.1.30</h1>
-<div id="major-change-2" class="section level2">
+<div id="major-change-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-change-2" class="anchor"></a>Major change</h2>
+<a href="#major-change-3" class="anchor"></a>Major change</h2>
 <ul>
 <li><p>new <code>spsAccount</code> class. This class is associated with login management , which allows users to create/delete user/admin accounts, change password, change roles.</p></li>
 <li><p>Deprecated the <code>spsPlotContainer</code> class since we rewrite the Canvas feature and move to a separate package {drawer}.</p></li>
@@ -229,9 +279,9 @@
 <li><p>Based on the module installation change, module loading methods are also changed. Module server functions are only called if users set the option to load them. In previous versions, the server functions are still loaded, just hide the unloaded module UI. This saves a lot of time on app starting time, roughly from &gt; 10s to &lt; 3s if none of the default modules are loaded.</p></li>
 </ul>
 </div>
-<div id="bug-fix-2" class="section level2">
+<div id="bug-fix-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-2" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-3" class="anchor"></a>Bug fix</h2>
 <ul>
 <li><p>update all links to our new website: <a href="https://systempipe.org/sps" class="uri">https://systempipe.org/sps</a></p></li>
 <li><p>Fix some bugs in the guide system</p></li>
@@ -241,9 +291,9 @@
     <div id="systempipeshiny-1120" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.20">
 <a href="#systempipeshiny-1120" class="anchor"></a>systemPipeShiny 1.1.20</h1>
-<div id="major-change-3" class="section level2">
+<div id="major-change-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-change-3" class="anchor"></a>Major change</h2>
+<a href="#major-change-4" class="anchor"></a>Major change</h2>
 <ul>
 <li><p>3 default modules complete: <code>workflow</code>, <code>RNAseq</code>,<code>quick ggplot</code>. Details of these modules updated in our website: <a href="https://systempipe.org/sps">&lt;https://systempipe.org/sps&gt;</a>{.uri}.</p></li>
 <li>
@@ -265,16 +315,16 @@
 <li><p>The interactive guide is back. After a few versions of tests, we added the guide system back. This time, developers can customize their own guides. A <code>guide_content.R</code> file is created when a SPS project initialize. It is stored in <code>R</code> of folder relate to the project root. The guide will also be displayed on the app top right corner.</p></li>
 </ul>
 </div>
-<div id="minor-change-2" class="section level2">
+<div id="minor-change-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-2" class="anchor"></a>Minor change</h2>
+<a href="#minor-change-3" class="anchor"></a>Minor change</h2>
 <ul>
 <li>updated all unit test to testthat v3 format.</li>
 </ul>
 </div>
-<div id="bug-fix-3" class="section level2">
+<div id="bug-fix-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-3" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-4" class="anchor"></a>Bug fix</h2>
 <ul>
 <li><p>fix bugs due to shiny updates to 1.6.0</p></li>
 <li><p>Fix all bugs caused by <a href="https://github.com/RinteRface/shinydashboardPlus">shinydashboardPlus</a> v2.0 updates.</p></li>

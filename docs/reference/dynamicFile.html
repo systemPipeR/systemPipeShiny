@@ -79,7 +79,7 @@ similar behavior as shiny::fileInput.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.41</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -141,7 +141,9 @@ similar behavior as <a href='https://rdrr.io/pkg/shiny/man/fileInput.html'>shiny
   label <span class='op'>=</span> <span class='st'>"Browse"</span>,
   icon <span class='op'>=</span> <span class='cn'>NULL</span>,
   style <span class='op'>=</span> <span class='st'>""</span>,
-  multiple <span class='op'>=</span> <span class='cn'>FALSE</span>
+  multiple <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  buttonType <span class='op'>=</span> <span class='st'>"primary"</span>,
+  placeholder <span class='op'>=</span> <span class='st'>"No file selected"</span>
 <span class='op'>)</span>
 
 <span class='fu'>dynamicFileServer</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>session</span>, <span class='va'>id</span>, roots <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>root <span class='op'>=</span> <span class='st'>"default"</span><span class='op'>)</span><span class='op'>)</span></pre>
@@ -164,7 +166,7 @@ module, but DO NOT use <code>ns()</code> to wrap the id on server side</p></td>
     </tr>
     <tr>
       <th>icon</th>
-      <td><p>button icon, only works for <code>local</code> mode</p></td>
+      <td><p>button icon, an object create by <a href='https://rdrr.io/pkg/shiny/man/icon.html'>shiny::icon</a></p></td>
     </tr>
     <tr>
       <th>style</th>
@@ -173,6 +175,16 @@ module, but DO NOT use <code>ns()</code> to wrap the id on server side</p></td>
     <tr>
       <th>multiple</th>
       <td><p>bool, are multiple files allowed?</p></td>
+    </tr>
+    <tr>
+      <th>buttonType</th>
+      <td><p>string, Bootstrap button markup (color).
+Default in SPS is 'primary', other valid values include 'info', 'success', 'default',
+'warning', 'danger'.</p></td>
+    </tr>
+    <tr>
+      <th>placeholder</th>
+      <td><p>string, text to display before the file is uploaded</p></td>
     </tr>
     <tr>
       <th>input</th>
@@ -211,14 +223,14 @@ store in the temp. Rather, it directly parses the path on the local file system
 and return the path immediately. It means the file has to exist on the file
 system that serves the Shiny app. If you deploy the app on places like shinyapps.io,
 users can only choose files from server.</p>
-<p>On the other hand, <code>server</code> mode uses original shiny default upload component.
+<p>On the other hand, <code>server</code> mode uses original but enhanced shiny default upload component.
 Users can upload files from local to server. So users do not have access to
 server end file system if you deploy it online. However, the limitations are:</p><ol>
-<li><p>not ideal for large files, default limit is 30MB, and there is no break point
+<li><p>not ideal for large files, default limit is 30MB, and there is no break-point
 upload.</p></li>
 <li><p>If you are running the app on your own computer, local end and server end is
 the same, which is your computer. Using <code>server</code> mode will make a copy of your
-existing file to temp location which is a waste of time and storage.</p></li>
+existing file to temp location and this is a waste of time and storage.</p></li>
 </ol>
 
 <p>To set up options:</p><ol>
@@ -233,9 +245,9 @@ set up mode.</p></li>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Simple example</span>
 <span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span><span class='op'>(</span>sps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>mode<span class='op'>=</span><span class='st'>'server'</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Change the mode to 'local' to see difference</span>
+    <span class='fu'>spsOption</span><span class='op'>(</span><span class='st'>"mode"</span>, value <span class='op'>=</span> <span class='st'>"server"</span><span class='op'>)</span> <span class='co'># Change the value to 'local' to see difference</span>
     <span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'>fluidPage</span><span class='op'>(</span>
-        <span class='fu'>dynamicFile</span><span class='op'>(</span><span class='st'>"server_file"</span>, <span class='st'>"server"</span><span class='op'>)</span>,
+        <span class='fu'>dynamicFile</span><span class='op'>(</span>id <span class='op'>=</span> <span class='st'>"server_file"</span>, label <span class='op'>=</span> <span class='st'>"server"</span><span class='op'>)</span>,
         <span class='fu'>verbatimTextOutput</span><span class='op'>(</span><span class='st'>"server_out"</span><span class='op'>)</span>
     <span class='op'>)</span>
 
