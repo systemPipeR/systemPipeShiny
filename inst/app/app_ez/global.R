@@ -11,11 +11,11 @@ library(magrittr) # load pipes
 ## SPS options
 # read "https://systempipe.org/sps/adv_features/config/#app-options" for details
 # title: dashboard and website title - any string
-# title_logo: logo to display when dashboard is collapsed and on website tab - url of an image
+# title_logo: logo to display when dashboard is collapsed and on browser tab - path/url of an image
 # mode: running mode - "local", "server"
 # warning_toast: some warning messages to check potential risks - TRUE, FALSE
 # login_screen: to show login screen? - TRUE, FALSE
-# login_theme: login screen themes, login_screen need be TRUE - "random"
+# login_theme: login screen themes, login_screen need be TRUE - "random", "empty", "vhelix", "hhelix", "biomatrix"
 # use_crayon: Do you want colorful terminal messages? TRUE, FALSE
 # verbose: display some info during processing? - TRUE, FALSE
 # admin_url: admin_page query url - "admin"

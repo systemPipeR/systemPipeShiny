@@ -93,6 +93,14 @@ wfUI <- function(id){
 wfServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
+        if(length(checkNameSpace("systemPipeR", quietly = TRUE)) != 0) return({
+            spswarn("Install systemPipeR version >= 1.27.10")
+            shinyjs::runjs('$("#shiny-tab-wf").children().remove();$("#shiny-tab-wf").append($("<h4>Insatall systemPipeR &gt;= 1.27.10</h4>"))')
+        })
+        if(packageVersion("systemPipeR") < "1.27.11") return({
+            spswarn("Upgrade systemPipeR version >= 1.27.10")
+            shinyjs::runjs('$("#shiny-tab-wf").children().remove();$("#shiny-tab-wf").append($("<h4>Upgrade systemPipeR version &gt;= 1.27.10</h4>"))')
+        })
         wf_targetServer("wf_targets", shared)
         wf_setupServer("wf_setup", shared)
         wf_wfServer("wf_wf", shared)
