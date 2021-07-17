@@ -15,6 +15,15 @@
     color: rgb(2, 117, 216, 0.5);
     text-align: center;
 }
+
+#wf_plot_box.enlarge-full-screen:before{
+    content: "SPR Workflow Plot";
+    font-size: 3rem;
+    position: relative;
+    display: block;
+    color: rgb(2, 117, 216, 0.5);
+    text-align: center;
+}
 #sortable .step-grid{
     width: 100px;
     height: 75px;
@@ -73,27 +82,34 @@
     float: right;
     position: absolute;
     right: 1rem;
-    top: 1rem;
+    top: 5rem;
     cursor: pointer;
     height: 2rem;
     width: 2rem;
+    color: rgb(2, 117, 216, 0.5);
+    z-index: calc(var(--step_editor_z) - 1);
 }
 
 .enlarge-icon[enlarged='true'] {
     position: fixed;
     right: 2rem;
-    top: 2rem;
+    top: 4rem;
+    color: rgb(245 129 129);
     z-index: calc(var(--step_editor_z) + 1);
 }
 
 /*enlarge*/
 .enlarge-full-screen {
-    top: 2vh;
-    height: 95vh;
+    top: 1vh;
+    left: 1vw;
+    bottom: 0vh;
+    right: 1vw;
+    height: 99vh;
     overflow-y: auto;
-    width: 95vw;
+    width: 99vw;
+    background-color: #FFF;
     z-index: var(--step_editor_z);
-    position: absolute;
+    position: fixed;
     border: solid 3px rgb(2, 117, 216, 0.2);
     border-radius: 10px;
 }
@@ -102,3 +118,40 @@
 .spr-steps-moving {
     background-color: rgb(2, 117, 216, 0.2);
 }
+
+#step_container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 70vh;
+}
+
+/*Plot*/
+#wf_plot_box {
+    height: inherit;
+    overflow: hidden;
+}
+#wf_plot_box.enlarge-full-screen {
+    height: 95vh;
+}
+
+#wf_plot_container {
+    overflow: auto;
+}
+
+/*step control panel*/
+.step-control-panel {
+    display: flex;
+    justify-content: space-between;
+}
+
+.step-control-panel > * {
+    display: inline-block;
+}
+
+.step-control-panel .btn-group b{
+    float: left;
+    position: relative;
+    padding-top: 5px;
+}
+
+

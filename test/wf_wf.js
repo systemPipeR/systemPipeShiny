@@ -1,6 +1,5 @@
 var sortable;
 $(function(){
-    console.log(Sortable);
     sortable = Sortable.create($('#sortable')[0], {
 	    ghostClass: 'spr-steps-moving',
 	    animation: 150,
@@ -9,7 +8,8 @@ $(function(){
 });
 
 
-$('body').on('click', '#step_enlarge', function(e){
+function enlargeBox(target) {
+    $('body').on('click', target, function(e){
     let enlarged = $(this).attr('enlarged');
     $($(this).attr('enlarge_target')).toggleClass('enlarge-full-screen');
     if (enlarged === 'false') {
@@ -18,3 +18,13 @@ $('body').on('click', '#step_enlarge', function(e){
         $(this).attr('enlarged', 'false').addClass('fa-expand-arrows-alt').removeClass('fa-compress-arrows-alt');
     }
 });
+}
+
+enlargeBox('#step_enlarge');
+enlargeBox('#wf_plot_enlarge');
+
+$(function(){
+    $(document).on('wf_plot_created', function(){
+        $('#wf_plot, #wf_plot svg').css({overflow: '', height: '97%', width: '100%'});
+    })
+})
