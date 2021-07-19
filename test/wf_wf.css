@@ -7,7 +7,7 @@
     transition: all 0.25s linear;
 }
 
-#sortable.enlarge-full-screen:before{
+#step_box.enlarge-full-screen:before{
     content: "SPR Workflow Designer";
     font-size: 3rem;
     position: relative;
@@ -35,11 +35,16 @@
     position: relative;
 }
 
+#sortable .step-grid:focus {
+    background-color: rgb(2, 117, 216, 0.5);
+}
+
 #sortable .step-grid .btn.action-button{
     border: none;
     padding: 0;
     display: block;
     position: absolute;
+    background-color: transparent;
     bottom: 5%;
     font-size: 2rem;
     transition: transform 0.25s linear;
@@ -64,7 +69,7 @@
     border-radius: 0 40px 40px 0;
 }
 
-#sortable.enlarge-full-screen .step-grid {
+#step_box.enlarge-full-screen .step-grid {
     width: 150px;
     height: 150px;
     font-size: 1.75rem;
@@ -78,6 +83,98 @@
     max-height: 75%;
 }
 
+/*step-box-control*/
+.step-box-control {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.step-box-control > * {
+    display: block;
+}
+
+.step-box-control > i {
+    color: #5cb85c;
+    font-size: 4rem;
+    margin: -5px 0;
+    cursor: pointer;
+}
+
+/*del step*/
+.step-trash {
+    background: #ff6873;
+    width: 33px;
+    height: 36px;
+    position: relative;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.step-trash div {
+    display: none;
+}
+
+.step-trash span {
+    position: absolute;
+    height: 5px;
+    background: #ff6873;
+    top: -6px;
+    left: -2px;
+    right: -1px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transform: rotate(0deg);
+    transition: transform 250ms;
+    transform-origin: 19% 100%;
+}
+
+.step-trash span:after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 5px;
+    background: #ff6873;
+    top: -6px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transform: rotate(0deg);
+    transition: transform 250ms;
+    transform-origin: 19% 100%;
+    left: 14px;
+}
+
+.step-trash i {
+    position: relative;
+    width: 3px;
+    height: 20px;
+    background: #fff;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+    top: 7px;
+}
+
+.step-trash i:after {
+    content: '';
+    width: 3px;
+    height: 20px;
+    background: #fff;
+    position: absolute;
+    left: -10px;
+}
+
+.step-trash i:before {
+content: '';
+    width: 3px;
+    height: 20px;
+    background: #fff;
+    position: absolute;
+    right: -9px;
+}
+
+
+
+/**/
 .enlarge-icon {
     float: right;
     position: absolute;
@@ -122,16 +219,17 @@
 #step_container {
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 70vh;
+    max-height: 80vh;
 }
 
 /*Plot*/
 #wf_plot_box {
     height: inherit;
     overflow: hidden;
+    padding-bottom: 40px;
 }
 #wf_plot_box.enlarge-full-screen {
-    height: 95vh;
+    height: 98vh;
 }
 
 #wf_plot_container {

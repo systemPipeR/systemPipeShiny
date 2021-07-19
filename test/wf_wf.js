@@ -1,13 +1,4 @@
-var sortable;
-$(function(){
-    sortable = Sortable.create($('#sortable')[0], {
-	    ghostClass: 'spr-steps-moving',
-	    animation: 150,
-	    handle: ".step-grid"
-    });
-});
-
-
+// general wf step module js
 function enlargeBox(target) {
     $('body').on('click', target, function(e){
     let enlarged = $(this).attr('enlarged');
