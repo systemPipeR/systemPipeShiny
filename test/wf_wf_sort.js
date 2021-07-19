@@ -9,6 +9,7 @@ $(function(){
         //removeOnSpill: true,
         onEnd: function(evt){
             stepIndex = sortable.toArray();
+            Shiny.setInputValue("wf-wf-step_orders", stepIndex)
         }
     });
 

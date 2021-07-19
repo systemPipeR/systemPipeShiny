@@ -18,8 +18,12 @@ makeSort <- function(sal_names, step_type){
     ), br(), br(), br(), spsHr(other_color = "rgb(2, 117, 216, 0.5)"),
     div(
       class = 'step-box-control',
-      tags$i(class="fa fa-plus") %>%
+      tags$i(class="fa fa-redo-alt shiny-bound-input action-button", id="step_cancel", style="color: #f39c12") %>%
+        bsPop("Resume to last saved state", "give up current changes and go back to the initial state or the last time you clicked save."),
+      tags$i(class="fa fa-plus shiny-bound-input action-button", id="step_new", style="color: #5cb85c;") %>%
         bsTip("Add a new step", placement = "bottom", status = "success"),
+      tags$i(class="fa fa-save shiny-bound-input action-button", id="step_save") %>%
+        bsTip("Save all modifications"),
       div(id="step_trash", class="step-trash", tags$span(), tags$i()) %>%
         bsTip("Drag here to delete a step", placement = "bottom", status = "danger")
     ),
@@ -157,47 +161,11 @@ ui <- fluidPage(
     shinydashboardPlus::dashboardHeader(title = ""),
     shinydashboardPlus::dashboardSidebar(),
     shinydashboard::dashboardBody()) %>% htmltools::findDependencies())[4:5],
+  spsDepend("toastr"),
   tags$script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"),
   tags$script(src="test/wf_wf.js"),
   tags$link(rel="stylesheet", href="test/wf_wf.css"),
   br(), br(),br(),
-  fluidRow(
-    box(
-      title = "Workflow designer actions",
-      status = "primary",
-      class = "step-control-panel",
-      width = 12,
-      solidHeader = TRUE,
-      div(
-        tags$b("Cancel:", style='color: #f39c12'),
-        actionButton("step_cancel", "", icon = animateIcon("redo-alt", color = '#f39c12')) %>%
-          bsPop("Resume to last saved state", "give up current changes and go back to the initial state or the last time you clicked save.")
-      ),
-      # div(
-      #   class= "btn-group", role='group',
-      #   tags$b("Other actions: "),
-      #   actionButton("save_steps", "", icon = animateIcon("plus")),
-      #   actionButton("save_steps", "", icon = animateIcon("save")),
-      #   actionButton("save_steps", "", icon = animateIcon("save")),
-      #   actionButton("step_del", "", icon = animateIcon("trash"))
-      # ),
-      div(
-        tags$b("Save: "),
-        actionButton("step_save", "", icon = animateIcon("save"))
-      ) %>%
-        bsPop("Save all modifications",
-              "Once this button is clicked, workflow will be overwritten, and there
-                is no way to resume last saved state. You must click here first before
-                adding to task"),
-      div(
-        tags$b("Next/Add to task: ", style="color: #00a65a"),
-        actionButton("step_totask", "", icon = animateIcon("check"))
-      ) %>%
-        bsPop("Add to SPS workflow task",
-              "Send the workflow to SPS workflow module manager so you can run it.
-              You must save it first before add to task.")
-    )
-  ),
   fluidRow(
     box(
       width = 6, id = "step_container", title = "Workflow step designer",
@@ -226,14 +194,58 @@ ui <- fluidPage(
       ),
       heightMatcher("wf_plot_container", "step_container")
     )
-  )
+  ),
+  fluidRow(
+    box(
+      title = "Workflow designer actions",
+      status = "primary",
+      class = "step-control-panel",
+      width = 12,
+      solidHeader = TRUE,
+      div(
+        style="color: #00a65a; font-size: 2rem",
+        tags$b("Next/Add to task: "),
+        actionButton("totask", "", icon = animateIcon("check"), style="font-size: 2rem")
+      ) %>%
+        bsPop("Add to SPS workflow task", placement = "bottom",
+              "Send the workflow to SPS workflow module manager so you can run it. You must save it first before add to task.")
+    )
+  ),
 
 )
 
 server <- function(input, output, session) {
   output$wf_plot <- renderPlotwf({
+    req(wf_share$sal)
     # systemPipeR::plotWF(sal, no_plot = TRUE, out_format = "dot_print")
     systemPipeR::plotWF(sal, rstudio = TRUE)
+  })
+
+  observeEvent(input$step_new, {
+    req(input$step_new)
+    ask_confirmation(
+      inputId = "new_step_confirm",
+      title = "R step or sysArgs step",
+      text = shinyWidgets::radioGroupButtons(
+        "new_step_type", "", choices = c(`R step`="r", `sysArgs Step`="sys"), status = "primary",
+        checkIcon = list(yes = icon("ok", lib = "glyphicon"))
+      ),
+      btn_labels = c("Cancel", "Next"),
+      html = TRUE
+    )
+  })
+
+  observeEvent(input$new_step_confirm, {
+    req(input$new_step_confirm)
+    req(input$new_step_type)
+    if(input$new_step_type == "r") {
+      showModal(modalDialog(size = "l", footer = tagList(modalButton("Cancel"), actionButton("save", "Save")), {
+        shinyAce::aceEditor(
+          "edit_new_r", fontSize = 14, value = "# Type your R code for this step",
+          mode = "r", wordWrap = TRUE, debounce = 10
+        )
+      }))
+    }
   })
 
   wf_share <- reactiveValues()
@@ -254,6 +266,20 @@ server <- function(input, output, session) {
     wf_share$config_ob <- makeConfig(wf_share$sal, wf_share$sal_names, wf_share$deps, session, input, output)
     output$step_box <-   renderUI({makeSort(wf_share$sal_names, wf_share$step_type)})
   })
+
+  observeEvent(input$step_save, shinyCatch(blocking_level = "error", {
+    print(input[['wf-wf-step_orders']])
+    wf_share$sal <- isolate(wf_share$sal)[as.numeric(input[['wf-wf-step_orders']])]
+    wf_share$sal_names <-  names(wf_share$sal$stepsWF)
+    wf_share$step_type <-  unlist(lapply(sal$stepsWF, function(x){if(inherits(x, "LineWise")) "R" else "sysArgs"}))
+    wf_share$deps <- wf_share$sal$dependency
+    wf_share$config_ob <- NULL
+    lapply(wf_share$config_ob, function(x) x$destroy())
+    wf_share$config_ob <- makeConfig(wf_share$sal, wf_share$sal_names, wf_share$deps, session, input, output)
+    output$wf_plot <- renderPlotwf({
+      systemPipeR::plotWF(wf_share$sal, rstudio = TRUE)
+    })
+  }))
 
 }
 system.file("extdata", package = "systemPipeR")
