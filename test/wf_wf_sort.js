@@ -12,6 +12,8 @@ $(function(){
             Shiny.setInputValue("wf-wf-step_orders", stepIndex)
         }
     });
+    stepIndex = sortable.toArray(); // get initial stepIndex
+    Shiny.setInputValue("wf-wf-step_orders", stepIndex);
 
     Sortable.create($('#step_trash')[0], {
         group: "steps",

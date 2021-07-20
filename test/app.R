@@ -1,8 +1,15 @@
 library(shiny)
 sal <- readRDS("sal.rds")
-plotwfOutput <- function(outputId, width = '100%', height = '400px'){
-  htmlwidgets::shinyWidgetOutput(outputId, 'plotwf', width, height, package = 'systemPipeR')
-}
+#' @rdname plotwf-shiny
+# #' @export
+# renderPlotwf <- function(expr, env = parent.frame(), quoted = FALSE) {
+#   if (!quoted) { expr <- substitute(expr) } # force quoted
+#   htmlwidgets::shinyRenderWidget(expr, plotwfOutput, env, quoted = TRUE)
+# }
+#
+# plotwfOutput <- function(outputId, width = '100%', height = '400px'){
+#   htmlwidgets::shinyWidgetOutput(outputId, 'plotwf', width, height, package = 'systemPipeR')
+# }
 
 makeSort <- function(sal_names, step_type){
   tagList(
@@ -149,12 +156,7 @@ makeConfig <- function(sal, sal_names, deps, session, input, output) {
 }
 
 
-#' @rdname plotwf-shiny
-# #' @export
-renderPlotwf <- function(expr, env = parent.frame(), quoted = FALSE) {
-  if (!quoted) { expr <- substitute(expr) } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, plotwfOutput, env, quoted = TRUE)
-}
+
 addResourcePath("test", ".")
 ui <- fluidPage(
   (shinydashboardPlus::dashboardPage(
@@ -190,7 +192,7 @@ ui <- fluidPage(
           hover = TRUE, enlarge_target='#wf_plot_box', enlarged='false'
         ) %>%
           bsTip("Enlarge workflow plot", "bottom", "info"),
-        plotwfOutput(outputId = "wf_plot"), br(), br()
+        systemPipeR::plotwfOutput(outputId = "wf_plot"), br(), br()
       ),
       heightMatcher("wf_plot_container", "step_container")
     )
@@ -215,7 +217,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  output$wf_plot <- renderPlotwf({
+  output$wf_plot <- systemPipeR::renderPlotwf({
     req(wf_share$sal)
     # systemPipeR::plotWF(sal, no_plot = TRUE, out_format = "dot_print")
     systemPipeR::plotWF(sal, rstudio = TRUE)
@@ -268,16 +270,19 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$step_save, shinyCatch(blocking_level = "error", {
-    print(input[['wf-wf-step_orders']])
-    wf_share$sal <- isolate(wf_share$sal)[as.numeric(input[['wf-wf-step_orders']])]
+    new_sal <- isolate(wf_share$sal)[as.numeric(input[['wf-wf-step_orders']])]
+    # if(is.null())
+    wf_share$sal <- isolate(wf_share$sal)
     wf_share$sal_names <-  names(wf_share$sal$stepsWF)
     wf_share$step_type <-  unlist(lapply(sal$stepsWF, function(x){if(inherits(x, "LineWise")) "R" else "sysArgs"}))
     wf_share$deps <- wf_share$sal$dependency
     wf_share$config_ob <- NULL
     lapply(wf_share$config_ob, function(x) x$destroy())
     wf_share$config_ob <- makeConfig(wf_share$sal, wf_share$sal_names, wf_share$deps, session, input, output)
-    output$wf_plot <- renderPlotwf({
+    # print(wf_share$sal)
+    output$wf_plot <- systemPipeR::renderPlotwf({
       systemPipeR::plotWF(wf_share$sal, rstudio = TRUE)
+      # plot(1)
     })
   }))
 
