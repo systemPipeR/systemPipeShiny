@@ -32,9 +32,9 @@ ui <- fluidPage(
         br(), br(), br(), spsHr(other_color = "rgb(2, 117, 216, 0.5)"),
         div(
           class = 'step-box-control',
-          tags$i(class="fa fa-redo shiny-bound-input action-button", id=ns("step_undo"), style="color: #3c8dbc") %>%
+          tags$button(class="fa fa-undo-alt shiny-bound-input action-button", id=ns("step_undo"), style="color: #3c8dbc") %>%
             bsTip("Undo", placement = "bottom"),
-          tags$i(class="fa fa-undo shiny-bound-input action-button", id=ns("step_redo"), style="color: #3c8dbc") %>%
+          tags$button(class="fa fa-redo-alt shiny-bound-input action-button", id=ns("step_redo"), style="color: #3c8dbc") %>%
             bsTip("Redo", placement = "bottom"),
           div(
             class = "wf-history-panel",
@@ -411,16 +411,38 @@ server <- function(input, output, session) {
             code = input$new_code_r, step_name = input$new_step_name,
             dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
           )
-          his$add(list(sal = sal, ob = list(), msg = "New R step"))
+          his$add(list(sal = sal, msg = "New R step"))
         })
         savehis(savehis() + 1)
         removeModal()
         shinyCatch(message("New R step saved."))
       }, ignoreInit = TRUE)
 
+      # step config save ---
+      ## config R
+      observeEvent(input$save_config_r, {
+        req(input$save_config_r)
+
+
+        his$add(list(sal = sal, msg = "Config R step"))
+        wf_ui_updates()
+        updateHisInfo(his)
+      })
+      ## config sys
+      observeEvent(input$save_config_sys, {
+        req(input$save_config_sys)
+        sal <- his$get()$item$sal
+
+        mysal@stepsWF$load_SPR@codeLine
+
+        his$add(list(sal = sal, msg = "Config sysArgs step"))
+        wf_ui_updates()
+        updateHisInfo(his)
+      })
+
+
       # when new sal history  ----
-      observeEvent(savehis(), {
-        req(savehis() > 0)
+      wf_ui_updates <- function(){
         sal <- his$get()$item$sal
         sal_stat <- statSal(sal)
         # update sort
@@ -433,6 +455,14 @@ server <- function(input, output, session) {
         output$wf_plot <- systemPipeR::renderPlotwf({
           systemPipeR::plotWF(sal, rstudio = TRUE)
         })
+        # update redo undo
+        shinyjs::toggleState("step_undo", !his$status()$first)
+        shinyjs::toggleState("step_redo", !his$status()$last)
+      }
+      observeEvent(savehis(), {
+        req(savehis() > 0)
+        wf_ui_updates()
+        updateHisInfo(his)
       })
       # on sort order change ----
       step_order_inited <- reactiveVal(FALSE)
@@ -443,29 +473,36 @@ server <- function(input, output, session) {
         if(step_order_triggered()) return(step_order_triggered(FALSE))
         sal <- his$get()$item$sal
         new_sal <- sal[as.numeric(input$step_orders)]
-        his$add(list(sal = new_sal, ob = list(), msg = "Change order"))
+        his$add(list(sal = new_sal, msg = "Change order"))
         savehis(savehis() + 1)
         step_order_triggered(TRUE)
       }, ignoreInit = TRUE)
+      # on redo or undo ----
+      updateHisInfo <- function(his){
+        getMsg <- function(pos){
+          quiet(shinyCatch(his$get(pos)$item$msg, shiny = FALSE)) %>%
+            if(emptyIsFalse(.)) . else "some action"
+        }
+        stats <- his$status()
+        msgs <- paste0(stats$pos, ".", getMsg(stats$pos))
+        msgs <- if(!stats$first) c(paste0(stats$pos - 1, ". ", getMsg(stats$pos - 1)), msgs) else c("-", msgs)
+        msgs <- if(!stats$last) c(msgs, paste0(stats$pos + 1, ". ", getMsg(stats$pos + 1))) else c(msgs,  "-")
+        session$sendCustomMessage("wf-undo-redo", list(msg = unname(msgs)))
+      }
+      observeEvent(input$step_undo, {
+        req(!his$status()$first)
+        shinyCatch(his$backward(), blocking_level = "error")
+        wf_ui_updates()
+        updateHisInfo(his)
+      })
+      observeEvent(input$step_redo, {
+        req(!his$status()$last)
+        shinyCatch(his$forward(), blocking_level = "error")
+        wf_ui_updates()
+        updateHisInfo(his)
+      })
       # on final save button ----
-      # observeEvent(input$step_save, shinyCatch(blocking_level = "error", {
-      #   new_sal <- isolate(wf_share$sal)[as.numeric(input[['wf-wf-step_orders']])]
-      #   # if(is.null())
-      #   # wf_share$sal <- isolate(wf_share$sal)
-      #   # wf_share$sal_names <-  names(wf_share$sal$stepsWF)
-      #   # wf_share$step_type <-  unlist(lapply(sal$stepsWF, function(x){if(inherits(x, "LineWise")) "R" else "sysArgs"}))
-      #   # wf_share$deps <- wf_share$sal$dependency
-      #   # wf_share$config_ob <- NULL
-      #   print(wf_share$config_ob)
-      #   destoryOb(wf_share$config_ob)
-      #   print(wf_share$config_ob)
-      #   wf_share$config_ob <- makeConfig(wf_share$sal, wf_share$sal_names, wf_share$deps, session, input, output, ns)
-      #   # print(wf_share$sal)
-      #   output$wf_plot <- systemPipeR::renderPlotwf({
-      #     systemPipeR::plotWF(wf_share$sal, rstudio = TRUE)
-      #     # plot(1)
-      #   })
-      # }))
+
     }
   )
 }

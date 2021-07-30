@@ -28,6 +28,8 @@ makeRmodal <- function(index, step, deps, step_name, sal_names, ns) {
     tabsetPanel(
         tabPanel(
             "Basic Info",
+            spsTitle("Step Name", "4"),
+            textInput(ns(paste0("change_name", index)), "", value = step_name),
             spsTitle("Step Object", "4"),
             tags$pre(glue(
                 "Step: ", step_name, "\n",
@@ -58,6 +60,8 @@ makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
     tabsetPanel(
         tabPanel(
             "Basic Info",
+            spsTitle("Step Name", "4"),
+            textInput(ns(paste0("change_name", index)), "", value = step_name),
             spsTitle("Step Object", "4"),
             tags$pre(glue(
                 "Step: ", step_name, "\n",
@@ -80,7 +84,8 @@ makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
                 "\n#sub-step CWL path(s)",
                 step$files$cltpaths,
                 "\n#targets file path if this step is loaded from a file",
-                if(emptyIsFalse(step$files$targets)) step$files$targets else "Targets of this step is inherited from a previous step, see Targets tab."),
+                if(emptyIsFalse(step$files$targets)) step$files$targets
+                else "Targets of this step is inherited from a previous step, see Targets tab/ or no targets required."),
                 sep = "\n"
             ))
         ),
@@ -93,11 +98,8 @@ makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
         ),
         tabPanel(
             "Targets", style = "overflow-x: auto;",
-            spsTitle("Choose targets connection", "4"),
-            selectizeInput(
-                ns(paste0("dddddd", index)), "", multiple = TRUE,
-                selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
-            ),
+            spsTitle("Targets connection(inherited):", "4"),
+            tags$pre(sal$targets_connection[[step_name]]),
             spsTitle("Targets header", "4"),
             tags$pre(glue_collapse(targets_header, sep = "\n")),
             spsTitle("Targets table", "4"),
@@ -165,13 +167,16 @@ makeConfig <- function(sal, sal_names, deps, session, input, output, ns) {
             showModal(modalDialog(
                 modal, title = paste0("Configure ", sal_names[index]), size = "l", footer = tagList(
                     modalButton("Cancel"),
-                    actionButton("save", "Save")
+                    actionButton(ns(if(is_r_step) "save_config_r" else "save_config_sys"), "Save")
                 )
             ))
             req(!is_r_step)
             outfiles_df <- as.data.frame(systemPipeR::outfiles(sal[index])[[1]])
             targets_df <- as.data.frame(sal[index]$targetsWF[[1]])
-            output[[paste0("targets", index)]] <- DT::renderDT({DT::datatable(targets_df, options = list(searching= FALSE), class = "compact")})
+            output[[paste0("targets", index)]] <- DT::renderDT({DT::datatable(
+                if(nrow(targets_df) != 0 ) targets_df else data.frame(`No targets for this step` = "No targets for this step"),
+                options = list(searching= FALSE), class = "compact"
+            )})
             output[[paste0("outfiles", index)]]<- DT::renderDT({DT::datatable(outfiles_df, options = list(searching= FALSE), class = "compact")})
         }, ignoreInit = TRUE)
     })

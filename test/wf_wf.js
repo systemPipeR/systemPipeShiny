@@ -19,6 +19,12 @@ $(function(){
         $('#wf-wf-wf_plot, #wf-wf-wf_plot svg').css({overflow: '', height: '97%', width: '100%'});
     });
 
+    Shiny.addCustomMessageHandler("wf-undo-redo", function(data){
+        $('.wf-history-panel tr td:nth-child(2)').text(function(x) {
+            return data.msg[x % data.msg.length];
+        });
+        clearPopTip();
+    });
 });
 
 function clearPopTip(){

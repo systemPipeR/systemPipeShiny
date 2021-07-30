@@ -1,18 +1,4 @@
 stepsWF:
-  step1_thm: |
-    codeLine: d
-    codeChunkStart: []
-    rmdPath: []
-    stepName: step1_thm
-    dependency:
-      step1_thm: ''
-    status:
-      status.summary: Pending
-      status.completed:
-        Step: step1_thm
-        status.summary: Pending
-      status.time: {}
-    files: []
   load_SPR: |
     codeLine: library(systemPipeR)
     codeChunkStart: 121
@@ -1184,14 +1170,21 @@ stepsWF:
         status.summary: Pending
       status.time: {}
     files: []
-statusWF:
-  step1_thm: |
-    step1_thm:
+  step18_uig: |
+    codeLine: sadasd
+    codeChunkStart: []
+    rmdPath: []
+    stepName: step18_uig
+    dependency:
+      step18_uig: heatmap
+    status:
       status.summary: Pending
       status.completed:
-        Step: step1_thm
+        Step: step18_uig
         status.summary: Pending
       status.time: {}
+    files: []
+statusWF:
   load_SPR: |
     load_SPR:
       status.summary: Pending
@@ -1375,9 +1368,14 @@ statusWF:
         Step: heatmap
         status.summary: Pending
       status.time: {}
+  step18_uig: |
+    step18_uig:
+      status.summary: Pending
+      status.completed:
+        Step: step18_uig
+        status.summary: Pending
+      status.time: {}
 targetsWF:
-  step1_thm: |
-    {}
   load_SPR: |
     {}
   trimming: |
@@ -1480,9 +1478,9 @@ targetsWF:
     {}
   heatmap: |
     {}
-outfiles:
-  step1_thm: |
+  step18_uig: |
     {}
+outfiles:
   load_SPR: |
     {}
   trimming: |
@@ -1562,11 +1560,27 @@ outfiles:
     {}
   heatmap: |
     {}
+  step18_uig: |
+    {}
 SEobj: |
-  []
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
+  - ~
 dependency:
-  step1_thm: |
-    step1_thm: ''
   load_SPR: |
     load_SPR: .na
   trimming: |
@@ -1601,9 +1615,9 @@ dependency:
     go_plot: go_enrich
   heatmap: |
     heatmap: go_enrich
+  step18_uig: |
+    step18_uig: heatmap
 targets_connection:
-  step1_thm: |
-    step1_thm: ~
   load_SPR: |
     load_SPR: ~
   trimming: |
@@ -1638,6 +1652,8 @@ targets_connection:
     go_plot: ~
   heatmap: |
     heatmap: ~
+  step18_uig: |
+    step18_uig: ~
 projectInfo: |
   project: myp
   data: data
@@ -1647,7 +1663,6 @@ projectInfo: |
   sysargslist: .SPRproject/SYSargsList.yml
   rmd_file: systemPipeRNAseq.Rmd
 runInfo: |
-  step1_thm: no
   load_SPR: no
   trimming: yes
   fastq_report: no
@@ -1665,3 +1680,4 @@ runInfo: |
   go_enrich: no
   go_plot: no
   heatmap: no
+  step18_uig: no
