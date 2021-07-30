@@ -1,5 +1,190 @@
+makeSort <- function(sal_names, step_type, ns, sal_stat){
+    # check dependencies
+    classes <- wfCheckDep(sal_stat, session)
+    # create list
+    tagList(
+        div(
+            id = ns("sortable"),
+            lapply(seq_along(sal_names), function(x)
+                div(
+                    class = classes[x], tabindex = "-1", `data-id`=x,
+                    tags$span(paste0(step_type[x], " Step ", x, ": ", sal_names[x])),
+                    actionButton(ns(paste0("configure", x)), "", title="config this step", icon = animateIcon("cog", color = "rgb(2, 117, 216, 0.5)"))
+                )
+            )
+        ),
+        if(length(unique(classes)) > 1) {
+            tagList(
+                tags$span("Please fix dependency of red steps", style="background-color: rgb(255, 104, 115, 0.25);"),
+                tags$script('$("#wf-wf-totask").prop(\'disabled\', true);')
+            )
+        } else tags$script('$("#wf-wf-totask").prop(\'disabled\', false);'),
+        tags$script(src="test/wf_wf_sort.js")
+    )
+}
 
-targets_header <- if(emptyIsFalse()
+makeRmodal <- function(index, step, deps, step_name, sal_names, ns) {
+    step_code <- as.character(step$codeLine)
+    tabsetPanel(
+        tabPanel(
+            "Basic Info",
+            spsTitle("Step Object", "4"),
+            tags$pre(glue(
+                "Step: ", step_name, "\n",
+                glue_collapse(capture.output(step) %>% remove_ANSI(), sep = "\n")
+            )),
+            spsTitle("Dependency", "4"),
+            selectizeInput(
+                ns(paste0("change_dep", index)), "", multiple = TRUE,
+                selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
+            ) %>% bsPop("Change Dependency", "You can only choose steps before this step as
+                        dependencies.", placement = "right", trigger = "hover")
+        ),
+        tabPanel(
+            "R code",
+            shinyAce::aceEditor(
+                ns(paste0("edit_code", index)), fontSize = 14,
+                step_code, "r", wordWrap = TRUE, debounce = 10,
+            )
+        )
+    )
+}
 
-targetsheader(sal)
-sal$stepsWF$trimming$targetsheader
+makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
+    cmd <- unlist(lapply(systemPipeR::cmdlist(sal[index])[[1]], function(x) glue_collapse(unname(unlist(x)), sep = "\n")))
+    cmd_str <- paste(paste0("\n#", names(cmd)), cmd, sep="\n", collapse = "\n")
+    targets_header <- step$targetsheader
+    targets_header <- if(emptyIsFalse(targets_header)) targets_header[[1]] else ""
+    tabsetPanel(
+        tabPanel(
+            "Basic Info",
+            spsTitle("Step Object", "4"),
+            tags$pre(glue(
+                "Step: ", step_name, "\n",
+                glue_collapse(capture.output(step) %>% remove_ANSI(), sep = "\n")
+            )),
+            spsTitle("Dependency", "4"),
+            selectizeInput(
+                ns(paste0("change_dep", index)), "", multiple = TRUE,
+                selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
+            ) %>% bsPop("Change Dependency", "You can only choose steps before this step as
+                        dependencies.", placement = "right", trigger = "hover"),
+            spsTitle("Tools required", "4"),
+            tags$pre(glue_collapse(step$modules %>% unlist() %>% unname(), sep = "\n")),
+            spsTitle("File paths", "4"),
+            tags$pre(glue_collapse(c(
+                "#CWL file",
+                step$files$cwl,
+                "\n#CWL input yaml path",
+                step$files$yml,
+                "\n#sub-step CWL path(s)",
+                step$files$cltpaths,
+                "\n#targets file path if this step is loaded from a file",
+                if(emptyIsFalse(step$files$targets)) step$files$targets else "Targets of this step is inherited from a previous step, see Targets tab."),
+                sep = "\n"
+            ))
+        ),
+        tabPanel(
+            "CMD",
+            spsTitle("sysArgs step commandline code", "4"),
+            shinyAce::aceEditor(
+                ns("display_cmd"), cmd_str, "sh", readOnly = TRUE, fontSize = 14, wordWrap = TRUE
+            )
+        ),
+        tabPanel(
+            "Targets", style = "overflow-x: auto;",
+            spsTitle("Choose targets connection", "4"),
+            selectizeInput(
+                ns(paste0("dddddd", index)), "", multiple = TRUE,
+                selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
+            ),
+            spsTitle("Targets header", "4"),
+            tags$pre(glue_collapse(targets_header, sep = "\n")),
+            spsTitle("Targets table", "4"),
+            DT::DTOutput(ns(paste0("targets", index)))
+        ),
+        tabPanel(
+            "Outfiles",  style = "overflow-x: auto;",
+            spsTitle("sysArgs step outfiles table", "4"),
+            DT::DTOutput(ns(paste0("outfiles", index)))
+        )
+    )
+}
+
+destoryOb <- function(ob){
+    try(lapply(ob, function(x) x$destroy()), silent = TRUE)
+}
+
+statSal <- function(sal){
+    list(
+        names = names(sal$stepsWF),
+        index = seq_along(sal),
+        len = length(sal),
+        type = unlist(lapply(sal$stepsWF, function(x){if(inherits(x, "LineWise")) "R" else "sysArgs"})),
+        deps = sal$dependency
+    )
+}
+
+newStepMain <- function(sal, ns){
+    sal_stat <- statSal(sal)
+    showModal(modalDialog(
+        size = "m",
+        footer = tagList(
+            modalButton("Cancel"),
+            actionButton(ns("new_step_choose"), "Next")
+        ), {
+            div(
+                spsTitle("What kind of step to create"),
+                shinyWidgets::radioGroupButtons(
+                    justified = TRUE,
+                    ns("new_step_type"), "", choices = c(`R step`="r", `sysArgs Step`="sys"), status = "primary",
+                    checkIcon = list(yes = icon("ok", lib = "glyphicon"))
+                ),
+                spsTitle("Where to insert the new step (index)?"),
+                p("The number here means as step X. For exmaple,
+                5 means original step 1-4 + new step 5 + original step 5-end. Default is insert after original last step."),
+                selectInput(
+                    ns("new_step_index"), "",
+                    choices = c(sal_stat$index, sal_stat$len + 1),
+                    selected = sal_stat$len + 1
+                )
+            )
+        }))
+}
+
+makeConfig <- function(sal, sal_names, deps, session, input, output, ns) {
+    lapply(seq_along(sal$stepsWF), function(index){
+        is_r_step <- inherits(sal$stepsWF[[index]], "LineWise")
+        modal <- if (is_r_step) {
+            makeRmodal(index, sal$stepsWF[[index]], deps, sal_names[index], sal_names, ns)
+        } else {
+            makeSysModal(index, sal$stepsWF[[index]], deps, sal_names[index], sal_names, sal, ns)
+        }
+        observeEvent(input[[paste0("configure", index)]], {
+            req(input[[paste0("configure", index)]])
+            showModal(modalDialog(
+                modal, title = paste0("Configure ", sal_names[index]), size = "l", footer = tagList(
+                    modalButton("Cancel"),
+                    actionButton("save", "Save")
+                )
+            ))
+            req(!is_r_step)
+            outfiles_df <- as.data.frame(systemPipeR::outfiles(sal[index])[[1]])
+            targets_df <- as.data.frame(sal[index]$targetsWF[[1]])
+            output[[paste0("targets", index)]] <- DT::renderDT({DT::datatable(targets_df, options = list(searching= FALSE), class = "compact")})
+            output[[paste0("outfiles", index)]]<- DT::renderDT({DT::datatable(outfiles_df, options = list(searching= FALSE), class = "compact")})
+        }, ignoreInit = TRUE)
+    })
+}
+
+wfCheckDep <- function(sal_stat, session){
+    classes <- rep("step-grid", sal_stat$len)
+    dep_warn <- !lapply(sal_stat$index, function(i) {
+        if(i == 1) {
+            return(!emptyIsFalse(sal_stat$deps[[i]]))
+        }
+        all(sal_stat$deps[[i]] %in% sal_stat$names[seq_len(i -1)])
+    }) %>% unlist()
+    classes[dep_warn] <- "step-grid dep-warn"
+    classes
+}

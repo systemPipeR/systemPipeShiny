@@ -163,7 +163,9 @@ loadDF <- function(choice, data_init=NULL, upload_path=NULL, eg_path=NULL,
 #' @param buttonType string, Bootstrap button markup (color).
 #' Default in SPS is 'primary', other valid values include 'info', 'success', 'default',
 #' 'warning', 'danger'.
+#' @param mode string, one of "local" or "server"
 #' @param placeholder string, text to display before the file is uploaded
+#'
 #' @importFrom shinyAce is.empty
 #' @importFrom shinyFiles shinyFilesButton
 #' @return a Shiny upload component on UI
@@ -229,7 +231,8 @@ dynamicFile <- function(
     label = "Browse", icon = NULL,
     style = "", multiple = FALSE,
     buttonType = "primary",
-    placeholder = "No file selected"
+    placeholder = "No file selected",
+    mode = spsOption('mode')
     ){
     # assertions
     stopifnot(is.character(id) && length(id) == 1)
@@ -239,10 +242,11 @@ dynamicFile <- function(
     stopifnot(is.character(buttonType) && length(buttonType) == 1)
     stopifnot(is.character(placeholder) && length(placeholder) == 1)
     stopifnot(is.logical(multiple) && length(multiple) == 1)
+    mode <- match.arg(mode, c("local", "server"))
     icon <- if(shinyAce::is.empty(icon)) icon("upload") else icon
     validateIcon(icon)
 
-    if (spsOption('mode') == "local") {
+    if (mode == "local") {
         div(class = "form-group shiny-input-container sps-file",
             tags$label(class="control-label", `for`=id, title),
             div(class="input-group",
@@ -282,11 +286,17 @@ dynamicFile <- function(
 #' `c(current=tempdir())`; unlimited: `c(shinyFiles::getVolumes()())`
 #' @export
 #' @importFrom shinyFiles getVolumes shinyFileChoose parseFilePaths
-dynamicFileServer <- function(input, session, id, roots = c(root = "default")){
+dynamicFileServer <- function(
+    input, session, id,
+    mode = spsOption('mode'),
+    roots = c(root = "default")){
+
+    mode <- match.arg(mode, c("local", "server"))
+
     file_return <- reactiveVal(NULL)
     if(names(roots)[1] == "root" & roots[1] == "default")
         roots = c(current=getwd(), shinyFiles::getVolumes()())
-    if (spsOption('mode') == "local") {
+    if (mode == "local") {
         shinyFiles::shinyFileChoose(input, id, roots = roots, session = session)
         observeEvent(input[[id]],
                      file_return({
