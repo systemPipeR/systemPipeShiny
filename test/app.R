@@ -419,27 +419,45 @@ server <- function(input, output, session) {
       }, ignoreInit = TRUE)
 
       # step config save ---
+      cur_config <- reactiveVal(NULL)
       ## config R
       observeEvent(input$save_config_r, {
         req(input$save_config_r)
-
-
+        req(cur_config())
+        sal <- his$get()$item$sal
+        sal_stat <- statSal(sal)
+        sal <- shinyCatch(blocking_level = "error", {
+          # save new code
+          sal@stepsWF[[cur_config()]]@codeLine <- shinyCatch(parse(text = input$edit_code), blocking_level = "error")
+          # rename
+          if(!emptyIsFalse(input$change_name)) stop("Step Name is empty")
+          if(sal_stat$names[cur_config()] != input$change_name) {
+            if(input$change_name %in% sal_stat$names) stop("Duplicated step name")
+            systemPipeR::renameStep(sal, step = cur_config()) <- input$change_name
+          }
+          # change dep
+          systemPipeR::dependency(mysal, step = "load_SPR") <- if(emptyMethodsList(input$change_dep)) input$change_dep else ""
+          sal
+        })
         his$add(list(sal = sal, msg = "Config R step"))
         wf_ui_updates()
         updateHisInfo(his)
+        shinyCatch(message("R step Configured"))
+        removeModal()
       })
       ## config sys
       observeEvent(input$save_config_sys, {
         req(input$save_config_sys)
+        req(cur_config())
         sal <- his$get()$item$sal
 
-        mysal@stepsWF$load_SPR@codeLine
 
         his$add(list(sal = sal, msg = "Config sysArgs step"))
         wf_ui_updates()
         updateHisInfo(his)
+        shinyCatch(message("sysArgs step Configured"))
+        removeModal()
       })
-
 
       # when new sal history  ----
       wf_ui_updates <- function(){
@@ -448,7 +466,7 @@ server <- function(input, output, session) {
         # update sort
         output$sort_box <-  renderUI({
           destoryOb(isolate(wf_share$config_ob))
-          wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns)
+          wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns, cur_config)
           makeSort(sal_stat$names, sal_stat$type, ns, sal_stat)
         })
         # update plot

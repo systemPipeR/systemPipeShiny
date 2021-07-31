@@ -29,15 +29,18 @@ makeRmodal <- function(index, step, deps, step_name, sal_names, ns) {
         tabPanel(
             "Basic Info",
             spsTitle("Step Name", "4"),
-            textInput(ns(paste0("change_name", index)), "", value = step_name),
+            p("Step name cannot duplicate following and can only be letters, numbers and underscore _, no space."),
+            tags$pre(paste(collapse = ", ", sal_names %>% {.[!. %in% step_name]})),
+            textInput(ns("change_name"), "", value = step_name),
             spsTitle("Step Object", "4"),
             tags$pre(glue(
                 "Step: ", step_name, "\n",
                 glue_collapse(capture.output(step) %>% remove_ANSI(), sep = "\n")
             )),
             spsTitle("Dependency", "4"),
+            p("No choice will be given if first step."),
             selectizeInput(
-                ns(paste0("change_dep", index)), "", multiple = TRUE,
+                ns("change_dep"), "", multiple = TRUE,
                 selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
             ) %>% bsPop("Change Dependency", "You can only choose steps before this step as
                         dependencies.", placement = "right", trigger = "hover")
@@ -45,7 +48,7 @@ makeRmodal <- function(index, step, deps, step_name, sal_names, ns) {
         tabPanel(
             "R code",
             shinyAce::aceEditor(
-                ns(paste0("edit_code", index)), fontSize = 14,
+                ns("edit_code"), fontSize = 14,
                 step_code, "r", wordWrap = TRUE, debounce = 10,
             )
         )
@@ -61,6 +64,8 @@ makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
         tabPanel(
             "Basic Info",
             spsTitle("Step Name", "4"),
+            p("Step name cannot duplicate following and can only be letters, numbers and underscore _, no space."),
+            tags$pre(paste(collapse = ", ", sal_names %>% {.[!. %in% step_name]})),
             textInput(ns(paste0("change_name", index)), "", value = step_name),
             spsTitle("Step Object", "4"),
             tags$pre(glue(
@@ -68,6 +73,7 @@ makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
                 glue_collapse(capture.output(step) %>% remove_ANSI(), sep = "\n")
             )),
             spsTitle("Dependency", "4"),
+            p("No choice will be given if first step."),
             selectizeInput(
                 ns(paste0("change_dep", index)), "", multiple = TRUE,
                 selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
@@ -154,7 +160,7 @@ newStepMain <- function(sal, ns){
         }))
 }
 
-makeConfig <- function(sal, sal_names, deps, session, input, output, ns) {
+makeConfig <- function(sal, sal_names, deps, session, input, output, ns, cur_config) {
     lapply(seq_along(sal$stepsWF), function(index){
         is_r_step <- inherits(sal$stepsWF[[index]], "LineWise")
         modal <- if (is_r_step) {
@@ -164,6 +170,7 @@ makeConfig <- function(sal, sal_names, deps, session, input, output, ns) {
         }
         observeEvent(input[[paste0("configure", index)]], {
             req(input[[paste0("configure", index)]])
+            cur_config(index)
             showModal(modalDialog(
                 modal, title = paste0("Configure ", sal_names[index]), size = "l", footer = tagList(
                     modalButton("Cancel"),

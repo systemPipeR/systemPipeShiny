@@ -1170,20 +1170,6 @@ stepsWF:
         status.summary: Pending
       status.time: {}
     files: []
-  step18_uig: |
-    codeLine: sadasd
-    codeChunkStart: []
-    rmdPath: []
-    stepName: step18_uig
-    dependency:
-      step18_uig: heatmap
-    status:
-      status.summary: Pending
-      status.completed:
-        Step: step18_uig
-        status.summary: Pending
-      status.time: {}
-    files: []
 statusWF:
   load_SPR: |
     load_SPR:
@@ -1368,13 +1354,6 @@ statusWF:
         Step: heatmap
         status.summary: Pending
       status.time: {}
-  step18_uig: |
-    step18_uig:
-      status.summary: Pending
-      status.completed:
-        Step: step18_uig
-        status.summary: Pending
-      status.time: {}
 targetsWF:
   load_SPR: |
     {}
@@ -1478,8 +1457,6 @@ targetsWF:
     {}
   heatmap: |
     {}
-  step18_uig: |
-    {}
 outfiles:
   load_SPR: |
     {}
@@ -1560,29 +1537,13 @@ outfiles:
     {}
   heatmap: |
     {}
-  step18_uig: |
-    {}
 SEobj: |
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
-  - ~
+  []
 dependency:
   load_SPR: |
-    load_SPR: .na
+    load_SPR:
+    - aaffa
+    - asas
   trimming: |
     trimming: load_SPR
   fastq_report: |
@@ -1615,8 +1576,6 @@ dependency:
     go_plot: go_enrich
   heatmap: |
     heatmap: go_enrich
-  step18_uig: |
-    step18_uig: heatmap
 targets_connection:
   load_SPR: |
     load_SPR: ~
@@ -1652,8 +1611,6 @@ targets_connection:
     go_plot: ~
   heatmap: |
     heatmap: ~
-  step18_uig: |
-    step18_uig: ~
 projectInfo: |
   project: myp
   data: data
@@ -1680,4 +1637,3 @@ runInfo: |
   go_enrich: no
   go_plot: no
   heatmap: no
-  step18_uig: no
