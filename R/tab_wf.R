@@ -160,13 +160,13 @@ wfServer <- function(id, shared){
                 "wf_wf_displayed", asis = TRUE,
                 anim = TRUE, animType = "fade",
                 # condition = shared$wf$flags$targets_ready
-                condition = T
+                condition = shared$wf$flags$targets_ready
             )
             shinyjs::toggleElement(
                 "wf_wf_disable", asis = TRUE,
                 anim = TRUE, animType = "fade",
                 # condition = !shared$wf$flags$targets_ready
-                condition = F
+                condition = !shared$wf$flags$targets_ready
             )
         })
         observeEvent(shared$wf$flags, {

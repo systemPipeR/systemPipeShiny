@@ -5,7 +5,9 @@
 core_topUI <- function(id){
     ns <- NS(id)
     init <-
-"print('Ready to run a workflow')"
+"sal <- systemPipeR::SPRproject(resume = TRUE)
+sal <- systemPipeR::runWF(sal)
+sal"
     div(
         tags$script(src = "sps/js/split1.6.0.js"),
         pushbar::pushbar_deps(),
@@ -46,7 +48,7 @@ core_topUI <- function(id){
                                  class = "split-body", style = "position: relative;",
                                  aceEditor(
                                      ns("code"), mode = "r", height = "30vh", value = init,
-                                     autoComplete = "live",
+                                     autoComplete = "live", fontSize = 14,
                                      autoCompleters = c("static", "text"),
                                      autoScrollEditorIntoView = TRUE,
                                      maxLines = 9999,
@@ -343,21 +345,21 @@ core_topServer <- function(id, shared){
         })
 
         # init editor code ----
-        observeEvent(shared$wf$wf_session_open, {
-            req(shared$wf$wf_session_open)
-            if(!emptyIsFalse(shared$wf$wf_path))
-                toastr_warning("Workflow path not detected", position = "bottom-right", timeOut = 3000)
-            updateAceEditor(
-                session = session, editorId = "code",
-                value = glue(
-                '
-                sysargslist <- systemPipeR::initWF(script="{shared$wf$wf_path}", overwrite = TRUE)
-                sysargslist <- systemPipeR::configWF(x=sysargslist)
-                sysargslist <- systemPipeR::runWF(sysargslist = sysargslist, steps = "ALL")
-                sysargslist
-                ')
-            )
-        }, ignoreInit = TRUE)
+        # observeEvent(shared$wf$wf_session_open, {
+        #     req(shared$wf$wf_session_open)
+        #     if(!emptyIsFalse(shared$wf$wf_path))
+        #         toastr_warning("Workflow path not detected", position = "bottom-right", timeOut = 3000)
+        #     updateAceEditor(
+        #         session = session, editorId = "code",
+        #         value = glue(
+        #         '
+        #         sysargslist <- systemPipeR::initWF(script="{shared$wf$wf_path}", overwrite = TRUE)
+        #         sysargslist <- systemPipeR::configWF(x=sysargslist)
+        #         sysargslist <- systemPipeR::runWF(sysargslist = sysargslist, steps = "ALL")
+        #         sysargslist
+        #         ')
+        #     )
+        # }, ignoreInit = TRUE)
         ## run code ----
         err <- reactiveVal(NULL)
         res <- reactiveVal(NULL)
@@ -463,6 +465,7 @@ core_topServer <- function(id, shared){
                 res <- rs_out$result
                 if(inherits(res, "ggplot")) res <- NULL # prevent ggplot to be rendered on parent
                 res <- utils::capture.output(rs_out$result)
+                if(is.character(res)) res <- remove_ANSI(res)
                 ## mute output for certain functions
                 if(rlang::expr_text(code_que()[1][[1]]) %>%
                    stringr::str_detect(

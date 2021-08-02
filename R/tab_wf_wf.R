@@ -151,7 +151,6 @@ wf_wfServer <- function(id, shared){
         })
         # init ----
         ### dev shortcut ####
-        shared <- reactiveValues()
         # observeEvent(1, {
         #     shared$wf$sal <- my_sal
         #     wf_share$config_ob <- NULL
@@ -277,12 +276,12 @@ wf_wfServer <- function(id, shared){
                       spsTitle("Choose CWL file", "4"),
                       selectInput(
                           ns("new_sys_cwl"), "", multiple = FALSE,
-                          choices = fs::dir_ls("param/cwl", recurse = TRUE, regexp = "\\.cwl$") %>% str_remove("param/cwl/")
+                          choices = fs::dir_ls(file.path(shared$wf$env_path, "param", "cwl"), recurse = TRUE, regexp = "\\.cwl$") %>% str_remove(file.path(shared$wf$env_path, "param", "cwl/"))
                       ),
                       spsTitle("Choose input yaml file for CWL", "4"),
                       selectInput(
                           ns("new_sys_yaml"), "", multiple = FALSE,
-                          choices = fs::dir_ls("param/cwl", recurse = TRUE, regexp = "\\.y[a]{0,}ml$") %>% str_remove("param/cwl/")
+                          choices = fs::dir_ls(file.path(shared$wf$env_path, "param", "cwl"), recurse = TRUE, regexp = "\\.y[a]{0,}ml$") %>% str_remove(file.path(shared$wf$env_path, "param", "cwl/"))
                       ),
                       spsTitle("inputVar: targets -> yaml replacement", "4"),
                       p("You need to have targets table displayed in the `Basic Arguments`
@@ -317,7 +316,7 @@ wf_wfServer <- function(id, shared){
         sys_bind_df <- reactiveVal()
         cwl_input_vars <- reactive({
             req(input$new_sys_yaml)
-            file_content <- readLines(file.path("param", "cwl", input$new_sys_yaml))
+            file_content <- readLines(file.path(shared$wf$env_path, "param", "cwl", input$new_sys_yaml))
             file_content %>%
                 str_split("\n") %>%
                 unlist() %>%
@@ -437,6 +436,8 @@ wf_wfServer <- function(id, shared){
                     "Targets connection is not empty but you have no inputVar replacement selected."
                 )
                 # parsing
+                on.exit(setwd(spsOption("app_path")), add = TRUE)
+                setwd(shared$wf$env_path)
                 systemPipeR::appendStep(sal, after = 0) <- systemPipeR::SYSargsList(
                     targets = targets, step_name = "dummy_step",
                     wf_file = input$new_sys_cwl,
@@ -471,7 +472,8 @@ wf_wfServer <- function(id, shared){
                     "Targets connection is not empty but you have no inputVar replacement selected."
                 )
                 if(!emptyIsFalse(input$new_step_name)) stop("Step name is empty")
-
+                on.exit(setwd(spsOption("app_path")), add = TRUE)
+                setwd(shared$wf$env_path)
                 systemPipeR::appendStep(sal, after = as.numeric(input$new_step_index)) <- systemPipeR::SYSargsList(
                     targets = targets,
                     dir = input$new_sys_dir,
@@ -497,6 +499,8 @@ wf_wfServer <- function(id, shared){
                 if(!emptyIsFalse(input$new_code_r)) stop("R code is empty")
                 if(!emptyIsFalse(input$new_step_name)) stop("Step name is empty")
                 options(linewise_importing = TRUE)
+                on.exit(setwd(spsOption("app_path")), add = TRUE)
+                setwd(shared$wf$env_path)
                 systemPipeR::appendStep(sal, after = as.numeric(input$new_step_index) - 1) <- systemPipeR::LineWise(
                     code = input$new_code_r, step_name = input$new_step_name,
                     dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
@@ -534,6 +538,8 @@ wf_wfServer <- function(id, shared){
         observeEvent(input$save_config_r, {
             req(input$save_config_r)
             req(cur_config())
+            on.exit(setwd(spsOption("app_path")), add = TRUE)
+            setwd(shared$wf$env_path)
             configStep()
             shinyCatch(message("R step configured"))
             removeModal()
@@ -542,6 +548,8 @@ wf_wfServer <- function(id, shared){
         observeEvent(input$save_config_sys, {
             req(input$save_config_sys)
             req(cur_config())
+            on.exit(setwd(spsOption("app_path")), add = TRUE)
+            setwd(shared$wf$env_path)
             configStep(rcode = FALSE)
             shinyCatch(message("sysArgs step configured"))
             removeModal()
@@ -622,7 +630,10 @@ wf_wfServer <- function(id, shared){
         observeEvent(input$totask, {
             req(input$totask)
             shared$wf$sal <- sal <- his$get()$item$sal
-            systemPipeR:::write_SYSargsList(sal)
+            shinyCatch(blocking_level = "error", {
+                systemPipeR:::write_SYSargsList(sys.file = file.path(shared$wf$env_path, ".SPRproject/SYSargsList.yml"), sal)
+            })
+            shared$wf$flags$wf_ready = isolate(shared$wf$flags$wf_ready) + 1
             shinyWidgets::confirmSweetAlert(
                 session = session,
                 inputId = ns("confirm_next"),
