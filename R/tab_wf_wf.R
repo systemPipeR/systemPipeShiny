@@ -105,8 +105,8 @@ wf_wfUI <- function(id){
                             div(id=ns("step_trash"), class="step-trash", tags$span(), tags$i()) %>%
                                 bsTip("Drag here to delete a step", placement = "bottom", status = "danger"),
                             tags$button(class="fa fa-save shiny-bound-input action-button", id=ns("totask"))%>%
-                                bsPop("Add to SPS workflow task", placement = "bottom",
-                                      "Send the workflow to SPS workflow module manager so you can run it. You must save it first before add to task.")
+                                bsPop("Add to SPS task", placement = "bottom",
+                                      "Send the workflow to SPS workflow module manager so you can run it.")
                         )
                     )
                 ),
