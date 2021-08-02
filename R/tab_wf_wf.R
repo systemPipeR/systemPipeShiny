@@ -9,182 +9,127 @@ wf_wfUI <- function(id){
             tabTitle("Workflow"),
             renderDesc(id = ns("desc"),
             '
+            #### Workflow designer
+            This is the workflow designer. Here you can add/remove/modify workflow
+            steps and visualize the entire workflow.
 
+            ***
 
-            #### Workflow files
+            ##### How to use it
+            It is best to start with some of the template workflows that can be
+            generated from the from SPS workflow module Step 1. If you have selected
+            one of the non-empty templates, like example, RNAseq etc., you should
+            now see some steps are display on the left designer.
+
+            1.You can drag to change the order, or drag to the <i class="fa fa-trash-alt"></i>
+            to delete a step.
+            2. Use <i class="fa fa-undo-alt"></i> undo or <i class="fa fa-redo-alt"></i> redo
+            to restore your actions.
+            3. You can use <i class="fa fa-cog"></i> to configure each step.
+            4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
+            an R step or a sysArgs step. the latter has more settings, you may want
+            to read the manual of SPS or SPR before that.
+            5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or
+            right panel to have a better view.
+
+            #### Visualize the workflow
+            You can see the workflow dependency graph on the right panel. It may
+            or may not change if you make some actions, like changing the step
+            dependencies.
+
+            #### Fix dependencies
+            Most steps will have dependencies, they are very important for a workflow
+            to run. The dependency graph is pre-configured for template workflows.
+            If you ever add/remove/change order of a step, the dependency graph may
+            fail. You then will see steps marked in red. You must fix the dependencies
+            of these steps by clicking <i class="fa fa-cog"> before continuing to run
+            the workflow.
+
+            Workflow plot is a good guide to build the dependency graph.
+
+            ##### Add to task
+            Clicking this <i class="fa fa-save"></i> will add the workflow file to the SPS task, it will
+            be used in **step 5**. You need to have at least **one** step and **fix dependency problems**
+            to enable this button. This is the final button to click after everything is done.
+
+            ***
+
+            #### Other information
+
+            ##### Workflow templates
             In SPR, workflows are defined as Rmarkdown files,
             you can read details and obtain them
             [here{blk}](https://systempipe.org/sp/spr/templates/). This step can
             help you choose/ skip some steps. Make a workflow diagram to see how
             the order SPR execute the workflow and take a preview of the
-            final report. If you just want to use the defaults, simply clicking
-            the "Add to task". SPS has already selected all steps for you.
-            ***
-            #### Workflow steps
-            Loading the default with pre-configed workflows or upload a
-            Rmd file on "Existing" option. The workflow file will be display on
-            "*Display workflow file*" box below. Workflow
-            steps are defined by "#" hashtag levels, similar to the title level in
-            markdown files. For example, text and code under the single "#" belongs
-            to the heighest level step; code under double "##" is a sub-step under the
-            nearest single "#" step from the top, *etc*.
-            ***
-            #### Add to task
-            Clicking this button will add the workflow file to the running task, will
-            be used in **step 5**. You need to select at least one step to enable
-            this button. A new R markdown file will **REPLACE** the old one. The old
-            file is backed up in the **backup** folder.
+            final report. If you just want to use all the defaults, simply clicking
+            the <i class="fa fa-save"></i>.
 
-            This is the last workflow preparation step (step 4 is optional). If you
-            have followed the order so far, after this step, you should see all status
-            indicators become green and you are go to lunch a workflow running session
-            at step 5.
-            ***
-            #### Select workflow steps
-            This box allows you to select workflow steps. You need to choose at lest
-            one step to enable other buttons in this box.
-
-            Clicking "Report preview" generates a preview of what the final report
-            will look like based on your step selection, but in the preview,
-            no code is evaluated. The report is displayed in the bottom of this tab.
-
-            Clicking on the "Plot steps" will show a flow chart on the right side
-            of what the step execution orders are when you run the actual workflow
-            in SPR.
-            ***
-            #### Download
-            After step selection, you can download the new Rmarkdown file by
-            "Save New Rmd".
-
-            #### more detailed manual
+            ##### more detailed manual
             A manual with screenshots and details is on [our website{blk}](https://systempipe.org/sps/modules/workflow/)
             '),
             spsHr(),
-            box(
-                title = "Confirm to use this workflow file",
-                closable = FALSE, collapsible = TRUE,
-                width = 12,
-                class = "center-block",
-                HTML(
-                    "
-                <ul>
-                  <li>
-                    When you have finished choosing workflow steps,
-                    clicking on the <b>Add to task</b>.
-                  </li>
-                  <li>
-                    You can also <b>Save</b> it as
-                    an individual file from the browser.</p>
-                  </li>
-                </ul>
-                "),
-                div(class = "text-danger",
-                    tags$ul(
-                        id = ns("warn_other"),
-                        HTML(
-                            "<li>Upon passing 'Add to task' checks, the original workflow file
-                            in the workflow folder will be overwritten. A backup of the old Rmd
-                            can be found in the <b>'backup'</b> folder.</li>"
-                        ))
-                ),
-                fluidRow(
-                    style = "padding-left: 40%",
-                    actionButton(ns("to_task_wf"),
-                                 label = "Add to task",
-                                 icon("paper-plane")) %>%
-                        bsHoverPopover(
-                            "Add workflow and add to workflow task",
-                            "You should choose some
-                            steps before adding it to task.",
-                            "bottom"
-                        ),
-                    downloadButton(ns("down_rmd"), "Save") %>%
-                        bsHoverPopover(
-                            "Download current workflow file",
-                            "You can download current workflow file from the
-                            browser.",
-                            "bottom"
+            tags$script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"),
+            tags$script(src="sps/js/sps_wf_wf.js"),
+            tags$link(rel="stylesheet", href="sps/js/sps_wf_wf.css"),
+            fluidRow(
+                shinydashboardPlus::box(
+                    width = 6, id = ns("step_container"), title = "Workflow step designer",
+                    solidHeader = TRUE, status = "primary",
+                    div(
+                        id = ns("step_box"),
+                        animateIcon(
+                            id=ns("step_enlarge"),"expand-arrows-alt", animation = "pulse",
+                            size = "lg", class= "enlarge-icon",
+                            hover = TRUE, enlarge_target= paste0('#', ns('step_box')), enlarged='false'
+                        ) %>%
+                            bsTip("Enlarge the step designer", "bottom", "info"),
+                        uiOutput(ns("sort_box")),
+                        br(), br(), br(), spsHr(other_color = "rgb(2, 117, 216, 0.5)"),
+                        div(
+                            class = 'step-box-control',
+                            tags$button(class="fa fa-undo-alt shiny-bound-input action-button", id=ns("step_undo"), style="color: #3c8dbc") %>%
+                                bsTip("Undo", placement = "bottom"),
+                            tags$button(class="fa fa-redo-alt shiny-bound-input action-button", id=ns("step_redo"), style="color: #3c8dbc") %>%
+                                bsTip("Redo", placement = "bottom"),
+                            div(
+                                class = "wf-history-panel",
+                                tags$table(
+                                    tags$tr(tags$td("Last history:"), tags$td("1")),
+                                    tags$tr(tags$td("Current history:"), tags$td("2")),
+                                    tags$tr(tags$td("Next history:"), tags$td("3"))
+                                )
+                            ),
+                            tags$i(class="fa fa-plus shiny-bound-input action-button", id=ns("step_new"), style="color: #5cb85c;") %>%
+                                bsTip("Add a new step", placement = "bottom", status = "success"),
+                            div(id=ns("step_trash"), class="step-trash", tags$span(), tags$i()) %>%
+                                bsTip("Drag here to delete a step", placement = "bottom", status = "danger"),
+                            tags$button(class="fa fa-save shiny-bound-input action-button", id=ns("totask"))%>%
+                                bsPop("Add to SPS workflow task", placement = "bottom",
+                                      "Send the workflow to SPS workflow module manager so you can run it. You must save it first before add to task.")
                         )
-                )
-            ),
-            fluidRow(
-                box(title = "Display workflow file", width = 12,
-                        closable = FALSE,
-                        shinyWidgets::radioGroupButtons(
-                            inputId = ns("wf_source"),
-                            label = "Choose workflow file source:",
-                            selected = "default",
-                            choiceNames = c("Default", "Upload"),
-                            choiceValues = c("default", "upload"),
-                            justified = TRUE, status = "primary",
-                            checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                             no = icon(""))
-                        ),
-                        fileInput(ns("rmd_file"), "Choose R markdown File",
-                                  multiple = FALSE,
-                                  accept = "Rmd"),
-                        tags$div(
-                            style = 'overflow:auto; height: 500px',
-                            networkD3::diagonalNetworkOutput(ns("wf_D3"))
-                        )
-                )
-            ),
-            fluidRow(
-                column(5,
-                       box(
-                           title = "Select workflow steps",
-                           width = 12,
-                           closable = FALSE,
-                           collapsible = TRUE,
-                           column(width = 12, style = "padding-left: 0;",
-                                  actionButton(ns("wf_plot_step"),
-                                               label = "Plot steps",
-                                               icon("redo-alt")),
-                                  actionButton(ns("wf_render_md"),
-                                               label = "Report preview",
-                                               icon("redo-alt"))
-                           ),
-                           hr(),
-                           p("When steps are chosen, you can plot steps and preview
-                             report document."),
-                           shinyTree::shinyTree(ns("rmd_tree"), checkbox = TRUE)
-
-                       )
+                    )
                 ),
-                column(7,
-                       box(title = "Workflow steps selected",
-                               width = 12,
-                               closable  = FALSE,
-                               sidebar_title = "Workflow diagram legend",
-                               sidebar_background = "#337ab7",
-                               collapsible = TRUE,
-                               sidebar =  shinydashboardPlus::boxSidebar(
-                                   width = 25, background = "#337ab7",
-                                   startOpen = TRUE, icon = icon("sliders-h"),
-                                   h3("Diagram Legend"),
-                                   p("This part uses systemPipeR::plotWF function"),
-                                   tags$ul(
-                                       tags$li("Gray colored steps are steps without any code chunks, only text"),
-                                       tags$li("steps with 'NA' means unknown number of samples in this step.
-                                               If it is a real case in SPR, you should see something like
-                                               '10/10' all samples passed this step or '10/20' only half passed.")
-                                    )
-                               ),
-                               uiOutput(ns("wf_plot_ui"))
-                       )
-                )
-            ),
-            fluidRow(
-                box(
-                    title = "Preview of the workflow report", width = 12,
-                    closable = FALSE,
-                    uiOutput(ns("wf_md_ui"))
+                shinydashboardPlus::box(
+                    width = 6, id = ns("wf_plot_container"), title = "Workflow Dependency Plot",
+                    solidHeader = TRUE, status = "primary",
+                    div(
+                        id =ns("wf_plot_box"),
+                        animateIcon(
+                            id=ns("wf_plot_enlarge"),"expand-arrows-alt", animation = "pulse",
+                            size = "lg", class= "enlarge-icon",
+                            hover = TRUE, enlarge_target=paste0('#', ns('wf_plot_box')), enlarged='false'
+                        ) %>%
+                            bsTip("Enlarge workflow plot", "bottom", "info"),
+                        systemPipeR::plotwfOutput(outputId = ns("wf_plot")), br(), br()
+                    ),
+                    heightMatcher(ns("wf_plot_container"), ns("step_container"))
                 )
             )
         ),
         div(
             id = "wf_wf_disable",
-            h3("Generate a workflow environment at Step 1 first",
+            h3("Comfirm your targets from step 2 frist",
                style = "text-center text-warning")
         )
     )
@@ -195,152 +140,489 @@ wf_wfUI <- function(id){
 #' @importFrom shinyjs runjs enable disable
 #' @noRd
 wf_wfServer <- function(id, shared){
-    if (!eval(parse(text = 'require("shinyTree")'))) {
-        spserror('Tried to load the required package "shinyTree" but failed')
-    }
     module <- function(input, output, session){
         ns <- session$ns
-        rmd_file_temp <-  reactiveVal(NULL)
-        observeEvent(input$wf_source, {
-            shinyjs::toggleElement("rmd_file", anim = TRUE, condition = input$wf_source == "upload")
+        renderSort <- renderUI({
+            sal <- his$get()$item$sal
+            sal_stat <- statSal(sal)
+            destoryOb(wf_share$config_ob)
+            # wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns)
+            makeSort(sal_stat$names, sal_stat$type, ns)
         })
-        # resolve path
-        rmd_file_path <- reactive({
-            req(input$wf_source)
-            if (input$wf_source == "default") shared$wf$wf_path
-            else input$rmd_file$datapath
-        })
-        # read Rmd
-        rmd <- reactive({
-            if (!is.null(rmd_file_path())) {
-                quiet(.subsetRmd(p = rmd_file_path()))
-            } else {
-                NULL
-            }
-        })
-        # get selected steps
-        rmd_tree_selected <- reactive({
-            req(input$wf_source)
-            if (input$wf_source == "upload" & is.null(rmd_file_path())) {
-                NULL
-            } else {
-                shinyTree::get_selected(input$rmd_tree, format = "names") %>%
-                    unlist() %>%
-                    str_remove_all(" .*$") %>%
-                    findTreeParent()
-            }
-
-        })
-        # disable all on start
-        observeEvent(input$wf_source, {
-            disable("down_rmd"); disable("wf_render_md"); disable("to_task_wf")
-            disable("wf_plot_step")
-        })
-        # disable all if no step been chosen
-        observeEvent(input$rmd_tree, {
-            if (length(rmd_tree_selected()) < 1 ) {
-                disable("down_rmd"); disable("wf_render_md"); disable("to_task_wf")
-                disable("wf_plot_step")
-            } else {
-                enable("down_rmd"); enable("wf_render_md"); enable("to_task_wf")
-                enable("wf_plot_step")
-            }
-        })
-        observeEvent(c(input$wf_source, rmd_tree_selected(), rmd_file_path()), {
-            if (input$wf_source == "upload" & is.null(rmd_file_path())) {
-                # hide tree if nothing is there
-                runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = "hidden"')
-               shinyTree::updateTree(session = session,
-                                      treeId = "rmd_tree",
-                                      data = list(""))
-            } else {
-                runjs('document.querySelectorAll("[id*=rmd_tree]")[0].style.visibility = ""')
-            }
-
-        })
-
-        output$wf_D3 <- networkD3::renderDiagonalNetwork({
-            networkD3::diagonalNetwork(
-                step2listD3(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text)),
-                fontSize = 15)
-        })
-        output$rmd_tree <- shinyTree::renderTree({
-            # on.exit(runjs('setTimeout(function(){$("[id*=rmd_tree]").jstree("select_all");}, 100)'))
-            step2listTree(rmd()$t_lvl, paste(rmd()$t_number, rmd()$t_text))
-
-        })
-
-        # bottom right
-        observeEvent(input$wf_plot_step, {
-            rmd_tree_df <- rmd()[rmd()$t_number %in% rmd_tree_selected(), ]
-            if (length(rmd_tree_selected()) > 0) rmd_tree_df$selected <- TRUE
-            output$wf_plot_ui <- renderUI({
-                tags$div(style = 'overflow:auto; height: 500px',
-                         HTML(.plotWF(df_wf = rmd_tree_df,
-                                     plot_style = "linear",
-                                     out_type = "shiny"))
-                )
-            })
-        })
-
-        observeEvent(input$wf_render_md, ignoreInit = TRUE, {
-            output$wf_md_ui <- renderUI({
-                includeMarkdown(isolate(rmd_file_temp()))
-            })
-        })
-        output$down_rmd <- downloadHandler(
-            filename <- function(){
-                "workflow.Rmd"
-            },
-            content <- function(file){
-                file.copy(from = rmd_file_temp(), to = file)
-            }
-        )
-        # listen to download button so it can be trigger in next observe
+        # init ----
+        ### dev shortcut ####
+        shared <- reactiveValues()
         observeEvent(1, {
-            shinyjs::runjs("
-                var click = 0;
-                var dwnldBtn = document.getElementById('wf-wf_wf-down_rmd');
-                dwnldBtn.onclick = function() {click += 1; Shiny.setInputValue('wf-wf_wf-saveRmd', click);}
-            ")
+            shared$wf$sal <- my_sal
+            wf_share$config_ob <- NULL
+            his$add(list(
+                sal = shared$wf$sal,
+                msg = "Initial sal"
+            ))
+            savehis(savehis() + 1)
         }, once = TRUE)
-        observeEvent(c(input$wf_render_md, input$to_task_wf, input$saveRmd),
-                     ignoreInit = TRUE, {
-            rmd_file_temp(tempfile(pattern = "wf", fileext = ".Rmd"))
-            shinyCatch({
-                quiet(.subsetRmd(p = rmd_file_path(),
-                                 p_out = rmd_file_temp(),
-                                 input_steps = paste(rmd_tree_selected(),
-                                                     collapse = ","),
-                                 save_rmd = TRUE
-                ))
-            }, blocking_level = "error")
+        ########
+        wf_share <- reactiveValues()
+        # start history stack
+        his <- historyStack$new(verbose = spsOption("verbose"),limit = 100)
+        # save envet trigger
+        savehis <- reactiveVal(0)
+        observeEvent(1, once = TRUE, priority = 99L, {
+            # # config obs
+            # wf_share$config_ob <- NULL
+            # his$add(list(
+            #   sal = shared$wf$sal,
+            #   msg = "Initial sal"
+            # ))
         })
 
-        observeEvent(input$to_task_wf, {
-            req(file.exists(rmd_file_temp()))
-            shinyCatch({
-                # create back up folder
-                dir.create(file.path(shared$wf$env_path, "backup"), recursive = TRUE, showWarnings = FALSE)
-                # if wf file exists, back it up
-                if(file.exists(shared$wf$wf_path))
-                    file.copy(
-                        shared$wf$wf_path,
-                        file.path(
-                            shared$wf$env_path,
-                            "backup",
-                            paste0(
-                                glue("bk{Sys.time() %>% format('%Y%m%d%H%M%S')}"),
-                                basename(shared$wf$wf_path))
-                        ),
-                        overwrite = TRUE
-                    )
-                # overwrite wf file
-                if(!file.copy(rmd_file_temp(), shared$wf$wf_path, overwrite = TRUE))
-                    stop("File ", shared$wf$wf_path, " can not be created or not modified")
+
+        # new step ----
+        observeEvent(input$step_new, {
+            req(input$step_new)
+            newStepMain(his$get()$item$sal, ns)
+        }, ignoreInit = TRUE)
+        # render modal based on new step type ----
+        observeEvent(input$new_step_choose, ignoreInit = TRUE, {
+            req(input$new_step_choose)
+            req(input$new_step_type)
+            req(input$new_step_index)
+            sal <- his$get()$item$sal
+            sal_stat <- statSal(sal)
+            dep_choice <- sal_stat$names[seq(as.numeric(input$new_step_index))]
+
+            if(input$new_step_type == "r") {
+                showModal(modalDialog(
+                    size = "l",
+                    footer = tagList(
+                        modalButton("Cancel"),
+                        actionButton(ns("new_step_back"), "Back"),
+                        actionButton(ns("new_step_r_save"), "Save"),
+                    ), {
+                        div(
+                            spsTitle("Type the R code of this step below", "4"),
+                            shinyAce::aceEditor(
+                                ns("new_code_r"), fontSize = 14, value = "",
+                                mode = "r", wordWrap = TRUE, debounce = 100, height = "250px",
+                                placeholder = "Write some R code"
+                            ),
+                            spsTitle("Type step name", "4"),
+                            p("Must be different than these names:"),
+                            tags$pre(paste(sal_stat$names, collapse = ", ")),
+                            textInput(
+                                ns("new_step_name"), "",
+                                paste0("step", input$new_step_index, "_", sample(letters, 3) %>% paste0(collapse = ""))
+                            ),
+                            spsTitle("Choose dependency", "4"),
+                            p("This step will be inserted to the index you selected.
+                  You may change the order later but remember to fix the dependency. ",
+                  tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
+                  selectizeInput(
+                      ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
+                      selected = dep_choice[length(dep_choice) - 1]
+                  )
+                        )
+                    }))
+            } else {
+                showModal(modalDialog(
+                    size = "l",
+                    footer = tagList(
+                        modalButton("Cancel"),
+                        actionButton(ns("new_step_back"), "Back"),
+                        actionButton(ns("new_step_sys_save"), "Save"),
+                    ), {
+                        tabsetPanel(
+                            tabPanel(
+                                "Basic Arguments",
+                                spsTitle("Type step name", "4"),
+                                p("Must be different than these names:"),
+                                tags$pre(paste(sal_stat$names, collapse = ", ")),
+                                textInput(
+                                    ns("new_step_name"), "",
+                                    paste0("step", input$new_step_index, "_", sample(letters, 3) %>% paste0(collapse = ""))
+                                ),
+                                spsTitle("Choose dependency", "4"),
+                                p("This step will be inserted to the index you selected.
+                  You may change the order later but remember to fix the dependency. ",
+                  tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
+                  selectizeInput(
+                      ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
+                      selected = dep_choice[length(dep_choice) - 1]
+                  ),
+                  spsTitle("sub-directory", "4"),
+                  p("Create a sub-dir inside results to store outputs from this step?"),
+                  shinyWidgets::awesomeCheckbox(ns("new_sys_dir"), "sub-directory?", value = TRUE, status = "primary"),
+                            ),
+                  tabPanel(
+                      "CWL Arguments",
+                      spsTitle("Choose targets connection", "4"),
+                      p("It can be a previous step(s) or comes from a fresh file"),
+                      shinyWidgets::radioGroupButtons(
+                          justified = TRUE,
+                          ns("new_sys_t_source"), "", choices = c(`Previous Step`="step", `New File`="upload"), status = "primary",
+                          checkIcon = list(yes = icon("ok", lib = "glyphicon"))
+                      ),
+                      conditionalPanel(
+                          "input.new_sys_t_source == 'step'", ns = ns,
+                          selectizeInput(
+                              ns("new_step_t_con"), "Choose targets connection from a step(s)", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)]
+                          )
+                      ),
+                      conditionalPanel(
+                          "input.new_sys_t_source == 'upload'", ns = ns,
+                          dynamicFile(ns("new_sys_t_path"), "Choose new targets file from server", mode = "local")
+                      ),
+                      DT::DTOutput(ns("step_sys_t_df")),
+                      spsTitle("Choose CWL file", "4"),
+                      selectInput(
+                          ns("new_sys_cwl"), "", multiple = FALSE,
+                          choices = fs::dir_ls("param/cwl", recurse = TRUE, regexp = "\\.cwl$") %>% str_remove("param/cwl/")
+                      ),
+                      spsTitle("Choose input yaml file for CWL", "4"),
+                      selectInput(
+                          ns("new_sys_yaml"), "", multiple = FALSE,
+                          choices = fs::dir_ls("param/cwl", recurse = TRUE, regexp = "\\.y[a]{0,}ml$") %>% str_remove("param/cwl/")
+                      ),
+                      spsTitle("inputVar: targets -> yaml replacement", "4"),
+                      p("You need to have targets table displayed in the `Basic Arguments`
+                    tab and the proper yaml file (some yaml files have no varaibles)
+                    to have the options shown below.", class="text-warning"),
+                    tags$ul(
+                        tags$li(id = ns("require_t_con"), class="text-danger", "Require valid target connections"),
+                        tags$li(id = ns("require_yaml"), class="text-danger", "Require a yaml file with inputVar variables")
+                    ),
+                    p("Choose a column from a targets to replace a variables in CWL yaml you have chosen"),
+                    fluidRow(id = ns("cwl_var")),
+                    spsHr(),
+                    spsTitle("Raw rendered commands", "4"),
+                    actionButton(ns("rerender_cmd"), "Render", icon= animateIcon("sync-alt")),
+                    verbatimTextOutput(ns("new_step_sys_cmd"))
+                  )
+                        )
+                    }))
+            }
+        })
+        # back is clicked ----
+        observeEvent(input$new_step_back, ignoreInit = TRUE, {
+            newStepMain(his$get()$item$sal, ns)
+        })
+        # sys step ----
+        new_step_sys_t_path <- dynamicFileServer(input,session, id = "new_sys_t_path", mode = "local")
+        sys_t_con <- reactive({
+            req(input$new_sys_t_source)
+            if(input$new_sys_t_source == "step") return(input$new_step_t_con)
+            new_step_sys_t_path()$datapath %>% basename()
+        }) %>% debounce(2000)
+        sys_bind_df <- reactiveVal()
+        cwl_input_vars <- reactive({
+            req(input$new_sys_yaml)
+            file_content <- readLines(file.path("param", "cwl", input$new_sys_yaml))
+            file_content %>%
+                str_split("\n") %>%
+                unlist() %>%
+                {.[str_detect(., ".*:")]} %>%
+                {.[str_detect(., ":\\s{0,}_[a-zA-Z0-9_]+_\\s{0,}$")]} %>%
+                str_extract("_[a-zA-Z0-9_]+_")
+        }) %>% debounce(1000)
+
+        observeEvent(sys_t_con(), ignoreInit = TRUE, ignoreNULL = FALSE, {
+            if(is.null(input$new_step_t_con)) return({
+                output$step_sys_t_df <- DT::renderDT({DT::datatable(data.frame())})
+                sys_bind_df(NULL)
+            })
+            sal <- his$get()$item$sal
+            sal_stat <- statSal(sal)
+            shinyCatch(blocking_level = "error", {
+                if(input$new_sys_t_source == "step") {
+                    ## handle outfiles
+                    outfiles <- systemPipeR::outfiles(sal)[sys_t_con()] %>%
+                        lapply(as.data.frame) %>%
+                        {.[lapply(., function(x) nrow(x) > 0) %>% unlist()]}
+                    if(length(outfiles) > 1) {
+                        outfiles_length <- lapply(outfiles, nrow) %>% unlist()
+                        if(
+                            (length(unique(outfiles_length)) > 2) ||
+                            (outfiles_length[1] != mean(outfiles_length)) &&
+                            (!1 %in% outfiles_length)
+                        ) {
+                            stop("Steps you selected have different Sample length in outfiles, cannot use these steps as targets connections")
+                        }
+                    }
+                    outfiles <- dplyr::bind_cols(outfiles)
+                    ## handle targets
+                    targets <- systemPipeR::targetsWF(sal)[sys_t_con()] %>%
+                        lapply(as.data.frame) %>%
+                        {.[lapply(., function(x) nrow(x) > 0) %>% unlist()]}
+                    if(length(targets) > 1) {
+                        targets_length <- lapply(targets, nrow) %>% unlist()
+                        if(
+                            (length(unique(targets_length)) > 2) ||
+                            (targets_length[1] != mean(targets_length)) &&
+                            (!1 %in% targets_length)
+                        ) {
+                            stop("Steps you selected have different Sample length in targets, cannot use these steps as targets connections")
+                        }
+                        targets <- lapply(seq_along(targets), function(x){
+                            if(x == 1) return(targets[[x]])
+                            names(targets[[x]]) <- paste0(names(targets[[x]]), "_", names(targets)[x])
+                            targets[[x]]
+                        })
+                    }
+                    targets <- dplyr::bind_cols(targets)
+                    ## merge both
+                    df <-  if(length(outfiles) == 0 && length(targets) != 0) {
+                        targets
+                    } else if(length(outfiles) != 0 && length(targets) == 0) {
+                        outfiles
+                    } else if(length(outfiles) == 0 && length(targets) == 0) {
+                        stop("Selected steps don't have any targets or outfiles, try to choose other steps as targets connections")
+                    } else {
+                        if((nrow(targets) != nrow(outfiles)) && (nrow(outfiles) != 1)) {
+                            stop("Step(s) you selected have different length in",
+                                 "outfiles and targets dataframes or the outfiles",
+                                 "length is not 1, this is not allowed")
+                        }
+                        dplyr::bind_cols(targets, outfiles)
+                    }
+                } else {
+                    df <- read.delim(sys_t_con(), comment.char = "#", sep = "\t")
+                }
+                output$step_sys_t_df <- DT::renderDT({DT::datatable(df, options = list(searching= FALSE, scrollX = TRUE), class = "compact")})
+                sys_bind_df(df)
+                shinyCatch(message("New targets table created."))
+            })
+        })
+
+        observeEvent(c(cwl_input_vars(), sys_bind_df()),{
+            shinyjs::toggleElement("require_t_con", condition = !emptyIsFalse(sys_bind_df()), anim = TRUE)
+            shinyjs::toggleElement("require_yaml", condition = !emptyIsFalse(cwl_input_vars()), anim = TRUE)
+            removeUI(
+                selector = glue('#{ns("cwl_var")} div'),
+                multiple = TRUE
+            )
+            req(emptyIsFalse(cwl_input_vars()))
+            req(emptyIsFalse(sys_bind_df()))
+            for(i in seq_along(cwl_input_vars())){
+                insertUI(
+                    glue('#{ns("cwl_var")}'),
+                    where = "beforeEnd",
+                    ui =  column(3, selectizeInput(
+                        inputId = ns(paste0("cwl_var-", i)),
+                        label = cwl_input_vars()[i],
+                        choices = c("Not required", names(sys_bind_df())),
+                        options = list(style = "btn-primary")
+                    ))
+                )
+            }
+            shinyCatch(message("New inputVar options created."))
+        })
+        ## render raw cmd
+        observeEvent(input$rerender_cmd, ignoreInit = TRUE, {
+            req(input$new_sys_cwl)
+            req(input$rerender_cmd)
+            sal <- his$get()$item$sal
+            sal <- shinyCatch({
+                # parse replacement
+                replace_cols <- lapply(seq_along(cwl_input_vars()), function(i){
+                    value <- input[[paste0("cwl_var-", i)]]
+                }) %>% unlist()
+                not_required <- replace_cols == "Not required"
+                inputvars <- cwl_input_vars()
+                names(inputvars) <- replace_cols
+                inputvars <- inputvars[!not_required]
+                inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
+                targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
+                if(emptyIsFalse(targets) && !emptyIsFalse(inputvars[1])) stop(
+                    "Targets connection is not empty but you have no inputVar replacement selected."
+                )
+                # parsing
+                systemPipeR::appendStep(sal, after = 0) <- systemPipeR::SYSargsList(
+                    targets = targets, step_name = "dummy_step",
+                    wf_file = input$new_sys_cwl,
+                    input_file = input$new_sys_yaml,
+                    dir_path = "param/cwl",
+                    inputvars = inputvars
+                )
+                sal
             }, blocking_level = "error")
-            shared$wf$flags$wf_ready = isolate(shared$wf$flags$wf_ready) + 1
-            # jump to next step
+            output$new_step_sys_cmd <- renderPrint({
+                print(systemPipeR::cmdlist(sal)[['dummy_step']] %>% unlist() %>% unname())
+            })
+            shinyCatch(message("Raw commandline code generated."))
+        })
+
+        # sys step new save ----
+        observeEvent(input$new_step_sys_save, {
+            req(input$new_step_sys_save)
+            sal <- his$get()$item$sal
+            shinyCatch({
+                # parse replacement
+                replace_cols <- lapply(seq_along(cwl_input_vars()), function(i){
+                    value <- input[[paste0("cwl_var-", i)]]
+                }) %>% unlist()
+                not_required <- replace_cols == "Not required"
+                inputvars <- cwl_input_vars()
+                names(inputvars) <- replace_cols
+                inputvars <- inputvars[!not_required]
+                inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
+                targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
+                if(emptyIsFalse(targets) && !emptyIsFalse(inputvars[1])) stop(
+                    "Targets connection is not empty but you have no inputVar replacement selected."
+                )
+                if(!emptyIsFalse(input$new_step_name)) stop("Step name is empty")
+
+                systemPipeR::appendStep(sal, after = as.numeric(input$new_step_index)) <- systemPipeR::SYSargsList(
+                    targets = targets,
+                    dir = input$new_sys_dir,
+                    wf_file = input$new_sys_cwl,
+                    input_file = input$new_sys_yaml,
+                    dir_path = "param/cwl",
+                    step_name = input$new_step_name,
+                    inputvars = inputvars,
+                    dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
+                )
+                his$add(list(sal = sal, msg = "New sysArgs step"))
+            }, blocking_level = "error")
+            savehis(savehis() + 1)
+            removeModal()
+            shinyCatch(message("New sysArgs step saved."))
+        }, ignoreInit = TRUE)
+
+        # R step new save ----
+        observeEvent(input$new_step_r_save, {
+            req(input$new_step_r_save)
+            sal <- his$get()$item$sal
+            shinyCatch(blocking_level = "error", {
+                if(!emptyIsFalse(input$new_code_r)) stop("R code is empty")
+                if(!emptyIsFalse(input$new_step_name)) stop("Step name is empty")
+                options(linewise_importing = TRUE)
+                systemPipeR::appendStep(sal, after = as.numeric(input$new_step_index) - 1) <- systemPipeR::LineWise(
+                    code = input$new_code_r, step_name = input$new_step_name,
+                    dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
+                )
+                his$add(list(sal = sal, msg = "New R step"))
+            })
+            savehis(savehis() + 1)
+            removeModal()
+            shinyCatch(message("New R step saved."))
+        }, ignoreInit = TRUE)
+
+        # step config save ---
+        cur_config <- reactiveVal(NULL)
+        ## config R
+        configStep <- function(rcode = TRUE){
+            sal <- his$get()$item$sal
+            sal_stat <- statSal(sal)
+            sal <- shinyCatch(blocking_level = "error", {
+                # save new code
+                if(rcode) sal@stepsWF[[cur_config()]]@codeLine <- shinyCatch(parse(text = input$edit_code), blocking_level = "error")
+                # rename
+                if(!emptyIsFalse(input$change_name)) stop("Step Name is empty")
+                if(sal_stat$names[cur_config()] != input$change_name) {
+                    if(input$change_name %in% sal_stat$names) stop("Duplicated step name")
+                    systemPipeR::renameStep(sal, step = cur_config()) <- input$change_name
+                }
+                # change dep
+                systemPipeR::dependency(sal, step = cur_config()) <- if(emptyIsFalse(input$change_dep[1])) input$change_dep else ""
+                sal
+            })
+            his$add(list(sal = sal, msg = "Config R step"))
+            wf_ui_updates()
+            updateHisInfo(his)
+        }
+        observeEvent(input$save_config_r, {
+            req(input$save_config_r)
+            req(cur_config())
+            configStep()
+            shinyCatch(message("R step configured"))
+            removeModal()
+        })
+        ## config sys
+        observeEvent(input$save_config_sys, {
+            req(input$save_config_sys)
+            req(cur_config())
+            configStep(rcode = FALSE)
+            shinyCatch(message("sysArgs step configured"))
+            removeModal()
+        })
+
+        # when new sal history  ----
+        ob_index <- reactiveVal(0)
+        wf_ui_updates <- function(){
+            sal <- his$get()$item$sal
+            sal_stat <- statSal(sal)
+            # update sort
+            if(length(sal$stepsWF) != 0) {
+                output$sort_box <-  renderUI({
+                    makeSort(sal_stat$names, sal_stat$type, ns, sal_stat, ob_index)
+                })
+                destoryOb(isolate(wf_share$config_ob))
+                wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns, cur_config, ob_index)
+            }
+
+            # update plot
+            output$wf_plot <- systemPipeR::renderPlotwf({
+                systemPipeR::plotWF(sal, rstudio = TRUE)
+            })
+            # update redo undo
+            shinyjs::toggleState("step_undo", !his$status()$first)
+            shinyjs::toggleState("step_redo", !his$status()$last)
+            print(input)
+        }
+
+        observeEvent(savehis(), {
+            req(savehis() > 0)
+            wf_ui_updates()
+            updateHisInfo(his)
+        })
+
+        # on sort order change ----
+        step_order_inited <- reactiveVal(FALSE)
+        step_order_old <- reactiveVal(FALSE)
+        observeEvent(input$step_orders, {
+            req(!is.null(input$step_orders))
+            if(!step_order_inited()) return(step_order_inited(TRUE))
+            if(suppressWarnings(all(step_order_old() == input$step_orders))) return()
+            step_order_old(input$step_orders)
+            sal <- his$get()$item$sal
+            step_order <- as.numeric(input$step_orders)
+            if(length(step_order) == 1 && step_order[1] == "0") step_order <- NULL
+            new_sal <- sal[step_order]
+            msgs <- if(emptyIsFalse(input$step_order_del) && input$step_order_del == "del") "Delete Step" else "Change order"
+            if(msgs == "Delete Step") ob_index(ob_index() + 1)
+            his$add(list(sal = new_sal, msg = msgs))
+            savehis(savehis() + 1)
+        }, ignoreInit = TRUE)
+        # on redo or undo ----
+        updateHisInfo <- function(his){
+            getMsg <- function(pos){
+                quiet(shinyCatch(his$get(pos)$item$msg, shiny = FALSE)) %>%
+                    if(emptyIsFalse(.)) . else "some action"
+            }
+            stats <- his$status()
+            msgs <- paste0(stats$pos, ".", getMsg(stats$pos))
+            msgs <- if(!stats$first) c(paste0(stats$pos - 1, ". ", getMsg(stats$pos - 1)), msgs) else c("-", msgs)
+            msgs <- if(!stats$last) c(msgs, paste0(stats$pos + 1, ". ", getMsg(stats$pos + 1))) else c(msgs,  "-")
+            session$sendCustomMessage("wf-undo-redo", list(msg = unname(msgs)))
+        }
+        observeEvent(input$step_undo, {
+            req(!his$status()$first)
+            shinyCatch(his$backward(), blocking_level = "error")
+            wf_ui_updates()
+            updateHisInfo(his)
+        })
+        observeEvent(input$step_redo, {
+            req(!his$status()$last)
+            shinyCatch(his$forward(), blocking_level = "error")
+            wf_ui_updates()
+            updateHisInfo(his)
+        })
+
+        # on final save button ----
+        observeEvent(input$totask, {
+            req(input$totask)
+            shared$wf$sal <- his$get()$item$sal
+            systemPipeR:::write_SYSargsList(sal)
             shinyWidgets::confirmSweetAlert(
                 session = session,
                 inputId = ns("confirm_next"),
@@ -351,30 +633,19 @@ wf_wfServer <- function(id, shared){
                 type = "success",
                 text = HTML(glue(
                     "
-                    <button class='btn btn-box-tool'
-                        data-widget='chat-pane-toggle'
-                        data-toggle='tooltip'
-                        data-original-title='More'
-                        type='button' title='Workflow diagram legend'
-                        style='padding-left: 90%; padding-bottom: 0;'>
-                        <i class='fa fa-minus'></i>
-                    </button>
-                    <h4>Do you want to proceed to the step 4 or step 5?</h4>
+                    <h4>Do you want to proceed to download or run the workflow?</h4>
                     <ul class='text-left'>
-                      <li>Step 4 is <b>optional</b>, can be skipped</li>
-                      <li>If all steps' status are green, you can to go step 5 to run the workflow.</li>
-                      <li>Click outside this box to dismiss if you want to stay here.</li>
+                      <li>Your workflow is ready.</li>
+                      <li>Click outside of this box or cancel if you want to stay here.</li>
                     </ul>
                     "
                 ))
             )
         })
+
         observeEvent(input$confirm_next, {
-            if(emptyIsFalse(input$confirm_next)){
-                shinyjs::runjs("$('#wf-wf_panel-4-heading > h4').trigger('click');")
-            } else {
-                shinyjs::runjs("$('#wf-wf_panel-3-heading > h4').trigger('click');")
-            }
+            req(input$confirm_next)
+            shinyjs::runjs("$('#wf-wf_panel-4-heading > h4').trigger('click');")
         })
     }
     moduleServer(id, module)

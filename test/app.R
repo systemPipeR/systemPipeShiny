@@ -1,5 +1,6 @@
 library(shiny)
 my_sal <- readRDS("sal.rds")
+# my_sal <-my_sal[1:2]
 source("wf_wf_helper.R")
 addResourcePath("test", ".")
 ns <- NS("wf-wf")
@@ -110,19 +111,6 @@ server <- function(input, output, session) {
         #   msg = "Initial sal"
         # ))
       })
-      # plot wf first time----
-      # output$wf_plot <- systemPipeR::renderPlotwf({
-      #   systemPipeR::plotWF(his$get()$item$sal, rstudio = TRUE)
-      # })
-      # # render sort  box first time ----
-      # output$sort_box <-  renderUI({
-      #   sal <- his$get()$item$sal
-      #   sal_stat <- statSal(sal)
-      #   print(1111)
-      #   destoryOb(isolate(wf_share$config_ob))
-      #   wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns)
-      #   makeSort(sal_stat$names, sal_stat$type, ns)
-      # })
 
 
       # new step ----
@@ -148,20 +136,20 @@ server <- function(input, output, session) {
               actionButton(ns("new_step_r_save"), "Save"),
             ), {
               div(
-                spsTitle("Type the R code of this step below"),
+                spsTitle("Type the R code of this step below", "4"),
                 shinyAce::aceEditor(
                   ns("new_code_r"), fontSize = 14, value = "",
                   mode = "r", wordWrap = TRUE, debounce = 100, height = "250px",
                   placeholder = "Write some R code"
                 ),
-                spsTitle("Type step name"),
+                spsTitle("Type step name", "4"),
                 p("Must be different than these names:"),
                 tags$pre(paste(sal_stat$names, collapse = ", ")),
                 textInput(
                   ns("new_step_name"), "",
                   paste0("step", input$new_step_index, "_", sample(letters, 3) %>% paste0(collapse = ""))
                 ),
-                spsTitle("Choose dependency"),
+                spsTitle("Choose dependency", "4"),
                 p("This step will be inserted to the index you selected.
                   You may change the order later but remember to fix the dependency. ",
                   tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
@@ -182,7 +170,28 @@ server <- function(input, output, session) {
               tabsetPanel(
                 tabPanel(
                   "Basic Arguments",
-                  spsTitle("Choose targets connection"),
+                  spsTitle("Type step name", "4"),
+                  p("Must be different than these names:"),
+                  tags$pre(paste(sal_stat$names, collapse = ", ")),
+                  textInput(
+                    ns("new_step_name"), "",
+                    paste0("step", input$new_step_index, "_", sample(letters, 3) %>% paste0(collapse = ""))
+                  ),
+                  spsTitle("Choose dependency", "4"),
+                  p("This step will be inserted to the index you selected.
+                  You may change the order later but remember to fix the dependency. ",
+                  tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
+                  selectizeInput(
+                    ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
+                    selected = dep_choice[length(dep_choice) - 1]
+                  ),
+                  spsTitle("sub-directory", "4"),
+                  p("Create a sub-dir inside results to store outputs from this step?"),
+                  shinyWidgets::awesomeCheckbox(ns("new_sys_dir"), "sub-directory?", value = TRUE, status = "primary"),
+                ),
+                tabPanel(
+                  "CWL Arguments",
+                  spsTitle("Choose targets connection", "4"),
                   p("It can be a previous step(s) or comes from a fresh file"),
                   shinyWidgets::radioGroupButtons(
                     justified = TRUE,
@@ -200,38 +209,17 @@ server <- function(input, output, session) {
                     dynamicFile(ns("new_sys_t_path"), "Choose new targets file from server", mode = "local")
                   ),
                   DT::DTOutput(ns("step_sys_t_df")),
-                  spsTitle("Type step name"),
-                  p("Must be different than these names:"),
-                  tags$pre(paste(sal_stat$names, collapse = ", ")),
-                  textInput(
-                    ns("new_step_name"), "",
-                    paste0("step", input$new_step_index, "_", sample(letters, 3) %>% paste0(collapse = ""))
-                  ),
-                  spsTitle("Choose dependency"),
-                  p("This step will be inserted to the index you selected.
-                  You may change the order later but remember to fix the dependency. ",
-                  tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
-                  selectizeInput(
-                    ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
-                    selected = dep_choice[length(dep_choice) - 1]
-                  ),
-                  spsTitle("sub-directory"),
-                  p("Create a sub-dir inside results to store outputs from this step?"),
-                  shinyWidgets::awesomeCheckbox(ns("new_sys_dir"), "sub-directory?", value = TRUE, status = "primary"),
-                ),
-                tabPanel(
-                  "CWL Arguments",
-                  spsTitle("Choose CWL file"),
+                  spsTitle("Choose CWL file", "4"),
                   selectInput(
                     ns("new_sys_cwl"), "", multiple = FALSE,
                     choices = fs::dir_ls("param/cwl", recurse = TRUE, regexp = "\\.cwl$") %>% str_remove("param/cwl/")
                   ),
-                  spsTitle("Choose input yaml file for CWL"),
+                  spsTitle("Choose input yaml file for CWL", "4"),
                   selectInput(
                     ns("new_sys_yaml"), "", multiple = FALSE,
                     choices = fs::dir_ls("param/cwl", recurse = TRUE, regexp = "\\.y[a]{0,}ml$") %>% str_remove("param/cwl/")
                   ),
-                  spsTitle("Targets - Yaml replacement"),
+                  spsTitle("inputVar: targets -> yaml replacement", "4"),
                   p("You need to have targets table displayed in the `Basic Arguments`
                     tab and the proper yaml file (some yaml files have no varaibles)
                     to have the options shown below.", class="text-warning"),
@@ -242,11 +230,8 @@ server <- function(input, output, session) {
                   p("Choose a column from a targets to replace a variables in CWL yaml you have chosen"),
                   fluidRow(id = ns("cwl_var")),
                   spsHr(),
-                  p("Render to see raw Commandline"),
-                  actionButton(ns("step_sys_parse"), "Render", class="center-block")
-                ),
-                tabPanel(
-                  "Raw commandline",
+                  spsTitle("Raw rendered commands", "4"),
+                  actionButton(ns("rerender_cmd"), "Render", icon= animateIcon("sync-alt")),
                   verbatimTextOutput(ns("new_step_sys_cmd"))
                 )
               )
@@ -262,7 +247,7 @@ server <- function(input, output, session) {
       sys_t_con <- reactive({
         req(input$new_sys_t_source)
         if(input$new_sys_t_source == "step") return(input$new_step_t_con)
-        new_step_sys_t_path()$datapath
+        new_step_sys_t_path()$datapath %>% basename()
       }) %>% debounce(2000)
       sys_bind_df <- reactiveVal()
       cwl_input_vars <- reactive({
@@ -347,12 +332,12 @@ server <- function(input, output, session) {
       observeEvent(c(cwl_input_vars(), sys_bind_df()),{
         shinyjs::toggleElement("require_t_con", condition = !emptyIsFalse(sys_bind_df()), anim = TRUE)
         shinyjs::toggleElement("require_yaml", condition = !emptyIsFalse(cwl_input_vars()), anim = TRUE)
-        req(emptyIsFalse(cwl_input_vars()))
-        req(emptyIsFalse(sys_bind_df()))
         removeUI(
           selector = glue('#{ns("cwl_var")} div'),
           multiple = TRUE
         )
+        req(emptyIsFalse(cwl_input_vars()))
+        req(emptyIsFalse(sys_bind_df()))
         for(i in seq_along(cwl_input_vars())){
           insertUI(
             glue('#{ns("cwl_var")}'),
@@ -360,43 +345,83 @@ server <- function(input, output, session) {
             ui =  column(3, selectizeInput(
               inputId = ns(paste0("cwl_var-", i)),
               label = cwl_input_vars()[i],
-              choices = names(sys_bind_df()),
+              choices = c("Not required", names(sys_bind_df())),
               options = list(style = "btn-primary")
             ))
           )
         }
         shinyCatch(message("New inputVar options created."))
       })
-
-      observeEvent(input$step_sys_parse, ignoreInit = TRUE, {
+      ## render raw cmd
+      observeEvent(input$rerender_cmd, ignoreInit = TRUE, {
         req(input$new_sys_cwl)
-        args <- shinyCatch({
+        req(input$rerender_cmd)
+        sal <- his$get()$item$sal
+        sal <- shinyCatch({
           # parse replacement
           replace_cols <- lapply(seq_along(cwl_input_vars()), function(i){
-            input[[paste0("cwl_var-", i)]]
+            value <- input[[paste0("cwl_var-", i)]]
           }) %>% unlist()
+          not_required <- replace_cols == "Not required"
           inputvars <- cwl_input_vars()
           names(inputvars) <- replace_cols
-          # parsing
-          systemPipeR::SYSargsList(
-            targets = sys_t_con(), dir = input$new_sys_dir,
-            wf_file = input$new_sys_cwl,
-            input_file=input$new_sys_yaml,
-            dir_path="param/cwl",
-            inputvars=if(emptyIsFalse(inputvars)) inputvars else NULL,
-            step_name = input$new_step_name,
-            dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
+          inputvars <- inputvars[!not_required]
+          inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
+          targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
+          if(emptyIsFalse(targets) && !emptyIsFalse(inputvars[1])) stop(
+            "Targets connection is not empty but you have no inputVar replacement selected."
           )
+          # parsing
+          systemPipeR::appendStep(sal, after = 0) <- systemPipeR::SYSargsList(
+            targets = targets, step_name = "dummy_step",
+            wf_file = input$new_sys_cwl,
+            input_file = input$new_sys_yaml,
+            dir_path = "param/cwl",
+            inputvars = inputvars
+          )
+          sal
         }, blocking_level = "error")
         output$new_step_sys_cmd <- renderPrint({
-          systemPipeR::cmdlist(args) %>% unlist() %>% unname()
+          print(systemPipeR::cmdlist(sal)[['dummy_step']] %>% unlist() %>% unname())
         })
         shinyCatch(message("Raw commandline code generated."))
       })
+
       # sys step new save ----
       observeEvent(input$new_step_sys_save, {
-        req(input$new_step_r_save)
+        req(input$new_step_sys_save)
         sal <- his$get()$item$sal
+        shinyCatch({
+          # parse replacement
+          replace_cols <- lapply(seq_along(cwl_input_vars()), function(i){
+            value <- input[[paste0("cwl_var-", i)]]
+          }) %>% unlist()
+          not_required <- replace_cols == "Not required"
+          inputvars <- cwl_input_vars()
+          names(inputvars) <- replace_cols
+          inputvars <- inputvars[!not_required]
+          inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
+          targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
+          if(emptyIsFalse(targets) && !emptyIsFalse(inputvars[1])) stop(
+            "Targets connection is not empty but you have no inputVar replacement selected."
+          )
+          if(!emptyIsFalse(input$new_step_name)) stop("Step name is empty")
+
+          systemPipeR::appendStep(sal, after = as.numeric(input$new_step_index)) <- systemPipeR::SYSargsList(
+            targets = targets,
+            dir = input$new_sys_dir,
+            wf_file = input$new_sys_cwl,
+            input_file = input$new_sys_yaml,
+            dir_path = "param/cwl",
+            step_name = input$new_step_name,
+            inputvars = inputvars,
+            dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
+          )
+          his$add(list(sal = sal, msg = "New sysArgs step"))
+        }, blocking_level = "error")
+        savehis(savehis() + 1)
+        removeModal()
+        shinyCatch(message("New sysArgs step saved."))
       }, ignoreInit = TRUE)
 
       # R step new save ----
@@ -421,14 +446,12 @@ server <- function(input, output, session) {
       # step config save ---
       cur_config <- reactiveVal(NULL)
       ## config R
-      observeEvent(input$save_config_r, {
-        req(input$save_config_r)
-        req(cur_config())
+      configStep <- function(rcode = TRUE){
         sal <- his$get()$item$sal
         sal_stat <- statSal(sal)
         sal <- shinyCatch(blocking_level = "error", {
           # save new code
-          sal@stepsWF[[cur_config()]]@codeLine <- shinyCatch(parse(text = input$edit_code), blocking_level = "error")
+          if(rcode) sal@stepsWF[[cur_config()]]@codeLine <- shinyCatch(parse(text = input$edit_code), blocking_level = "error")
           # rename
           if(!emptyIsFalse(input$change_name)) stop("Step Name is empty")
           if(sal_stat$names[cur_config()] != input$change_name) {
@@ -436,39 +459,43 @@ server <- function(input, output, session) {
             systemPipeR::renameStep(sal, step = cur_config()) <- input$change_name
           }
           # change dep
-          systemPipeR::dependency(mysal, step = "load_SPR") <- if(emptyMethodsList(input$change_dep)) input$change_dep else ""
+          systemPipeR::dependency(sal, step = cur_config()) <- if(emptyIsFalse(input$change_dep[1])) input$change_dep else ""
           sal
         })
         his$add(list(sal = sal, msg = "Config R step"))
         wf_ui_updates()
         updateHisInfo(his)
-        shinyCatch(message("R step Configured"))
+      }
+      observeEvent(input$save_config_r, {
+        req(input$save_config_r)
+        req(cur_config())
+        configStep()
+        shinyCatch(message("R step configured"))
         removeModal()
       })
       ## config sys
       observeEvent(input$save_config_sys, {
         req(input$save_config_sys)
         req(cur_config())
-        sal <- his$get()$item$sal
-
-
-        his$add(list(sal = sal, msg = "Config sysArgs step"))
-        wf_ui_updates()
-        updateHisInfo(his)
-        shinyCatch(message("sysArgs step Configured"))
+        configStep(rcode = FALSE)
+        shinyCatch(message("sysArgs step configured"))
         removeModal()
       })
 
       # when new sal history  ----
+      ob_index <- reactiveVal(0)
       wf_ui_updates <- function(){
         sal <- his$get()$item$sal
         sal_stat <- statSal(sal)
         # update sort
-        output$sort_box <-  renderUI({
+        if(length(sal$stepsWF) != 0) {
+          output$sort_box <-  renderUI({
+            makeSort(sal_stat$names, sal_stat$type, ns, sal_stat, ob_index)
+          })
           destoryOb(isolate(wf_share$config_ob))
-          wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns, cur_config)
-          makeSort(sal_stat$names, sal_stat$type, ns, sal_stat)
-        })
+          wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns, cur_config, ob_index)
+        }
+
         # update plot
         output$wf_plot <- systemPipeR::renderPlotwf({
           systemPipeR::plotWF(sal, rstudio = TRUE)
@@ -476,24 +503,31 @@ server <- function(input, output, session) {
         # update redo undo
         shinyjs::toggleState("step_undo", !his$status()$first)
         shinyjs::toggleState("step_redo", !his$status()$last)
+        print(input)
       }
+
       observeEvent(savehis(), {
         req(savehis() > 0)
         wf_ui_updates()
         updateHisInfo(his)
       })
+
       # on sort order change ----
       step_order_inited <- reactiveVal(FALSE)
-      step_order_triggered <- reactiveVal(FALSE)
+      step_order_old <- reactiveVal(FALSE)
       observeEvent(input$step_orders, {
-        req(input$step_orders)
+        req(!is.null(input$step_orders))
         if(!step_order_inited()) return(step_order_inited(TRUE))
-        if(step_order_triggered()) return(step_order_triggered(FALSE))
+        if(suppressWarnings(all(step_order_old() == input$step_orders))) return()
+        step_order_old(input$step_orders)
         sal <- his$get()$item$sal
-        new_sal <- sal[as.numeric(input$step_orders)]
-        his$add(list(sal = new_sal, msg = "Change order"))
+        step_order <- as.numeric(input$step_orders)
+        if(length(step_order) == 1 && step_order[1] == "0") step_order <- NULL
+        new_sal <- sal[step_order]
+        msgs <- if(emptyIsFalse(input$step_order_del) && input$step_order_del == "del") "Delete Step" else "Change order"
+        if(msgs == "Delete Step") ob_index(ob_index() + 1)
+        his$add(list(sal = new_sal, msg = msgs))
         savehis(savehis() + 1)
-        step_order_triggered(TRUE)
       }, ignoreInit = TRUE)
       # on redo or undo ----
       updateHisInfo <- function(his){
@@ -521,6 +555,12 @@ server <- function(input, output, session) {
       })
       # on final save button ----
 
+      observeEvent(input$totask, {
+        req(input$totask)
+        shared$wf$sal <- his$get()$item$sal
+        systemPipeR:::write_SYSargsList(sal)
+        shinyCatch(message("SPR project added to task"))
+      })
     }
   )
 }

@@ -1170,26 +1170,6 @@ stepsWF:
         status.summary: Pending
       status.time: {}
     files: []
-  hhhoo: |
-    codeLine:
-    - lkhlj
-    - l
-    - l
-    - kkkkkk
-    codeChunkStart: []
-    rmdPath: []
-    stepName: hhhoo
-    dependency:
-      hhhoo:
-      - heatmap
-      - hisat_mapping
-    status:
-      status.summary: Pending
-      status.completed:
-        Step: hhhoo
-        status.summary: Pending
-      status.time: {}
-    files: []
 statusWF:
   load_SPR: |
     load_SPR:
@@ -1374,13 +1354,6 @@ statusWF:
         Step: heatmap
         status.summary: Pending
       status.time: {}
-  hhhoo: |
-    hhhoo:
-      status.summary: Pending
-      status.completed:
-        Step: hhhoo
-        status.summary: Pending
-      status.time: {}
 targetsWF:
   load_SPR: |
     {}
@@ -1484,8 +1457,6 @@ targetsWF:
     {}
   heatmap: |
     {}
-  hhhoo: |
-    {}
 outfiles:
   load_SPR: |
     {}
@@ -1566,8 +1537,6 @@ outfiles:
     {}
   heatmap: |
     {}
-  hhhoo: |
-    {}
 SEobj: |
   []
 dependency:
@@ -1605,10 +1574,6 @@ dependency:
     go_plot: go_enrich
   heatmap: |
     heatmap: go_enrich
-  hhhoo: |
-    hhhoo:
-    - heatmap
-    - hisat_mapping
 targets_connection:
   load_SPR: |
     load_SPR: ~
@@ -1644,8 +1609,6 @@ targets_connection:
     go_plot: ~
   heatmap: |
     heatmap: ~
-  hhhoo: |
-    hhhoo: ~
 projectInfo: |
   project: myp
   data: data
@@ -1672,4 +1635,3 @@ runInfo: |
   go_enrich: no
   go_plot: no
   heatmap: no
-  hhhoo: no

@@ -444,7 +444,7 @@ emptyIsFalse <- function (x) {
         return(TRUE)
     if (length(x) < 1 || is.na(x) || is.null(x))
         return(FALSE)
-    if (nchar(x) == 0)
+    if (nchar(x[1]) == 0)
         return(FALSE)
     if (isFALSE(x))
         return(FALSE)
