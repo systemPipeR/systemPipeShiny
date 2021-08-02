@@ -331,13 +331,15 @@ wf_setupServer <- function(id, shared){
                     "eg" = {
                         res <- list()
                         dir.create(file.path(final_env_path, "data"), recursive = TRUE)
-                        dir.create(file.path(final_env_path, "param", "cwl"), recursive = TRUE)
+                        dir.create(file.path(final_env_path, "param"), recursive = TRUE)
                         dir.create(file.path(final_env_path, "results"), recursive = TRUE)
                         # file.copy(system.file("app", "data", "targetsPE.txt", package = "systemPipeShiny"),
-                        res[['1']] <- file.copy(system.file("extdata", "workflows", "new", "targetsPE.txt", package = "systemPipeRdata"),
-                                  file.path(final_env_path, "targetsPE.txt"))
-                        res[['2']] <- file.copy(system.file("extdata", "workflows", "new", "new.Rmd", package = "systemPipeRdata"),
+                        res[['1']] <- file.copy(system.file("extdata", "cwl", "gunzip", "targets_gunzip.txt", package="systemPipeR"),
+                                  file.path(final_env_path, "targets_gunzip.txt"))
+                        res[['2']] <- file.copy(system.file("app", "templates", "spr_simple_wf.Rmd", package = "systemPipeShiny"),
                                   file.path(final_env_path, "systemPipeExample.Rmd"))
+                        res[['3']] <- file.copy(system.file("extdata", "cwl", package="systemPipeR"),
+                                                file.path(final_env_path, "param"), recursive = TRUE)
                         if(!unlist(res) %>% all()) stop("Files not copied, see warnings")
                     },
                     systemPipeRdata::genWorkenvir(input$choose_wf, mydirname = final_env_path)
@@ -351,6 +353,7 @@ wf_setupServer <- function(id, shared){
                 "chipseq" = normalizePath(file.path(final_env_path, "targetsPE_chip.txt")),
                 "new" = normalizePath(file.path(final_env_path, "targets.txt")),
                 "exist" = wf_targets_path(),
+                "eg" = normalizePath(file.path(final_env_path, "targets_gunzip.txt")),
                 normalizePath(file.path(final_env_path, "targetsPE.txt"))
             ), blocking_level = "error")
             updateProgressBar(session, "gen_wf_pg", 4, 6, title = "update project info - workflow file")

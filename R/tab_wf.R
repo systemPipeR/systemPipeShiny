@@ -67,7 +67,7 @@ wfUI <- function(id){
             bsplus::bs_set_opts(panel_type = "default") %>%
             bsplus::bs_append("1. Create a workflow environment", wf_setupUI(ns("wf_setup")), panel_type = "success") %>%
             bsplus::bs_append("2. Prepare the targets file", wf_targetUI(ns("wf_targets"))) %>%
-            bsplus::bs_append("3. Prepare the workflow file", wf_wfUI(ns("wf_wf"))) %>%
+            bsplus::bs_append("3. Prepare the workflow file", wf_wfUI(ns("wf"))) %>%
             bsplus::bs_set_opts(panel_type = "success") %>%
             bsplus::bs_append("4. Check CWL files (optional)", wf_cwlUI(ns("wf_cwl"))) %>%
             bsplus::bs_set_opts(panel_type = "default") %>%
@@ -103,7 +103,7 @@ wfServer <- function(id, shared){
         })
         wf_targetServer("wf_targets", shared)
         wf_setupServer("wf_setup", shared)
-        wf_wfServer("wf_wf", shared)
+        wf_wfServer("wf", shared)
         wf_cwlServer("wf_cwl", shared)
         wf_runServer("wf_run", shared)
         # observeEvent(input$set, {
@@ -122,6 +122,7 @@ wfServer <- function(id, shared){
             )
             shared$wf$all_ready = FALSE
             shared$wf$wf_session_open = FALSE
+            shared$wf$sal = NULL
             shared$wf$spr_loaded = if("systemPipeR" %in% (.packages())) TRUE else FALSE
             shared$wf$rs <- NULL
             shared$wf$rs_info$log_name <- NULL
@@ -152,15 +153,20 @@ wfServer <- function(id, shared){
                 anim = TRUE, animType = "fade",
                 condition = !shared$wf$flags$env_ready
             )
+        })
+        # show 3 if 2 is ready
+        observeEvent(shared$wf$flags$targets_ready, {
             shinyjs::toggleElement(
                 "wf_wf_displayed", asis = TRUE,
                 anim = TRUE, animType = "fade",
-                condition = shared$wf$flags$env_ready
+                # condition = shared$wf$flags$targets_ready
+                condition = T
             )
             shinyjs::toggleElement(
                 "wf_wf_disable", asis = TRUE,
                 anim = TRUE, animType = "fade",
-                condition = !shared$wf$flags$env_ready
+                # condition = !shared$wf$flags$targets_ready
+                condition = F
             )
         })
         observeEvent(shared$wf$flags, {

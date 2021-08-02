@@ -19,7 +19,7 @@ makeSort <- function(sal_names, step_type, ns, sal_stat, ob_index){
                 tags$script('$("#wf-wf-totask").prop(\'disabled\', true);')
             )
         } else tags$script('$("#wf-wf-totask").prop(\'disabled\', false);'),
-        tags$script(src="test/wf_wf_sort.js")
+        tags$script(src="sps/js/sps_wf_wf_sort.js")
     )
 }
 

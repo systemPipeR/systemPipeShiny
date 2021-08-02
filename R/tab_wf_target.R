@@ -430,7 +430,13 @@ wf_targetServer <- function(id, shared){
                     if(identical(old_mtime, file.mtime(shared$wf$targets_path)))
                         stop("File ", shared$wf$targets_path, " can not be created or not modified")
                     shared$wf$targets_path <- normalizePath(shared$wf$targets_path)
+                    wd_old <- getwd()
+                    on.exit(setwd(wd_old), add = TRUE)
+                    setwd(shared$wf$env_path)
+                    sal <- systemPipeR::SPRproject(projPath = shared$wf$env_path, overwrite = TRUE)
+                    shared$wf$sal <- systemPipeR::importWF(sal, shared$wf$wf_path)
                 }, blocking_level = "error")
+
                 shared$wf$flags$targets_ready <- isolate(shared$wf$flags$targets_ready) + 1
                 shinyWidgets::confirmSweetAlert(
                     session = session,
@@ -478,16 +484,10 @@ wf_targetServer <- function(id, shared){
             "FileName" %in% col_names
         }
         checker2 <- function(col_names)  "SampleName" %in% col_names
-        checker3 <- function(col_names)  "Factor" %in% col_names
-        checker4 <- function(headerlines) {
-            any(str_detect(headerlines, "#\\s{0,}<CMP>"))}
-        check_results <- vapply(c(checker1, checker2, checker3),
+        check_results <- vapply(c(checker1, checker2),
                                 function(x) x(col_names),
-                                logical(1)) %>%
-            append(checker4(headerlines))
-        names(check_results) <- c("both 'FileName1' 'FileName2' or 'FileName'",
-                                  "SampleName", "Factor",
-                                  "header with # &ltCMP&gt")
+                                logical(1))
+        names(check_results) <- c("both 'FileName1' 'FileName2' or 'FileName'", "SampleName")
         return(check_results)
     }
     moduleServer(id, module)

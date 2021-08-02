@@ -7,71 +7,71 @@ wf_wfUI <- function(id){
             id = "wf_wf_displayed",
             style = "display:none",
             tabTitle("Workflow"),
-            renderDesc(id = ns("desc"),
-            '
-            #### Workflow designer
-            This is the workflow designer. Here you can add/remove/modify workflow
-            steps and visualize the entire workflow.
-
-            ***
-
-            ##### How to use it
-            It is best to start with some of the template workflows that can be
-            generated from the from SPS workflow module Step 1. If you have selected
-            one of the non-empty templates, like example, RNAseq etc., you should
-            now see some steps are display on the left designer.
-
-            1.You can drag to change the order, or drag to the <i class="fa fa-trash-alt"></i>
-            to delete a step.
-            2. Use <i class="fa fa-undo-alt"></i> undo or <i class="fa fa-redo-alt"></i> redo
-            to restore your actions.
-            3. You can use <i class="fa fa-cog"></i> to configure each step.
-            4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
-            an R step or a sysArgs step. the latter has more settings, you may want
-            to read the manual of SPS or SPR before that.
-            5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or
-            right panel to have a better view.
-
-            #### Visualize the workflow
-            You can see the workflow dependency graph on the right panel. It may
-            or may not change if you make some actions, like changing the step
-            dependencies.
-
-            #### Fix dependencies
-            Most steps will have dependencies, they are very important for a workflow
-            to run. The dependency graph is pre-configured for template workflows.
-            If you ever add/remove/change order of a step, the dependency graph may
-            fail. You then will see steps marked in red. You must fix the dependencies
-            of these steps by clicking <i class="fa fa-cog"> before continuing to run
-            the workflow.
-
-            Workflow plot is a good guide to build the dependency graph.
-
-            ##### Add to task
-            Clicking this <i class="fa fa-save"></i> will add the workflow file to the SPS task, it will
-            be used in **step 5**. You need to have at least **one** step and **fix dependency problems**
-            to enable this button. This is the final button to click after everything is done.
-
-            ***
-
-            #### Other information
-
-            ##### Workflow templates
-            In SPR, workflows are defined as Rmarkdown files,
-            you can read details and obtain them
-            [here{blk}](https://systempipe.org/sp/spr/templates/). This step can
-            help you choose/ skip some steps. Make a workflow diagram to see how
-            the order SPR execute the workflow and take a preview of the
-            final report. If you just want to use all the defaults, simply clicking
-            the <i class="fa fa-save"></i>.
-
-            ##### more detailed manual
-            A manual with screenshots and details is on [our website{blk}](https://systempipe.org/sps/modules/workflow/)
-            '),
+            # renderDesc(id = ns("desc"),
+            # '
+            # #### Workflow designer
+            # This is the workflow designer. Here you can add/remove/modify workflow
+            # steps and visualize the entire workflow.
+            #
+            # ***
+            #
+            # ##### How to use it
+            # It is best to start with some of the template workflows that can be
+            # generated from the from SPS workflow module Step 1. If you have selected
+            # one of the non-empty templates, like example, RNAseq etc., you should
+            # now see some steps are display on the left designer.
+            #
+            # 1.You can drag to change the order, or drag to the <i class="fa fa-trash-alt"></i>
+            # to delete a step.
+            # 2. Use <i class="fa fa-undo-alt"></i> undo or <i class="fa fa-redo-alt"></i> redo
+            # to restore your actions.
+            # 3. You can use <i class="fa fa-cog"></i> to configure each step.
+            # 4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
+            # an R step or a sysArgs step. the latter has more settings, you may want
+            # to read the manual of SPS or SPR before that.
+            # 5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or
+            # right panel to have a better view.
+            #
+            # #### Visualize the workflow
+            # You can see the workflow dependency graph on the right panel. It may
+            # or may not change if you make some actions, like changing the step
+            # dependencies.
+            #
+            # #### Fix dependencies
+            # Most steps will have dependencies, they are very important for a workflow
+            # to run. The dependency graph is pre-configured for template workflows.
+            # If you ever add/remove/change order of a step, the dependency graph may
+            # fail. You then will see steps marked in red. You must fix the dependencies
+            # of these steps by clicking <i class="fa fa-cog"> before continuing to run
+            # the workflow.
+            #
+            # Workflow plot is a good guide to build the dependency graph.
+            #
+            # ##### Add to task
+            # Clicking this <i class="fa fa-save"></i> will add the workflow file to the SPS task, it will
+            # be used in **step 5**. You need to have at least **one** step and **fix dependency problems**
+            # to enable this button. This is the final button to click after everything is done.
+            #
+            # ***
+            #
+            # #### Other information
+            #
+            # ##### Workflow templates
+            # In SPR, workflows are defined as Rmarkdown files,
+            # you can read details and obtain them
+            # [here{blk}](https://systempipe.org/sp/spr/templates/). This step can
+            # help you choose/ skip some steps. Make a workflow diagram to see how
+            # the order SPR execute the workflow and take a preview of the
+            # final report. If you just want to use all the defaults, simply clicking
+            # the <i class="fa fa-save"></i>.
+            #
+            # ##### more detailed manual
+            # A manual with screenshots and details is on [our website{blk}](https://systempipe.org/sps/modules/workflow/)
+            # '),
             spsHr(),
             tags$script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"),
             tags$script(src="sps/js/sps_wf_wf.js"),
-            tags$link(rel="stylesheet", href="sps/js/sps_wf_wf.css"),
+            tags$link(rel="stylesheet", href="sps/css/sps_wf_wf.css"),
             fluidRow(
                 shinydashboardPlus::box(
                     width = 6, id = ns("step_container"), title = "Workflow step designer",
@@ -152,28 +152,29 @@ wf_wfServer <- function(id, shared){
         # init ----
         ### dev shortcut ####
         shared <- reactiveValues()
-        observeEvent(1, {
-            shared$wf$sal <- my_sal
-            wf_share$config_ob <- NULL
-            his$add(list(
-                sal = shared$wf$sal,
-                msg = "Initial sal"
-            ))
-            savehis(savehis() + 1)
-        }, once = TRUE)
+        # observeEvent(1, {
+        #     shared$wf$sal <- my_sal
+        #     wf_share$config_ob <- NULL
+        #     his$add(list(
+        #         sal = shared$wf$sal,
+        #         msg = "Initial sal"
+        #     ))
+        #     savehis(savehis() + 1)
+        # }, once = TRUE)
         ########
         wf_share <- reactiveValues()
         # start history stack
         his <- historyStack$new(verbose = spsOption("verbose"),limit = 100)
         # save envet trigger
         savehis <- reactiveVal(0)
-        observeEvent(1, once = TRUE, priority = 99L, {
-            # # config obs
-            # wf_share$config_ob <- NULL
-            # his$add(list(
-            #   sal = shared$wf$sal,
-            #   msg = "Initial sal"
-            # ))
+        observeEvent(shared$wf$flags$targets_ready, priority = 2L, {
+            # config obs
+            wf_share$config_ob <- NULL
+            his$add(list(
+              sal = shared$wf$sal,
+              msg = "Initial sal"
+            ))
+            savehis(savehis() + 1)
         })
 
 
@@ -567,7 +568,6 @@ wf_wfServer <- function(id, shared){
             # update redo undo
             shinyjs::toggleState("step_undo", !his$status()$first)
             shinyjs::toggleState("step_redo", !his$status()$last)
-            print(input)
         }
 
         observeEvent(savehis(), {
@@ -621,7 +621,7 @@ wf_wfServer <- function(id, shared){
         # on final save button ----
         observeEvent(input$totask, {
             req(input$totask)
-            shared$wf$sal <- his$get()$item$sal
+            shared$wf$sal <- sal <- his$get()$item$sal
             systemPipeR:::write_SYSargsList(sal)
             shinyWidgets::confirmSweetAlert(
                 session = session,
