@@ -259,6 +259,194 @@ validateIcon <- function(icon){
 
 
 
+# queue
+
+simepleStack <- R6::R6Class(
+    classname = "simepleStack",
+    public = list(
+        initialize = function(items = list(), limit = Inf){
+            stopifnot(is.list(items))
+            private$stack = self$push(items)
+        },
+
+        len = function(){
+            length(private$stack)
+        },
+
+        get = function() {
+            return(private$stack)
+        },
+
+        clear = function(){
+            private$stack <- list()
+        },
+
+        push = function(items, after = self$len()) {
+            stopifnot(is.list(items))
+            if(!is.numeric(after)) stop("Push position must be numeric")
+            if(length(after) != 1) stop("Push position cannot be more than 1 number")
+            if(after > self$len())  stop("Push position cannot be more than current stack length")
+            if(after < 0)  stop("Push position cannot be less than 0")
+            private$stack <- append(private$stack, items, after)
+        },
+
+        pop = function(len=1, tail = FALSE){
+            stopifnot(is.logical(tail) && length(tail) == 1)
+            if(!is.numeric(len)) stop("Pop numbers must be numeric")
+            if(len < 1)  stop("Pop length cannot be less than 1")
+            stack_len <- self$len()
+            if(len > stack_len) stop("Pop length cannot be more than stack length")
+            len <- as.integer(len)
+            if (tail) {
+                stack_len <- self$len()
+                pop_index <- seq(stack_len, stack_len - len)
+                pop_index <- pop_index[pop_index != 0]
+            } else {
+                pop_index <- seq_len(len)
+            }
+            pop_items <- private$stack[pop_index]
+            private$stack <- private$stack[-pop_index]
+            pop_items
+        }
+    ),
+    private = list(
+        stack = list()
+    )
+)
+
+historyStack <- R6::R6Class(
+    classname = "historyStack",
+    public = list(
+        initialize = function(items = NULL, limit = 25, verbose = TRUE){
+            if(is.null(items)) items <- list()
+            stopifnot(is.list(items))
+            stopifnot(is.numeric(limit))
+            stopifnot(is.logical(verbose) && length(verbose) == 1)
+            if(limit < 1) stop("Cannot create a history stack with limit less than 1.")
+            if(limit == Inf) stop("Limit cannot be Inf.")
+
+            limit <- as.integer(limit)
+            private$limit = limit
+            if(length(items) > limit) stop("Initial items length larger than limit.")
+
+            item_len <- length(items)
+            private$stack <- append(private$stack, items)
+
+            private$len <- private$pos <- item_len
+            private$last <- if(private$pos >= 0) TRUE
+            private$first <- if(private$pos <= 1) TRUE else FALSE
+            private$verbose <- verbose
+
+            if(private$verbose) message("Created a history stack which can record  ", limit, " steps")
+            invisible(self)
+        },
+        clear = function(){
+            limit <- private$limit
+            verbose <- private$verbose
+            self$initialize(limit = limit, verbose = verbose)
+
+            if(private$verbose) message("Stack clear")
+            invisible(self)
+        },
+        get = function(pos = private$pos){
+            stopifnot(is.numeric(pos) && length(pos) == 1)
+            if(pos == Inf) stop("Position cannot be Inf.")
+            pos <- as.integer(pos)
+            if(pos > private$len) stop("Position is larger than current max history storage")
+            item <- if(pos == 0) list() else private$stack[[pos]]
+            list(
+                item = item,
+                pos = pos,
+                first = private$first,
+                last = private$last
+            )
+        },
+
+        getPos = function(){
+            private$pos
+        },
+
+        status = function(){
+            list(
+                pos = private$pos,
+                len = private$len,
+                limit = private$limit,
+                first = private$first,
+                last = private$last
+            )
+        },
+
+        forward = function(){
+            if(private$last) {
+                if(private$verbose) warning("Already the last history, cannot move forward")
+                return(NULL)
+            }
+            inc(private$pos)
+            private$last <- if(private$pos == private$len) TRUE else FALSE
+            private$first <- if(private$pos == 1) TRUE else FALSE
+
+            self$get(private$pos)
+        },
+
+        backward = function(){
+            if (private$first){
+                if(private$verbose) warning("Already the first history, cannot move backward")
+                return(NULL)
+            }
+            inc(private$pos, -1)
+            private$first <- if(private$pos == 1) TRUE else FALSE
+            private$last <- if(private$pos == private$len) TRUE else FALSE
+
+            self$get(private$pos)
+        },
+
+        add = function(item) {
+            pos <- private$pos
+            stack <- private$stack
+            item <- list(item)
+            if (pos != private$limit) {
+                stack <- if(length(stack)) append(stack[seq_len(pos)], item) else item
+                inc(pos)
+            } else {
+                stack <- append(stack[-1], item)
+            }
+            private$stack <- stack
+            private$len <- length(stack)
+            private$pos <- pos
+            private$first <- if(pos == 1) TRUE else FALSE
+            private$last <- TRUE
+            if(private$verbose) message("Added one item to position ", pos)
+            invisible(self)
+        }
+    ),
+    private = list(
+        stack = list(),
+        pos = 0,
+        len = 0,
+        limit = 25,
+        first = TRUE,
+        last = FALSE,
+        verbose = NULL
+    )
+)
+
+
+# operators
+inc <- function(e1,e2 = 1) eval.parent(substitute(e1 <- e1 + e2))
+mult <- function(e1,e2 = 2) eval.parent(substitute(e1 <- e1 * e2))
+dev <- function(e1,e2 = 2) eval.parent(substitute(e1 <- e1 / e2))
 
 
 
+## temp fix before new spsUtil  is on CRAN
+emptyIsFalse <- function (x) {
+    if (is.function(x))
+        return(TRUE)
+    if (length(x) < 1 || all(is.na(x)) || is.null(x))
+        return(FALSE)
+    if (nchar(x[1]) == 0)
+        return(FALSE)
+    if (isFALSE(x))
+        return(FALSE)
+    else TRUE
+}

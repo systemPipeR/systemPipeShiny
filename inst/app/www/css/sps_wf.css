@@ -164,3 +164,31 @@
     color: black;
     opacity: 0.2;
 }
+
+
+/* core top logs are too large*/
+#core_top-logs h1{
+  font-size: 2.75rem;
+}
+
+#core_top-logs h2{
+  font-size: 2.25rem;
+}
+
+#core_top-logs h3{
+  font-size: 1.75rem;
+}
+
+div#core_top-wf_log .nav-tabs li {
+  width: 50%;
+}
+
+div#core_top-wf_log .nav-tabs li a {
+  background: var(--primary);
+  opacity: 0.7;
+}
+
+div#core_top-wf_log .nav-tabs li.active a {
+  background: var(--primary);
+  opacity: 1;
+}

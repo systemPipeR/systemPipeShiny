@@ -52,7 +52,6 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
             } else {
                 req(isTRUE(nologin()))
             }
-            # print("loaded once")
             # core tabs
             spsinfo("Loading core tabs server")
             if (spsOption('tab_welcome')) rlang::env_get(sps_env, 'core_welcomeServer', core_welcomeServer)("core_welcome", shared)

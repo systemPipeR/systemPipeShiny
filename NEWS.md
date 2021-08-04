@@ -10,6 +10,16 @@
 
 ## Major Change
 
+-   Redesign of a few steps in Workflow module. The new version of {systemPipeR} fundamentally changed how the workflow will be run. To sync to this new version, WF module has to been redesigned. Major change happens on workflow step selection. This requires users to install systemPipeR \> 1.27.10
+
+    -   New methods to initiate the WF project
+
+    -   New workflow plot
+
+    -   New step selection mechanism
+
+    -   New step editing functionalities
+
 ## Minor Change
 
 -   For RNAseq module, the dendrogram plot library changed from {ggtree} package to {ape}. {ggtree} is not very compatible with Shiny under current version. Plot cannot be created, always error, but no error outside Shiny. An issue has submitted to Shiny on Github. We may switch back to ggtree when this is fixed.

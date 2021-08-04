@@ -5,7 +5,9 @@
 core_topUI <- function(id){
     ns <- NS(id)
     init <-
-"print('Ready to run a workflow')"
+"sal <- systemPipeR::SPRproject(resume = TRUE)
+sal <- systemPipeR::runWF(sal)
+sal"
     div(
         tags$script(src = "sps/js/split1.6.0.js"),
         pushbar::pushbar_deps(),
@@ -46,7 +48,7 @@ core_topUI <- function(id){
                                  class = "split-body", style = "position: relative;",
                                  aceEditor(
                                      ns("code"), mode = "r", height = "30vh", value = init,
-                                     autoComplete = "live",
+                                     autoComplete = "live", fontSize = 14,
                                      autoCompleters = c("static", "text"),
                                      autoScrollEditorIntoView = TRUE,
                                      maxLines = 9999,
@@ -143,19 +145,27 @@ core_topUI <- function(id){
                             id = ns("wf_log"), class ="split split-content",
                             div(
                                 class = "split-header",
-                                h3("Workflow Log", class = "split-title"),
+                                h3("Workflow Status", class = "split-title"),
                                 div(
                                     class = "split-tool",
                                     actionButton("a", "", icon = icon("minus"), class = "")
                                 )
                             ),
                             div(class = "split-body",
-                                verbatimTextOutput(ns("logs")) %>%
-                                    {.$attribs[['style']] <- " margin:0; overflow: visible;"; .},
+                                tabsetPanel(
+                                    tabPanel(
+                                        "Status Plot",
+                                        systemPipeR::plotwfOutput(ns("status_plot"))
+                                    ),
+                                    tabPanel(
+                                        "Workflow log",
+                                        uiOutput(ns("logs")) %>%
+                                            {.$attribs[['style']] <- " margin:0; overflow: visible;"; .},
+                                    )
+                                ),
+                                div(style="width:100%", spsHr()),
                                 p("This panel always displays the most recent
-                                      modified log in `.SYSproject` folder, updates every 10s."),
-                                p("Only systemPipeR workflow logs will be displayed here. Check
-                                      console for any other random R code results"),
+                                     workflow status and log stored in `.SPRproject` folder, updates every 10s."),
                                 div(
                                     style="height:5px; width:100%",
                                     shinyWidgets::progressBar(
@@ -343,21 +353,21 @@ core_topServer <- function(id, shared){
         })
 
         # init editor code ----
-        observeEvent(shared$wf$wf_session_open, {
-            req(shared$wf$wf_session_open)
-            if(!emptyIsFalse(shared$wf$wf_path))
-                toastr_warning("Workflow path not detected", position = "bottom-right", timeOut = 3000)
-            updateAceEditor(
-                session = session, editorId = "code",
-                value = glue(
-                '
-                sysargslist <- systemPipeR::initWF(script="{shared$wf$wf_path}", overwrite = TRUE)
-                sysargslist <- systemPipeR::configWF(x=sysargslist)
-                sysargslist <- systemPipeR::runWF(sysargslist = sysargslist, steps = "ALL")
-                sysargslist
-                ')
-            )
-        }, ignoreInit = TRUE)
+        # observeEvent(shared$wf$wf_session_open, {
+        #     req(shared$wf$wf_session_open)
+        #     if(!emptyIsFalse(shared$wf$wf_path))
+        #         toastr_warning("Workflow path not detected", position = "bottom-right", timeOut = 3000)
+        #     updateAceEditor(
+        #         session = session, editorId = "code",
+        #         value = glue(
+        #         '
+        #         sysargslist <- systemPipeR::initWF(script="{shared$wf$wf_path}", overwrite = TRUE)
+        #         sysargslist <- systemPipeR::configWF(x=sysargslist)
+        #         sysargslist <- systemPipeR::runWF(sysargslist = sysargslist, steps = "ALL")
+        #         sysargslist
+        #         ')
+        #     )
+        # }, ignoreInit = TRUE)
         ## run code ----
         err <- reactiveVal(NULL)
         res <- reactiveVal(NULL)
@@ -463,6 +473,7 @@ core_topServer <- function(id, shared){
                 res <- rs_out$result
                 if(inherits(res, "ggplot")) res <- NULL # prevent ggplot to be rendered on parent
                 res <- utils::capture.output(rs_out$result)
+                if(is.character(res)) res <- remove_ANSI(res)
                 ## mute output for certain functions
                 if(rlang::expr_text(code_que()[1][[1]]) %>%
                    stringr::str_detect(
@@ -478,12 +489,12 @@ core_topServer <- function(id, shared){
                 if(length(res) < 1) res <- NULL # prevent character(0) capture
                 else if(length(res) > 1) NULL # do nothing if > 1
                 else if(res == "NULL") res <- NULL # mute NULL output
-                if(length(res) > 10){
+                if(length(res) > 100){
                     insertUI(
                         selector = paste0("#", ns("output")),
-                        ui = p(tags$b(class = "text-warning", "You are outputing too many lines to console, only display first 10"))
+                        ui = p(tags$b(class = "text-warning", "You are outputing too many lines to console, only display first 100"))
                     )
-                    res <- res[seq(10)]
+                    res <- res[seq(100)]
                 }
                 for(i in res) insertUI(selector = paste0("#", ns("output")), ui = p(class = "text-info", paste0(i)))
                 if(!is.null(rs_out$error)){
@@ -554,19 +565,19 @@ core_topServer <- function(id, shared){
         })
         ## capture SPR logs----
         observeEvent(1, {
-            output$logs <- renderPrint({
-                cat(rep("\n", 10))
+            output$logs <- renderUI({
+                tagList(lapply(seq(10), function(x) br()))
             })
         }, once = TRUE)
         logs <- reactiveVal(NULL)
         log_old <- reactiveVal("")
         observe({
             invalidateLater(10000, session)
-            req(dir.exists(file.path(shared$wf$env_path, ".SYSproject")))
+            req(dir.exists(file.path(shared$wf$env_path, ".SPRproject")))
             Sys.sleep(1)
             updateProgressBar(session, "update_log", 0)
             log_file <- shinyCatch({
-                fs::dir_ls(file.path(shared$wf$env_path, ".SYSproject"), glob = "*_logWF_*", type = "file") %>%
+                fs::dir_ls(file.path(shared$wf$env_path, ".SPRproject"), glob = "*_logWF_*", type = "file") %>%
                     {.[file.mtime(.) %>% which.max()]}
             },blocking_level = "error", shiny = FALSE)
             req(length(log_file) > 0)
@@ -574,8 +585,13 @@ core_topServer <- function(id, shared){
             req(!identical(log_mtime, log_old()))
             logs(readLines(log_file))
             log_old(log_mtime)
-            output$logs <- renderPrint({
-                cat(logs(), sep = "\n")
+            output$logs <- renderUI({
+                markdown(logs())
+            })
+            sal <- spsUtil::quiet(try(systemPipeR::SPRproject(projPath = shared$wf$env_path, resume = TRUE), TRUE))
+            req(inherits(sal, "SYSargsList"))
+            output$status_plot <- systemPipeR::renderPlotwf({
+                systemPipeR::plotWF(sal, rstudio = TRUE)
             })
             Sys.sleep(1)
             updateProgressBar(session, "update_log", 100)

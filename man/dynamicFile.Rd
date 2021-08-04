@@ -13,10 +13,17 @@ dynamicFile(
   style = "",
   multiple = FALSE,
   buttonType = "primary",
-  placeholder = "No file selected"
+  placeholder = "No file selected",
+  mode = spsOption("mode")
 )
 
-dynamicFileServer(input, session, id, roots = c(root = "default"))
+dynamicFileServer(
+  input,
+  session,
+  id,
+  mode = spsOption("mode"),
+  roots = c(root = "default")
+)
 }
 \arguments{
 \item{id}{element ID, Use \code{ns()} to wrap the id if you are using within a shiny
@@ -37,6 +44,8 @@ Default in SPS is 'primary', other valid values include 'info', 'success', 'defa
 'warning', 'danger'.}
 
 \item{placeholder}{string, text to display before the file is uploaded}
+
+\item{mode}{string, one of "local" or "server"}
 
 \item{input}{shiny server input}
 

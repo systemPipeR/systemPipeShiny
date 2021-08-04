@@ -24,9 +24,9 @@ test_that("SPS classes", {
     expect_s3_class(sps_enc, "spsEncryption")
 })
 
-sps <- suppressWarnings(sps())
+
 test_that("SPS main UI and server", {
-    expect_length(sps, 2)
+    sps <- suppressWarnings(sps())
     expect_s3_class(sps$ui, "shiny.tag.list")
     expect_type(sps$server, "closure")
 })
