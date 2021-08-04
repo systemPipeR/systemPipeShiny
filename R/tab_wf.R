@@ -67,9 +67,9 @@ wfUI <- function(id){
             bsplus::bs_set_opts(panel_type = "default") %>%
             bsplus::bs_append("1. Create a workflow environment", wf_setupUI(ns("wf_setup")), panel_type = "success") %>%
             bsplus::bs_append("2. Prepare the targets file", wf_targetUI(ns("wf_targets"))) %>%
-            bsplus::bs_append("3. Prepare the workflow file", wf_wfUI(ns("wf"))) %>%
+            bsplus::bs_append("3. Prepare the workflow object", wf_wfUI(ns("wf"))) %>%
             bsplus::bs_set_opts(panel_type = "success") %>%
-            bsplus::bs_append("4. Check CWL files (optional)", wf_cwlUI(ns("wf_cwl"))) %>%
+            bsplus::bs_append("4. Edit CWL files", wf_cwlUI(ns("wf_cwl"))) %>%
             bsplus::bs_set_opts(panel_type = "default") %>%
             bsplus::bs_append("5. Run workflow", wf_runUI(ns("wf_run"))),
         hexPanel(ns("poweredby"), "THIS TAB IS POWERED BY:",

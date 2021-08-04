@@ -38,7 +38,7 @@ mapply(
 
 ```{r gzip, eval=TRUE, spr='sysargs', spr.dep='export_iris'}
 appendStep(sal) <- SYSargsList(step_name = "gzip", 
-                      targets="targets_gunzip.txt", dir=TRUE,
+                      targets="targets.txt", dir=TRUE,
                       wf_file="gunzip/workflow_gzip.cwl", input_file="gunzip/gzip.yml",
                       dir_path = "param/cwl",
                       inputvars = c(FileName = "_FILE_PATH_", SampleName = "_SampleName_"), 

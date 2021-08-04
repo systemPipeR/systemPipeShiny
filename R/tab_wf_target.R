@@ -24,6 +24,10 @@ wf_targetUI <- function(id){
             This file is similar to the `colData` slot in an `SummarizedExperiment`
             object which stores sample ID and other meta information.
 
+            A workflow may require more than 1 set of targets. In SPS, only one set
+            of targets is allowed to be edited. Most times this set is the initial
+            targets.
+
             #### Using template workflow targets
             If the workflow environment has been set up correctly in the previous step,
             by default SPS loads the targets file that is been used in the workflow file.
@@ -50,8 +54,14 @@ wf_targetUI <- function(id){
 
             #### Check the format
             "Add to task" button can help you to check if you have the required
-            targets file format, i.e. column names, headers. If anything is missing,
-            you will see the instruction in the pop-up box.
+            targets file format, i.e. column names. If anything is missing,
+            you will see the warning in the pop-up box.
+
+            #### Add to task
+            Weh you are done with modifications, remember to click this button.
+            SPS will start to load the SPR project. Every time this is clicked,
+            old SPR project will be **overwritten** and re-rendered.
+
             '),
             spsHr(),
             box(

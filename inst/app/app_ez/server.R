@@ -1,5 +1,3 @@
 # ####### Server
-# DO NOT delete the next line by hand
-# last change date:
-
+# Usually there is no need to edit this file.
 sps_app$server

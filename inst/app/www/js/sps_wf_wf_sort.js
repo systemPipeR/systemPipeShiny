@@ -42,4 +42,6 @@ $(function(){
             return data.colors[index % data.colors.length];
         });
     });
+    // prevent event listensers from fileInput
+    $('#wf-wf-sortable')[0].addEventListener('dragleave', e => e.stopPropagation());
 });

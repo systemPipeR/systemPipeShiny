@@ -3,7 +3,7 @@
 if(interactive() && Sys.getenv("RSTUDIO", "") == "1"){
     (function(){
         if (!requireNamespace("devtools", quietly = TRUE)) {
-            return(cat("Install {devtools} to develop this package\n. `install.package('devtools')`"))
+            return(cat("Install {devtools} to develop this package\n. `install.packages('devtools')`"))
         }
         cat("Load package funcs...\n")
         devtools::load_all()

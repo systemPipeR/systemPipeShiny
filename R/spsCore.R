@@ -538,7 +538,7 @@ spsTabInfo <- function(return_type = "print", n_print = 40, app_path = getwd()){
     wf = sort(c(
         'systemPipeR',
         'systemPipeRdata',
-        'networkD3',
+        # 'networkD3',
         'rhandsontable',
         'zip',
         'callr',
@@ -546,8 +546,8 @@ spsTabInfo <- function(return_type = "print", n_print = 40, app_path = getwd()){
         'fs',
         'readr',
         'R.utils',
-        'DOT',
-        'shinyTree',
+        # 'DOT',
+        # 'shinyTree',
         "openssl"
     )),
     rna = sort(c(

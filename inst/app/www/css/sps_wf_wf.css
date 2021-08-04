@@ -5,6 +5,7 @@
 
 #wf-wf-sortable {
     transition: all 0.25s linear;
+    display: flex;
 }
 
 #wf-wf-step_box.enlarge-full-screen:before{

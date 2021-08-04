@@ -24,7 +24,8 @@ wf_setupUI <- function(id){
         **5**. *ChipSeq*. You can also choose an **6**. *existing* SPR workflow directory or create
         an **7**. *empty* SPR workflow directory.
 
-        **1**. Example is a very tiny workflow. It basically just list the `session info`.
+        **1**. Example is a very tiny workflow. It will runs some simple commands to
+        show you how workflows in SPR work.
 
         - All choices except "existing" will directly use the targets file and workflow
         file inside the SPR project folder as default or you can upload a new one.
@@ -34,10 +35,9 @@ wf_setupUI <- function(id){
         - If you choose the "*existing*" option, we cannot guess the targets file name
         and workflow file name. You can only upload the file. App will not detect and
         open the files for you. When you click "Add to task" in targets preparation step,
-        a file with "*targets.txt*" will be written to the workflow directory. So
-        make sure to **rename your targets file if you do not want it be overwritten**.
-        The same applies to workflow file preparation step, a file named "*workflow.Rmd*"
-        will be written to the directory you have chosen.
+        a file with "*targets.txt*" will be written to the workflow directory. Every time you click
+        "Add to task", the targets file will be backed up in the `backup` folder.
+
 
         '),
         spsHr(),
@@ -334,8 +334,8 @@ wf_setupServer <- function(id, shared){
                         dir.create(file.path(final_env_path, "param"), recursive = TRUE)
                         dir.create(file.path(final_env_path, "results"), recursive = TRUE)
                         # file.copy(system.file("app", "data", "targetsPE.txt", package = "systemPipeShiny"),
-                        res[['1']] <- file.copy(system.file("extdata", "cwl", "gunzip", "targets_gunzip.txt", package="systemPipeR"),
-                                  file.path(final_env_path, "targets_gunzip.txt"))
+                        res[['1']] <- file.copy(system.file("app", "templates", "targets_gunzip.txt", package="systemPipeShiny"),
+                                  file.path(final_env_path, "targets.txt"))
                         res[['2']] <- file.copy(system.file("app", "templates", "spr_simple_wf.Rmd", package = "systemPipeShiny"),
                                   file.path(final_env_path, "systemPipeExample.Rmd"))
                         res[['3']] <- file.copy(system.file("extdata", "cwl", package="systemPipeR"),
@@ -353,13 +353,13 @@ wf_setupServer <- function(id, shared){
                 "chipseq" = normalizePath(file.path(final_env_path, "targetsPE_chip.txt")),
                 "new" = normalizePath(file.path(final_env_path, "targets.txt")),
                 "exist" = wf_targets_path(),
-                "eg" = normalizePath(file.path(final_env_path, "targets_gunzip.txt")),
+                "eg" = normalizePath(file.path(final_env_path, "targets.txt")),
                 normalizePath(file.path(final_env_path, "targetsPE.txt"))
             ), blocking_level = "error")
             updateProgressBar(session, "gen_wf_pg", 4, 6, title = "update project info - workflow file")
             Sys.sleep(0.1)
             wf_file_path <- shinyCatch(switch(input$choose_wf,
-                "rnaseq" = normalizePath(file.path(final_env_path, "systemPipeRNAseq.Rmd")),
+                "rnaseq" = normalizePath(file.path(final_env_path, "systemPipeRNAseq_importWF.Rmd")),
                 "varseq" = normalizePath(file.path(final_env_path, "systemPipeVARseq.Rmd")),
                 "riboseq" = normalizePath(file.path(final_env_path, "systemPipeRIBOseq.Rmd")),
                 "chipseq" = normalizePath(file.path(final_env_path, "systemPipeChIPseq.Rmd")),

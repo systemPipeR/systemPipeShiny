@@ -442,7 +442,7 @@ dev <- function(e1,e2 = 2) eval.parent(substitute(e1 <- e1 / e2))
 emptyIsFalse <- function (x) {
     if (is.function(x))
         return(TRUE)
-    if (length(x) < 1 || is.na(x) || is.null(x))
+    if (length(x) < 1 || all(is.na(x)) || is.null(x))
         return(FALSE)
     if (nchar(x[1]) == 0)
         return(FALSE)

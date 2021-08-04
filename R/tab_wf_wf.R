@@ -3,71 +3,73 @@
 wf_wfUI <- function(id){
     ns <- NS(id)
     tagList(
+        # actionButton(ns("set"), "set"), # dev shortcut
         div(
             id = "wf_wf_displayed",
             style = "display:none",
             tabTitle("Workflow"),
-            # renderDesc(id = ns("desc"),
-            # '
-            # #### Workflow designer
-            # This is the workflow designer. Here you can add/remove/modify workflow
-            # steps and visualize the entire workflow.
-            #
-            # ***
-            #
-            # ##### How to use it
-            # It is best to start with some of the template workflows that can be
-            # generated from the from SPS workflow module Step 1. If you have selected
-            # one of the non-empty templates, like example, RNAseq etc., you should
-            # now see some steps are display on the left designer.
-            #
-            # 1.You can drag to change the order, or drag to the <i class="fa fa-trash-alt"></i>
-            # to delete a step.
-            # 2. Use <i class="fa fa-undo-alt"></i> undo or <i class="fa fa-redo-alt"></i> redo
-            # to restore your actions.
-            # 3. You can use <i class="fa fa-cog"></i> to configure each step.
-            # 4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
-            # an R step or a sysArgs step. the latter has more settings, you may want
-            # to read the manual of SPS or SPR before that.
-            # 5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or
-            # right panel to have a better view.
-            #
-            # #### Visualize the workflow
-            # You can see the workflow dependency graph on the right panel. It may
-            # or may not change if you make some actions, like changing the step
-            # dependencies.
-            #
-            # #### Fix dependencies
-            # Most steps will have dependencies, they are very important for a workflow
-            # to run. The dependency graph is pre-configured for template workflows.
-            # If you ever add/remove/change order of a step, the dependency graph may
-            # fail. You then will see steps marked in red. You must fix the dependencies
-            # of these steps by clicking <i class="fa fa-cog"> before continuing to run
-            # the workflow.
-            #
-            # Workflow plot is a good guide to build the dependency graph.
-            #
-            # ##### Add to task
-            # Clicking this <i class="fa fa-save"></i> will add the workflow file to the SPS task, it will
-            # be used in **step 5**. You need to have at least **one** step and **fix dependency problems**
-            # to enable this button. This is the final button to click after everything is done.
-            #
-            # ***
-            #
-            # #### Other information
-            #
-            # ##### Workflow templates
-            # In SPR, workflows are defined as Rmarkdown files,
-            # you can read details and obtain them
-            # [here{blk}](https://systempipe.org/sp/spr/templates/). This step can
-            # help you choose/ skip some steps. Make a workflow diagram to see how
-            # the order SPR execute the workflow and take a preview of the
-            # final report. If you just want to use all the defaults, simply clicking
-            # the <i class="fa fa-save"></i>.
-            #
-            # ##### more detailed manual
-            # A manual with screenshots and details is on [our website{blk}](https://systempipe.org/sps/modules/workflow/)
-            # '),
+            renderDesc(id = ns("desc"),
+            '
+            #### Workflow designer
+            This is the workflow designer. Here you can add/remove/modify workflow
+            steps and visualize the entire workflow.
+            ***
+
+            ##### How to use it
+            It is best to start with some of the template workflows that can be
+            generated from the from SPS workflow module Step 1. If you have selected
+            one of the non-empty templates, like example, RNAseq etc., you should
+            now see some steps are display on the left designer.
+
+            1.You can drag to change the order, or drag to the <i class="fa fa-trash-alt"></i>
+            to delete a step.
+            2. Use <i class="fa fa-undo-alt"></i> undo or <i class="fa fa-redo-alt"></i> redo
+            to restore your actions.
+            3. You can use <i class="fa fa-cog"></i> to configure each step.
+            4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
+            an R step or a sysArgs step. the latter has more settings, you may want
+            to read the manual of SPS or SPR before that.
+            5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or
+            right panel to have a better view.
+            ***
+
+            #### Visualize the workflow
+            You can see the workflow dependency graph on the right panel. It may
+            change if you make some actions, like changing the step
+            dependencies.
+            ***
+
+            #### Fix dependencies
+            Most steps will have dependencies, they are very important for a workflow
+            to run. The dependency graph is pre-configured for template workflows.
+            If you ever add/remove/change order of a step, the dependency graph may
+            fail. You then will see steps are marked in red. You **must fix** the dependencies
+            of these steps by clicking <i class="fa fa-cog"></i> before continuing to run
+            the workflow.
+            ***
+
+            If you are not sure how to fix, look at the workflow plot on the right.
+            It is a good guide to build the dependency graph.
+
+            ##### Add to task
+            Clicking this <i class="fa fa-save"></i> will add the workflow file to the SPS task, it will
+            be used in **step 5**. You need to have at least **one** step and **fix dependency problems**
+            to enable this button. This is the final button to click after everything is done.
+            ***
+
+            #### Other information
+            ##### Workflow templates
+            In SPR, workflows are defined as Rmarkdown files,
+            you can read details and obtain them
+            [here{blk}](https://systempipe.org/sp/spr/templates/). This step can
+            help you choose/ skip some steps. Make a workflow diagram to see how
+            the order SPR execute the workflow and take a preview of the
+            final report. If you just want to use all the defaults, simply clicking
+            the <i class="fa fa-save"></i>.
+
+            ##### Detailed manual
+            A manual with screenshots and details is on [our website{blk}](https://systempipe.org/sps/modules/workflow/)
+            '),
             spsHr(),
             tags$script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"),
             tags$script(src="sps/js/sps_wf_wf.js"),
@@ -151,11 +153,13 @@ wf_wfServer <- function(id, shared){
         })
         # init ----
         ### dev shortcut ####
-        # observeEvent(1, {
+        # observeEvent(input$set, {
+        #     shared$wf$flags$targets_ready <- 1
+        #     shared$wf$env_path <- file.path(getwd(), "spr_example_wf")
         #     shared$wf$sal <- my_sal
         #     wf_share$config_ob <- NULL
         #     his$add(list(
-        #         sal = shared$wf$sal,
+        #         sal = my_sal,
         #         msg = "Initial sal"
         #     ))
         #     savehis(savehis() + 1)
@@ -168,6 +172,7 @@ wf_wfServer <- function(id, shared){
         savehis <- reactiveVal(0)
         observeEvent(shared$wf$flags$targets_ready, priority = 2L, {
             # config obs
+            # my_sal <<-shared$wf$sal
             wf_share$config_ob <- NULL
             his$add(list(
               sal = shared$wf$sal,
@@ -307,10 +312,14 @@ wf_wfServer <- function(id, shared){
             newStepMain(his$get()$item$sal, ns)
         })
         # sys step ----
-        new_step_sys_t_path <- dynamicFileServer(input,session, id = "new_sys_t_path", mode = "local")
+        new_step_sys_t_path <- dynamicFileServer(
+            input, session, id = "new_sys_t_path", mode = "local",
+            roots = c(app = spsOption("app_path")))
+
         sys_t_con <- reactive({
             req(input$new_sys_t_source)
             if(input$new_sys_t_source == "step") return(input$new_step_t_con)
+            req(new_step_sys_t_path())
             new_step_sys_t_path()$datapath %>% basename()
         }) %>% debounce(2000)
         sys_bind_df <- reactiveVal()
@@ -326,7 +335,7 @@ wf_wfServer <- function(id, shared){
         }) %>% debounce(1000)
 
         observeEvent(sys_t_con(), ignoreInit = TRUE, ignoreNULL = FALSE, {
-            if(is.null(input$new_step_t_con)) return({
+            if(is.null(sys_t_con())) return({
                 output$step_sys_t_df <- DT::renderDT({DT::datatable(data.frame())})
                 sys_bind_df(NULL)
             })
@@ -385,7 +394,9 @@ wf_wfServer <- function(id, shared){
                         dplyr::bind_cols(targets, outfiles)
                     }
                 } else {
-                    df <- read.delim(sys_t_con(), comment.char = "#", sep = "\t")
+                    if(!file.exists(file.path(shared$wf$env_path, sys_t_con())))
+                        stop("You can only choose files inside current SPR workflow project folder, not in SPS app root")
+                    df <- read.delim(file.path(shared$wf$env_path, sys_t_con()), comment.char = "#", sep = "\t")
                 }
                 output$step_sys_t_df <- DT::renderDT({DT::datatable(df, options = list(searching= FALSE, scrollX = TRUE), class = "compact")})
                 sys_bind_df(df)
@@ -430,6 +441,8 @@ wf_wfServer <- function(id, shared){
                 inputvars <- cwl_input_vars()
                 names(inputvars) <- replace_cols
                 inputvars <- inputvars[!not_required]
+                if(length(names(inputvars)) != unique(names(inputvars)))
+                    stop("Each target column can only be used once for inputvars")
                 inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
                 targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
                 if(emptyIsFalse(targets) && !emptyIsFalse(inputvars[1])) stop(
@@ -448,7 +461,7 @@ wf_wfServer <- function(id, shared){
                 sal
             }, blocking_level = "error")
             output$new_step_sys_cmd <- renderPrint({
-                print(systemPipeR::cmdlist(sal)[['dummy_step']] %>% unlist() %>% unname())
+                print(suppressMessages(systemPipeR::cmdlist(sal))[['dummy_step']] %>% unlist() %>% unname())
             })
             shinyCatch(message("Raw commandline code generated."))
         })
@@ -466,6 +479,8 @@ wf_wfServer <- function(id, shared){
                 inputvars <- cwl_input_vars()
                 names(inputvars) <- replace_cols
                 inputvars <- inputvars[!not_required]
+                if(length(names(inputvars)) != unique(names(inputvars)))
+                    stop("Each target column can only be used once for inputvars")
                 inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
                 targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
                 if(emptyIsFalse(targets) && !emptyIsFalse(inputvars[1])) stop(
@@ -571,6 +586,7 @@ wf_wfServer <- function(id, shared){
 
             # update plot
             output$wf_plot <- systemPipeR::renderPlotwf({
+                req(sal)
                 systemPipeR::plotWF(sal, rstudio = TRUE)
             })
             # update redo undo
@@ -631,7 +647,7 @@ wf_wfServer <- function(id, shared){
             req(input$totask)
             shared$wf$sal <- sal <- his$get()$item$sal
             shinyCatch(blocking_level = "error", {
-                systemPipeR:::write_SYSargsList(sys.file = file.path(shared$wf$env_path, ".SPRproject/SYSargsList.yml"), sal)
+                systemPipeR::write_SYSargsList(sys.file = file.path(shared$wf$env_path, ".SPRproject", "SYSargsList.yml"), sal)
             })
             shared$wf$flags$wf_ready = isolate(shared$wf$flags$wf_ready) + 1
             shinyWidgets::confirmSweetAlert(

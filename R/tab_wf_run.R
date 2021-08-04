@@ -2,73 +2,112 @@
 wf_runUI <- function(id){
     ns <- NS(id)
     tagList(
-        # actionButton(ns("set"), "set"),
+        # actionButton(ns("set1"), "current page"),
+        # actionButton(ns("set2"), "run page"),
+        spsDepend("css-loader"),
         div(
             id = "wf_run_displayed",
             style = "display:none",
             tabTitle("Run Workflow"),
             renderDesc(id = ns("desc"),
-                       '
-        #### Running the workflow
-        Directly running the prepared workflow from SPS will be supported soon.
-        At this point, you should have prepared all the three very important
-        files for SPR workflow running. Open up the progress tracking panel
-        from top right corner and you should see everything is green. That
-        means you are ready to go.
+            '
+            #### Running the workflow
+            Congradulations! Upon this point, your workflow is ready to run. You can
+            choose run it directly from SPS by clicking the `Run workflow` or download
+            your workflow bundle in different format and use R console, Rstudio to
+            run it.
 
-        Copy these files to your SPR workflow project root and follow SPR
-        instructions.
+            If you choose to download, unzip the SPR bundle and follow SPR
+            [instructions{blk}](https://systempipe.org/sp/).
+            ****
 
-        When you are done with workflow running and have obtained some results,
-        come back to SPS to make some beautiful plots in the "Visualization".
+            ##### After running
+            If you have generated some results after running the workflow directly
+            in SPS, you can come back here and download again. This time, all newly
+            created files, logs, results will be included in the bundle.
+            ****
 
-        **Most SPR workflows needs to run in *Unix-like* system. Windows will fail to run except the example workflow**
-        '),
+            #### Connect with other SPS utilities
+            When you are done with workflow running and have obtained some results,
+            come back to SPS to make some beautiful plots in the SPS visualization
+            modules.
+            ****
+
+            #### Other info
+            **Most SPR workflows needs to run in *Unix-like* system. Windows will fail to run.**
+            Always make sure you have all the commandline tools installed for the workflows
+            you want to want. SPS will not be responsible to check those tools for you.
+            '),
             spsHr(),
             box(
-                width = 8,
+                width = 4,
                 collapsible = FALSE,
                 closable = FALSE,
+                id = ns("box-left"),
                 title = "Initiate a workflow environment",
                 tags$ul(
                     id = ns("example_tip"),
                     HTML("<li>A workflow is ready to run.</li>
-                         <li>Or you can download all prepared files to run at other places.</li>")
+                             <li>Or you can download all prepared files to run at other places.</li>")
                 ),
                 fluidRow(
                     class = "text-center",
                     actionButton(ns("run_session"), "Run workflow", style = "margin-top: 25px;") %>%
-                        bsHoverPopover(
-                            "Start a workflow running",
+                        bsPop(
+                            "Run workflow directly in SPS",
                             "Clicking here will direct you to a workflow running
                             session and set the working directory to the workflow
                             project. Once the session starts, you cannot interact
-                            with other part of SPS.",
+                            with other part(modules) of SPS.",
                             "top"
-                        ),
+                        )
+                )
+            ),
+            box(
+                width = 4,
+                id = ns("box-mid"),
+                collapsible = FALSE,
+                closable = FALSE,
+                title = "Choose download formats",
+                p("Additional formats to download"),
+                checkboxInput(ns("sal2bash"), "Export as bash scripts") %>%
+                    bsPop("Export to bash scripts",
+                          "SPR workflow can be exported as bash scripts to run. It
+                          means after exporting you no longer need SPR or SPS. You
+                          can execute the workflow by running the bash script directly.
+                          If you choose this option, a 'spr_wf.sh' file and 'spr_bash'
+                          folder will be included. cd to unzipped directory and
+                          run 'bash spr_wf.sh' to execute the workflow."),
+                checkboxInput(ns("sal2rmd"), "Export as workflow templates") %>%
+                    bsPop("Export current project to a template",
+                          "Exporting current SPR project to a template will enable you
+                          to share the workflow with others. Other poeple can easily
+                          reproduce your workflow with the same or different data sets."),
+                fluidRow(
+                    class = "text-center",
                     downloadButton(ns("download"), "Download Bundle", style = "margin-top: 25px;") %>%
-                        bsHoverPopover(
+                        bsPop(
                             "Download Workflow Bundle",
                             "Clicking here zips everything in current workflow folder and allow you
-                            to run the workflow elsewhere. You can even run the workflow here to produce
-                            some simple results and then quit the session and come to here to download
-                            everything including results. Current limit is 300MB.",
+                                to run the workflow elsewhere. You can even run the workflow here to produce
+                                some simple results and then quit the session and come to here to download
+                                everything including results.",
                             "top"
-                        ),
-                    div(id = ns("loading_down"), style = "display: none;",
-                        spsLoader())
+                        )
                 )
             ),
             box(
                 title = "Required files in task",
-                width = 4,
+                width = 4, id = ns("box-right"),
                 closable = FALSE,
                 collapsible = FALSE,
                 strong(id = ns("intask_targets_title"), "Targets file:"),
                 p(id = ns("intask_targets"), "No file submitted"),
                 strong(id = ns("intask_wf_title"),"Workflow file:"),
                 p(id = ns("intask_wf"), "No file submitted")
-            )
+            ),
+            heightMatcher(ns("box-left"), ns("box-mid")),
+            heightMatcher(ns("box-right"), ns("box-mid"))
         ),
         div(
             id = "wf_run_disable",
@@ -76,7 +115,6 @@ wf_runUI <- function(id){
                style = "text-center text-warning")
         )
     )
-
 }
 
 # server
@@ -84,17 +122,13 @@ wf_runServer <- function(id, shared){
     module <- function(input, output, session){
         ns <- session$ns
         tab_id <- "wf_run"
-        # toggle elements in wf init panel
-        observeEvent(input$choose_wf, {
-            shinyjs::toggleElement(
-                id = "exist_browse", anim = TRUE,
-                condition = input$choose_wf == "exist")
-            shinyjs::toggleElement(
-                id = "gen_warning", anim = TRUE,
-                condition = input$choose_wf != "eg")
-        })
         ####### run page shortcut
-        # observeEvent(input$set, ignoreInit = TRUE, {
+        # observeEvent(input$set1, ignoreInit = TRUE, {
+        #     shared$wf$all_ready <- TRUE
+        #     shared$wf$env_path <- "spr_example_wf"
+        #     shared$wf$sal <- my_sal
+        # })
+        # observeEvent(input$set2, ignoreInit = TRUE, {
         #     shared$wf$all_ready <- TRUE
         #     shared$wf$env_path <- "."
         #     shared$wf$rs <- shinyCatch(callr::r_session$new(), blocking_level = "error")
@@ -102,7 +136,7 @@ wf_runServer <- function(id, shared){
         #     shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
         #     shared$wf$rs_info$created <- TRUE
         #     shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
-        #     shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SYSproject", shared$wf$rs_info$log_name)
+        #     shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SPRproject", shared$wf$rs_info$log_name)
         #     shared$wf$rs_info$rs_dir <- file.path(shared$wf$env_path, "results", paste0("rs", shared$wf$rs_info$pid))
         #     spsOption("console_width",  getOption("width"))
         #     options(width = 80)
@@ -156,7 +190,7 @@ wf_runServer <- function(id, shared){
             shared$wf$rs_info$pid <-  shared$wf$rs$get_pid()
             shared$wf$rs_info$created <- TRUE
             shared$wf$rs_info$log_name <- paste0("SPS", shared$wf$rs_info$pid, ".log")
-            shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, "log",
+            shared$wf$rs_info$log_path <- file.path(shared$wf$env_path, ".SPRproject",
                                                     shared$wf$rs_info$log_name)
             shared$wf$rs_info$rs_dir <- file.path(shared$wf$env_path, "results", paste0("rs", shared$wf$rs_info$pid))
             # create log folder and file
@@ -197,29 +231,41 @@ wf_runServer <- function(id, shared){
             shared$wf$wf_session_open <- TRUE
         })
         # download bundle
+        down_bundle_loader <- addLoader$new("download", type = "facebook", color = "white")
         output$download <- downloadHandler(
             filename = function() {
                 "SPR_workflow_by_SPS.zip"
             },
             content = function(filename) {
                 on.exit({
-                    shinyjs::hide(ns("loading_down"))
-                    shinyjs::show(ns("download"))
+                    down_bundle_loader$hide()
+                    shinyjs::enable(ns("download"))
                     pg$close()
                 })
-                shinyjs::hide(ns("download"))
-                shinyjs::show(ns("loading_down"))
+                down_bundle_loader$show()
+                shinyjs::disable(ns("download"))
                 pg <- shiny::Progress$new()
                 pg$set(0)
                 pg$set(message = "Checking folder size")
-                shinyCatch({
-                    all_size <- fs::dir_ls(shared$wf$env_path, all = TRUE, recurse = TRUE) %>%
-                        fs::file_size() %>% sum()
-                    if(all_size > 5e+8) stop("Workflow folder toooooooooo large")
-                    if(all_size > 3e+8) stop("Workflow folder too large")
-                }, blocking_level = "error")
-                pg$set(10)
-                pg$set(message = "Start to zip, please wait")
+                if(emptyIsFalse(input$sal2bash)) shinyCatch(blocking_level = "error", {
+                    pg$set(25, message = "Creating bash files")
+                    sal <- shared$wf$sal
+                    systemPipeR::sal2bash(sal, out_dir = shared$wf$env_path)
+                })
+                if(emptyIsFalse(input$sal2rmd)) shinyCatch(blocking_level = "error", {
+                    pg$set(50, message = "Creating new workflow template file")
+                    systemPipeR::sal2rmd(
+                        shared$wf$sal, verbose = FALSE,
+                        desc = "This is a workflow template generated from SPS app.",
+                        file.path(shared$wf$env_path, "exported_SPR_template.Rmd")
+                    )
+                })
+                # shinyCatch({
+                #     all_size <- fs::dir_ls(shared$wf$env_path, all = TRUE, recurse = TRUE) %>%
+                #         fs::file_size() %>% sum()
+                #     if(all_size > 3e+8) stop("Workflow folder too large, over limit")
+                # }, blocking_level = "error")
+                pg$set(70, message = "Start to zip, please wait")
                 zip::zip(zipfile=filename, files=shared$wf$env_path, mode = "cherry-pick")
             },
             contentType = "application/zip"

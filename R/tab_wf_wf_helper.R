@@ -107,7 +107,7 @@ makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
         tabPanel(
             "Targets", style = "overflow-x: auto;",
             spsTitle("Targets connection(inherited):", "4"),
-            tags$pre(sal$targets_connection[[step_name]]),
+            tags$pre(sal$targets_connection[[step_name]][['targets_step']]),
             spsTitle("Targets header", "4"),
             tags$pre(glue_collapse(targets_header, sep = "\n")),
             spsTitle("Targets table", "4"),
