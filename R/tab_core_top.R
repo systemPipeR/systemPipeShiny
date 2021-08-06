@@ -571,11 +571,24 @@ core_topServer <- function(id, shared){
         }, once = TRUE)
         logs <- reactiveVal(NULL)
         log_old <- reactiveVal("")
+        wf_plot_old <- reactiveVal("")
         observe({
             invalidateLater(10000, session)
             req(dir.exists(file.path(shared$wf$env_path, ".SPRproject")))
-            Sys.sleep(1)
             updateProgressBar(session, "update_log", 0)
+            sal_yaml <- file.path(shared$wf$env_path, ".SPRproject", "SYSargsList.yml")
+            if(file.exists(sal_yaml)) {
+                wf_plot_mtime <- file.mtime(sal_yaml)
+                if(!identical(wf_plot_mtime, wf_plot_old())) {
+                    wf_plot_old(wf_plot_mtime)
+                    sal <- spsUtil::quiet(try(systemPipeR::SPRproject(projPath = shared$wf$env_path, resume = TRUE), TRUE))
+                    if(inherits(sal, "SYSargsList")) {
+                        output$status_plot <- systemPipeR::renderPlotwf({
+                            systemPipeR::plotWF(sal, rstudio = TRUE)
+                        })
+                    }
+                }
+            }
             log_file <- shinyCatch({
                 fs::dir_ls(file.path(shared$wf$env_path, ".SPRproject"), glob = "*_logWF_*", type = "file") %>%
                     {.[file.mtime(.) %>% which.max()]}
@@ -587,11 +600,6 @@ core_topServer <- function(id, shared){
             log_old(log_mtime)
             output$logs <- renderUI({
                 markdown(logs())
-            })
-            sal <- spsUtil::quiet(try(systemPipeR::SPRproject(projPath = shared$wf$env_path, resume = TRUE), TRUE))
-            req(inherits(sal, "SYSargsList"))
-            output$status_plot <- systemPipeR::renderPlotwf({
-                systemPipeR::plotWF(sal, rstudio = TRUE)
             })
             Sys.sleep(1)
             updateProgressBar(session, "update_log", 100)

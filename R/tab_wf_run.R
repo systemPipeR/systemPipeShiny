@@ -4,7 +4,6 @@ wf_runUI <- function(id){
     tagList(
         # actionButton(ns("set1"), "current page"),
         # actionButton(ns("set2"), "run page"),
-        spsDepend("css-loader"),
         div(
             id = "wf_run_displayed",
             style = "display:none",
@@ -242,7 +241,7 @@ wf_runServer <- function(id, shared){
                     down_bundle_loader$hide()
                     shinyjs::enable(ns("download"))
                     pg$close()
-                })
+                }, add = TRUE)
                 down_bundle_loader$show()
                 shinyjs::disable(ns("download"))
                 pg <- shiny::Progress$new()

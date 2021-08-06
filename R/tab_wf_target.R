@@ -407,9 +407,12 @@ wf_targetServer <- function(id, shared){
                     filename)
         })
         # add to task
+        # totask_loader <- addLoader$new("to_task_target", type = "facebook", color = "white")
         observeEvent(input$to_task_target, {
             # check col_names, header lines
             req(t.df())
+            # on.exit({totask_loader$hide()}, add = TRUE)
+            # totask_loader$show()
             t.df(rhandsontable::hot_to_r(input$targets_df))
             header_lines <- isolate(input$ace_target_header)
             check_results <- check_target(col_names = t.df()[1, ],

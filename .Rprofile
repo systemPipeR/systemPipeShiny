@@ -26,4 +26,7 @@ if(interactive() && Sys.getenv("RSTUDIO", "") == "1"){
     cat("You are in SPS develop environment. It is recommended to use Rstudio to develop this package.\n")
 }
 
+# path = Sys.getenv("PATH")
+# path = paste0(path, ":/home/lab/lib")
+# Sys.setenv(PATH= path)
 
