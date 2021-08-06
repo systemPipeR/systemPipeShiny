@@ -42,8 +42,8 @@ wfUI <- function(id){
         tags$head(
             tags$script(src = "sps/js/split1.6.0.js"),
             tags$script(type="module", src = "sps/js/sps_wf.js"),
-            tags$link(rel="stylesheet", href = "sps/css/sps_wf.css")
-            # spsDepend("css-loader")
+            tags$link(rel="stylesheet", href = "sps/css/sps_wf.css"),
+            spsDepend("css-loader")
         ),
         tabTitle("Data analysis workflows"),
         renderDesc(ns("desc"), desc),
