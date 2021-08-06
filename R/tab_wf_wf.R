@@ -158,6 +158,7 @@ wf_wfServer <- function(id, shared){
         #     shared$wf$env_path <- file.path(getwd(), "spr_example_wf")
         #     shared$wf$sal <- my_sal
         #     wf_share$config_ob <- NULL
+        #     his$clear()
         #     his$add(list(
         #         sal = my_sal,
         #         msg = "Initial sal"
@@ -172,11 +173,13 @@ wf_wfServer <- function(id, shared){
         savehis <- reactiveVal(0)
         observeEvent(shared$wf$flags$targets_ready, priority = 2L, {
             # config obs
-            # my_sal <<-shared$wf$sal
             wf_share$config_ob <- NULL
+            req(shared$wf$sal)
+            # my_sal <<-shared$wf$sa
+            his$clear()
             his$add(list(
               sal = shared$wf$sal,
-              msg = "Initial sal"
+              msg = "New sal created"
             ))
             savehis(savehis() + 1)
         })
@@ -441,7 +444,7 @@ wf_wfServer <- function(id, shared){
                 inputvars <- cwl_input_vars()
                 names(inputvars) <- replace_cols
                 inputvars <- inputvars[!not_required]
-                if(length(names(inputvars)) != unique(names(inputvars)))
+                if(length(names(inputvars)) != length(unique(names(inputvars))))
                     stop("Each target column can only be used once for inputvars")
                 inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
                 targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
@@ -479,7 +482,7 @@ wf_wfServer <- function(id, shared){
                 inputvars <- cwl_input_vars()
                 names(inputvars) <- replace_cols
                 inputvars <- inputvars[!not_required]
-                if(length(names(inputvars)) != unique(names(inputvars)))
+                if(length(names(inputvars)) != length(unique(names(inputvars))))
                     stop("Each target column can only be used once for inputvars")
                 inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
                 targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
@@ -501,6 +504,7 @@ wf_wfServer <- function(id, shared){
                 )
                 his$add(list(sal = sal, msg = "New sysArgs step"))
             }, blocking_level = "error")
+            step_order_change(FALSE)
             savehis(savehis() + 1)
             removeModal()
             shinyCatch(message("New sysArgs step saved."))
@@ -522,6 +526,7 @@ wf_wfServer <- function(id, shared){
                 )
                 his$add(list(sal = sal, msg = "New R step"))
             })
+            step_order_change(FALSE)
             savehis(savehis() + 1)
             removeModal()
             shinyCatch(message("New R step saved."))
@@ -546,6 +551,7 @@ wf_wfServer <- function(id, shared){
                 systemPipeR::dependency(sal, step = cur_config()) <- if(emptyIsFalse(input$change_dep[1])) input$change_dep else ""
                 sal
             })
+            step_order_change(FALSE)
             his$add(list(sal = sal, msg = "Config R step"))
             wf_ui_updates()
             updateHisInfo(his)
@@ -583,7 +589,6 @@ wf_wfServer <- function(id, shared){
                 destoryOb(isolate(wf_share$config_ob))
                 wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns, cur_config, ob_index)
             }
-
             # update plot
             output$wf_plot <- systemPipeR::renderPlotwf({
                 req(sal)
@@ -601,20 +606,35 @@ wf_wfServer <- function(id, shared){
         })
 
         # on sort order change ----
+        step_order_change <- reactiveVal(TRUE)
         step_order_inited <- reactiveVal(FALSE)
-        step_order_old <- reactiveVal(FALSE)
+        sal_old <- reactiveVal(FALSE)
         observeEvent(input$step_orders, {
             req(!is.null(input$step_orders))
+            # cat("change before", step_order_change(), "\n")
+            if(!step_order_change()) return(step_order_change(TRUE))
             if(!step_order_inited()) return(step_order_inited(TRUE))
-            if(suppressWarnings(all(step_order_old() == input$step_orders))) return()
-            step_order_old(input$step_orders)
+            # cat("change after", step_order_change(), "\n")
             sal <- his$get()$item$sal
             step_order <- as.numeric(input$step_orders)
             if(length(step_order) == 1 && step_order[1] == "0") step_order <- NULL
-            new_sal <- sal[step_order]
-            msgs <- if(emptyIsFalse(input$step_order_del) && input$step_order_del == "del") "Delete Step" else "Change order"
-            if(msgs == "Delete Step") ob_index(ob_index() + 1)
-            his$add(list(sal = new_sal, msg = msgs))
+            sal_new <- sal[step_order]
+            req(!identical(sal_new, sal_old()))
+            sal_old(sal_new)
+            his$add(list(sal = sal_new, msg = "Change order"))
+            savehis(savehis() + 1)
+        }, ignoreInit = TRUE)
+        # delete step
+        observeEvent(input$step_order_del_trigger, {
+            req(input$step_order_del_trigger)
+            req(!is.null(input$step_order_del))
+            sal <- his$get()$item$sal
+            step_order <- as.numeric(input$step_order_del)
+            if(length(step_order) == 1 && step_order[1] == "0") step_order <- NULL
+            sal_new <- sal[step_order]
+            ob_index(ob_index() + 1)
+            step_order_change(FALSE)
+            his$add(list(sal = sal_new, msg = "Delete step"))
             savehis(savehis() + 1)
         }, ignoreInit = TRUE)
         # on redo or undo ----
@@ -632,12 +652,14 @@ wf_wfServer <- function(id, shared){
         observeEvent(input$step_undo, {
             req(!his$status()$first)
             shinyCatch(his$backward(), blocking_level = "error")
+            step_order_change(FALSE)
             wf_ui_updates()
             updateHisInfo(his)
         })
         observeEvent(input$step_redo, {
             req(!his$status()$last)
             shinyCatch(his$forward(), blocking_level = "error")
+            step_order_change(FALSE)
             wf_ui_updates()
             updateHisInfo(his)
         })

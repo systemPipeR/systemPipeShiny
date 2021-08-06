@@ -1,5 +1,6 @@
 // general wf step module js
-var stepIndex;
+var wfDelIndex = 0; // declare var for sortable delete index values
+
 function enlargeBox(target) {
     $('body').on('click', target, function(e){
     let enlarged = $(this).attr('enlarged');
@@ -18,6 +19,7 @@ enlargeBox('#wf-wf-wf_plot_enlarge');
 $(function(){
     $(document).on('wf_plot_created', function(){
         $('#wf-wf-wf_plot, #wf-wf-wf_plot svg').css({overflow: '', height: '97%', width: '100%'});
+        $('#core_top-status_plot svg').css({overflow: '', height: '100%', width: '100%'});
     });
 
     Shiny.addCustomMessageHandler("wf-undo-redo", function(data){

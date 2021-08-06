@@ -1,62 +1,62 @@
 ### Utility functions, can be run outside SPS
 
-#' Take steps output from subsetRmd and change to a nested list structure
-#' @description Data prepare for ShinyTree
-#' @param t_lvl positive integers, vector, levels of all title levels in Rmd
-#' @param t_text character strings, vector, text of titles
-#' @param start_lvl integer, default value is 0, but default
-#' level is 1 (0 + 1). level to start to create list
-#' @noRd
-#' @return a nested list
-#'
-# @examples
-# library(shiny)
-# library(shinyTree)
-# tree = step2listTree(t_lvl, t_text)
-# str(tree)
-#
-# tree_names = names(unlist(tree))
-#
-# ui = shinyUI(
-#     pageWithSidebar(
-#         mainPanel(
-#             shinyTree("tree", stripes = TRUE,
-#                       multiple = FALSE, animation = FALSE)
-#         )
-#     ))
-# server = shinyServer(function(input, output, session) {
-#     output$tree <- renderTree({
-#         tree
-#     })
-# })
-# shinyApp(ui, server)
-step2listTree <- function(t_lvl, t_text, start_lvl = 0){
-    if (t_lvl %>% unique() %>% length == 1){
-        tmp_lst <- list()
-        for (i in t_text){
-            tmp_lst[[as.character(i)]] <- ""
-        }
-        return(tmp_lst)
-    }
-    start_lvl <- start_lvl + 1
-    t_index <- which(t_lvl == start_lvl)
-    if (!length(t_index) == 0){
-        tmp_lst <- list()
-        for (i in seq_along(t_index)){
-            t_index <- c(t_index, length(t_lvl) + 1)
-            if_children <- t_index[i]  + 1 == t_index[i+1]
-            if (is.na(if_children) | if_children) {
-                tmp_lst[[t_text[t_index[i]]]] <- ""
-            } else {
-                children_lvl <- t_lvl[(t_index[i] + 1): (t_index[i + 1] -1)]
-                children_name <- t_text[(t_index[i] + 1): (t_index[i + 1] -1)]
-                tmp_lst[[t_text[t_index[i]]]] <-
-                    step2listTree(children_lvl, children_name, start_lvl)
-            }
-        }
-        return(tmp_lst)
-    } else {return("")}
-}
+# #' Take steps output from subsetRmd and change to a nested list structure
+# #' @description Data prepare for ShinyTree
+# #' @param t_lvl positive integers, vector, levels of all title levels in Rmd
+# #' @param t_text character strings, vector, text of titles
+# #' @param start_lvl integer, default value is 0, but default
+# #' level is 1 (0 + 1). level to start to create list
+# #' @noRd
+# #' @return a nested list
+# #'
+# # @examples
+# # library(shiny)
+# # library(shinyTree)
+# # tree = step2listTree(t_lvl, t_text)
+# # str(tree)
+# #
+# # tree_names = names(unlist(tree))
+# #
+# # ui = shinyUI(
+# #     pageWithSidebar(
+# #         mainPanel(
+# #             shinyTree("tree", stripes = TRUE,
+# #                       multiple = FALSE, animation = FALSE)
+# #         )
+# #     ))
+# # server = shinyServer(function(input, output, session) {
+# #     output$tree <- renderTree({
+# #         tree
+# #     })
+# # })
+# # shinyApp(ui, server)
+# step2listTree <- function(t_lvl, t_text, start_lvl = 0){
+#     if (t_lvl %>% unique() %>% length == 1){
+#         tmp_lst <- list()
+#         for (i in t_text){
+#             tmp_lst[[as.character(i)]] <- ""
+#         }
+#         return(tmp_lst)
+#     }
+#     start_lvl <- start_lvl + 1
+#     t_index <- which(t_lvl == start_lvl)
+#     if (!length(t_index) == 0){
+#         tmp_lst <- list()
+#         for (i in seq_along(t_index)){
+#             t_index <- c(t_index, length(t_lvl) + 1)
+#             if_children <- t_index[i]  + 1 == t_index[i+1]
+#             if (is.na(if_children) | if_children) {
+#                 tmp_lst[[t_text[t_index[i]]]] <- ""
+#             } else {
+#                 children_lvl <- t_lvl[(t_index[i] + 1): (t_index[i + 1] -1)]
+#                 children_name <- t_text[(t_index[i] + 1): (t_index[i + 1] -1)]
+#                 tmp_lst[[t_text[t_index[i]]]] <-
+#                     step2listTree(children_lvl, children_name, start_lvl)
+#             }
+#         }
+#         return(tmp_lst)
+#     } else {return("")}
+# }
 
 
 
@@ -440,8 +440,8 @@ dev <- function(e1,e2 = 2) eval.parent(substitute(e1 <- e1 / e2))
 
 ## temp fix before new spsUtil  is on CRAN
 emptyIsFalse <- function (x) {
-    if (is.function(x))
-        return(TRUE)
+    if (is.function(x)) return(TRUE)
+    if (is.environment(x)) return(TRUE)
     if (length(x) < 1 || all(is.na(x)) || is.null(x))
         return(FALSE)
     if (nchar(x[1]) == 0)

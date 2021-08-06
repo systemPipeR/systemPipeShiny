@@ -307,9 +307,13 @@ core_topServer <- function(id, shared){
         observeEvent(shared$wf$rs_info$created, ignoreInit = TRUE, {
             if(shared$wf$rs_info$created) {
                 update_rs$resume()
+                ob_log$resume()
+                ob_log_plot$resume()
             }
             else {
                 update_rs$suspend()
+                ob_log$suspend()
+                ob_log_plot$suspend()
                 shinyjs::html("rs_status", "no R session active")
                 shinyjs::removeCssClass("rs_status", "text-success")
                 shinyjs::removeCssClass("rs_status", "text-warning")
@@ -325,7 +329,7 @@ core_topServer <- function(id, shared){
                 inputId = ns("confirm_close"),
                 title = "Close current session?",
                 text = if (shared$wf$rs$get_state() == "busy") "Session is running! Any running workflow or R code will be stopped, and it may cause error. Unsaved data will be lost."
-                       else "Unsaved data will be lost.",
+                else "Unsaved data will be lost.",
                 type = if(shared$wf$rs$get_state() == "busy") "warning" else "info"
             )
         })
@@ -336,6 +340,8 @@ core_topServer <- function(id, shared){
             update_rs$suspend()
             out_watcher$suspend()
             plot_watcher$suspend()
+            ob_log$suspend()
+            ob_log_plot$suspend()
             # update status
             shared$wf$wf_session_open <- FALSE
             try({shared$wf$rs$close(); shared$wf$rs$finalize()}, silent = TRUE)
@@ -482,7 +488,7 @@ core_topServer <- function(id, shared){
                            "(print\\()|",
                            "(library\\()"
                        ))
-                 ){
+                ){
                     res <- NULL # handle print resulting duplicates on console
                 }
 
@@ -571,11 +577,9 @@ core_topServer <- function(id, shared){
         }, once = TRUE)
         logs <- reactiveVal(NULL)
         log_old <- reactiveVal("")
-        observe({
+        ob_log <- observe(suspended = TRUE, {
             invalidateLater(10000, session)
             req(dir.exists(file.path(shared$wf$env_path, ".SPRproject")))
-            Sys.sleep(1)
-            updateProgressBar(session, "update_log", 0)
             log_file <- shinyCatch({
                 fs::dir_ls(file.path(shared$wf$env_path, ".SPRproject"), glob = "*_logWF_*", type = "file") %>%
                     {.[file.mtime(.) %>% which.max()]}
@@ -588,6 +592,15 @@ core_topServer <- function(id, shared){
             output$logs <- renderUI({
                 markdown(logs())
             })
+            Sys.sleep(1)
+            updateProgressBar(session, "update_log", 100)
+        })
+        ob_log_plot <- observe(suspended = TRUE, {
+            invalidateLater(10000, session)
+            req(dir.exists(file.path(shared$wf$env_path, ".SPRproject")))
+            updateProgressBar(session, "update_log", 0)
+            sal_yaml <- file.path(shared$wf$env_path, ".SPRproject", "SYSargsList.yml")
+            req(file.exists(sal_yaml))
             sal <- spsUtil::quiet(try(systemPipeR::SPRproject(projPath = shared$wf$env_path, resume = TRUE), TRUE))
             req(inherits(sal, "SYSargsList"))
             output$status_plot <- systemPipeR::renderPlotwf({
@@ -605,5 +618,4 @@ core_topServer <- function(id, shared){
     }
     moduleServer(id, module)
 }
-
 

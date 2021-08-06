@@ -5,7 +5,6 @@
 
 #wf-wf-sortable {
     transition: all 0.25s linear;
-    display: flex;
 }
 
 #wf-wf-step_box.enlarge-full-screen:before{
@@ -81,7 +80,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
-    max-height: 75%;
+    max-height: 60%;
 }
 
 .step-grid.dep-warn {

@@ -62,7 +62,6 @@ Suggests:
     fs,
     readr,
     R.utils,
-    shinyTree,
     DESeq2,
     SummarizedExperiment,
     glmpca,

@@ -1,6 +1,6 @@
 // attach when new sortable table renders.
 $(function(){
-    var selStep;
+    var selStep, stepIndex;
     const sortable = Sortable.create($('#wf-wf-sortable')[0], {
         ghostClass: 'spr-steps-moving',
         group: "steps",
@@ -8,13 +8,13 @@ $(function(){
         handle: ".step-grid",
         //removeOnSpill: true,
         onEnd: function(evt){
+            //console.log("sortable index", sortable.toArray())
+            //console.log("stored index", stepIndex)
             if(sortable.toArray().join() === stepIndex.join()) return false;
-            let delMsg =  sortable.toArray().length < stepIndex.length ? "del" : "";
-            stepIndex = sortable.toArray();
+            if(sortable.toArray().length !== stepIndex.length) return false;
             if(stepIndex.length === 0) stepIndex = ["0"];
+            stepIndex = sortable.toArray();
             Shiny.setInputValue("wf-wf-step_orders", stepIndex);
-            console.log(stepIndex)
-            Shiny.setInputValue("wf-wf-step_order_del", delMsg);
         }
     });
 
@@ -22,7 +22,6 @@ $(function(){
         stepIndex = sortable.toArray(); // get initial stepIndex
         Shiny.setInputValue("wf-wf-step_orders", stepIndex);
     }
-
     const delStack = Sortable.create($('#wf-wf-step_trash')[0], {
         group: "steps",
         onAdd: function(evt) {
@@ -30,6 +29,10 @@ $(function(){
             let span = $(this.el).children('span');
             span.css({transform: 'rotate(-45deg)'});
             setTimeout(()=>span.css({transform: 'rotate(0deg)'}), 250);
+            wfDelIndex += 1;
+            //console.log("delindex", wfDelIndex)
+            Shiny.setInputValue("wf-wf-step_order_del_trigger", wfDelIndex);
+            Shiny.setInputValue("wf-wf-step_order_del", sortable.toArray());
         }
     });
 

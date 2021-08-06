@@ -19,10 +19,9 @@
 ## uncomment and copy following by your needs to "global.R" file in deployment:
 ##########################################################################
 ## Workflow module
-# requireNamespace("DOT"); requireNamespace("networkD3"); requireNamespace("pushbar")
-# requireNamespace("readr"); requireNamespace("rhandsontable"); requireNamespace("shinyTree")
+# requireNamespace("pushbar"); requireNamespace("callr")
+# requireNamespace("readr"); requireNamespace("rhandsontable")
 # requireNamespace("systemPipeR"); requireNamespace("systemPipeRdata"); requireNamespace("zip")
-# requireNamespace("callr")
 
 ## RNA-Seq module
 # requireNamespace("DESeq2"); requireNamespace("Rtsne"); requireNamespace("SummarizedExperiment")
