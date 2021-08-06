@@ -3,7 +3,7 @@
 wf_wfUI <- function(id){
     ns <- NS(id)
     tagList(
-        actionButton(ns("set"), "set"), # dev shortcut
+        # actionButton(ns("set"), "set"), # dev shortcut
         div(
             id = "wf_wf_displayed",
             style = "display:none",
@@ -153,37 +153,36 @@ wf_wfServer <- function(id, shared){
         })
         # init ----
         ### dev shortcut ####
-        observeEvent(input$set, {
-            shared$wf$flags$targets_ready <- 1
-            shared$wf$env_path <- file.path(getwd(), "spr_example_wf")
-            shared$wf$sal <- my_sal
-            wf_share$config_ob <- NULL
-            his$clear()
-            his$add(list(
-                sal = my_sal,
-                msg = "Initial sal"
-            ))
-            savehis(savehis() + 1)
-        }, once = TRUE)
+        # observeEvent(input$set, {
+        #     shared$wf$flags$targets_ready <- 1
+        #     shared$wf$env_path <- file.path(getwd(), "spr_example_wf")
+        #     shared$wf$sal <- my_sal
+        #     wf_share$config_ob <- NULL
+        #     his$clear()
+        #     his$add(list(
+        #         sal = my_sal,
+        #         msg = "Initial sal"
+        #     ))
+        #     savehis(savehis() + 1)
+        # }, once = TRUE)
         ########
         wf_share <- reactiveValues()
         # start history stack
         his <- historyStack$new(verbose = spsOption("verbose"),limit = 100)
         # save envet trigger
         savehis <- reactiveVal(0)
-        # observeEvent(shared$wf$flags$targets_ready, priority = 2L, {
-        #     # config obs
-        #     wf_share$config_ob <- NULL
-        #     req(shared$wf$sal)
-        #     print(1)
-        #     # my_sal <<-shared$wf$sa
-        #     his$clear()
-        #     his$add(list(
-        #       sal = shared$wf$sal,
-        #       msg = "New sal created"
-        #     ))
-        #     savehis(savehis() + 1)
-        # })
+        observeEvent(shared$wf$flags$targets_ready, priority = 2L, {
+            # config obs
+            wf_share$config_ob <- NULL
+            req(shared$wf$sal)
+            # my_sal <<-shared$wf$sa
+            his$clear()
+            his$add(list(
+              sal = shared$wf$sal,
+              msg = "New sal created"
+            ))
+            savehis(savehis() + 1)
+        })
 
 
         # new step ----
@@ -582,39 +581,28 @@ wf_wfServer <- function(id, shared){
         wf_ui_updates <- function(){
             sal <- his$get()$item$sal
             sal_stat <- statSal(sal)
-            print(7)
             # update sort
             if(length(sal$stepsWF) != 0) {
                 output$sort_box <-  renderUI({
-                    print("sort")
                     makeSort(sal_stat$names, sal_stat$type, ns, sal_stat, ob_index)
                 })
-                print(10)
                 destoryOb(isolate(wf_share$config_ob))
                 wf_share$config_ob <- makeConfig(sal, sal_stat$names, sal_stat$deps, session, input, output, ns, cur_config, ob_index)
-                print(11)
             }
-            print(8)
             # update plot
             output$wf_plot <- systemPipeR::renderPlotwf({
-                print(12.1)
                 req(sal)
-                print(12.5)
                 systemPipeR::plotWF(sal, rstudio = TRUE)
             })
             # update redo undo
-            print(9)
             shinyjs::toggleState("step_undo", !his$status()$first)
             shinyjs::toggleState("step_redo", !his$status()$last)
         }
 
         observeEvent(savehis(), {
             req(savehis() > 0)
-            print(2)
             wf_ui_updates()
-            print(3)
             updateHisInfo(his)
-            print(4)
         })
 
         # on sort order change ----
@@ -622,7 +610,6 @@ wf_wfServer <- function(id, shared){
         step_order_inited <- reactiveVal(FALSE)
         sal_old <- reactiveVal(FALSE)
         observeEvent(input$step_orders, {
-            print(5)
             req(!is.null(input$step_orders))
             # cat("change before", step_order_change(), "\n")
             if(!step_order_change()) return(step_order_change(TRUE))
@@ -639,7 +626,6 @@ wf_wfServer <- function(id, shared){
         }, ignoreInit = TRUE)
         # delete step
         observeEvent(input$step_order_del_trigger, {
-            print(6)
             req(input$step_order_del_trigger)
             req(!is.null(input$step_order_del))
             sal <- his$get()$item$sal

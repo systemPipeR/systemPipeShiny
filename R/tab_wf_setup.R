@@ -150,17 +150,12 @@ wf_setupUI <- function(id){
             tags$ul(
                 class = "text-danger", id = ns("warn_noneg"),
                 tags$li("This will run a non-example workflow.
-                If the required command
-                line tools are not installed, the workflow will fail."),
-                HTML("<li>Current version of SystemPipeR templates has some formatting
-                     issues that will cause the workflow fail to run. Please read the
-                     updates on <b>About</b> tab when we fix them.</li>"),
-                HTML("<li>Most other pre-configed template workflows like RNAseq,
-                Varseq provide more than one alignment, calling, and other methods. You
-                only need to choose one method on certain steps. Make sure to select
-                the desired method steps in the step <strong>3. Workflow File</strong>.
-                Using the defualt workflow file without
-                any custom selection is not recommended.</li>")
+                        If the required command
+                        line tools are not installed, the workflow will fail."),
+                HTML("<li>Some templates in of SystemPipeRdata 1.21.3 has not been
+                      updated to accomendate the latest version of SPR 1.27.21. Please
+                     wait one month (from 08/2021) till they are updated. For now, only
+                     Example, RNAseq and Existing options will work</li>")
             ),
             tags$ul(
                 class = "text-danger", id = ns("warn_empty"),

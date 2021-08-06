@@ -378,7 +378,7 @@ wf_cwlServer <- function(id, shared){
                     ui =  column(3, selectizeInput(
                         inputId = ns(paste0("replace-", i)),
                         label = cwl_input_vars()[i],
-                        choices = targets_columns(),
+                        choices = c("Not required", targets_columns()),
                         options = list(style = "btn-primary")
                     ))
                 )
@@ -397,8 +397,13 @@ wf_cwlServer <- function(id, shared){
                 replace_cols <- lapply(seq_along(cwl_input_vars()), function(i){
                     input[[paste0("replace-", i)]]
                 }) %>% unlist()
+                not_required <- replace_cols == "Not required"
                 inputvars <- cwl_input_vars()
                 names(inputvars) <- replace_cols
+                inputvars <- inputvars[!not_required]
+                if(length(names(inputvars)) != length(unique(names(inputvars))))
+                    stop("Each target column can only be used once for inputvars")
+                inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
                 # parsing
                 args <- systemPipeR::loadWorkflow(targets = targets, wf_file = "wf.cwl",
                                                   input_file = "input.yml", dir_path = temp_folder)
