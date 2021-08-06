@@ -93,17 +93,18 @@ version.
 
 ### Linux
 
-If you are on Linux, you may also need the following libraries **before installing SPS**.
+If you are on Linux, you may also need the following system dependencies  **before installing SPS**.
 Different distributions 
 may have different commands, but the following commands are examples for Ubuntu:
 
+```bash
+sudo apt-get install -y libicu-dev
+sudo apt-get install -y pandoc
+sudo apt-get install -y zlib1g-dev
+sudo apt-get install -y libcurl4-openssl-dev
+sudo apt-get install -y libssl-dev      
+sudo apt-get install -y make
 ```
-sudo apt-get install libcurl4-openssl-dev
-sudo apt-get install libv8-dev
-sudo apt-get install libxm12-dev
-sudo apt-get install libssl-dev
-```
-
 ## Quick start
 
 This is a basic example which shows how to use `systempipeShiny` package:

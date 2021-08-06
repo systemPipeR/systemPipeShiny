@@ -398,13 +398,13 @@ vs_rnaseq_normalServer <- function(id, shared){
             }
         }, once = TRUE)
         ####### develop shotcut
-        observeEvent(input$set, {
-            shared$rnaseq$data_ready <- TRUE
-            targetspath <- "data/targetsPE.txt"
-            targets(read.delim(targetspath, comment="#"))
-            cmp(systemPipeR::readComp(file=targetspath, format="matrix", delim="-"))
-            count(read.delim(file.path("data", "rna_raw_count.tsv"), row.names=1) %>% as.matrix())
-        })
+        # observeEvent(input$set, {
+        #     shared$rnaseq$data_ready <- TRUE
+        #     targetspath <- "data/targetsPE.txt"
+        #     targets(read.delim(targetspath, comment="#"))
+        #     cmp(systemPipeR::readComp(file=targetspath, format="matrix", delim="-"))
+        #     count(read.delim(file.path("data", "rna_raw_count.tsv"), row.names=1) %>% as.matrix())
+        # })
         #######
         # get value from data tab
         observeEvent(shared$rnaseq$data_ready, {
@@ -441,7 +441,7 @@ vs_rnaseq_normalServer <- function(id, shared){
             updateSpsTimeline(session, "rna_status2-1", 1, FALSE)
             shinyjs::disable("check_trans")
             rnaseqDataText("check_trans")
-
+            output$trans_plot_opts <- renderUI({p("")})
 
             dds <- shinyCatch(blocking_level = "error", {
                     ## pair sample names and sample ID
@@ -541,6 +541,7 @@ vs_rnaseq_normalServer <- function(id, shared){
             shinyjs::showElement('deg_pg_panel', anim = TRUE)
             rnaseqDataText("check_deg_csv")
             rnaseqDataText("check_deg_rds")
+            output$deg_plot_opts <- renderUI({p("")}) # reset UI
 
             dds <- shinyCatch(.run_DESeq2(
                 countDF = count(), targets = targets(),

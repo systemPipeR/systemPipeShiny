@@ -3,7 +3,7 @@ vs_rnaseq_dataUI <- function(id) {
     ns <- NS(id)
     desc <- '
     *****
-    ###  Conduct a RNA-Seq analysis workflow
+    ###  RNA-Seq workflow downstream analysis
     In this big module, RNAseq data can be transformed, DEGs can be calculated and
     results can be visualized by different types of plots.
     *****

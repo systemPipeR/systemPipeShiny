@@ -441,7 +441,7 @@ wf_wfServer <- function(id, shared){
                 inputvars <- cwl_input_vars()
                 names(inputvars) <- replace_cols
                 inputvars <- inputvars[!not_required]
-                if(length(names(inputvars)) != unique(names(inputvars)))
+                if(length(names(inputvars)) != length(unique(names(inputvars))))
                     stop("Each target column can only be used once for inputvars")
                 inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
                 targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL
@@ -479,7 +479,7 @@ wf_wfServer <- function(id, shared){
                 inputvars <- cwl_input_vars()
                 names(inputvars) <- replace_cols
                 inputvars <- inputvars[!not_required]
-                if(length(names(inputvars)) != unique(names(inputvars)))
+                if(length(names(inputvars)) != length(unique(names(inputvars))))
                     stop("Each target column can only be used once for inputvars")
                 inputvars <- if(emptyIsFalse(inputvars[1])) inputvars else NULL
                 targets <- if(emptyIsFalse(sys_t_con()) && length(inputvars) !=0) sys_t_con() else NULL

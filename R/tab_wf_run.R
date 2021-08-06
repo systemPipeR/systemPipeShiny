@@ -39,7 +39,7 @@ wf_runUI <- function(id){
             you want to want. SPS will not be responsible to check those tools for you.
             '),
             spsHr(),
-            box(
+            shinydashboardPlus::box(
                 width = 4,
                 collapsible = FALSE,
                 closable = FALSE,
@@ -63,7 +63,7 @@ wf_runUI <- function(id){
                         )
                 )
             ),
-            box(
+            shinydashboardPlus::box(
                 width = 4,
                 id = ns("box-mid"),
                 collapsible = FALSE,
@@ -96,11 +96,12 @@ wf_runUI <- function(id){
                         )
                 )
             ),
-            box(
+            shinydashboardPlus::box(
                 title = "Required files in task",
                 width = 4, id = ns("box-right"),
                 closable = FALSE,
                 collapsible = FALSE,
+                style = "overflow: hidden;",
                 strong(id = ns("intask_targets_title"), "Targets file:"),
                 p(id = ns("intask_targets"), "No file submitted"),
                 strong(id = ns("intask_wf_title"),"Workflow file:"),
