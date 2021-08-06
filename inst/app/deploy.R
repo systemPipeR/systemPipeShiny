@@ -20,7 +20,7 @@
 ##########################################################################
 ## Workflow module
 # requireNamespace("pushbar"); requireNamespace("callr")
-# requireNamespace("readr"); requireNamespace("rhandsontable"); requireNamespace("shinyTree")
+# requireNamespace("readr"); requireNamespace("rhandsontable")
 # requireNamespace("systemPipeR"); requireNamespace("systemPipeRdata"); requireNamespace("zip")
 
 ## RNA-Seq module
