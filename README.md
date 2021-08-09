@@ -168,6 +168,9 @@ options(sps = list(
 
 
 ## Screenshots of SPS
+##### Full app
+![sps](/sps/img/main_app.png)
+
 ##### Loading screens
 ![loading screens](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/loading_theme.gif?raw=true)
 
@@ -182,9 +185,6 @@ options(sps = list(
 ![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_deg.png?raw=true)
 
 ![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_heatmap.png?raw=true)
-
-##### Canvas 
-![canvas](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/canvas.png?raw=true)
 
 ##### Canvas 
 ![canvas](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/canvas.png?raw=true)

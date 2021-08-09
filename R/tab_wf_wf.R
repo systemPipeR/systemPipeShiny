@@ -677,7 +677,7 @@ wf_wfServer <- function(id, shared){
                 inputId = ns("confirm_next"),
                 title = "Workflow file setup done!",
                 closeOnClickOutside = TRUE,
-                btn_labels = c("Step 4", "Step 5"),
+                btn_labels = c("Cancel", "Yes"),
                 html = TRUE,
                 type = "success",
                 text = HTML(glue(

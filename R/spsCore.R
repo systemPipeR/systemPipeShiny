@@ -22,8 +22,8 @@
 #' @importFrom glue glue glue_collapse
 #' @importFrom assertthat assert_that not_empty is.writeable
 #' @importFrom ggplot2 ggplot geom_point ggtitle aes geom_bar coord_flip
-#' @importFrom stats relevel
-#' @importFrom utils capture.output write.csv read.delim
+#' @importFrom stats relevel cutree
+#' @importFrom utils capture.output write.csv read.delim packageVersion
 #' @importFrom dplyr count
 #' @importFrom shinytoastr toastr_warning toastr_error
 #' @importFrom htmltools doRenderTags
