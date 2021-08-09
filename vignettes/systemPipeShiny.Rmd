@@ -165,10 +165,12 @@ Different distributions
 may have different commands, but the following commands are examples for Ubuntu:
 
 ```
-sudo apt-get install libcurl4-openssl-dev
-sudo apt-get install libv8-dev
-sudo apt-get install libxm12-dev
-sudo apt-get install libssl-dev
+sudo apt-get install -y libicu-dev
+sudo apt-get install -y pandoc
+sudo apt-get install -y zlib1g-dev
+sudo apt-get install -y libcurl4-openssl-dev
+sudo apt-get install -y libssl-dev      
+sudo apt-get install -y make
 ```
 
 # Main functionalities 
@@ -194,7 +196,7 @@ SPS supporting packages: [spsComps](https://github.com/lz100/spsComps),
 
 
 <center id="sps_structure">
-![SPS_structure](./img/sps_structure.png)
+![](./img/sps_structure.png)
 </center>
 **Figure 1.** Design of `systemPipeShiny.` 
 
@@ -214,7 +216,9 @@ Details about extending existing tabs and designing new ones are provided in
 
 The following instructions go through use each module step by step.
 
-Please read our website: <https://systempipe.org/sps/> for full instructions, 
+This vignette is the simplified version of instruactions. Due to package size limit, 
+we cannot write the full instructions here. We **highly recommend** you to read the full
+details on our website: <https://systempipe.org/sps/> for instructions, 
 animations, videos, and advanced sections. 
 
 ## Load package
@@ -239,7 +243,7 @@ directory on a user's system. For a real project, it should be written to a
 defined and user controlled location on a system rather than a temporary
 directory.
 
-```{r spsinit_temp, eval=TRUE}
+```{r spsinit_temp, eval=TRUE, collapse=TRUE}
 sps_tmp_dir <- tempdir()
 spsInit(app_path = sps_tmp_dir, change_wd = FALSE, project_name = "SPSProject")
 sps_dir <- file.path(sps_tmp_dir, "SPSProject")
@@ -295,7 +299,7 @@ on the welcome screen will open the main dashboard (Fig.2).
 
 
 <center id="sps_ui">
-![sps_ui](./img/sps_ui_main.jpg)
+![](./img/sps_ui_main.jpg)
 </center>
 **Figure 2:** Snapshot of SPS' UI.
 
@@ -335,7 +339,7 @@ The current version of `SPS` allows to:
 
 ### 1. setup a workflow 
 <center>
-![wf_setup](./img/sps_wf_setup.jpg)
+![](https://systempipe.org/sps/modules/img/sps_wf_setup.jpg)
 </center>
 **Figure 3. A.** Workflow Management - Targets File
 
@@ -372,27 +376,144 @@ here. Leave it as default for other projects.
 6. Clicking on "Add to task" can help you to check if your target file has any formatting problem. You should see a green success pop-up if everything is right. Now your target file is ready and you can click "save" to download it and later use in a SPR project. 
 
 <center>
-![wf_targets](./img/sps_ui_target.jpg)
+![](https://systempipe.org/sps/modules/img/sps_ui_target.jpg)
 </center>
 **Figure 3. A.** Workflow Management - Targets File
 
-### 3. Prepare a workflow file
+### 3. Prepare a workflow object
 
-In SPR, workflows are defined in Rmarkdown files, you can read details and obtain them  [here](https://systempipe.org/pages/pipelines_area/).
+In SPR, workflows are defined in Rmarkdown files, you can read details and obtain them  [here](https://systempipe.org/sp/spr/templates/).
 
 Now let us follow the order below to see how SPS helps you to prepare a workflow file for a RNAseq project (Fig.3 B):
 
-1. Your project workflow file is loaded for you, but you can choose to upload a different one.
-2. The workflow structure is displayed in a tree-leaf-like plot. 
-3. Check all steps in the workflow that you want to include. You can skip (uncheck) some steps but it may cause the workflow to fail. Read more SPR instructions before do so. 
-4. Clicking on the "Plot steps" will show a flow chart of what the step execution orders will be when you run the workflow in SPR. 
-5. Clicking "Report preview" generates a preview of what the final report will look like for current RNAseq workflow (hidden in Fig 3.B), but in the preview, no code is evaluated.
-6. If you are satisfied with your workflow file, click "Add to task" to save your workflow file.
+1. The left panal is the workflow designer. All steps from the template from your 
+   choosen workflow will be displayed here. The arrows indicates the execution order
+   of the entire workflow.
+2. All the steps are draggable. Drag and place steps to a different place to change the 
+   order. Note: if you change the order, it may break the dependency. SPS will check 
+   this for you. After changing orders, steps marked in pink mean these steps are 
+   broken. You need to fix the dependency before you can save it.
+3. To config a step, such as, changing name, fixing dependency. Click the <i class="fa fa-cog"></i>
+   button next to each step, a modal will show up and you can make changes there.
+4. To add a step, click the <i class="fa fa-plus"></i> button. There, you will have 
+   more options to choose which will be explained in the next figure. 
+5. History is enabled in this designer, you can undo <i class="fa fa-undo"></i>
+   or redo<i class="fa fa-redo"></i> anytime you want. 
+   Current SPS stores max 100 steps of history for you.
+6. To delete a step, simply drag it to the trash can. 
+7. After you are done with all edits, click here to save the workflow so we can 
+   run or download it in the next major step. 
+8. On the right side is the workflow dependency plot. This plot shows how each 
+   step is connected and the **expected** execution order. It does not mean the 
+   the workflow will be run in the same order. The order is determined by the order 
+   you have in the left-side designer. 
+9. Enlarge the left or right panel. If you have a small monitor screen, this can help. 
 
 <center>
-![wf_wf](./img/sps_ui_wf.jpg)
+
+![](https://systempipe.org/sps/modules/img/sps_ui_wf.png)
 </center>
-**Figure 3. B.** Workflow Management - Workflow File
+**Figure 3. B.1** Workflow Management - Workflow Designer
+
+#### R step and sysArgs step
+On the designer there are two types of workflow steps. One is R step, which only 
+has R code. Then it is the time to run these R steps, they will be run in the same 
+R session as the Shiny app and in a separate environment different than your global
+environment. In other words, all R steps are in **the same environment**, they can communicate 
+with each other, meaning you can define a variable in one step and use it in other 
+R steps.
+
+sysArgs steps, on the other hand, is different, as its name suggest, it will invoke 
+system commands (like bash) when run. Details of how to create these steps will be 
+discussed on _Fig 3.B.5_, _Fig 3.B.6_.
+
+#### View and modify steps
+
+Current SPS allows users to view some basic information of R steps like, step name,
+select dependency(ies). Besides, users are welcome to change the R code they want 
+in the second sub-tab (Fig 3.B.2).
+
+<center>
+
+![](https://systempipe.org/sps/modules/img/wf_config_r.png)
+</center>
+**Figure 3. B.2** Workflow Management - config R
+
+Modification of sysArgs steps is limited to step name and dependency. However, this 
+kind steps will provide more information to view, like the files that were used to 
+create this step, raw commandline code 
+that will be run, targets (metadata) and output dataframes. This information 
+is distributed in different subtabs (Fig 3.B.3).
+
+<center>
+
+![](https://systempipe.org/sps/modules/img/wf_config_sys.png)
+</center>
+**Figure 3. B.3** Workflow Management - config sysArgs
+
+#### Create a new step
+
+After clicking the <i class="fa fa-plus"></i> button in Fig 3.B.1, you would need 
+to choose whether to create an R or sysArgs step (Figure 3. B.5). 
+
+<center>
+
+![](https://systempipe.org/sps/modules/img/wf_new_choose.png)
+</center>
+**Figure 3. B.5** Workflow Management - Choose new step type
+
+**Create a new R step**
+
+Create a new R step is simple. In the modal, type the step name, R code, 
+and select dependency (Fig 3. B.6). 
+
+<center>
+
+![](https://systempipe.org/sps/modules/img/wf_new_r.png)
+</center>
+**Figure 3. B.6** Workflow Management - New R step
+
+**Create a new sysArgs step**
+
+Basic info for sysArgs step is simialr to R step  (Fig 3. B.7). 
+
+<center>
+
+![](https://systempipe.org/sps/modules/img/wf_new_sys1.png)
+</center>
+**Figure 3. B.7** Workflow Management - New sysArgs step
+
+To generate some commandline line, there are three items need to be prepared:
+**targets**, **CWL file**, **CWL yaml file** (Fig.3. B.8).
+
+- targets: metadata that will populate the basecommand sample-wisely. Columns in 
+  targets will be injected into CWL yaml and then, yaml file will replace variables   in parsed CWL base command. 
+- CWL file: provide the base command. 
+- CWL yaml file: provides CWL variables.
+
+1. Choose the targets source. Targets in SPR workflow steps can come from either a 
+   fresh file or inherit from a previous sysArg step(s) (output from a previous 
+   step can become input of the next(s)).
+2. If you choose from a previous step(s), select the steps from here. If a new
+   file, upload here.
+3. Then, the targets or inherited targets table is displayed here for you to take a 
+   look. Later we will use these column to replace CWL yaml variables.
+4. Choose the CWL and CWL yaml file you want to use. All `.cwl` and `.yaml` or `.yml`
+   files inside your workflow project `param/cwl` folder will be listed here. You 
+   could drop more of these files you want to this folder. They will become aviable 
+   the next time you create a new step.
+5. If you have all the three items, you can start to use which column from the targets 
+   to replace each CWL yaml variables.
+6. Try to parse the command, see if the results is as what you expect. If not, try to 
+   change options above and try again.
+7. If everything looks fine, save and create the step. 
+
+<center>
+
+![](https://systempipe.org/sps/modules/img/wf_new_sys2.png)
+</center>
+**Figure 3. B.8** Workflow Management - New sysArgs step
+
 
 ### 4. Prepare CWL files (optional)
 
@@ -421,7 +542,7 @@ code you get.
 new steps. 
 
 <center>
-![wf_cwl](./img/sps_wf_cwl.jpg)
+![](https://systempipe.org/sps/modules/img/sps_wf_cwl.jpg)
 </center>
 **Figure 3. C.** Workflow Management - CWL File
 
@@ -431,7 +552,7 @@ Up until this step, congratulations, the workflow is prepared. You can choose to
 download the workflow project files as a bundle or continue to run the workflow. 
 
 <center>
-![wf_cwl](./img/sps_wf_run.jpg)
+![](https://systempipe.org/sps/modules/img/sps_wf_run.jpg)
 </center>
 **Figure 4.A.B** Workflow Runner
 
@@ -458,7 +579,7 @@ different plots to visualize the results.
 To start, we require two files, the metadata file (targets) and a raw count table (Fig. 5).  
 
 <center>
-![rna_data](./img/sps_rna_data.jpg)
+![](./img/sps_rna_data.jpg)
 </center>
 **Figure 5** RNAseq 
 
@@ -503,7 +624,7 @@ in other sub-tabs.
 These two options are independent. 
 
 <center>
-![rna_norm](./img/sps_rna_norm.jpg)
+![](./img/sps_rna_norm.jpg)
 </center>
 **Figure 6** RNAseq Normalization
 
@@ -525,7 +646,7 @@ Check all items you want and SPS will help you to zip it into one file to downlo
 SPS RNAseq module provides 6 different plot options to cluster transformed count table. 
 
 <center>
-![rna_plot](./img/sps_rna_plot.jpg)
+![](./img/sps_rna_plot.jpg)
 </center>
 **Figure 6** RNAseq plots
 
@@ -543,7 +664,7 @@ can be accessed once the DEG is calculated on the "Normalize Data" sub-tab.
 
 
 <center>
-![rna_deg](./img/sps_rna_deg.jpg)
+![](./img/sps_rna_deg.jpg)
 </center>
 **Figure 7** RNAseq DEG
 
@@ -581,7 +702,7 @@ This module enables you to quickly upload datasets and make a {[ggplot](https://
 in a second by using some functionalities from {[Esquisse](https://dreamrs.github.io/esquisse/index.html)}.
 
 <center>
-![quickgg](./img/sps_quickgg.jpg)
+![](./img/sps_quickgg.jpg)
 </center>
 **Figure 8** Quick ggplot
 
@@ -603,7 +724,7 @@ from these places to this Canvas.
 
 <center>
 
-![plot_tab](./img/sps_canvas.jpg)
+![](./img/sps_canvas.jpg)
 
 </center>
 
