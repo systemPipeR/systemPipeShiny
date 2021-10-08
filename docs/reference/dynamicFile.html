@@ -79,7 +79,7 @@ similar behavior as shiny::fileInput.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">systemPipeShiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.10</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@ similar behavior as shiny::fileInput.
       <ul class="nav navbar-nav">
         <li>
   <a href="https://systempipe.org/sps/">
-    <span class="fa fa fa fa-home"></span>
+    <span class="fa fa-home"></span>
      
     SPS Home
   </a>
@@ -143,10 +143,17 @@ similar behavior as <a href='https://rdrr.io/pkg/shiny/man/fileInput.html'>shiny
   style <span class='op'>=</span> <span class='st'>""</span>,
   multiple <span class='op'>=</span> <span class='cn'>FALSE</span>,
   buttonType <span class='op'>=</span> <span class='st'>"primary"</span>,
-  placeholder <span class='op'>=</span> <span class='st'>"No file selected"</span>
+  placeholder <span class='op'>=</span> <span class='st'>"No file selected"</span>,
+  mode <span class='op'>=</span> <span class='fu'>spsOption</span><span class='op'>(</span><span class='st'>"mode"</span><span class='op'>)</span>
 <span class='op'>)</span>
 
-<span class='fu'>dynamicFileServer</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>session</span>, <span class='va'>id</span>, roots <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>root <span class='op'>=</span> <span class='st'>"default"</span><span class='op'>)</span><span class='op'>)</span></pre>
+<span class='fu'>dynamicFileServer</span><span class='op'>(</span>
+  <span class='va'>input</span>,
+  <span class='va'>session</span>,
+  <span class='va'>id</span>,
+  mode <span class='op'>=</span> <span class='fu'>spsOption</span><span class='op'>(</span><span class='st'>"mode"</span><span class='op'>)</span>,
+  roots <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>root <span class='op'>=</span> <span class='st'>"default"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,6 +192,10 @@ Default in SPS is 'primary', other valid values include 'info', 'success', 'defa
     <tr>
       <th>placeholder</th>
       <td><p>string, text to display before the file is uploaded</p></td>
+    </tr>
+    <tr>
+      <th>mode</th>
+      <td><p>string, one of "local" or "server"</p></td>
     </tr>
     <tr>
       <th>input</th>
