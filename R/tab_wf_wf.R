@@ -677,12 +677,13 @@ wf_wfServer <- function(id, shared){
                 inputId = ns("confirm_next"),
                 title = "Workflow file setup done!",
                 closeOnClickOutside = TRUE,
-                btn_labels = c("Cancel", "Yes"),
+                cancelOnDismiss = FALSE,
+                btn_labels = c("Step 4", "Step 5"),
                 html = TRUE,
                 type = "success",
                 text = HTML(glue(
                     "
-                    <h4>Do you want to proceed to download or run the workflow?</h4>
+                    <h4>Do you want to proceed to download/run the workflow? or play with some CWL operations (optional)</h4>
                     <ul class='text-left'>
                       <li>Your workflow is ready.</li>
                       <li>Click outside of this box or cancel if you want to stay here.</li>
@@ -693,8 +694,9 @@ wf_wfServer <- function(id, shared){
         })
 
         observeEvent(input$confirm_next, {
-            req(input$confirm_next)
-            shinyjs::runjs("$('#wf-wf_panel-4-heading > h4').trigger('click');")
+            if(is.null(input$confirm_next)) return(NULL)
+            tab_index <- if(input$confirm_next) 4 else 3
+            shinyjs::runjs(glue("$('#wf-wf_panel-{tab_index}-heading > h4').trigger('click');"))
         })
     }
     moduleServer(id, module)

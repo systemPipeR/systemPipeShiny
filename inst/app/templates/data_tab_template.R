@@ -34,7 +34,7 @@
                 choiceValues = c("upload", "eg"),
                 justified = TRUE, status = "primary",
                 checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                 no = icon(""))
+                                 no = icon("", verify_fa = FALSE))
             ),
             fluidRow(
                 column(width = 5, dynamicFile(id = ns("file_upload"))),

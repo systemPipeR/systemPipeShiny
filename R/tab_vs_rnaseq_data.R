@@ -112,7 +112,7 @@ vs_rnaseq_dataUI <- function(id) {
                                     justified = TRUE, status = "primary",
                                     checkIcon = list(
                                         yes = icon("ok", lib = "glyphicon"),
-                                        no = icon(""))
+                                        no = icon("", verify_fa = FALSE))
                                 ),
                                 dynamicFile(id = ns("targets_upload")),
                                 selectizeInput(
@@ -173,7 +173,7 @@ vs_rnaseq_dataUI <- function(id) {
                                         justified = TRUE, status = "primary",
                                         checkIcon = list(
                                             yes = icon("ok", lib = "glyphicon"),
-                                            no = icon(""))
+                                            no = icon("", verify_fa = FALSE))
                                     ),
                                     dynamicFile(id = ns("count_upload")),
                                     selectizeInput(

@@ -43,11 +43,11 @@ wf_runUI <- function(id){
                 collapsible = FALSE,
                 closable = FALSE,
                 id = ns("box-left"),
-                title = "Initiate a workflow environment",
+                title = "Execute current workflow directly in SPS",
                 tags$ul(
                     id = ns("example_tip"),
                     HTML("<li>A workflow is ready to run.</li>
-                             <li>Or you can download all prepared files to run at other places.</li>")
+                          <li>Or choose middle panel to download all prepared files and run at other places.</li>")
                 ),
                 fluidRow(
                     class = "text-center",
@@ -57,7 +57,7 @@ wf_runUI <- function(id){
                             "Clicking here will direct you to a workflow running
                             session and set the working directory to the workflow
                             project. Once the session starts, you cannot interact
-                            with other part(modules) of SPS.",
+                            with other part (modules) of SPS (locked in that session).",
                             "top"
                         )
                 )

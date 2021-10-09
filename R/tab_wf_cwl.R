@@ -169,7 +169,7 @@ wf_cwlUI <- function(id){
                                 justified = TRUE, status = "primary",
                                 checkIcon = list(
                                     yes = icon("ok", lib = "glyphicon"),
-                                    no = icon(""))
+                                    no = icon("", verify_fa = FALSE))
                             ),
                             dynamicFile(id = ns("targets_upload")),
                             selectizeInput(
@@ -205,7 +205,7 @@ wf_cwlUI <- function(id){
                                 justified = TRUE, status = "primary",
                                 checkIcon = list(
                                     yes = icon("ok", lib = "glyphicon"),
-                                    no = icon(""))
+                                    no = icon("", verify_fa = FALSE))
                             ),
                             dynamicFile(id = ns("cwl_upload"))
                         )
@@ -235,7 +235,7 @@ wf_cwlUI <- function(id){
                                 justified = TRUE, status = "primary",
                                 checkIcon = list(
                                     yes = icon("ok", lib = "glyphicon"),
-                                    no = icon(""))
+                                    no = icon("", verify_fa = FALSE))
                             ),
                             dynamicFile(id = ns("cwl_input_upload"))
                         )

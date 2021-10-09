@@ -19,7 +19,7 @@ wf_targetUI <- function(id){
             The targets (metadata) file defines all input files\' path and other sample
             information of an analysis workflow. Read "Structure of targets file"
             section on
-            [our website{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-targets-file)
+            [our website{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-initial-targets-file)
             to better undertand the structure of this file.
             This file is similar to the `colData` slot in an `SummarizedExperiment`
             object which stores sample ID and other meta information.
@@ -169,7 +169,7 @@ wf_targetUI <- function(id){
                            choiceValues = c("default", "upload"),
                            justified = TRUE, status = "primary",
                            checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                            no = icon(""))
+                                            no = icon("", verify_fa = FALSE))
                        ),
                        fileInput(ns("targets_upload"),
                                    "If upload, choose your target file here:",
@@ -332,7 +332,7 @@ wf_targetServer <- function(id, shared){
                     session, "target_source",
                     selected = selected_old(),
                     checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                     no = icon(""))
+                                     no = icon("", verify_fa = FALSE))
                 )
                 selected_flag(FALSE)
             }
