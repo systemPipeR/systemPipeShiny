@@ -52,6 +52,7 @@ Suggests:
     testthat,
     BiocStyle,
     knitr, 
+    markdown,
     rmarkdown,
     systemPipeR (>= 1.27.27),
     systemPipeRdata (>= 1.21.4),
@@ -80,6 +81,6 @@ Encoding: UTF-8
 LazyData: true
 BugReports: https://github.com/systemPipeR/systemPipeShiny/issues
 URL: https://systempipe.org/sps, https://github.com/systemPipeR/systemPipeShiny
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
