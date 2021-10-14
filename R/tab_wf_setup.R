@@ -7,14 +7,14 @@ wf_setupUI <- function(id){
         #### Set up a workflow environment
         To run a SPR workflow, a workflow environment is required. The
         environment is a directory containing all required files, like the
-        [targets file{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-targets-file),
+        [targets file{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-initial-targets-file),
         the [workflow file{blk}](https://systempipe.org/sp/spr/templates/),
         and all other
-        [parameter files{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-the-new-param-files-and-construct-sysargs2-container).
+        [parameter files{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-the-new-parameters-files).
 
         The directory structure looks like this image below:
 
-        ![spr-structure](https://systempipe.org/sp/spr/gettingstarted/SYSdir.png)
+        ![spr-structure](https://systempipe.org/sp/spr/gettingstarted/spr_project.png)
 
         Read more about this [workflow structure{blk}](https://systempipe.org/sp/spr/gettingstarted/#directory-structure).
 
@@ -142,19 +142,20 @@ wf_setupUI <- function(id){
             if(Sys.info()['sysname'] == "Windows"){
                 tags$ul(
                     class = "text-danger",
-                    HTML("<li>Your host system is Windows, Most bioinformatics command
+                    HTML("<li>Your host system is Windows, Most command
                      line tools <strong>DO NOT</strong> work on Windows.
-                     Only the example workflow will work.</li>")
+                     Step 5 (executing workflow) will very likely fail</li>")
                 )
             } else div(),
             tags$ul(
                 class = "text-danger", id = ns("warn_noneg"),
                 tags$li("This will run a non-example workflow.
                         If the required command
-                        line tools are not installed, the workflow will fail."),
+                        line tools are not installed, the workflow will fail. Please
+                        make sure you install them and the path is exported."),
                 HTML("<li>Some templates in of SystemPipeRdata 1.21.3 has not been
-                      updated to accomendate the latest version of SPR 1.27.21. Please
-                     wait one month (from 08/2021) till they are updated. For now, only
+                      updated to accomendate the latest version of SPR 1.27.27. Please
+                     wait some time till they are updated (as today 2021-10-08). For now, only
                      Example, RNAseq and Existing options will work</li>")
             ),
             tags$ul(

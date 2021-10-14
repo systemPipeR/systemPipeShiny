@@ -169,7 +169,7 @@ options(sps = list(
 
 ## Screenshots of SPS
 ##### Full app
-![sps](/sps/img/main_app.png)
+![sps](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/main_app.png?raw=true)
 
 ##### Loading screens
 ![loading screens](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/loading_theme.gif?raw=true)

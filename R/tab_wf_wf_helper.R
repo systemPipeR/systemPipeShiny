@@ -23,7 +23,7 @@ makeSort <- function(sal_names, step_type, ns, sal_stat, ob_index){
     )
 }
 
-makeRmodal <- function(index, step, deps, step_name, sal_names, ns) {
+makeRmodal <- function(index, step, run_opts, deps, step_name, sal_names, ns) {
     step_code <- as.character(step$codeLine)
     tabsetPanel(
         tabPanel(
@@ -43,7 +43,12 @@ makeRmodal <- function(index, step, deps, step_name, sal_names, ns) {
                 ns("change_dep"), "", multiple = TRUE,
                 selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
             ) %>% bsPop("Change Dependency", "You can only choose steps before this step as
-                        dependencies.", placement = "right", trigger = "hover")
+                        dependencies.", placement = "right", trigger = "hover"),
+            spsTitle("Run time options", "4"),
+            tags$pre(glue(
+                "This step is:             ", run_opts$run_step, "\n",
+                "This step will be run in: ", run_opts$run_session, "\n"
+            ))
         ),
         tabPanel(
             "R code",
@@ -54,8 +59,7 @@ makeRmodal <- function(index, step, deps, step_name, sal_names, ns) {
         )
     )
 }
-
-makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
+makeSysModal <- function(index, step, run_opts, deps, step_name, sal_names, sal, ns){
     cmd <- unlist(lapply(systemPipeR::cmdlist(sal[index])[[1]], function(x) glue_collapse(unname(unlist(x)), sep = "\n")))
     cmd_str <- paste(paste0("\n#", names(cmd)), cmd, sep="\n", collapse = "\n")
     targets_header <- step$targetsheader
@@ -79,6 +83,12 @@ makeSysModal <- function(index, step, deps, step_name, sal_names, sal, ns){
                 selected = deps[[index]], choices = sal_names[seq_len(index -1)] %>% unlist() %>% unname() %>% na.omit()
             ) %>% bsPop("Change Dependency", "You can only choose steps before this step as
                         dependencies.", placement = "right", trigger = "hover"),
+            spsTitle("Run time options", "4"),
+            tags$pre(glue(
+                "This step is:                              ", run_opts$run_step, "\n",
+                "This step will be run in:                  ", run_opts$run_session, "\n",
+                "This step results in a separate directory: ", run_opts$directory, "\n"
+            )),
             spsTitle("Tools required", "4"),
             tags$pre(glue_collapse(step$modules %>% unlist() %>% unname(), sep = "\n")),
             spsTitle("File paths", "4"),
@@ -166,9 +176,9 @@ makeConfig <- function(sal, sal_names, deps, session, input, output, ns, cur_con
     lapply(seq_along(sal$stepsWF), function(index){
         is_r_step <- inherits(sal$stepsWF[[index]], "LineWise")
         modal <- if (is_r_step) {
-            makeRmodal(index, sal$stepsWF[[index]], deps, sal_names[index], sal_names, ns)
+            makeRmodal(index, sal$stepsWF[[index]], sal$runInfo$runOption[[index]], deps, sal_names[index], sal_names, ns)
         } else {
-            makeSysModal(index, sal$stepsWF[[index]], deps, sal_names[index], sal_names, sal, ns)
+            makeSysModal(index, sal$stepsWF[[index]], sal$runInfo$runOption[[index]], deps, sal_names[index], sal_names, sal, ns)
         }
         ob_id <- paste0("configure", ob_index(), "_", index)
         observeEvent(input[[ob_id]], {

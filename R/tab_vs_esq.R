@@ -65,7 +65,7 @@ vs_esqUI <- function(id) {
                                 justified = TRUE, status = "primary",
                                 checkIcon = list(
                                     yes = icon("ok", lib = "glyphicon"),
-                                    no = icon(""))
+                                    no = icon("", verify_fa = FALSE))
                             ),
                             dynamicFile(id = ns("df_upload")),
                             selectizeInput(
@@ -118,7 +118,7 @@ vs_esqUI <- function(id) {
         hexPanel(ns("poweredby"), "THIS MODULE IS POWERED BY:",
                  hex_imgs = c(
                      "img/sps_small.png",
-                     "https://github.com/dreamRs/esquisse/raw/master/man/figures/logo_esquisse.png"
+                     "https://github.com/dreamRs/esquisse/raw/master/man/figures/logo.png"
                  ),
                  hex_titles = c("SystemPipeShiny", "esquisse"),
                  hex_links = c(

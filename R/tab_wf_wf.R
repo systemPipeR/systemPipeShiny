@@ -201,7 +201,7 @@ wf_wfServer <- function(id, shared){
 
             if(input$new_step_type == "r") {
                 showModal(modalDialog(
-                    size = "l",
+                    size = "xl",
                     footer = tagList(
                         modalButton("Cancel"),
                         actionButton(ns("new_step_back"), "Back"),
@@ -222,18 +222,27 @@ wf_wfServer <- function(id, shared){
                                 paste0("step", input$new_step_index, "_", sample(letters, 3) %>% paste0(collapse = ""))
                             ),
                             spsTitle("Choose dependency", "4"),
-                            p("This step will be inserted to the index you selected.
-                  You may change the order later but remember to fix the dependency. ",
-                  tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
-                  selectizeInput(
-                      ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
-                      selected = dep_choice[length(dep_choice) - 1]
-                  )
+                            p(
+                                "This step will be inserted to the index you selected.
+                                You may change the order later but remember to fix the dependency. ",
+                                tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")
+                            ),
+                            selectizeInput(
+                                ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
+                                selected = dep_choice[length(dep_choice) - 1]
+                            ),
+                            spsTitle("Required?", "4"),
+                            p("Is this step mandatory or optional?"),
+                            selectizeInput(ns("new_step_req"), "",choices = c("mandatory", "optional")),
+                            spsTitle("Run time location", "4"),
+                            p("Where will this step be run, the same R session (rsession) or a remote
+                              location, like cloud or a cluster (cluster)?"),
+                            selectizeInput(ns("new_step_session"), "", choices = c("rsession", "cluster"))
                         )
                     }))
             } else {
                 showModal(modalDialog(
-                    size = "l",
+                    size = "xl",
                     footer = tagList(
                         modalButton("Cancel"),
                         actionButton(ns("new_step_back"), "Back"),
@@ -251,15 +260,22 @@ wf_wfServer <- function(id, shared){
                                 ),
                                 spsTitle("Choose dependency", "4"),
                                 p("This step will be inserted to the index you selected.
-                  You may change the order later but remember to fix the dependency. ",
-                  tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
-                  selectizeInput(
-                      ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
-                      selected = dep_choice[length(dep_choice) - 1]
-                  ),
-                  spsTitle("sub-directory", "4"),
-                  p("Create a sub-dir inside results to store outputs from this step?"),
-                  shinyWidgets::awesomeCheckbox(ns("new_sys_dir"), "sub-directory?", value = TRUE, status = "primary"),
+                                  You may change the order later but remember to fix the dependency. ",
+                                tags$span(class="text-danger", "Adding a downstream step as dependency is not allowed.")),
+                                selectizeInput(
+                                    ns("new_step_dep"), "", multiple = TRUE, choices = dep_choice[seq_len(length(dep_choice) - 1)],
+                                    selected = dep_choice[length(dep_choice) - 1]
+                                ),
+                                spsTitle("sub-directory", "4"),
+                                p("Create a sub-dir inside results to store outputs from this step?"),
+                                shinyWidgets::awesomeCheckbox(ns("new_sys_dir"), "sub-directory?", value = TRUE, status = "primary"),
+                                spsTitle("Required?", "4"),
+                                p("Is this step mandatory or optional?"),
+                                selectizeInput(ns("new_step_req"), "",choices = c("mandatory", "optional")),
+                                spsTitle("Run time location", "4"),
+                                p("Where will this step be run, the same R session (rsession) or a remote
+                                            location, like cloud or a cluster (cluster)?"),
+                                selectizeInput(ns("new_step_session"), "", choices = c("rsession", "cluster"))
                             ),
                   tabPanel(
                       "CWL Arguments",
@@ -500,7 +516,9 @@ wf_wfServer <- function(id, shared){
                     dir_path = "param/cwl",
                     step_name = input$new_step_name,
                     inputvars = inputvars,
-                    dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
+                    dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep,
+                    run_step = input$new_step_req,
+                    run_session = input$new_step_session
                 )
                 his$add(list(sal = sal, msg = "New sysArgs step"))
             }, blocking_level = "error")
@@ -522,7 +540,9 @@ wf_wfServer <- function(id, shared){
                 setwd(shared$wf$env_path)
                 systemPipeR::appendStep(sal, after = as.numeric(input$new_step_index) - 1) <- systemPipeR::LineWise(
                     code = input$new_code_r, step_name = input$new_step_name,
-                    dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep
+                    dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep,
+                    run_step = input$new_step_req,
+                    run_session = input$new_step_session
                 )
                 his$add(list(sal = sal, msg = "New R step"))
             })
@@ -677,12 +697,13 @@ wf_wfServer <- function(id, shared){
                 inputId = ns("confirm_next"),
                 title = "Workflow file setup done!",
                 closeOnClickOutside = TRUE,
-                btn_labels = c("Cancel", "Yes"),
+                cancelOnDismiss = FALSE,
+                btn_labels = c("Step 4", "Step 5"),
                 html = TRUE,
                 type = "success",
                 text = HTML(glue(
                     "
-                    <h4>Do you want to proceed to download or run the workflow?</h4>
+                    <h4>Do you want to proceed to download/run the workflow? or play with some CWL operations (optional)</h4>
                     <ul class='text-left'>
                       <li>Your workflow is ready.</li>
                       <li>Click outside of this box or cancel if you want to stay here.</li>
@@ -693,8 +714,9 @@ wf_wfServer <- function(id, shared){
         })
 
         observeEvent(input$confirm_next, {
-            req(input$confirm_next)
-            shinyjs::runjs("$('#wf-wf_panel-4-heading > h4').trigger('click');")
+            if(is.null(input$confirm_next)) return(NULL)
+            tab_index <- if(input$confirm_next) 4 else 3
+            shinyjs::runjs(glue("$('#wf-wf_panel-{tab_index}-heading > h4').trigger('click');"))
         })
     }
     moduleServer(id, module)

@@ -1,4 +1,20 @@
-# systemPipeShiny 1.3.10 Dev
+# systemPipeShiny 1.3.15 Dev
+
+## New Feature
+
+-   In workflow module, workflow designer (step 3), added two new parameter when creating a new step, `mandatory` and `place of execution`. These are new features added in systemPipeR 1.27.27.
+
+## Minor Change
+
+-   Bump version requirements of `spsComps`, `systemPipeR`, `systemPipeRdata`
+
+-   In global.R, now use `spsOption` with the `.list` argument to set up options instead of the base `options` function.
+
+## Bug Fix
+
+-   Fix links and image urls that were not working or changed.
+
+# systemPipeShiny 1.3.10 
 
 ## New Feature
 

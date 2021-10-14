@@ -61,6 +61,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
     spsinfo("Loading guide UI")
 
     spsinfo("Create UI header ...")
+
     dashboardHeader <- shinydashboardPlus::dashboardHeader(
         title = tagList(
             span(class = "logo-lg", sps_title),
@@ -73,7 +74,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
         guide[['guide_ui']],
         shinydashboard::dropdownMenu(
             type = "notifications", badgeStatus = if(emptyIsFalse(notes[['items']])) "warning" else "success" ,
-            icon = if(emptyIsFalse(notes[['items']])) icon("warning") else icon("check"),
+            icon = if(emptyIsFalse(notes[['items']])) icon("exclamation-triangle") else icon("check"),
             headerText = "Notifications",
             .list = notes[['items']]
         )

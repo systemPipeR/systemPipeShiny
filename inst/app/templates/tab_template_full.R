@@ -54,7 +54,7 @@
                                 justified = TRUE, status = "primary",
                                 checkIcon = list(
                                     yes = icon("ok", lib = "glyphicon"),
-                                    no = icon(""))
+                                    no = icon("", verify_fa = FALSE))
                             ),
                             dynamicFile(id = ns("df_upload")),
                             selectizeInput(

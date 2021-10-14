@@ -241,6 +241,7 @@ content: '';
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 80vh;
+    min-height: 50vh;
 }
 
 /*Plot*/

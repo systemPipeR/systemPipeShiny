@@ -103,7 +103,7 @@ sal"
                                              `data-toggle` = "dropdown",
                                              `aria-haspopup`= "true",
                                              `aria-expanded`= "false",
-                                             tags$i(class = "fa fa-gear")
+                                             tags$i(class = "fa fa-cogs")
                                          ),
                                          tags$ul(
                                              class="dropdown-menu",

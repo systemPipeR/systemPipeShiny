@@ -49,7 +49,7 @@ var spsDisconImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAA
 function showDiscon() {
     $('#ss-connect-dialog').show()
     .addClass("shiny-discon")
-    .prepend('<span>If you think this is a bug, report to us on <a href="https://github.com/systemPipeR/systemPipeShiny/issues">Github</a></span>')
+    .prepend('<span>If you think this is a bug, report to us on <a href="https://github.com/systemPipeR/systemPipeShiny/issues" target="_blank">Github</a></span>')
     .prepend(`<img src=${spsDisconImg} alt="">`);
     $('#ss-overlay').show();
       $('#ss-connect-dialog > p').after();
