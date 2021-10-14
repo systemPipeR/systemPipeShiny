@@ -52,7 +52,6 @@ Suggests:
     testthat,
     BiocStyle,
     knitr, 
-    markdown,
     rmarkdown,
     systemPipeR,
     systemPipeRdata,
