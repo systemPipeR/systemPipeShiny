@@ -406,10 +406,10 @@ spsOptions <- function(app_path = getwd(), show_legend = TRUE){
     }
     if(show_legend){
         cat(
-            "********\nOption legend:\n",
+            "********\nOption legends:\n",
             crayon::blue$bold("    known options    "),
             crayon::make_style("orange")$bold("    Hidden/custom options* and values+\n"),
-            "Value legend:\n",
+            "Value legends:\n",
             crayon::green$bold("    same as default values    "),
             "    different from defaults+",
             sep = ""
