@@ -10,11 +10,13 @@
 
 -   In global.R, now use `spsOption` with the `.list` argument to set up options instead of the base `options` function.
 
+-   Replace `includeMardown()` by `markdown(readLines())` so we don't need additional {markdown} package as dependency.
+
 ## Bug Fix
 
 -   Fix links and image urls that were not working or changed.
 
-# systemPipeShiny 1.3.10 
+# systemPipeShiny 1.3.10
 
 ## New Feature
 

@@ -10,8 +10,8 @@ core_aboutUI <- function(id){
             collapsible = TRUE,
             width = 12,
             style = "height: 500px; overflow-Y: auto;",
-            if(checkUrl("https://raw.githubusercontent.com/lz100/systemPipeShiny/master/NEWS.md")){
-                includeMarkdown("https://raw.githubusercontent.com/lz100/systemPipeShiny/master/NEWS.md")
+            if(checkUrl("https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/NEWS.md")){
+                markdown(readLines("https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/NEWS.md"))
             } else {
                 div(
                     h3("Cannot load SPS updates"),
