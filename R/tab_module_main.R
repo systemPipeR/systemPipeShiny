@@ -23,7 +23,7 @@ module_mainUI <- function(id){
         '),
         spsHr(),
         br(),
-        genHrefTable(rows = list(`Data tabs in this project` =  c("wf", "vs_rnaseq", "vs_esq")),
+        genHrefTable(rows = list(`Modules` =  c("wf", "vs_rnaseq", "vs_esq")),
                      title = "All SPS module options")
 
     )

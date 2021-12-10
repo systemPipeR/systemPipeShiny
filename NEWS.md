@@ -1,4 +1,20 @@
-# systemPipeShiny 1.3.15 Dev
+# systemPipeShiny 1.5.5 Dev
+
+## Major Change
+
+-   Redesign of the welcome page. Old content is moved to about. Now the welcome page is more clear.
+
+-   Introduce `cookies`, this is used to remember if users have clicked the interactive guide. When they refresh the page, the guide will not pop up again.
+
+-   Adapt SPR to the 2.1.x version.
+
+    -   Add more instructing images to the workflow module.
+
+## Minor Change
+
+-   Fix some text typo, links.
+
+# systemPipeShiny 1.3.15 
 
 ## New Feature
 
