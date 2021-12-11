@@ -1,0 +1,125 @@
+/*Welcome page css */
+
+.welcome-header {
+  position: relative;
+}
+
+#welcome-svg svg {
+    width: calc(100% + 30px);
+    left: 0;
+    top: 0;
+    min-width: 300px;
+    transform: translate(-15px, -50px);
+}
+
+#sps_header_logo > g{
+  position: relative;
+  transition: filter 500ms;
+}
+
+#sps_header_logo > g:hover {
+  transform: scale(1.3);
+  filter: blur(1px);
+}
+
+.welcome-header .card {
+  height: calc(20vw - 50px);
+  width: calc(20vw - 50px);
+  background-color: #f4f4f4;;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: solid 5px #ddd;
+  max-width: 200px;
+  max-height: 200px;
+  min-width: 100px;
+  min-height: 100px;
+  box-shadow: 1.5rem 2.5rem 5rem 0.7rem rgba(0,0,0,0.1);
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+}
+
+.welcome-header .card:hover {
+  cursor: pointer;
+}
+
+.welcome-header .card img {
+  transform: translateZ(80px);
+  height: 50%;
+}
+
+.welcome-header .card:nth-of-type(even) img{
+  width: 55%;
+}
+
+.welcome-header .card:nth-of-type(odd) img{
+  width: 50%;
+}
+
+.card.wf {
+  margin-top: calc(1vw - 110px);
+  margin-left: 2vw;
+}
+.card.rnaseq {
+  margin-top: calc(1vw - 150px);
+  margin-left: 23vw;
+}
+
+.card.ggplot {
+  margin-top: calc(1vw - 150px);
+  margin-left: 43vw;
+}
+
+.card.canvas {
+  margin-top: calc(1vw - 250px);
+  margin-left: 65vw;
+}
+
+@media screen and (max-width: 1160px) {
+  .card.wf {
+    margin-top: calc(1vw - 50px);
+  }
+  .card.rnaseq {
+    margin-top: calc(1vw - 100px);
+  }
+
+  .card.ggplot {
+    margin-top: calc(1vw - 50px);
+  }
+
+  .card.canvas {
+    margin-top: calc(1vw - 200px);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .card.wf {
+    margin-left: 2vw;
+  }
+  .card.rnaseq {
+    margin-left: 30vw;
+  }
+
+  .card.ggplot {
+    margin-left: 50vw;
+  }
+
+  .card.canvas {
+    margin-top: calc(1vw - 150px);
+    margin-left: 75vw;
+  }
+
+}
+
+.welcome-header .card span {
+  margin: 0 auto;
+  font-size: min(2rem, max(1.5vw, 1rem));
+  font-weight: bold;
+  white-space: nowrap;
+  transform: translateZ(100px);
+}
+

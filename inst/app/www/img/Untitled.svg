@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="512" height="124" viewBox="-6 -6 512 124" xml:space="preserve">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="499" height="125" viewBox="1 0.5 499 125" xml:space="preserve">
 <desc>Created with Fabric.js 4.6.0</desc>
 <defs>
 </defs>
@@ -28,7 +28,7 @@
 <g transform="matrix(1.04 0 0 1.04 107.13 32.69)" style="" id="2FxVSqA8nMRQcRNP9P7bc"  >
 		<text xmlns="http://www.w3.org/2000/svg" xml:space="preserve" font-family="sans-serif" y="6.28" x="-84.66" font-size="20" font-style="normal" font-weight="700" line-height="1.16" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"><tspan style="fill: #BCCFFF">s</tspan><tspan>ystem</tspan><tspan style="fill: #BCCFFF">P</tspan><tspan>ipe</tspan><tspan style="fill: #BCCFFF">S</tspan><tspan>hiny</tspan></text>
 </g>
-<g transform="matrix(1 0 0 1 361.71 67.53)" id="sps_header_logo" style="display:none;" >
+<g transform="matrix(1 0 0 1 361.71 67.53)" id="sps_header_logo">
 <g style="" vector-effect="non-scaling-stroke"   >
 		<g transform="matrix(0.12 0 0 0.12 0 0)" id="3O8lLkMjkVz4PTLGolcaX"  >
 <filter id="SVGID_2" y="-39%" height="178%" x="-41%" width="182%" >

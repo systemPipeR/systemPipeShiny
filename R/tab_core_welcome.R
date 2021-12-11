@@ -3,38 +3,44 @@
 core_welcomeUI <- function(id){
     ns <- NS(id)
     tagList(
+        tags$script(src = "sps/js/sps_welcome.js"),
+        tags$link(rel = "stylesheet", href = "sps/css/sps_welcome.css"),
         tags$style('.skin-blue .main-header .navbar {background-color: #2c8abf;}'),
+        div(class = "welcome-header",
+            div(id = "welcome-svg"),
+            div(
+                class = "card wf", `data-tilt` ="", `data-tilt-max`="30",
+                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                tags$img(src = "img/spr_notext.png"),
+                tags$span("Workflow")
+            ),
+            div(
+                class = "card rnaseq", `data-tilt` ="", `data-tilt-max`="30",
+                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                tags$img(src = "img/rnaseq_notext.png"),
+                tags$span("RNAseq")
+            ),
+            div(
+                class = "card ggplot", `data-tilt` ="", `data-tilt-max`="30",
+                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                tags$img(src = "img/ggplot.png"),
+                tags$span("Quick ggplot"),
+                onclick="document.querySelector('a[href=\"#shiny-tab-vs_esq\"]').click()"
+            ),
+            div(
+                class = "card canvas", `data-tilt` ="", `data-tilt-max`="30",
+                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                tags$img(src = "img/drawer.png"),
+                tags$span("Canvas")
+            ),
+        ),
+        tags$script(src = "sps/js/vanilla-tilt.js"),
         fluidRow(
             class = "text-main",
-            style = "padding-left: 15px;",
-            div(
-                style =
-                '
-                margin: -5% 0 auto -5%;
-                position: relative;
-                ',
-                div(id = "welcome-svg"),
-                tags$style(
-                    '
-                    #welcome-svg svg {
-                        width: 105%;
-                        position: absolute;
-                        left: 0;
-                        top:0;
-                    }
-                    '
-                ),
-                tags$script(HTML('$("#welcome-svg").load("img/Untitled.svg", function(){
-                    $("#welcome-svg > svg").removeAttr("height").removeAttr("width");
-                    $("#sps_header_logo").fadeIn(2000);
-                });'))
-            ),
+            style = "padding-left: 15px; padding-top: 25vh; padding-right: 15px",
             spsHr(),
             renderDesc(id = ns("desc"), desc =
             "
-            systemPipeShiny (SPS) is a framework for data analysis workflow management
-            and downstream data visualization.
-
             ## To start
             Start by choosing a **module** below or from the left sidebar. Expand
             to read more about SPS.
