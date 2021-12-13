@@ -136,5 +136,24 @@
   top: max(calc(93vh - 50px), 34vw);
   left: 50%;
   transform: translate(-50%, 0);
-  background: linear-gradient(#2689c0, #6d7fc6); ;
+  background: linear-gradient(#2689c0, #6d7fc6);
+  font-weight: bold;
+}
+
+@media screen and (max-width: 767px) {
+  #core_welcome-go_down {
+    top: max(calc(88vh - 50px), 34vw);
+  }
+}
+
+.welcome-header .mod-desc {
+  padding-top: max(100px);
+}
+
+.mod-desc h5 {
+  display: none;
+  font-size: min(3rem, max(1.5vw, 1rem));
+  font-weight: 700;
+  color: #2c8abf;
+  text-align: center;
 }

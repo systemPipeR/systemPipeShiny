@@ -23,5 +23,16 @@ $(function(){
       behavior: "smooth"
     });
   })
+
+  $('.welcome-header .card').map(function(){
+    $(this).mouseover(function(){
+      var mod = $(this).attr('data-desc');
+      var modDesc = $(`.mod-desc h5[data-desc="${mod}"]`);
+      if(modDesc.css("display") === "none") {
+        $(`.mod-desc h5[data-desc]`).fadeOut();
+        modDesc.fadeIn();
+      }
+    });
+  });
 });
 

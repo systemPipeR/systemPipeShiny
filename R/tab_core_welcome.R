@@ -2,6 +2,7 @@
 #' @noRd
 core_welcomeUI <- function(id, mod_missings){
     ns <- NS(id)
+
     div(
         style = "postition: relative",
         tags$script(src = "sps/js/sps_welcome.js"),
@@ -12,6 +13,7 @@ core_welcomeUI <- function(id, mod_missings){
             div(
                 class = "card wf", `data-tilt` ="", `data-tilt-max`="30",
                 `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                `data-desc` = "wf",
                 tags$img(src = "img/spr_notext.png"),
                 tags$span("Workflow"),
                 onclick="document.querySelector('a[href=\"#shiny-tab-wf\"]').click()"
@@ -19,6 +21,7 @@ core_welcomeUI <- function(id, mod_missings){
             div(
                 class = "card rnaseq", `data-tilt` ="", `data-tilt-max`="30",
                 `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                `data-desc` = "rnaseq",
                 tags$img(src = "img/rnaseq_notext.png"),
                 tags$span("RNAseq"),
                 onclick="document.querySelector('a[href=\"#shiny-tab-vs_rnaseq\"]').click()"
@@ -26,6 +29,7 @@ core_welcomeUI <- function(id, mod_missings){
             div(
                 class = "card ggplot", `data-tilt` ="", `data-tilt-max`="30",
                 `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                `data-desc` = "ggplot",
                 tags$img(src = "img/ggplot.png"),
                 tags$span("Quick ggplot"),
                 onclick="document.querySelector('a[href=\"#shiny-tab-vs_esq\"]').click()"
@@ -33,9 +37,21 @@ core_welcomeUI <- function(id, mod_missings){
             div(
                 class = "card canvas", `data-tilt` ="", `data-tilt-max`="30",
                 `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                `data-desc` = "canvas",
                 tags$img(src = "img/drawer.png"),
                 tags$span("Canvas"),
                 onclick="document.querySelector('a[href=\"#shiny-tab-core_canvas\"]').click()"
+            ),
+            div(
+                class = "mod-desc",
+                h5(`data-desc` = "wf", "Workflow Module: Choose, design, and run systemPipeR workflows
+                   interactively in a guided manner."),
+                h5(`data-desc` = "rnaseq", "RNAseq Module: perform downstream
+                   RNAseq analysis, like clustering, DEG, plotting, and more."),
+                h5(`data-desc` = "ggplot", "Quick ggplot Module: Make ggplots
+                   from any tabular-like datasets users provide."),
+                h5(`data-desc` = "canvas", "Canvas Tool: Interactively edit plots you made in all
+                   other modules.")
             ),
             actionBttn(
                 inputId = ns("go_down"),
@@ -52,8 +68,7 @@ core_welcomeUI <- function(id, mod_missings){
             markdown(
             "
             ## To start
-            Start by choosing a **module** below or from the left sidebar. Expand
-            to read more about SPS.
+            Start by choosing a **module** above or from the left sidebar.
 
             *****
 
@@ -63,7 +78,7 @@ core_welcomeUI <- function(id, mod_missings){
             current version of SPS, there are 3 pre-built modules.
 
             1. [**Workflow**{blk}](https://systempipe.org/sps/modules/workflow/): Choose, design, and run [systemPipeR{blk}](https://systempipe.org/sp/)
-               workflows with guided and interactive manner.
+               workflows interactively in a guided manner.
             2. [**RNA-Seq**{blk}](https://systempipe.org/sps/modules/rnaseq/): perform downstream RNAseq analysis, like clustering, DEG, plotting, and more.
             3. [**Quick {ggplot}**{blk}](https://systempipe.org/sps/modules/ggplot/): Make ggplots from any tabular-like datasets users provide.
 
@@ -110,9 +125,8 @@ core_welcomeUI <- function(id, mod_missings){
             ") %>%
                 div(class = "sps-dash"),
             spsHr(),
-            fluidRow(
-
-            )
+            br(),
+            br()
         )
     )
 }
