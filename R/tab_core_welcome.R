@@ -1,8 +1,9 @@
 ## UI
 #' @noRd
-core_welcomeUI <- function(id){
+core_welcomeUI <- function(id, mod_missings){
     ns <- NS(id)
-    tagList(
+    div(
+        style = "postition: relative",
         tags$script(src = "sps/js/sps_welcome.js"),
         tags$link(rel = "stylesheet", href = "sps/css/sps_welcome.css"),
         tags$style('.skin-blue .main-header .navbar {background-color: #2c8abf;}'),
@@ -12,13 +13,15 @@ core_welcomeUI <- function(id){
                 class = "card wf", `data-tilt` ="", `data-tilt-max`="30",
                 `data-tilt-scale`="1.3", `data-tilt-speed`="800",
                 tags$img(src = "img/spr_notext.png"),
-                tags$span("Workflow")
+                tags$span("Workflow"),
+                onclick="document.querySelector('a[href=\"#shiny-tab-wf\"]').click()"
             ),
             div(
                 class = "card rnaseq", `data-tilt` ="", `data-tilt-max`="30",
                 `data-tilt-scale`="1.3", `data-tilt-speed`="800",
                 tags$img(src = "img/rnaseq_notext.png"),
-                tags$span("RNAseq")
+                tags$span("RNAseq"),
+                onclick="document.querySelector('a[href=\"#shiny-tab-vs_rnaseq\"]').click()"
             ),
             div(
                 class = "card ggplot", `data-tilt` ="", `data-tilt-max`="30",
@@ -31,15 +34,22 @@ core_welcomeUI <- function(id){
                 class = "card canvas", `data-tilt` ="", `data-tilt-max`="30",
                 `data-tilt-scale`="1.3", `data-tilt-speed`="800",
                 tags$img(src = "img/drawer.png"),
-                tags$span("Canvas")
+                tags$span("Canvas"),
+                onclick="document.querySelector('a[href=\"#shiny-tab-core_canvas\"]').click()"
             ),
+            actionBttn(
+                inputId = ns("go_down"),
+                label = "Read More",
+                icon = icon("angle-double-down"),
+                style = "jelly",
+                color = "primary"
+            )
         ),
         tags$script(src = "sps/js/vanilla-tilt.js"),
         fluidRow(
-            class = "text-main",
-            style = "padding-left: 15px; padding-top: 25vh; padding-right: 15px",
+            class = "text-main welcome-text",
             spsHr(),
-            renderDesc(id = ns("desc"), desc =
+            markdown(
             "
             ## To start
             Start by choosing a **module** below or from the left sidebar. Expand

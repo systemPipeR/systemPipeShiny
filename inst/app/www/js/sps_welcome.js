@@ -14,6 +14,14 @@ $(function(){
       glare: true,
       max: 45
     });
-  })()
+  })();
+
+
+  $('#core_welcome-go_down').click(()=> {
+    document.documentElement.scrollTo({
+      top: window.innerHeight,
+      behavior: "smooth"
+    });
+  })
 });
 

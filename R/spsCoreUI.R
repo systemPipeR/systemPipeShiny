@@ -24,9 +24,9 @@ spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
 
     spsinfo("parse title and logo")
     sps_title <- spsOption("title")
-    if(!(is.character(sps_title) && length(sps_title) == 1)) spserror("Value for option 'title' is incorrect")
+    if(!(is.character(sps_title) && length(sps_title) == 1)) spserror("Value for option 'title' needs to be length 1 string")
     sps_logo <- spsOption("title_logo")
-    if(!(is.character(sps_logo) && length(sps_logo) == 1)) spserror("Value for option 'title_logo' is incorrect")
+    if(!(is.character(sps_logo) && length(sps_logo) == 1)) spserror("Value for option 'title_logo' needs to be length 1 string")
 
     spsinfo("resolve default tabs UI")
     core_welcomeUI <- rlang::env_get(sps_env, 'core_welcomeUI', core_welcomeUI)
@@ -135,7 +135,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
         if(spsOption("tab_vs_main")) shinydashboard::tabItem(tabName = "vs_main", vs_mainUI("vs_main")) else missingTab(),
         # core tabs
         if(any_module) shinydashboard::tabItem(tabName = "module_main", module_mainUI("module_main")) else missingTab(),
-        if(spsOption("tab_welcome")) shinydashboard::tabItem(tabName = "core_welcome", core_welcomeUI("core_welcome")) else missingTab(),
+        if(spsOption("tab_welcome")) shinydashboard::tabItem(tabName = "core_welcome", core_welcomeUI("core_welcome", mod_missings)) else missingTab(),
         if(spsOption("tab_canvas")) shinydashboard::tabItem(tabName = "core_canvas", core_canvasUI("core_canvas")) else missingTab(),
         if(spsOption("tab_about")) shinydashboard::tabItem(tabName = "core_about", core_aboutUI("core_about")) else missingTab(),
         #  modules

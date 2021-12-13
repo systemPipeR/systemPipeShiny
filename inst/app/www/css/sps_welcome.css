@@ -2,6 +2,7 @@
 
 .welcome-header {
   position: relative;
+  height: max(calc(100vh - 50px), 35vw);
 }
 
 #welcome-svg svg {
@@ -123,3 +124,17 @@
   transform: translateZ(100px);
 }
 
+.welcome-text {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+
+#core_welcome-go_down {
+  position: absolute;
+  margin: 0 auto;
+  top: max(calc(93vh - 50px), 34vw);
+  left: 50%;
+  transform: translate(-50%, 0);
+  background: linear-gradient(#2689c0, #6d7fc6); ;
+}
