@@ -34,7 +34,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  border: solid 5px #ddd;
+  border: solid 5px rgb(38 137 192 / 31%);
   max-width: 200px;
   max-height: 200px;
   min-width: 100px;
@@ -59,6 +59,18 @@
 
 .welcome-header .card:nth-of-type(odd) img{
   width: 50%;
+}
+
+.welcome-header .card.disabled {
+  cursor: not-allowed;
+  border-color: rgb(217, 83, 79, 0.3);
+}
+.welcome-header .card.disabled img, .welcome-header .card.missing img {
+  filter: grayscale(1);
+}
+
+.welcome-header .card.missing {
+  border-color: rgb(243, 156, 18, 0.3);
 }
 
 .card.wf {
@@ -147,12 +159,12 @@
 }
 
 .welcome-header .mod-desc {
-  padding-top: max(100px);
+  padding-top: min(100px, 6vw);
 }
 
 .mod-desc h5 {
   display: none;
-  font-size: min(3rem, max(1.5vw, 1rem));
+  font-size: min(3rem, max(1.5vw, 2rem));
   font-weight: 700;
   color: #2c8abf;
   text-align: center;

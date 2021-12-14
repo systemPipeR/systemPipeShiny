@@ -9,7 +9,7 @@ core_aboutUI <- function(id){
             '
             ### [Read the manual{blk}](https://systempipe.org/sps/)
             Read the full manual on our [website{blk}](https://systempipe.org/sps/)
-            or click the links below each feature to navigate to different part
+            or click the links below of each SPS feature to navigate to different part
             of the manual.
             '
         ),

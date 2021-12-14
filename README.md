@@ -130,32 +130,9 @@ shiny::runApp()
 ```
 
 ### [options](https://systempipe.org/sps/adv_features/config/#app-options)
-Change some of the options listed in `global.R` will change how the app behave. Here
-is a quick look and their defaults of these options:
-
-```r
-options(sps = list(
-    title = "systemPipeShiny",
-    title_logo = "img/sps_small.png",
-    mode = "local",
-    warning_toast = FALSE,
-    login_screen = FALSE,
-    login_theme = "random",
-    use_crayon = TRUE,
-    verbose = FALSE,
-    admin_page = TRUE,
-    admin_url = "admin",
-    note_url = 'https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/inst/remote_resource/notifications.yaml',
-    tab_welcome = TRUE,
-    tab_vs_main = TRUE,
-    tab_canvas = TRUE,
-    tab_about = TRUE,
-    module_wf = TRUE,
-    module_rnaseq = TRUE,
-    module_ggplot = TRUE,
-    traceback = FALSE
-))
-```
+Change some of the [options](https://systempipe.org/sps/adv_features/config/#app-options)
+listed in `global.R` will change how the app behave, for example, modules to load,
+title, logo, whether to apply user authentication, and more ...
 
 ## Other packages in systemPipeShiny
 

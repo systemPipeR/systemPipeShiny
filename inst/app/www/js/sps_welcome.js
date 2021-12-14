@@ -25,6 +25,12 @@ $(function(){
   })
 
   $('.welcome-header .card').map(function(){
+    var status = $(this).attr('data-status');
+    if (status === "disabled") {
+      $(this).addClass("disabled").attr('onclick', '');
+      this.vanillaTilt.destroy();
+    }
+    if (status === "missing") {$(this).addClass("missing");}
     $(this).mouseover(function(){
       var mod = $(this).attr('data-desc');
       var modDesc = $(`.mod-desc h5[data-desc="${mod}"]`);
@@ -34,5 +40,6 @@ $(function(){
       }
     });
   });
+
 });
 

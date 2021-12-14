@@ -545,10 +545,10 @@ spsTabInfo <- function(return_type = "print", n_print = 40, app_path = getwd()){
         'pushbar',
         'fs',
         'readr',
-        'R.utils',
+        'R.utils'
         # 'DOT',
         # 'shinyTree',
-        "openssl"
+        # "openssl"
     )),
     rna = sort(c(
         'DESeq2',

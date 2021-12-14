@@ -2,7 +2,34 @@
 #' @noRd
 core_welcomeUI <- function(id, mod_missings){
     ns <- NS(id)
+    mod_status <- lapply(c("wf", "rna", "ggplot", "canvas"), function(x) {
+        if (x == "canvas") return(
+            if(spsOption("tab_canvas")) "pass" else "disabled"
+        )
+        if(is.null(mod_missings[[x]])) "disabled" else {
+            if(length(mod_missings[[x]]) == 0) "pass" else "missing"
+        }
+    })
+    names(mod_status) <- c("wf", "rnaseq", "ggplot", "canvas")
+    mod_src <- list(
+        wf = list(img = "img/spr_notext.png", label = "Workflow", tabid = "wf"),
+        rnaseq = list(img = "img/rnaseq_notext.png", label = "RNAseq", tabid = "rnaseq"),
+        ggplot = list(img = "img/ggplot.png", label = "Quick ggplot", tabid = "vs_esq"),
+        canvas = list(img = "img/drawer.png", label = "Canvas", tabid = "core_canvas")
+    )
 
+    modPopover <- function(tag, status) {
+        if (status == "pass") return(tag)
+        if (status == "missing") return(bsPop(
+            tag, "Package(s) Missing", status = "warning", contentweight = "bold",
+            titlesize = "2rem", contentsize = "1.5rem", titleweight = "bold",
+            "Some required packages are not installed to use this module. You
+            can check the module tab to see what needs to be installed."))
+        if (status == "disabled") return(bsPop(
+            tag, "Module Disabled", status = "danger", contentweight = "bold",
+            titlesize = "2rem", contentsize = "1.5rem", titleweight = "bold",
+            "This module is disabled by your SPS manager."))
+    }
     div(
         style = "postition: relative",
         tags$script(src = "sps/js/sps_welcome.js"),
@@ -10,38 +37,16 @@ core_welcomeUI <- function(id, mod_missings){
         tags$style('.skin-blue .main-header .navbar {background-color: #2c8abf;}'),
         div(class = "welcome-header",
             div(id = "welcome-svg"),
-            div(
-                class = "card wf", `data-tilt` ="", `data-tilt-max`="30",
-                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
-                `data-desc` = "wf",
-                tags$img(src = "img/spr_notext.png"),
-                tags$span("Workflow"),
-                onclick="document.querySelector('a[href=\"#shiny-tab-wf\"]').click()"
-            ),
-            div(
-                class = "card rnaseq", `data-tilt` ="", `data-tilt-max`="30",
-                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
-                `data-desc` = "rnaseq",
-                tags$img(src = "img/rnaseq_notext.png"),
-                tags$span("RNAseq"),
-                onclick="document.querySelector('a[href=\"#shiny-tab-vs_rnaseq\"]').click()"
-            ),
-            div(
-                class = "card ggplot", `data-tilt` ="", `data-tilt-max`="30",
-                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
-                `data-desc` = "ggplot",
-                tags$img(src = "img/ggplot.png"),
-                tags$span("Quick ggplot"),
-                onclick="document.querySelector('a[href=\"#shiny-tab-vs_esq\"]').click()"
-            ),
-            div(
-                class = "card canvas", `data-tilt` ="", `data-tilt-max`="30",
-                `data-tilt-scale`="1.3", `data-tilt-speed`="800",
-                `data-desc` = "canvas",
-                tags$img(src = "img/drawer.png"),
-                tags$span("Canvas"),
-                onclick="document.querySelector('a[href=\"#shiny-tab-core_canvas\"]').click()"
-            ),
+            lapply(c("wf", "rnaseq", "ggplot", "canvas"), function(x) {
+                div(
+                    class = glue("card {x}"), `data-tilt`="", `data-tilt-max`="30",
+                    `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                    `data-desc` = x, `data-status` = mod_status[[x]],
+                    tags$img(src = mod_src[[x]][['img']]),
+                    tags$span(mod_src[[x]][['label']]),
+                    onclick= glue("document.querySelector('a[href=\"#shiny-tab-{mod_src[[x]][['tabid']]}\"]').click()")
+                ) %>% modPopover(mod_status[[x]])
+            }),
             div(
                 class = "mod-desc",
                 h5(`data-desc` = "wf", "Workflow Module: Choose, design, and run systemPipeR workflows

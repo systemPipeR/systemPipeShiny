@@ -20,7 +20,7 @@ test_that("canvas test", {
 })
 
 test_that("core_dashboard test", {
-    expect_s3_class(core_welcomeUI("a"), "shiny.tag.list")
+    expect_s3_class(core_welcomeUI("a"), "shiny.tag")
     expect_null(testServer(core_welcomeServer, {}))
 })
 

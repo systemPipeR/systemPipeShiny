@@ -1,8 +1,8 @@
-# systemPipeShiny 1.5.5 Dev
+# systemPipeShiny 1.5.10 Dev
 
 ## Major Change
 
--   Redesign of the welcome page. Old content is moved to about. Now the welcome page is more clear.
+-   Redesign of the welcome page. Old content is moved to `about`. Now the welcome page is more clear.
 
 -   Introduce `cookies`, this is used to remember if users have clicked the interactive guide. When they refresh the page, the guide will not pop up again.
 
@@ -13,8 +13,9 @@
 ## Minor Change
 
 -   Fix some text typo, links.
+-   Add more figures as instructions in different modules/tabs.
 
-# systemPipeShiny 1.3.15 
+# systemPipeShiny 1.3.15
 
 ## New Feature
 
@@ -284,3 +285,4 @@ Changes made from 1.1.0 to 1.1.05 <!--#   YYYY.MM.DD -->
 -   RNAseq part is now only in one tab as big module: users upload the targets file and a raw count table, and make different plots in subtabs.
 
     -   This introduced a lot of dependencies, will decide later if we keep as it is or separate it to *spsBio.*
+

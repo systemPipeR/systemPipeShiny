@@ -203,12 +203,13 @@ vs_esqServer <- function(id, shared) {
                 text = div(
                     h3("Continue to make plots?"),
                     HTML("Or manually click <span class='text-info'>2. Make a ggplot</span> panel"),
-                    if(utils::packageVersion("esquisse") <= "1.0.1") {
+                    if(utils::packageVersion("esquisse") < "1.1.2.9000") {
                         tags$b(
                             class = "text-danger", style = "display:block",
-                            "There are known bugs of {esquisse}. If you see 'object
-                            not found' issue, install the most recent develop version and restart R.",
-                            p('remotes::install_github("dreamRs/datamods"); remotes::install_github("dreamRs/esquisse")')
+                            "There are known bugs of {esquisse} release version. If you see 'object
+                            not found' issue or icon warnings, install the most recent develop version
+                            of {esquisse}, {datamods} and restart R.",
+                            p(class = "text-info", 'remotes::install_github("dreamRs/datamods"); remotes::install_github("dreamRs/esquisse")')
                         )
                     }
                 )
