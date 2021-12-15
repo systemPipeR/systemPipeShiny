@@ -236,6 +236,7 @@ wf_targetServer <- function(id, shared){
         #     shared$wf$env_option = "exist"
         # })
         #####
+        # when step 1 is ready, triger this
         observeEvent(c(shared$wf$flags$env_ready), {
             req(shared$wf$flags$env_ready)
             req(shared$wf$targets_path)
@@ -255,7 +256,7 @@ wf_targetServer <- function(id, shared){
             )
 
         })
-        # update table
+        # update targets table
         output$targets_df <- rhandsontable::renderRHandsontable({
             rhandsontable::rhandsontable(t.df(),
                                          selectCallback = TRUE,
@@ -263,6 +264,7 @@ wf_targetServer <- function(id, shared){
                 rhandsontable::hot_context_menu(allowRowEdit = TRUE,
                                                 allowColEdit = TRUE)
         })
+        # when table source changed
         observeEvent(c(input$target_source, not_empty(input$targets_upload)),
                      ignoreInit = TRUE, ignoreNULL = TRUE, {
             req(not_empty(input$targets_upload))

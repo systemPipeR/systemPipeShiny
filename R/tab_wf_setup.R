@@ -316,7 +316,7 @@ wf_setupServer <- function(id, shared){
             shinyCatch({
                 switch(input$choose_wf,
                     "exist" = {
-                        lapply(c("data", "param", "results") %>% {paste0(final_env_path, .)}, function(x){
+                        lapply(c("data", "param", "results", ".SPRproject") %>% {paste0(final_env_path, .)}, function(x){
                             if(!dir.exists(x)){
                                 stop("Required folder '", x, "' for an existing workflow is not there")
                             }

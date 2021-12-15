@@ -235,9 +235,9 @@ wf_wfServer <- function(id, shared){
                             p("Is this step mandatory or optional?"),
                             selectizeInput(ns("new_step_req"), "",choices = c("mandatory", "optional")),
                             spsTitle("Run time location", "4"),
-                            p("Where will this step be run, the same R session (rsession) or a remote
-                              location, like cloud or a cluster (cluster)?"),
-                            selectizeInput(ns("new_step_session"), "", choices = c("rsession", "cluster"))
+                            p("Where will this step be run, the same management session or a child
+                              compute node?"),
+                            selectizeInput(ns("new_step_session"), "", choices = c("management", "compute"))
                         )
                     }))
             } else {
@@ -273,9 +273,9 @@ wf_wfServer <- function(id, shared){
                                 p("Is this step mandatory or optional?"),
                                 selectizeInput(ns("new_step_req"), "",choices = c("mandatory", "optional")),
                                 spsTitle("Run time location", "4"),
-                                p("Where will this step be run, the same R session (rsession) or a remote
-                                            location, like cloud or a cluster (cluster)?"),
-                                selectizeInput(ns("new_step_session"), "", choices = c("rsession", "cluster"))
+                                p("Where will this step be run, the same management session or a child
+                                    compute node?"),
+                                selectizeInput(ns("new_step_session"), "", choices = c("management", "compute"))
                             ),
                   tabPanel(
                       "CWL Arguments",
@@ -612,7 +612,7 @@ wf_wfServer <- function(id, shared){
             # update plot
             output$wf_plot <- systemPipeR::renderPlotwf({
                 req(sal)
-                systemPipeR::plotWF(sal, rstudio = TRUE)
+                systemPipeR::plotWF(sal, rstudio = TRUE, plot_ctr = FALSE)
             })
             # update redo undo
             shinyjs::toggleState("step_undo", !his$status()$first)

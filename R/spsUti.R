@@ -69,17 +69,17 @@
 # @examples
 # step_name <- c("1.1.1", "2.2.2")
 # findTreeParent(step_name)
-findTreeParent <- function(step_names){
-    lapply(step_names, function(each_name){
-        if (str_detect(each_name, "\\.")) {
-            step_p <- str_remove(step_names, "[^0-9]+.[^.]*$")
-            tmp_holder <- c(step_p, findTreeParent(step_p))
-            return(c(step_names, tmp_holder))
-        } else {return(each_name)}
-    }) %>%
-    unlist() %>%
-    unique() %>% str_sort(numeric = TRUE)
-}
+# findTreeParent <- function(step_names){
+#     lapply(step_names, function(each_name){
+#         if (str_detect(each_name, "\\.")) {
+#             step_p <- str_remove(step_names, "[^0-9]+.[^.]*$")
+#             tmp_holder <- c(step_p, findTreeParent(step_p))
+#             return(c(step_names, tmp_holder))
+#         } else {return(each_name)}
+#     }) %>%
+#     unlist() %>%
+#     unique() %>% str_sort(numeric = TRUE)
+# }
 
 
 #' Create structure for networkD3 object
@@ -97,48 +97,48 @@ findTreeParent <- function(step_names){
 # test = step2listD3(t_lvl, t_text)
 # str(test)
 # diagonalNetwork(test)
-step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
-    if (is.null(t_lvl) | is.null(t_text))
-        return(list(name = "Nothing has been loaded"))
-    findChildren <- function(t_lvl, t_text, start_lvl){
-        start_lvl <- start_lvl + 1
-
-        t_index <- NULL
-        while (start_lvl <= max(stats::na.omit(t_lvl))) {
-            t_index <- which(t_lvl == start_lvl)
-            if (length(t_index) == 0) {
-                start_lvl <- start_lvl + 1
-            } else {
-                break()
-            }
-        }
-
-        if (!length(t_index) == 0) {
-            tmp_lst <- lapply(seq_along(t_index), function(i){
-                t_index <- c(t_index, length(t_lvl) + 1)
-                children_lvl <- t_lvl[(t_index[i] + 1) : (t_index[i+1] - 1)]
-                children_name <- t_text[(t_index[i] + 1) : (t_index[i+1] - 1)]
-                list(name = t_text[t_index[i]],
-                     children = findChildren(children_lvl,
-                                             children_name,
-                                             start_lvl)
-                     )
-            })
-            return(tmp_lst)
-        } else { return(list(name = ""))}
-    }
-    if (t_lvl %>% unique() %>% length == 1){
-        tmp_lst = list()
-        for (i in t_text){
-            tmp_lst <- append(tmp_lst,
-                              list(list(name = i, children = list(name = ""))))
-        }
-        return(list(name = "File", children = tmp_lst))
-    }
-    return(
-        list(name = "File", children = findChildren(t_lvl, t_text, start_lvl))
-    )
-}
+# step2listD3 <- function(t_lvl, t_text, start_lvl = 0){
+#     if (is.null(t_lvl) | is.null(t_text))
+#         return(list(name = "Nothing has been loaded"))
+#     findChildren <- function(t_lvl, t_text, start_lvl){
+#         start_lvl <- start_lvl + 1
+#
+#         t_index <- NULL
+#         while (start_lvl <= max(stats::na.omit(t_lvl))) {
+#             t_index <- which(t_lvl == start_lvl)
+#             if (length(t_index) == 0) {
+#                 start_lvl <- start_lvl + 1
+#             } else {
+#                 break()
+#             }
+#         }
+#
+#         if (!length(t_index) == 0) {
+#             tmp_lst <- lapply(seq_along(t_index), function(i){
+#                 t_index <- c(t_index, length(t_lvl) + 1)
+#                 children_lvl <- t_lvl[(t_index[i] + 1) : (t_index[i+1] - 1)]
+#                 children_name <- t_text[(t_index[i] + 1) : (t_index[i+1] - 1)]
+#                 list(name = t_text[t_index[i]],
+#                      children = findChildren(children_lvl,
+#                                              children_name,
+#                                              start_lvl)
+#                      )
+#             })
+#             return(tmp_lst)
+#         } else { return(list(name = ""))}
+#     }
+#     if (t_lvl %>% unique() %>% length == 1){
+#         tmp_lst = list()
+#         for (i in t_text){
+#             tmp_lst <- append(tmp_lst,
+#                               list(list(name = i, children = list(name = ""))))
+#         }
+#         return(list(name = "File", children = tmp_lst))
+#     }
+#     return(
+#         list(name = "File", children = findChildren(t_lvl, t_text, start_lvl))
+#     )
+# }
 
 
 #' Find tab information from tabs.csv
@@ -256,194 +256,3 @@ validateIcon <- function(icon){
     }
 }
 
-
-
-
-# queue
-
-simepleStack <- R6::R6Class(
-    classname = "simepleStack",
-    public = list(
-        initialize = function(items = list(), limit = Inf){
-            stopifnot(is.list(items))
-            private$stack = self$push(items)
-        },
-
-        len = function(){
-            length(private$stack)
-        },
-
-        get = function() {
-            return(private$stack)
-        },
-
-        clear = function(){
-            private$stack <- list()
-        },
-
-        push = function(items, after = self$len()) {
-            stopifnot(is.list(items))
-            if(!is.numeric(after)) stop("Push position must be numeric")
-            if(length(after) != 1) stop("Push position cannot be more than 1 number")
-            if(after > self$len())  stop("Push position cannot be more than current stack length")
-            if(after < 0)  stop("Push position cannot be less than 0")
-            private$stack <- append(private$stack, items, after)
-        },
-
-        pop = function(len=1, tail = FALSE){
-            stopifnot(is.logical(tail) && length(tail) == 1)
-            if(!is.numeric(len)) stop("Pop numbers must be numeric")
-            if(len < 1)  stop("Pop length cannot be less than 1")
-            stack_len <- self$len()
-            if(len > stack_len) stop("Pop length cannot be more than stack length")
-            len <- as.integer(len)
-            if (tail) {
-                stack_len <- self$len()
-                pop_index <- seq(stack_len, stack_len - len)
-                pop_index <- pop_index[pop_index != 0]
-            } else {
-                pop_index <- seq_len(len)
-            }
-            pop_items <- private$stack[pop_index]
-            private$stack <- private$stack[-pop_index]
-            pop_items
-        }
-    ),
-    private = list(
-        stack = list()
-    )
-)
-
-historyStack <- R6::R6Class(
-    classname = "historyStack",
-    public = list(
-        initialize = function(items = NULL, limit = 25, verbose = TRUE){
-            if(is.null(items)) items <- list()
-            stopifnot(is.list(items))
-            stopifnot(is.numeric(limit))
-            stopifnot(is.logical(verbose) && length(verbose) == 1)
-            if(limit < 1) stop("Cannot create a history stack with limit less than 1.")
-            if(limit == Inf) stop("Limit cannot be Inf.")
-
-            limit <- as.integer(limit)
-            private$limit = limit
-            if(length(items) > limit) stop("Initial items length larger than limit.")
-
-            item_len <- length(items)
-            private$stack <- append(private$stack, items)
-
-            private$len <- private$pos <- item_len
-            private$last <- if(private$pos >= 0) TRUE
-            private$first <- if(private$pos <= 1) TRUE else FALSE
-            private$verbose <- verbose
-
-            if(private$verbose) message("Created a history stack which can record  ", limit, " steps")
-            invisible(self)
-        },
-        clear = function(){
-            limit <- private$limit
-            verbose <- private$verbose
-            self$initialize(limit = limit, verbose = verbose)
-
-            if(private$verbose) message("Stack clear")
-            invisible(self)
-        },
-        get = function(pos = private$pos){
-            stopifnot(is.numeric(pos) && length(pos) == 1)
-            if(pos == Inf) stop("Position cannot be Inf.")
-            pos <- as.integer(pos)
-            if(pos > private$len) stop("Position is larger than current max history storage")
-            item <- if(pos == 0) list() else private$stack[[pos]]
-            list(
-                item = item,
-                pos = pos,
-                first = private$first,
-                last = private$last
-            )
-        },
-
-        getPos = function(){
-            private$pos
-        },
-
-        status = function(){
-            list(
-                pos = private$pos,
-                len = private$len,
-                limit = private$limit,
-                first = private$first,
-                last = private$last
-            )
-        },
-
-        forward = function(){
-            if(private$last) {
-                if(private$verbose) warning("Already the last history, cannot move forward")
-                return(NULL)
-            }
-            inc(private$pos)
-            private$last <- if(private$pos == private$len) TRUE else FALSE
-            private$first <- if(private$pos == 1) TRUE else FALSE
-
-            self$get(private$pos)
-        },
-
-        backward = function(){
-            if (private$first){
-                if(private$verbose) warning("Already the first history, cannot move backward")
-                return(NULL)
-            }
-            inc(private$pos, -1)
-            private$first <- if(private$pos == 1) TRUE else FALSE
-            private$last <- if(private$pos == private$len) TRUE else FALSE
-
-            self$get(private$pos)
-        },
-
-        add = function(item) {
-            pos <- private$pos
-            stack <- private$stack
-            item <- list(item)
-            if (pos != private$limit) {
-                stack <- if(length(stack)) append(stack[seq_len(pos)], item) else item
-                inc(pos)
-            } else {
-                stack <- append(stack[-1], item)
-            }
-            private$stack <- stack
-            private$len <- length(stack)
-            private$pos <- pos
-            private$first <- if(pos == 1) TRUE else FALSE
-            private$last <- TRUE
-            if(private$verbose) message("Added one item to position ", pos)
-            invisible(self)
-        }
-    ),
-    private = list(
-        stack = list(),
-        pos = 0,
-        len = 0,
-        limit = 25,
-        first = TRUE,
-        last = FALSE,
-        verbose = NULL
-    )
-)
-
-
-# operators
-inc <- function(e1,e2 = 1) eval.parent(substitute(e1 <- e1 + e2))
-mult <- function(e1,e2 = 2) eval.parent(substitute(e1 <- e1 * e2))
-dev <- function(e1,e2 = 2) eval.parent(substitute(e1 <- e1 / e2))
-
-
-
-## temp fix before new spsUtil  is on CRAN
-emptyIsFalse <- function (x) {
-    if (is.function(x)) return(TRUE)
-    if (is.environment(x)) return(TRUE)
-    if (length(x) < 1 || all(is.na(x)) || is.null(x)) return(FALSE)
-    if (nchar(x[1]) == 0) return(FALSE)
-    if (isFALSE(x)) return(FALSE)
-    else TRUE
-}
