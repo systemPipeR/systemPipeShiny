@@ -53,7 +53,7 @@ Suggests:
     BiocStyle,
     knitr, 
     rmarkdown,
-    systemPipeR (>= 2.0.12),
+    systemPipeR (>= 2.0.0),
     systemPipeRdata,
     rhandsontable,
     zip,
@@ -71,7 +71,7 @@ Suggests:
     Rtsne,
     UpSetR,
     tidyr,
-    esquisse (>= 1.0.2),
+    esquisse (>= 1.1.0),
     cicerone
 VignetteBuilder: knitr
 biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
