@@ -153,16 +153,15 @@ wf_setupUI <- function(id){
                         If the required command
                         line tools are not installed, the workflow will fail. Please
                         make sure you install them and the path is exported."),
-                HTML("<li>Some templates in of SystemPipeRdata 1.21.3 has not been
-                      updated to accomendate the latest version of SPR 1.27.27. Please
-                     wait some time till they are updated (as today 2021-10-08). For now, only
-                     Example, RNAseq and Existing options will work</li>")
+                HTML("<li>Current version of SPS (>= 1.6) is compatible with the latest
+                     SPR (>= 2.2.0) and SPRdata (>=1.24.0). Make sure you install the
+                     correct versions.
+                     </li>")
             ),
             tags$ul(
                 class = "text-danger", id = ns("warn_empty"),
-                tags$li("This option will generate an empty workflow folder.
-                        The workflow file only has a header. You need to write
-                        your own code.")
+                tags$li("This option will generate an empty workflow, containing a single demo
+                         step. You need to design your own steps.")
             ),
             tags$ul(
                 class = "text-danger", id = ns("warn_exist"),
@@ -316,7 +315,7 @@ wf_setupServer <- function(id, shared){
             shinyCatch({
                 switch(input$choose_wf,
                     "exist" = {
-                        lapply(c("data", "param", "results") %>% {paste0(final_env_path, .)}, function(x){
+                        lapply(c("data", "param", "results", ".SPRproject") %>% {paste0(final_env_path, .)}, function(x){
                             if(!dir.exists(x)){
                                 stop("Required folder '", x, "' for an existing workflow is not there")
                             }
@@ -355,7 +354,7 @@ wf_setupServer <- function(id, shared){
             updateProgressBar(session, "gen_wf_pg", 4, 6, title = "update project info - workflow file")
             Sys.sleep(0.1)
             wf_file_path <- shinyCatch(switch(input$choose_wf,
-                "rnaseq" = normalizePath(file.path(final_env_path, "systemPipeRNAseq_importWF.Rmd")),
+                "rnaseq" = normalizePath(file.path(final_env_path, "systemPipeRNAseq.Rmd")),
                 "varseq" = normalizePath(file.path(final_env_path, "systemPipeVARseq.Rmd")),
                 "riboseq" = normalizePath(file.path(final_env_path, "systemPipeRIBOseq.Rmd")),
                 "chipseq" = normalizePath(file.path(final_env_path, "systemPipeChIPseq.Rmd")),

@@ -20,7 +20,8 @@ test_that("canvas test", {
 })
 
 test_that("core_dashboard test", {
-    expect_s3_class(core_welcomeUI("a"), "shiny.tag.list")
+    missing_mod <- list("wf" = "", "rna" = "", "ggplot" ="", "canvas" = "")
+    expect_s3_class(core_welcomeUI("a", missing_mod), "shiny.tag")
     expect_null(testServer(core_welcomeServer, {}))
 })
 

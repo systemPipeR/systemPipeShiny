@@ -219,6 +219,7 @@ a.carousel-control:focus {
 /* table in markdown */
 .desc-table table {
   margin: 0 auto;
+  font-size: 2rem;
 }
 
 .desc-table thead {

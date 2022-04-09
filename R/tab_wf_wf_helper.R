@@ -52,6 +52,7 @@ makeRmodal <- function(index, step, run_opts, deps, step_name, sal_names, ns) {
         ),
         tabPanel(
             "R code",
+            p("You are allowed to modify R code of this step below"),
             shinyAce::aceEditor(
                 ns("edit_code"), fontSize = 14,
                 step_code, "r", wordWrap = TRUE, debounce = 10,
@@ -85,9 +86,9 @@ makeSysModal <- function(index, step, run_opts, deps, step_name, sal_names, sal,
                         dependencies.", placement = "right", trigger = "hover"),
             spsTitle("Run time options", "4"),
             tags$pre(glue(
-                "This step is:                              ", run_opts$run_step, "\n",
-                "This step will be run in:                  ", run_opts$run_session, "\n",
-                "This step results in a separate directory: ", run_opts$directory, "\n"
+                "This step is:                                      ", run_opts$run_step, "\n",
+                "This step will be run in:                          ", run_opts$run_session, " node\n",
+                "Store this step's results in a separate directory: ", run_opts$directory, "\n"
             )),
             spsTitle("Tools required", "4"),
             tags$pre(glue_collapse(step$modules %>% unlist() %>% unname(), sep = "\n")),

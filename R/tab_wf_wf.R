@@ -27,7 +27,9 @@ wf_wfUI <- function(id){
             to restore your actions.
             3. You can use <i class="fa fa-cog"></i> to configure each step.
             4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
-            an R step or a sysArgs step. the latter has more settings, you may want
+            an [R step{blk}](https://systempipe.org/sp/spr/spr_run/#adding-the-first-step)
+            or a [sysArgs step{blk}](https://systempipe.org/sp/spr/spr_run/#adding-more-steps)
+            . the latter has more settings, you may want
             to read the manual of SPS or SPR before that.
             5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or
             right panel to have a better view.
@@ -43,7 +45,8 @@ wf_wfUI <- function(id){
             Most steps will have dependencies, they are very important for a workflow
             to run. The dependency graph is pre-configured for template workflows.
             If you ever add/remove/change order of a step, the dependency graph may
-            fail. You then will see steps are marked in red. You **must fix** the dependencies
+            fail. You then will see steps are marked in <span style="color: red">red</span>.
+            You **must fix** the dependencies
             of these steps by clicking <i class="fa fa-cog"></i> before continuing to run
             the workflow.
             ***
@@ -235,9 +238,9 @@ wf_wfServer <- function(id, shared){
                             p("Is this step mandatory or optional?"),
                             selectizeInput(ns("new_step_req"), "",choices = c("mandatory", "optional")),
                             spsTitle("Run time location", "4"),
-                            p("Where will this step be run, the same R session (rsession) or a remote
-                              location, like cloud or a cluster (cluster)?"),
-                            selectizeInput(ns("new_step_session"), "", choices = c("rsession", "cluster"))
+                            p("Where will this step be run, the same management session or a child
+                              compute node?"),
+                            selectizeInput(ns("new_step_session"), "", choices = c("management", "compute"))
                         )
                     }))
             } else {
@@ -273,9 +276,9 @@ wf_wfServer <- function(id, shared){
                                 p("Is this step mandatory or optional?"),
                                 selectizeInput(ns("new_step_req"), "",choices = c("mandatory", "optional")),
                                 spsTitle("Run time location", "4"),
-                                p("Where will this step be run, the same R session (rsession) or a remote
-                                            location, like cloud or a cluster (cluster)?"),
-                                selectizeInput(ns("new_step_session"), "", choices = c("rsession", "cluster"))
+                                p("Where will this step be run, the same management session or a child
+                                    compute node?"),
+                                selectizeInput(ns("new_step_session"), "", choices = c("management", "compute"))
                             ),
                   tabPanel(
                       "CWL Arguments",
@@ -612,7 +615,7 @@ wf_wfServer <- function(id, shared){
             # update plot
             output$wf_plot <- systemPipeR::renderPlotwf({
                 req(sal)
-                systemPipeR::plotWF(sal, rstudio = TRUE)
+                systemPipeR::plotWF(sal, rstudio = TRUE, plot_ctr = FALSE)
             })
             # update redo undo
             shinyjs::toggleState("step_undo", !his$status()$first)

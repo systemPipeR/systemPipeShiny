@@ -604,7 +604,7 @@ core_topServer <- function(id, shared){
             sal <- spsUtil::quiet(try(systemPipeR::SPRproject(projPath = shared$wf$env_path, resume = TRUE), TRUE))
             req(inherits(sal, "SYSargsList"))
             output$status_plot <- systemPipeR::renderPlotwf({
-                systemPipeR::plotWF(sal, rstudio = TRUE)
+                systemPipeR::plotWF(sal, rstudio = TRUE, plot_ctr = FALSE)
             })
             Sys.sleep(1)
             updateProgressBar(session, "update_log", 100)

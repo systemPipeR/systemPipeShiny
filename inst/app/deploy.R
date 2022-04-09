@@ -16,7 +16,7 @@
 
 ###########################################################################
 ## If you are using some SPS modules, pick what modules you prefer,
-## uncomment and copy following by your needs to "global.R" file in deployment:
+## uncomment and copy following by your needs to "global.R" file before deployment:
 ##########################################################################
 ## Workflow module
 # requireNamespace("pushbar"); requireNamespace("callr")
