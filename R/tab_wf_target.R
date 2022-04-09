@@ -19,7 +19,7 @@ wf_targetUI <- function(id){
             The targets (metadata) file defines all input files\' path and other sample
             information of an analysis workflow. Read "Structure of targets file"
             section on
-            [our website{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-initial-targets-file)
+            [our website{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-initial-targets-data)
             to better undertand the structure of this file.
             This file is similar to the `colData` slot in an `SummarizedExperiment`
             object which stores sample ID and other meta information.
@@ -177,7 +177,7 @@ wf_targetUI <- function(id){
                        h4("Targets header"),
                        p("You can edit your target file header below.
                      All lines should start with #, a line of # <CMP>
-                     xxx is required."),
+                     xxx is required if you want to do some special workflows, like RNAseq, ChIPseq."),
                        shinyAce::aceEditor(
                            outputId = ns("ace_target_header"),
                            theme = "Chrome",
@@ -185,9 +185,9 @@ wf_targetUI <- function(id){
                            placeholder = "Target header lines", height = "100px"
                        ),
                        p("You can edit your targets (metadata) below."),
-                       p("Columns of 'FileName1', 'FileName2' are required
-                     for pair-end or 'FileName' for single-end.
-                     'SampleName', 'Factor' are required for both."),
+                       p("Tow columns named 'FileName1', 'FileName2'
+                      or a single column of 'FileName' is required.
+                     A column named 'SampleName' is required."),
                        p("Columns names should be on the first row."),
                        rhandsontable::rHandsontableOutput(ns("targets_df"),
                                                           height = "500px")

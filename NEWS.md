@@ -9,11 +9,13 @@
 -   Adapt SPR to the 2.1.x version.
 
     -   Add more instructing images to the workflow module.
+    -   A warning message is added if `spsOption("demo", TRUE)`, to let people know some workflow templates will fail if they use the demo server to run jobs.
 
 ## Minor Change
 
 -   Fix some text typo, links.
 -   Add more figures as instructions in different modules/tabs.
+-   Text/links fixed in workflow module.
 
 # systemPipeShiny 1.3.15
 
@@ -285,4 +287,3 @@ Changes made from 1.1.0 to 1.1.05 <!--#   YYYY.MM.DD -->
 -   RNAseq part is now only in one tab as big module: users upload the targets file and a raw count table, and make different plots in subtabs.
 
     -   This introduced a lot of dependencies, will decide later if we keep as it is or separate it to *spsBio.*
-

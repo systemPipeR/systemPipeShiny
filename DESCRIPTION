@@ -53,7 +53,7 @@ Suggests:
     BiocStyle,
     knitr, 
     rmarkdown,
-    systemPipeR,
+    systemPipeR (>= 2.0.12),
     systemPipeRdata,
     rhandsontable,
     zip,

@@ -27,7 +27,9 @@ wf_wfUI <- function(id){
             to restore your actions.
             3. You can use <i class="fa fa-cog"></i> to configure each step.
             4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
-            an R step or a sysArgs step. the latter has more settings, you may want
+            an [R step{blk}](https://systempipe.org/sp/spr/spr_run/#adding-the-first-step)
+            or a [sysArgs step{blk}](https://systempipe.org/sp/spr/spr_run/#adding-more-steps)
+            . the latter has more settings, you may want
             to read the manual of SPS or SPR before that.
             5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or
             right panel to have a better view.
@@ -43,7 +45,8 @@ wf_wfUI <- function(id){
             Most steps will have dependencies, they are very important for a workflow
             to run. The dependency graph is pre-configured for template workflows.
             If you ever add/remove/change order of a step, the dependency graph may
-            fail. You then will see steps are marked in red. You **must fix** the dependencies
+            fail. You then will see steps are marked in <span style="color: red">red</span>.
+            You **must fix** the dependencies
             of these steps by clicking <i class="fa fa-cog"></i> before continuing to run
             the workflow.
             ***

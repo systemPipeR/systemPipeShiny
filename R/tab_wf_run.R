@@ -230,6 +230,32 @@ wf_runServer <- function(id, shared){
             pushbar::pushbar_open(id = "core_top-wf_push")
             shared$wf$wf_session_open <- TRUE
         })
+
+        # warning on demo
+        observeEvent(shared$wf$wf_session_open, {
+            req(spsOption("is_demo"))
+            req(shared$wf$wf_session_open)
+            shinyWidgets::sendSweetAlert(
+                session = session,
+                type = "warning",
+                title = "This is a demo",
+                html = TRUE,
+                text = h4(
+                    "This is a",  tags$b("demo"),
+                    " instance. Please do not use it for production purposes.",
+                    "Required command-line tools for workflow templates are not installed on this
+                    server. You can continue to run this workflow here, but be
+                    aware, Workflows like",
+                    tags$b("rnaseq, varseq, riboseq, chipseq"),
+                    "will",
+                    tags$span(style = "color: red", "FAIL"),
+                    " with this demo server. To successfully run these
+                    worklfows, please install required tools and test
+                    on your own computer/server."
+                )
+            )
+        })
+
         # download bundle
         down_bundle_loader <- addLoader$new("download", type = "facebook", color = "white")
         output$download <- downloadHandler(
