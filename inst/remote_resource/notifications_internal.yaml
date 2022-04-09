@@ -40,7 +40,7 @@
 - note:
     type: package
     pkg_name: systemPipeShiny
-    version: 1.5.0
+    version: 9.9.0
     title: SPS 1.6.0 available
     expire: 2099-12-31
     icon:
@@ -73,16 +73,16 @@
 - note:
     type: package
     pkg_name: spsComps
-    version: 0.3.0
+    version: 9.3.3
     title: spsComps 0.3.2 available
     expire: 2022-12-31
     icon:
     status:
     message: |
-        ## spsComps 0.3.1
+        ## spsComps 0.3.2
 
         [spsComps](https://github.com/lz100/spsComps)
-        v0.3.1 is on [Github](https://github.com/lz100/spsComps) and CRAN.
+        v0.3.2 is on [Github](https://github.com/lz100/spsComps) and CRAN.
 
         ## New features
 
