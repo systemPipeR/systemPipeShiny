@@ -4,8 +4,6 @@
 
 -   Redesign of the welcome page. Old content is moved to `about`. Now the welcome page is more clear.
 
--   Introduce `cookies`, this is used to remember if users have clicked the interactive guide. When they refresh the page, the guide will not pop up again.
-
 -   Adapt SPR to the 2.1.x version.
 
     -   Add more instructing images to the workflow module.
