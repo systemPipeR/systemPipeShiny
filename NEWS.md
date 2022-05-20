@@ -4,11 +4,15 @@
 
 -   bump up the version requirement for SPR to 2.2.0, SPRdata to 2.0.0, spsComps to 0.3.2, drawer to 0.2.0.
 
+## Minor change:
+
+-   Since `xl` modal is not supported in bs3, change all modal in WF module to `l` size.
+
 ## Bug fix:
 
 -   As the new version of SPR, when adding a Linewise step R code, if the code is stored inside a variable, this is not supported. However, SPS has to capture user input code as variable. A workaround is used for now to fix this problem, waiting SPR to support a better way of code in variable or quoted code.
 
-# systemPipeShiny 1.5.10 
+# systemPipeShiny 1.5.10
 
 ## Major Change
 

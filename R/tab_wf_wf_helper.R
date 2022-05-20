@@ -149,7 +149,7 @@ statSal <- function(sal){
 newStepMain <- function(sal, ns){
     sal_stat <- statSal(sal)
     showModal(modalDialog(
-        size = "m",
+        size = "l",
         footer = tagList(
             modalButton("Cancel"),
             actionButton(ns("new_step_choose"), "Next")

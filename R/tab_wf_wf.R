@@ -204,7 +204,7 @@ wf_wfServer <- function(id, shared){
 
             if(input$new_step_type == "r") {
                 showModal(modalDialog(
-                    size = "xl",
+                    size = "l",
                     footer = tagList(
                         modalButton("Cancel"),
                         actionButton(ns("new_step_back"), "Back"),
@@ -245,7 +245,7 @@ wf_wfServer <- function(id, shared){
                     }))
             } else {
                 showModal(modalDialog(
-                    size = "xl",
+                    size = "l",
                     footer = tagList(
                         modalButton("Cancel"),
                         actionButton(ns("new_step_back"), "Back"),
