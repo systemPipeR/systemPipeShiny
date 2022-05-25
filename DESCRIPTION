@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
-Version: 1.6.0
-Date: 2022-04-08
+Version: 1.7.1
+Date: 2022-05-20
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danicassol@gmail.com"),
@@ -14,8 +14,8 @@ Depends:
     R (>= 4.0.0),
     shiny (>= 1.6.0),
     spsUtil (>= 0.2.2),
-    spsComps (>= 0.3.1),
-    drawer
+    spsComps (>= 0.3.2),
+    drawer (>= 0.2)
 Imports:
     DT,
     assertthat,
@@ -53,8 +53,8 @@ Suggests:
     BiocStyle,
     knitr, 
     rmarkdown,
-    systemPipeR (>= 2.0.0),
-    systemPipeRdata,
+    systemPipeR (>= 2.2.0),
+    systemPipeRdata (>= 2.0.0),
     rhandsontable,
     zip,
     callr,

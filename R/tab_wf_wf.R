@@ -204,7 +204,7 @@ wf_wfServer <- function(id, shared){
 
             if(input$new_step_type == "r") {
                 showModal(modalDialog(
-                    size = "xl",
+                    size = "l",
                     footer = tagList(
                         modalButton("Cancel"),
                         actionButton(ns("new_step_back"), "Back"),
@@ -245,7 +245,7 @@ wf_wfServer <- function(id, shared){
                     }))
             } else {
                 showModal(modalDialog(
-                    size = "xl",
+                    size = "l",
                     footer = tagList(
                         modalButton("Cancel"),
                         actionButton(ns("new_step_back"), "Back"),
@@ -542,11 +542,13 @@ wf_wfServer <- function(id, shared){
                 on.exit(setwd(spsOption("app_path")), add = TRUE)
                 setwd(shared$wf$env_path)
                 systemPipeR::appendStep(sal, after = as.numeric(input$new_step_index) - 1) <- systemPipeR::LineWise(
-                    code = input$new_code_r, step_name = input$new_step_name,
+                    code = input_code, step_name = input$new_step_name,
                     dependency = if(is.null(input$new_step_dep)) "" else input$new_step_dep,
                     run_step = input$new_step_req,
                     run_session = input$new_step_session
                 )
+                sal@stepsWF[[input$new_step_name]]@codeLine <- parse(text = input$new_code_r) # a hack to change the code
+                systemPipeR::write_SYSargsList(sal, silent = TRUE)
                 his$add(list(sal = sal, msg = "New R step"))
             })
             step_order_change(FALSE)
