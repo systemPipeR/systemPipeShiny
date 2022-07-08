@@ -73,7 +73,7 @@ BiocManager::install("systemPipeShiny")
 
 By the minimum installation, all the 3 core modules are **not** installed. You 
 can still start the app, and when you start the app and click on these modules, 
-it will tell to enable these modules, what packages to install and waht 
+it will tell to enable these modules, what packages to install and what 
 command you need to run. 
 Just follow the instructions. Install as you need.
 
