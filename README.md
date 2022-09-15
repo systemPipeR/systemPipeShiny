@@ -44,9 +44,6 @@ To see all the details of SPS, read the user manual on [our website](https://sys
 
 ## Installation
 
-SPS is under heavy development. We recommend to install the develop version 
-([most recent](#most-recent)) for the latest features. 
-
 ### Full
 
 ``` r
