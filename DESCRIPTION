@@ -74,7 +74,7 @@ Suggests:
     esquisse (>= 1.1.0),
     cicerone
 VignetteBuilder: knitr
-biocViews: Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
+biocViews: ShinyApps, Infrastructure, DataImport, Sequencing, QualityControl, ReportWriting, ExperimentalDesign, Clustering
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
