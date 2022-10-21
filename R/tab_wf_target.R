@@ -19,7 +19,7 @@ wf_targetUI <- function(id){
             The targets (metadata) file defines all input files\' path and other sample
             information of an analysis workflow. Read "Structure of targets file"
             section on
-            [our website{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-initial-targets-data)
+            [our website{blk}](https://systempipe.org/sp/spr/gettingstarted/#structure-of-initial-targets-file)
             to better undertand the structure of this file.
             This file is similar to the `colData` slot in an `SummarizedExperiment`
             object which stores sample ID and other meta information.
