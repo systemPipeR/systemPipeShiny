@@ -17,7 +17,7 @@ wf_runUI <- function(id){
             run it.
 
             If you choose to download, unzip the SPR bundle and follow SPR
-            [instructions{blk}](https://systempipe.org/sp/).
+            [exporting instructions{blk}](https://systempipe.org/sp/spr/sp_run/sal_explore/).
             ****
 
             ##### After running

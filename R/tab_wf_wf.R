@@ -27,8 +27,8 @@ wf_wfUI <- function(id){
             to restore your actions.
             3. You can use <i class="fa fa-cog"></i> to configure each step.
             4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
-            an [R step{blk}](https://systempipe.org/sp/spr/spr_run/#adding-the-first-step)
-            or a [sysArgs step{blk}](https://systempipe.org/sp/spr/spr_run/#adding-more-steps)
+            an [R step{blk}](https://systempipe.org/sp/spr/sp_run/step_interactive/#adding-the-first-step)
+            or a [sysArgs step{blk}](https://systempipe.org/sp/spr/sp_run/step_interactive/#adding-more-steps)
             . the latter has more settings, you may want
             to read the manual of SPS or SPR before that.
             5. Use <i class="fa fa-expand-arrows-alt"></i> to enlarge the left or

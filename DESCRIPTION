@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
-Version: 1.7.2
-Date: 2022-10-20
+Version: 1.7.3
+Date: 2022-10-21
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danicassol@gmail.com"),

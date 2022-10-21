@@ -1,4 +1,4 @@
-# systemPipeShiny 1.7.01
+# systemPipeShiny 1.7.03
 
 ## General:
 
@@ -7,6 +7,8 @@
 ## Minor change:
 
 -   Since `xl` modal is not supported in bs3, change all modal in WF module to `l` size.
+-   Fixed some links
+-   add BiocView keywords to description.
 
 ## Bug fix:
 
