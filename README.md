@@ -38,6 +38,9 @@ that you can also play with. You need to create a free new account. Two Biocondu
 related modules - workflow & RNAseq are not installed. They require more than 1GB 
 RAM to install and to run which is beyond the limit of a free account. 
 
+### Docker
+Use [systempipe_docker](https://github.com/systemPipeR/systempipe_docker) for instructions.
+
 ## [Documents](https://systempipe.org/sps/)
 
 To see all the details of SPS, read the user manual on [our website](https://systempipe.org/sps/).
