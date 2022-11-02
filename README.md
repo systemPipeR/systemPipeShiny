@@ -152,53 +152,54 @@ title, logo, whether to apply user authentication, and more ...
 <details>
     <summary>Expand</summary>
     
-    ### Workflow Module
-    <video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_workflow.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
-    
-    ### RNAseq Module
-    <video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_rnaseq.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
-    
-    ### Quick ggplot Module
-    <video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_ggplot.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
-    
-    ### Canvas Tool
-    <video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/canvas.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+### Workflow Module
+<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_workflow.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+
+### RNAseq Module
+<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_rnaseq.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+
+### Quick ggplot Module
+<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_ggplot.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+
+### Canvas Tool
+<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/canvas.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
 
 </details>
 
 ## Screenshots of SPS
 <details>
     <summary>Expand</summary>
-    ##### Full app
-    ![sps](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/main_app.png?raw=true)
     
-    ##### Loading screens
-    ![loading screens](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/loading_theme.gif?raw=true)
-    
-    ##### Workflow module
-    
-    ![WF](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_main.png?raw=true)
-    
-    ##### Workflow Execution
-    ![WF run](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_run.png?raw=true)
-    
-    ##### RNASeq module
-    ![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_deg.png?raw=true)
-    
-    ![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_heatmap.png?raw=true)
-    
-    ##### Canvas 
-    ![canvas](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/canvas.png?raw=true)
-    
-    ##### Admin
-    ![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_login.png?raw=true)
-    
-    ![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_server_info.png?raw=true)
-    
-    ![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_user_control.png?raw=true)
-    
-    ##### Debugging
-    ![Debugging](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/logging.png?raw=true)
+##### Full app
+![sps](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/main_app.png?raw=true)
+
+##### Loading screens
+![loading screens](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/loading_theme.gif?raw=true)
+
+##### Workflow module
+
+![WF](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_main.png?raw=true)
+
+##### Workflow Execution
+![WF run](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/wf_run.png?raw=true)
+
+##### RNASeq module
+![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_deg.png?raw=true)
+
+![RNASeq module](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/rnaseq_heatmap.png?raw=true)
+
+##### Canvas 
+![canvas](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/canvas.png?raw=true)
+
+##### Admin
+![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_login.png?raw=true)
+
+![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_server_info.png?raw=true)
+
+![Admin](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/admin_user_control.png?raw=true)
+
+##### Debugging
+![Debugging](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/logging.png?raw=true)
 
 </details>
 
