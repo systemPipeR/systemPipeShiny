@@ -13,7 +13,7 @@ Besides, SPS provides many developer tools that are distributed as [separate pac
 
 ## 4 minutes quick overview
 
-https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/sps_overview.webm?raw=true
+https://user-images.githubusercontent.com/35240440/199619635-97b6a8bd-40b1-4a64-8309-a8622e099d97.mp4
 
 ![design](https://systempipe.org/sps/img/sps_structure.png)
 
