@@ -1,3 +1,9 @@
+# systemPipeShiny 1.9.01
+
+## Major Change
+
+-   Add video tutorials to main page and all modules.
+
 # systemPipeShiny 1.7.03
 
 ## General:
