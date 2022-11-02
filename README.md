@@ -12,6 +12,7 @@ SPS can work as a general framework to build custom web apps on data analysis an
 Besides, SPS provides many developer tools that are distributed as [separate packages](#other-packages-in-systempipeshiny). 
 
 ## 4 minutes quick overview
+You need to unmuted it to hear the sound. 
 
 https://user-images.githubusercontent.com/35240440/199619635-97b6a8bd-40b1-4a64-8309-a8622e099d97.mp4
 
@@ -151,18 +152,33 @@ title, logo, whether to apply user authentication, and more ...
 ## More Tutorials 
 <details>
     <summary>Expand</summary>
-    
+
+You need to unmuted it to hear the sound. 
+
 ### Workflow Module
-<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_workflow.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_workflow.webm?raw=true" type="video/webm">
+    Video cannot be loaded or your browser does not support the video tag.
+</video>
 
 ### RNAseq Module
-<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_rnaseq.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_rnaseq.webm?raw=true" type="video/webm">
+    Video cannot be loaded or your browser does not support the video tag.
+</video>
+
 
 ### Quick ggplot Module
-<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_ggplot.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_ggplot.webm?raw=true" type="video/webm">
+    Video cannot be loaded or your browser does not support the video tag.
+</video>
 
 ### Canvas Tool
-<video src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/canvas.webm?raw=true" style="width: 100%; aspect-ratio: 16 / 9"  controls></video>
+<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/canvas.webm?raw=true" type="video/webm">
+    Video cannot be loaded or your browser does not support the video tag.
+</video>
 
 </details>
 
