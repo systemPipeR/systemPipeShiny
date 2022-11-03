@@ -61,7 +61,7 @@ core_welcomeUI <- function(id, mod_missings){
             actionBttn(
                 inputId = ns("go_down"),
                 label = "Read More",
-                icon = icon("angle-double-down"),
+                icon = icon("angles-down"),
                 style = "jelly",
                 color = "primary"
             )
@@ -70,6 +70,15 @@ core_welcomeUI <- function(id, mod_missings){
         fluidRow(
             class = "text-main welcome-text",
             spsHr(),
+            spsTitle("Quick Overview"),
+            HTML(
+                '
+                <video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+                    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/sps_overview.webm?raw=true" type="video/webm">
+                    Video cannot be loaded or your browser does not support the video tag.
+                </video>
+                '
+            ),
             markdown(
             "
             ## To start

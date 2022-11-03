@@ -133,7 +133,7 @@ wf_targetUI <- function(id){
                                width = 12,
                                textOutput(ns("box_ncol")),
                                "Number of columns",
-                               icon = icon("columns"),
+                               icon = icon("table-columns"),
                                color = "purple")
                        ),
                        fluidRow(
@@ -390,7 +390,7 @@ wf_targetServer <- function(id, shared){
                 valueBox(width = 12,
                          textOutput(ns("box_missing")),
                          "Missing files in selected column",
-                         icon = if (box_missing_val %in% c("NA", "0")) icon("check") else icon("times"),
+                         icon = if (box_missing_val %in% c("NA", "0")) icon("check") else icon("xmark"),
                          color = if (box_missing_val %in% c("NA", "0")) 'green' else 'red'
                 )
             })

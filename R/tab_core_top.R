@@ -21,7 +21,7 @@ sal"
                         shinyWidgets::actionBttn(ns("close_push"),
                                                  style = "simple",
                                                  label = "Close this workflow session",
-                                                 icon = icon("times"),
+                                                 icon = icon("xmark"),
                                                  color = "danger",
                                                  size = "sm")) %>%
                         bsHoverPopover(
@@ -103,7 +103,7 @@ sal"
                                              `data-toggle` = "dropdown",
                                              `aria-haspopup`= "true",
                                              `aria-expanded`= "false",
-                                             tags$i(class = "fa fa-cogs")
+                                             tags$i(class = "fa fa-gears")
                                          ),
                                          tags$ul(
                                              class="dropdown-menu",
@@ -251,7 +251,7 @@ sal"
                                     ),
                                     h5("0 / 0"),
                                     actionButton(
-                                        "rs-plot-canvas", "", icon = icon("paint-brush"),
+                                        "rs-plot-canvas", "", icon = icon("paintbrush"),
                                         `data-toggle`="tooltip",
                                         `data-placement`="top",
                                         title="Send to canvas",

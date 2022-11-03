@@ -4,6 +4,12 @@
 
 -   Add video tutorials to main page and all modules.
 
+## Bug Fix
+
+-   Fix FontAwesome 6.0 introduced name changes
+
+    -   One would also need to install develop version of `spsComps` and `drawer`.
+
 # systemPipeShiny 1.7.03
 
 ## General:

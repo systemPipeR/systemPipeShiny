@@ -44,7 +44,7 @@ vs_rnaseq_normalUI <- function(id){
                     up_labels = c("1"),
                     down_labels = c("Options"),
                     icons = list(
-                        icon("cog")
+                        icon("gear")
                     ),
                     completes = c(FALSE)
                 )

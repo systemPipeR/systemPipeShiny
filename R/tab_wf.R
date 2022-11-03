@@ -8,6 +8,16 @@ wfUI <- function(id){
     workflow will be prepared in [systemPipeR (SPR){blk}](https://systempipe.org/sp)
     format and it can be used in other similar compatible workflow environments.
 
+    *****
+
+    #### Expand to watch the tutorial
+    <div style="text-align: center;">
+    <video style="width: 50%; aspect-ratio: 16 / 9"  controls>
+        <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_workflow.webm?raw=true" type="video/webm">
+        Video cannot be loaded or your browser does not support the video tag.
+    </video>
+    </div>
+
     `WARNING: This module will allow users to access some server files and run
     random R code in the workflow running session (step 5). It is recommended to use
     this module locally. If there is public access, consider to provide this serivce

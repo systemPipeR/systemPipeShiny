@@ -8,15 +8,28 @@
 ## UI for vs_esquisse
 vs_esqUI <- function(id) {
     ns <- NS(id)
-    desc <- "
-    #### Make plots in one second
+    desc <- '
+    #### Make plots with any dataset interactively
 
     This module enables you to quickly upload datasets and make a {[ggplot](https://ggplot2.tidyverse.org/)}
     in a second by using some functionalities from  {[Esquisse](https://dreamrs.github.io/esquisse/index.html)}.
 
-    1. If you don't have an analysis-ready dataset, simply **confirm** and use the example
+    *****
+
+    #### Expand to watch the tutorial
+    <div style="text-align: center;">
+    <video style="width: 50%; aspect-ratio: 16 / 9"  controls>
+        <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_ggplot.webm?raw=true" type="video/webm">
+        Video cannot be loaded or your browser does not support the video tag.
+    </video>
+    </div>
+
+    This module enables you to quickly upload datasets and make a {[ggplot](https://ggplot2.tidyverse.org/)}
+    in a second by using some functionalities from  {[Esquisse](https://dreamrs.github.io/esquisse/index.html)}.
+
+    1. If you don\'t have an analysis-ready dataset, simply **confirm** and use the example
        dataset and follow the [guide](https://dreamrs.github.io/esquisse/articles/get-started.html).
-       For most UI parts, you don't need to use the guide, they should be very easy to understand.
+       For most UI parts, you don\'t need to use the guide, they should be very easy to understand.
     2. Upload your own dataset, choose the right delimiter and comment symbols to parse
        the data file. e.g., a typical `csv` file use `,` as delimiter and `#` to mark
        comment lines. Confirm this new dataset and the plot maker should be updated.
@@ -26,7 +39,7 @@ vs_esqUI <- function(id) {
     4. SPS is not a professional data editor, so editing the data table is disabled
        on this module. You may want to preprocess it before uploading.
 
-    "
+    '
     tagList(
         tags$head(
             tags$script(src="sps/js/sps_esq.js"),

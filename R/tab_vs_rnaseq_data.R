@@ -2,10 +2,20 @@
 vs_rnaseq_dataUI <- function(id) {
     ns <- NS(id)
     desc <- '
-    *****
     ###  RNA-Seq workflow downstream analysis
     In this big module, RNAseq data can be transformed, DEGs can be calculated and
     results can be visualized by different types of plots.
+
+    *****
+
+    #### Expand to watch the tutorial
+    <div style="text-align: center;">
+    <video style="width: 50%; aspect-ratio: 16 / 9"  controls>
+        <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_rnaseq.webm?raw=true" type="video/webm">
+        Video cannot be loaded or your browser does not support the video tag.
+    </video>
+    </div>
+
     *****
     #### Required files
     You need to first upload your **Raw** count table and the **targets (metadata

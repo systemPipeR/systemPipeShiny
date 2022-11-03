@@ -54,7 +54,7 @@ guideUI <- function(guide_ui){
     shinydashboard::dropdownMenu(
         type = "messages",
         headerText = "Choose a guide",
-        icon = icon("chalkboard-teacher"),
+        icon = icon("chalkboard-user"),
         .list = guide_ui
     )
 }

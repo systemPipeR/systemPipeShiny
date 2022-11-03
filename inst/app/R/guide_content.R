@@ -5,7 +5,7 @@ guide_ui <- try(list(
     shinydashboardPlus::messageItem(
         inputId = "guide_main",
         from = "Main Guide",
-        icon = icon('home'),
+        icon = icon('house'),
         message = "Brief introduction"
     )
 ))
