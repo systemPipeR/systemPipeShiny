@@ -11,6 +11,11 @@ environment with data visualization and a versatile graphical user interface.
 SPS can work as a general framework to build custom web apps on data analysis and visualization.
 Besides, SPS provides many developer tools that are distributed as [separate packages](#other-packages-in-systempipeshiny). 
 
+## 4 minutes quick overview
+You need to unmuted it to hear the sound. 
+
+https://user-images.githubusercontent.com/35240440/199619635-97b6a8bd-40b1-4a64-8309-a8622e099d97.mp4
+
 ![design](https://systempipe.org/sps/img/sps_structure.png)
 
 ## Demos
@@ -144,7 +149,30 @@ title, logo, whether to apply user authentication, and more ...
 |<img src="https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/images/spsutil.png?raw=true" align="right" height="30" width="30" />[spsUtil](https://github.com/lz100/spsUtil) | SPS utility functions |[website](https://systempipe.org/sps/dev/spsutil/)|[link](https://systempipe.org/sps/funcs/spsutil/reference/)  | NA|
 
 
+## More Tutorials 
+<details>
+    <summary>Expand</summary>
+
+You need to unmuted it to hear the sound. 
+
+### Workflow Module
+https://user-images.githubusercontent.com/35240440/199857935-64267b1a-fbb2-4a9c-a460-bafcf2f6e95a.mp4
+
+### RNAseq Module
+https://user-images.githubusercontent.com/35240440/199857988-525e4f50-df90-4bb5-bb3e-41142182ed83.mp4
+
+### Quick ggplot Module
+https://user-images.githubusercontent.com/35240440/199858014-02af7c97-daf1-4728-a9f5-cb0d4d256bf9.mp4
+
+### Canvas Tool
+https://user-images.githubusercontent.com/35240440/199858040-9d5443ff-a0ef-4bbe-b4e7-93aa442e64fa.mp4
+
+</details>
+
 ## Screenshots of SPS
+<details>
+    <summary>Expand</summary>
+    
 ##### Full app
 ![sps](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/main_app.png?raw=true)
 
@@ -175,6 +203,8 @@ title, logo, whether to apply user authentication, and more ...
 
 ##### Debugging
 ![Debugging](https://github.com/systemPipeR/systemPipeR.github.io/blob/main/static/sps/img/logging.png?raw=true)
+
+</details>
 
 ## Contact & contributions
  

@@ -2,10 +2,20 @@
 vs_rnaseq_dataUI <- function(id) {
     ns <- NS(id)
     desc <- '
-    *****
     ###  RNA-Seq workflow downstream analysis
     In this big module, RNAseq data can be transformed, DEGs can be calculated and
     results can be visualized by different types of plots.
+
+    *****
+
+    #### Expand to watch the tutorial
+    <div style="text-align: center;">
+        <video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+            <source src="https://user-images.githubusercontent.com/35240440/199857988-525e4f50-df90-4bb5-bb3e-41142182ed83.mp4" type="video/mp4">
+            Video cannot be loaded or your browser does not support the video tag.
+        </video>
+    </div>
+
     *****
     #### Required files
     You need to first upload your **Raw** count table and the **targets (metadata
@@ -112,7 +122,7 @@ vs_rnaseq_dataUI <- function(id) {
                                     justified = TRUE, status = "primary",
                                     checkIcon = list(
                                         yes = icon("ok", lib = "glyphicon"),
-                                        no = icon("", verify_fa = FALSE))
+                                        no = "")
                                 ),
                                 dynamicFile(id = ns("targets_upload")),
                                 selectizeInput(
@@ -173,7 +183,7 @@ vs_rnaseq_dataUI <- function(id) {
                                         justified = TRUE, status = "primary",
                                         checkIcon = list(
                                             yes = icon("ok", lib = "glyphicon"),
-                                            no = icon("", verify_fa = FALSE))
+                                            no = "")
                                     ),
                                     dynamicFile(id = ns("count_upload")),
                                     selectizeInput(

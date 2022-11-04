@@ -1116,7 +1116,7 @@ spsEzUI <- function(desc="", tab_title = "Tab Title",
                                     justified = TRUE, status = "primary",
                                     checkIcon = list(
                                         yes = icon("ok", lib = "glyphicon"),
-                                        no = icon("", verify_fa = FALSE))
+                                        no = "")
                                 ),
                                 dynamicFile(id = ns("df_upload")),
                                 selectizeInput(

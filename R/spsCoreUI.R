@@ -74,7 +74,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
         guide[['guide_ui']],
         shinydashboard::dropdownMenu(
             type = "notifications", badgeStatus = if(emptyIsFalse(notes[['items']])) "warning" else "success" ,
-            icon = if(emptyIsFalse(notes[['items']])) icon("exclamation-triangle") else icon("check"),
+            icon = if(emptyIsFalse(notes[['items']])) icon("triangle-exclamation") else icon("check"),
             headerText = "Notifications",
             .list = notes[['items']]
         )
@@ -123,7 +123,7 @@ spsUI <- function(tabs, mod_missings, sps_env, guide, login_message){
                 ""
             },
             if(spsOption("tab_vs_main")) shinydashboard::menuItem("Custom tabs", icon = icon("images"), tabName = "vs_main", menu_tab) else "",
-            if(spsOption("tab_canvas")) shinydashboard::menuItem("Canvas", tabName = "core_canvas", icon = icon("paint-brush")) else "",
+            if(spsOption("tab_canvas")) shinydashboard::menuItem("Canvas", tabName = "core_canvas", icon = icon("paintbrush")) else "",
             if(spsOption("tab_about")) shinydashboard::menuItem("About", icon = icon("info"), tabName = "core_about") else ""
         )
     )

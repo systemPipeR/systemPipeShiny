@@ -8,15 +8,28 @@
 ## UI for vs_esquisse
 vs_esqUI <- function(id) {
     ns <- NS(id)
-    desc <- "
-    #### Make plots in one second
+    desc <- '
+    #### Make plots with any dataset interactively
 
     This module enables you to quickly upload datasets and make a {[ggplot](https://ggplot2.tidyverse.org/)}
     in a second by using some functionalities from  {[Esquisse](https://dreamrs.github.io/esquisse/index.html)}.
 
-    1. If you don't have an analysis-ready dataset, simply **confirm** and use the example
+    *****
+
+    #### Expand to watch the tutorial
+    <div style="text-align: center;">
+        <video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+            <source src="https://user-images.githubusercontent.com/35240440/199858014-02af7c97-daf1-4728-a9f5-cb0d4d256bf9.mp4" type="video/mp4">
+            Video cannot be loaded or your browser does not support the video tag.
+        </video>
+    </div>
+
+    This module enables you to quickly upload datasets and make a {[ggplot](https://ggplot2.tidyverse.org/)}
+    in a second by using some functionalities from  {[Esquisse](https://dreamrs.github.io/esquisse/index.html)}.
+
+    1. If you don\'t have an analysis-ready dataset, simply **confirm** and use the example
        dataset and follow the [guide](https://dreamrs.github.io/esquisse/articles/get-started.html).
-       For most UI parts, you don't need to use the guide, they should be very easy to understand.
+       For most UI parts, you don\'t need to use the guide, they should be very easy to understand.
     2. Upload your own dataset, choose the right delimiter and comment symbols to parse
        the data file. e.g., a typical `csv` file use `,` as delimiter and `#` to mark
        comment lines. Confirm this new dataset and the plot maker should be updated.
@@ -26,7 +39,7 @@ vs_esqUI <- function(id) {
     4. SPS is not a professional data editor, so editing the data table is disabled
        on this module. You may want to preprocess it before uploading.
 
-    "
+    '
     tagList(
         tags$head(
             tags$script(src="sps/js/sps_esq.js"),
@@ -34,7 +47,7 @@ vs_esqUI <- function(id) {
         ),
         tabTitle("Quick {ggplot}"),
         renderDesc(id = ns("desc"), desc),
-        ## Progress
+        # Progress
         h3("Confirm dataset for quick plots", class = "text-center text-info"),
         spsTimeline(
             ns("df_status"),
@@ -65,7 +78,7 @@ vs_esqUI <- function(id) {
                                 justified = TRUE, status = "primary",
                                 checkIcon = list(
                                     yes = icon("ok", lib = "glyphicon"),
-                                    no = icon("", verify_fa = FALSE))
+                                    no = "")
                             ),
                             dynamicFile(id = ns("df_upload")),
                             selectizeInput(

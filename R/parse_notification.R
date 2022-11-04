@@ -24,7 +24,7 @@ parseNote <- function(url = spsOption('note_url')){
         if(!.checkNotePkg(note[['type']], note[['pkg_name']], note[['version']])) return(NULL)
         if(!emptyIsFalse(note[['title']])) return(NULL)
 
-        msg_icon <- if(emptyIsFalse(note[['icon']])) note[['icon']] else "info-circle"
+        msg_icon <- if(emptyIsFalse(note[['icon']])) note[['icon']] else "circle-info"
         msg_body <- if(emptyIsFalse(note[['message']])) note[['message']] else "no details"
 
         list(

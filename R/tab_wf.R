@@ -8,6 +8,16 @@ wfUI <- function(id){
     workflow will be prepared in [systemPipeR (SPR){blk}](https://systempipe.org/sp)
     format and it can be used in other similar compatible workflow environments.
 
+    *****
+
+    #### Expand to watch the tutorial
+    <div style="text-align: center;">
+        <video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+            <source src="https://user-images.githubusercontent.com/35240440/199857935-64267b1a-fbb2-4a9c-a460-bafcf2f6e95a.mp4" type="video/mp4">
+            Video cannot be loaded or your browser does not support the video tag.
+        </video>
+    </div>
+
     `WARNING: This module will allow users to access some server files and run
     random R code in the workflow running session (step 5). It is recommended to use
     this module locally. If there is public access, consider to provide this serivce

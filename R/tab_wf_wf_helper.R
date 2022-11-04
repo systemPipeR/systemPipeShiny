@@ -9,7 +9,7 @@ makeSort <- function(sal_names, step_type, ns, sal_stat, ob_index){
                 div(
                     class = classes[x], tabindex = "-1", `data-id`=x,
                     tags$span(paste0(step_type[x], " Step ", x, ": ", sal_names[x])),
-                    actionButton(ns(paste0("configure", ob_index(), "_", x)), "", title="config this step", icon = animateIcon("cog", color = "rgb(2, 117, 216, 0.5)"))
+                    actionButton(ns(paste0("configure", ob_index(), "_", x)), "", title="config this step", icon = animateIcon("gear", color = "rgb(2, 117, 216, 0.5)"))
                 )
             )
         ),

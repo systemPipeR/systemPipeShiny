@@ -25,7 +25,7 @@ wf_wfUI <- function(id){
             to delete a step.
             2. Use <i class="fa fa-undo-alt"></i> undo or <i class="fa fa-redo-alt"></i> redo
             to restore your actions.
-            3. You can use <i class="fa fa-cog"></i> to configure each step.
+            3. You can use <i class="fa fa-gear"></i> to configure each step.
             4. Use <i class="fa fa-plus"></i> to create a new step. You can create either
             an [R step{blk}](https://systempipe.org/sp/spr/sp_run/step_interactive/#adding-the-first-step)
             or a [sysArgs step{blk}](https://systempipe.org/sp/spr/sp_run/step_interactive/#adding-more-steps)
@@ -47,7 +47,7 @@ wf_wfUI <- function(id){
             If you ever add/remove/change order of a step, the dependency graph may
             fail. You then will see steps are marked in <span style="color: red">red</span>.
             You **must fix** the dependencies
-            of these steps by clicking <i class="fa fa-cog"></i> before continuing to run
+            of these steps by clicking <i class="fa fa-gear"></i> before continuing to run
             the workflow.
             ***
 

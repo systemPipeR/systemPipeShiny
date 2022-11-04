@@ -133,7 +133,7 @@ wf_targetUI <- function(id){
                                width = 12,
                                textOutput(ns("box_ncol")),
                                "Number of columns",
-                               icon = icon("columns"),
+                               icon = icon("table-columns"),
                                color = "purple")
                        ),
                        fluidRow(
@@ -169,7 +169,7 @@ wf_targetUI <- function(id){
                            choiceValues = c("default", "upload"),
                            justified = TRUE, status = "primary",
                            checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                            no = icon("", verify_fa = FALSE))
+                                            no = "")
                        ),
                        fileInput(ns("targets_upload"),
                                    "If upload, choose your target file here:",
@@ -334,7 +334,7 @@ wf_targetServer <- function(id, shared){
                     session, "target_source",
                     selected = selected_old(),
                     checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                     no = icon("", verify_fa = FALSE))
+                                     no = "")
                 )
                 selected_flag(FALSE)
             }
@@ -390,7 +390,7 @@ wf_targetServer <- function(id, shared){
                 valueBox(width = 12,
                          textOutput(ns("box_missing")),
                          "Missing files in selected column",
-                         icon = if (box_missing_val %in% c("NA", "0")) icon("check") else icon("times"),
+                         icon = if (box_missing_val %in% c("NA", "0")) icon("check") else icon("xmark"),
                          color = if (box_missing_val %in% c("NA", "0")) 'green' else 'red'
                 )
             })

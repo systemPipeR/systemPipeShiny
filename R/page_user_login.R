@@ -63,7 +63,7 @@ userLoginUI <- function(login_message){
                     id = ns("login-alert"),
                     class = "alert alert-danger",
                     style = "display: none",
-                    icon("exclamation-triangle"),
+                    icon("triangle-exclamation"),
                     tags$label("Incorrect username or password")
                 )
             )
