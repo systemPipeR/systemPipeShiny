@@ -156,29 +156,16 @@ title, logo, whether to apply user authentication, and more ...
 You need to unmuted it to hear the sound. 
 
 ### Workflow Module
-<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
-    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_workflow.webm?raw=true" type="video/webm">
-    Video cannot be loaded or your browser does not support the video tag.
-</video>
+https://user-images.githubusercontent.com/35240440/199857935-64267b1a-fbb2-4a9c-a460-bafcf2f6e95a.mp4
 
 ### RNAseq Module
-<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
-    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_rnaseq.webm?raw=true" type="video/webm">
-    Video cannot be loaded or your browser does not support the video tag.
-</video>
-
+https://user-images.githubusercontent.com/35240440/199857988-525e4f50-df90-4bb5-bb3e-41142182ed83.mp4
 
 ### Quick ggplot Module
-<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
-    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_ggplot.webm?raw=true" type="video/webm">
-    Video cannot be loaded or your browser does not support the video tag.
-</video>
+https://user-images.githubusercontent.com/35240440/199858014-02af7c97-daf1-4728-a9f5-cb0d4d256bf9.mp4
 
 ### Canvas Tool
-<video style="width: 100%; aspect-ratio: 16 / 9"  controls>
-    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/canvas.webm?raw=true" type="video/webm">
-    Video cannot be loaded or your browser does not support the video tag.
-</video>
+https://user-images.githubusercontent.com/35240440/199858040-9d5443ff-a0ef-4bbe-b4e7-93aa442e64fa.mp4
 
 </details>
 
