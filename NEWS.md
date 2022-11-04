@@ -10,6 +10,10 @@
 
     -   One would also need to install develop version of `spsComps` and `drawer`.
 
+-   Fix not working tab link on welcome page.
+
+-   Fix empty icon problems.
+
 # systemPipeShiny 1.7.03
 
 ## General:

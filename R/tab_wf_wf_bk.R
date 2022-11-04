@@ -118,7 +118,7 @@
 #                             choiceValues = c("default", "upload"),
 #                             justified = TRUE, status = "primary",
 #                             checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-#                                              no = icon("", verify_fa = FALSE))
+#                                              no = "")
 #                         ),
 #                         fileInput(ns("rmd_file"), "Choose R markdown File",
 #                                   multiple = FALSE,

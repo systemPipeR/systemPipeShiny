@@ -13,7 +13,7 @@ core_welcomeUI <- function(id, mod_missings){
     names(mod_status) <- c("wf", "rnaseq", "ggplot", "canvas")
     mod_src <- list(
         wf = list(img = "img/spr_notext.png", label = "Workflow", tabid = "wf"),
-        rnaseq = list(img = "img/rnaseq_notext.png", label = "RNAseq", tabid = "rnaseq"),
+        rnaseq = list(img = "img/rnaseq_notext.png", label = "RNAseq", tabid = "vs_rnaseq"),
         ggplot = list(img = "img/ggplot.png", label = "Quick ggplot", tabid = "vs_esq"),
         canvas = list(img = "img/drawer.png", label = "Canvas", tabid = "core_canvas")
     )
@@ -74,7 +74,7 @@ core_welcomeUI <- function(id, mod_missings){
             HTML(
                 '
                 <video style="width: 100%; aspect-ratio: 16 / 9"  controls>
-                    <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/sps_overview.webm?raw=true" type="video/webm">
+                    <source src="https://user-images.githubusercontent.com/35240440/199619635-97b6a8bd-40b1-4a64-8309-a8622e099d97.mp4" type="video/mp4">
                     Video cannot be loaded or your browser does not support the video tag.
                 </video>
                 '

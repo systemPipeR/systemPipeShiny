@@ -18,10 +18,10 @@ vs_esqUI <- function(id) {
 
     #### Expand to watch the tutorial
     <div style="text-align: center;">
-    <video style="width: 50%; aspect-ratio: 16 / 9"  controls>
-        <source src="https://github.com/systemPipeR/sp_tutorials/blob/main/videos/sps1.8/module_ggplot.webm?raw=true" type="video/webm">
-        Video cannot be loaded or your browser does not support the video tag.
-    </video>
+        <video style="width: 100%; aspect-ratio: 16 / 9"  controls>
+            <source src="https://user-images.githubusercontent.com/35240440/199858014-02af7c97-daf1-4728-a9f5-cb0d4d256bf9.mp4" type="video/mp4">
+            Video cannot be loaded or your browser does not support the video tag.
+        </video>
     </div>
 
     This module enables you to quickly upload datasets and make a {[ggplot](https://ggplot2.tidyverse.org/)}
@@ -47,7 +47,7 @@ vs_esqUI <- function(id) {
         ),
         tabTitle("Quick {ggplot}"),
         renderDesc(id = ns("desc"), desc),
-        ## Progress
+        # Progress
         h3("Confirm dataset for quick plots", class = "text-center text-info"),
         spsTimeline(
             ns("df_status"),
@@ -78,7 +78,7 @@ vs_esqUI <- function(id) {
                                 justified = TRUE, status = "primary",
                                 checkIcon = list(
                                     yes = icon("ok", lib = "glyphicon"),
-                                    no = icon("", verify_fa = FALSE))
+                                    no = "")
                             ),
                             dynamicFile(id = ns("df_upload")),
                             selectizeInput(

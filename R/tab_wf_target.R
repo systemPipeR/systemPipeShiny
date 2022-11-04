@@ -169,7 +169,7 @@ wf_targetUI <- function(id){
                            choiceValues = c("default", "upload"),
                            justified = TRUE, status = "primary",
                            checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                            no = icon("", verify_fa = FALSE))
+                                            no = "")
                        ),
                        fileInput(ns("targets_upload"),
                                    "If upload, choose your target file here:",
@@ -334,7 +334,7 @@ wf_targetServer <- function(id, shared){
                     session, "target_source",
                     selected = selected_old(),
                     checkIcon = list(yes = icon("ok", lib = "glyphicon"),
-                                     no = icon("", verify_fa = FALSE))
+                                     no = "")
                 )
                 selected_flag(FALSE)
             }
