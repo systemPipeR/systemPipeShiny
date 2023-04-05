@@ -3,7 +3,8 @@
 core_welcomeUI <- function(id, mod_missings){
     ns <- NS(id)
     # disabled will be gray color, pass normal color, disabled orange color
-    mod_status <- lapply(c("wf", "rnaseq", "ggplot", "canvas"), function(x) {
+    # here the lapply for RNAseq has to be 'rna', but other places need to be `rnaseq`
+    mod_status <- lapply(c("wf", "rna", "ggplot", "canvas"), function(x) {
         if (x == "canvas") return(
             if(spsOption("tab_canvas")) "pass" else "disabled"
         )
