@@ -77,31 +77,24 @@
   margin-top: calc(1vw - 110px);
   margin-left: 2vw;
 }
-.card.rnaseq {
-  margin-top: calc(1vw - 150px);
-  margin-left: 23vw;
-}
-
-.card.ggplot {
-  margin-top: calc(1vw - 150px);
-  margin-left: 43vw;
-}
 
 .card.canvas {
   margin-top: calc(1vw - 250px);
   margin-left: 65vw;
 }
 
+.card.visualization {
+  margin-top: calc(1vw - 150px);
+  margin-left: 35vw;
+}
+
+
 @media screen and (max-width: 1160px) {
   .card.wf {
     margin-top: calc(1vw - 50px);
   }
-  .card.rnaseq {
-    margin-top: calc(1vw - 100px);
-  }
-
-  .card.ggplot {
-    margin-top: calc(1vw - 50px);
+  .card.visualization {
+    margin-top: calc(1vw - 130px);
   }
 
   .card.canvas {
@@ -109,23 +102,15 @@
   }
 }
 
-@media screen and (max-width: 767px) {
-  .card.wf {
-    margin-left: 2vw;
+@media screen and (max-width: 930px) {
+  .welcome-cards {
+    display: flex;
+    justify-content: space-around;
   }
-  .card.rnaseq {
-    margin-left: 30vw;
+  .card.wf, .card.visualization, .card.canvas  {
+    margin-top: 0;
+    margin-left: 0;
   }
-
-  .card.ggplot {
-    margin-left: 50vw;
-  }
-
-  .card.canvas {
-    margin-top: calc(1vw - 150px);
-    margin-left: 75vw;
-  }
-
 }
 
 .welcome-header .card span {
@@ -141,6 +126,20 @@
   padding-right: 15px;
 }
 
+#core_welcome-vis_modal .modal-dialog {
+    top: 50vh;
+    transform: translateY(-50%);
+}
+
+#core_welcome-vis_modal .modal-body .cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#core_welcome-vis_modal .mod-desc {
+  padding-top: 20px;
+}
 
 #core_welcome-go_down {
   position: absolute;

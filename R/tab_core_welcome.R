@@ -2,7 +2,8 @@
 #' @noRd
 core_welcomeUI <- function(id, mod_missings){
     ns <- NS(id)
-    mod_status <- lapply(c("wf", "rna", "ggplot", "canvas"), function(x) {
+    # disabled will be gray color, pass normal color, disabled orange color
+    mod_status <- lapply(c("wf", "rnaseq", "ggplot", "canvas"), function(x) {
         if (x == "canvas") return(
             if(spsOption("tab_canvas")) "pass" else "disabled"
         )
@@ -10,12 +11,14 @@ core_welcomeUI <- function(id, mod_missings){
             if(length(mod_missings[[x]]) == 0) "pass" else "missing"
         }
     })
-    names(mod_status) <- c("wf", "rnaseq", "ggplot", "canvas")
+    mod_status[[5]] = 'pass'
+    names(mod_status) <- c("wf", "rnaseq", "ggplot", "canvas", "visualization")
     mod_src <- list(
         wf = list(img = "img/spr_notext.png", label = "Workflow", tabid = "wf"),
         rnaseq = list(img = "img/rnaseq_notext.png", label = "RNAseq", tabid = "vs_rnaseq"),
         ggplot = list(img = "img/ggplot.png", label = "Quick ggplot", tabid = "vs_esq"),
-        canvas = list(img = "img/drawer.png", label = "Canvas", tabid = "core_canvas")
+        canvas = list(img = "img/drawer.png", label = "Canvas", tabid = "core_canvas"),
+        visualization = list(img = "img/visualization.png", label = "Data Visualization", tabid = "")
     )
 
     modPopover <- function(tag, status) {
@@ -37,26 +40,65 @@ core_welcomeUI <- function(id, mod_missings){
         tags$style('.skin-blue .main-header .navbar {background-color: #2c8abf;}'),
         div(class = "welcome-header",
             div(id = "welcome-svg"),
-            lapply(c("wf", "rnaseq", "ggplot", "canvas"), function(x) {
-                div(
-                    class = glue("card {x}"), `data-tilt`="", `data-tilt-max`="30",
-                    `data-tilt-scale`="1.3", `data-tilt-speed`="800",
-                    `data-desc` = x, `data-status` = mod_status[[x]],
-                    tags$img(src = mod_src[[x]][['img']]),
-                    tags$span(mod_src[[x]][['label']]),
-                    onclick= glue("document.querySelector('a[href=\"#shiny-tab-{mod_src[[x]][['tabid']]}\"]').click()")
-                ) %>% modPopover(mod_status[[x]])
-            }),
+            div(
+                class = "welcome-cards",
+                lapply(c("wf", "visualization", "canvas"), function(x) {
+                    div(
+                        class = glue("card {x}"), `data-tilt`="", `data-tilt-max`="30",
+                        `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                        `data-desc` = x, `data-status` = mod_status[[x]],
+                        tags$img(src = mod_src[[x]][['img']]),
+                        tags$span(mod_src[[x]][['label']]),
+                        onclick= glue("document.querySelector('a[href=\"#shiny-tab-{mod_src[[x]][['tabid']]}\"]').click()")
+                    ) %>% modPopover(mod_status[[x]])
+                })
+            ),
             div(
                 class = "mod-desc",
                 h5(`data-desc` = "wf", "Workflow Module: Choose, design, and run systemPipeR workflows
                    interactively in a guided manner."),
-                h5(`data-desc` = "rnaseq", "RNAseq Module: perform downstream
-                   RNAseq analysis, like clustering, DEG, plotting, and more."),
-                h5(`data-desc` = "ggplot", "Quick ggplot Module: Make ggplots
-                   from any tabular-like datasets users provide."),
+                h5(`data-desc` = "visualization", "Visualization Modules: interpret
+                   the meaning behind raw data by making plots and charts."),
                 h5(`data-desc` = "canvas", "Canvas Tool: Interactively edit plots you made in all
                    other modules.")
+            ),
+            # create a modal to hold visualization cards, rndseq and ggplot
+            div(
+                class="modal fade", id=ns('vis_modal'), tabindex="-1", role="dialog", `aria-labelledby`=ns('vis_modal-label'),
+                div(
+                    class="modal-dialog", role="document",
+                    div(
+                        class="modal-content",
+                        div(
+                            class="modal-header",
+                            HTML('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span style="font-size: 4rem;" aria-hidden="true">&times;</span></button>'),
+                            h4(class="modal-title", id=ns('vis_modal-label'), "Choose visualization submodules"),
+                            div(
+                                class="modal-body",
+                                div(
+                                    class = "cards",
+                                    lapply(c("ggplot", "rnaseq"), function(x) {
+                                        div(
+                                            class = glue("card {x}"), `data-tilt`="", `data-tilt-max`="30",
+                                            `data-tilt-scale`="1.3", `data-tilt-speed`="800",
+                                            `data-desc` = x, `data-status` = mod_status[[x]],
+                                            tags$img(src = mod_src[[x]][['img']]),
+                                            tags$span(mod_src[[x]][['label']]),
+                                            onclick= glue("document.querySelector('a[href=\"#shiny-tab-{mod_src[[x]][['tabid']]}\"]').click()")
+                                        ) %>% modPopover(mod_status[[x]])
+                                    })
+                                ),
+                                div(
+                                    class = "mod-desc", style = "height: 130px;",
+                                    h5(`data-desc` = "ggplot", "Quick ggplot Module: Make ggplots
+                                    from any tabular-like datasets users provide."),
+                                    h5(`data-desc` = "rnaseq", "RNAseq Module: perform downstream
+                                    RNAseq analysis, like clustering, DEG, plotting, and more.")
+                                )
+                            )
+                        )
+                    )
+                )
             ),
             actionBttn(
                 inputId = ns("go_down"),
