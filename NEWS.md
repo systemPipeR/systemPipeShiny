@@ -1,4 +1,4 @@
-# systemPipeShiny 1.9.01
+# systemPipeShiny 1.9.04
 
 ## Major Change
 
@@ -20,6 +20,8 @@
 -   Fix not working tab link on welcome page.
 
 -   Fix empty icon problems.
+
+-   Fix bug where RNAseq module is always disabled
 
 # systemPipeShiny 1.7.03
 
