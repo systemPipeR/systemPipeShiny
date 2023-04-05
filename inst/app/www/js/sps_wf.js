@@ -52,10 +52,10 @@ function findWFimage(choice){
      case 'Chipseq':
        img_src = 'sps/img/chipseq.png';
        break;
-     case 'Empty':
+     case 'Empty workflow (start from scratch)':
        img_src = 'sps/img/empty.png';
        break;
-     case 'Existing':
+     case 'Upload custom workflows':
        img_src = 'sps/img/exist.png';
        break;
      case 'Example':

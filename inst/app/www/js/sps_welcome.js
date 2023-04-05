@@ -23,8 +23,17 @@ $(function(){
       behavior: "smooth"
     });
   })
+  // special handling for the vis card
+  function visCard(el) {
+    $(el).attr('onclick', '');
+    $(el).attr('type', 'button');
+    $(el).attr('data-target', '#core_welcome-vis_modal');
+    $(el).attr('data-toggle', 'modal');
+  }
 
   $('.welcome-header .card').map(function(){
+    if ($(this).attr('data-desc') === "visualization") visCard(this);
+
     var status = $(this).attr('data-status');
     if (status === "disabled") {
       $(this).addClass("disabled").attr('onclick', '');
@@ -41,5 +50,9 @@ $(function(){
     });
   });
 
+  // close modal on clicking vis modal cards
+  $('#core_welcome-vis_modal .card:not(.disabled)').on('click', function() {
+      $('#core_welcome-vis_modal').modal('hide');
+  });
 });
 
