@@ -7,6 +7,9 @@
 ## Minor Change
 
 -   Replace the major icons on welcome page, now it has 3 circles instead of 3, reflecting the 3 major functionalities of SPS, workflow, visualization, and canvas.
+-   Changed some namings in workflow creation options
+    -   empty: Start from scratch
+    -   existing: upload custom workflows
 
 ## Bug Fix
 

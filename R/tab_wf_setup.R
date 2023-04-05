@@ -21,18 +21,18 @@ wf_setupUI <- function(id){
         #### Template workflows
         SPR has some preconfigured workflows that you can generate in SPS with
         one click. Supported template workflows are: **2**. *RNASeq*, **3**. *VarSeq*, **4**. *RiboSeq*,
-        **5**. *ChipSeq*. You can also choose an **6**. *existing* SPR workflow directory or create
-        an **7**. *empty* SPR workflow directory.
+        **5**. *ChipSeq*. You can also choose an **6**. *custom workflow* SPR workflow directory or create
+        an **7**. *empty (from scratch)* SPR workflow directory.
 
         **1**. Example is a very tiny workflow. It will runs some simple commands to
         show you how workflows in SPR work.
 
-        - All choices except "existing" will directly use the targets file and workflow
+        - All choices except "custom workflow" will directly use the targets file and workflow
         file inside the SPR project folder as default or you can upload a new one.
         When you "Add to task" targets or workflow file, these files in the project
         directory will be overwritten back to the same file.
 
-        - If you choose the "*existing*" option, we cannot guess the targets file name
+        - If you choose the "*custom workflow*" option, we cannot guess the targets file name
         and workflow file name. You can only upload the file. App will not detect and
         open the files for you. When you click "Add to task" in targets preparation step,
         a file with "*targets.txt*" will be written to the workflow directory. Every time you click
@@ -76,8 +76,8 @@ wf_setupUI <- function(id){
                         inputId = ns("choose_wf"),
                         label = "Choose a workflow template",
                         choices = c(Example="eg", RNAseq="rnaseq", Varseq="varseq",
-                                    Riboseq="riboseq", Chipseq="chipseq", Empty="new",
-                                    Existing="exist"
+                                    Riboseq="riboseq", Chipseq="chipseq", `Empty workflow (start from scratch)`="new",
+                                    `Upload custom workflows`="exist"
                                     ),
                         options = list(style = "btn-primary")
                     )
@@ -96,7 +96,7 @@ wf_setupUI <- function(id){
             fluidRow(
                 class = "form-group shiny-input-container sps-file center-block",
                 tags$label(class="control-label",
-                           "Select where you want to create a new workflow or use an existing workflow directory"),
+                           "Select where you want to create a new workflow or use an existing (custom) workflow directory"),
                 p("Default is current directory."),
                 div(class="input-group",
                     tags$label(class="input-group-btn input-group-prepend",
@@ -167,7 +167,8 @@ wf_setupUI <- function(id){
                 class = "text-danger", id = ns("warn_exist"),
                 HTML(
                 "<li>
-                You are selecting an existing SPR workflow project directory.
+                You have selected the custom workflow option. Choose your existing
+                workflow template file and the initial targets file location.
                 Make sure you have the project folder's writing permission and
                 it has subfolders: <b>'data'</b>, <b>'param'</b>, <b>'results'</b>.
                 You are <b>required</b> to choose the <b>targets file</b> and <b>workflow file</b>
