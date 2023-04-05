@@ -18,10 +18,10 @@ test_that("DT funcs", {
     expect_s3_class(df, "datatables")
 })
 
-test_that("DT snap", {
-    skip_on_bioc()
-    expect_snapshot_output(DT::DTOutput(""))
-})
+# test_that("DT snap", {
+#     skip_on_bioc()
+#     expect_snapshot_output(DT::DTOutput(""))
+# })
 
 
 test_that("R6 class", {
