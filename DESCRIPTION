@@ -1,7 +1,7 @@
 Package: systemPipeShiny
 Title: systemPipeShiny: An Interactive Framework for Workflow Management and Visualization
-Version: 1.11.0
-Date: 2023-04-05
+Version: 1.11.1
+Date: 2023-10-16
 Authors@R: c(
     person(given = "Le", family = "Zhang", role = c("aut", "cre"), email = "le.zhang001@email.ucr.edu"),
     person(given = "Daniela", family = "Cassol", role = c("aut"), email = "danicassol@gmail.com"),
@@ -14,7 +14,7 @@ Depends:
     R (>= 4.0.0),
     shiny (>= 1.6.0),
     spsUtil (>= 0.2.2),
-    spsComps (>= 0.3.2),
+    spsComps (>= 0.3.3),
     drawer (>= 0.2)
 Imports:
     DT,
