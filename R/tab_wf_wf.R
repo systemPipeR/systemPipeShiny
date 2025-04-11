@@ -93,9 +93,9 @@ wf_wfUI <- function(id){
                         br(), br(), br(), spsHr(other_color = "rgb(2, 117, 216, 0.5)"),
                         div(
                             class = 'step-box-control',
-                            tags$button(class="fa fa-undo-alt shiny-bound-input action-button", id=ns("step_undo"), style="color: #3c8dbc") %>%
+                            actionButton(ns("step_undo"), "", icon = icon("undo-alt"), style="color: #3c8dbc", class = "") %>%
                                 bsTip("Undo", placement = "bottom"),
-                            tags$button(class="fa fa-redo-alt shiny-bound-input action-button", id=ns("step_redo"), style="color: #3c8dbc") %>%
+                            actionButton(ns("step_redo"), "", icon = icon("redo-alt"), style="color: #3c8dbc") %>%
                                 bsTip("Redo", placement = "bottom"),
                             div(
                                 class = "wf-history-panel",
@@ -105,11 +105,11 @@ wf_wfUI <- function(id){
                                     tags$tr(tags$td("Next history:"), tags$td("3"))
                                 )
                             ),
-                            tags$i(class="fa fa-plus shiny-bound-input action-button", id=ns("step_new"), style="color: #5cb85c;") %>%
+                            actionButton(ns("step_new"), "", icon = icon("plus"), style="color: #5cb85c;") %>%
                                 bsTip("Add a new step", placement = "bottom", status = "success"),
-                            div(id=ns("step_trash"), class="step-trash", tags$span(), tags$i()) %>%
+                            div(id = ns("step_trash"), class="step-trash", tags$span(), tags$i()) %>%
                                 bsTip("Drag here to delete a step", placement = "bottom", status = "danger"),
-                            tags$button(class="fa fa-save shiny-bound-input action-button", id=ns("totask"))%>%
+                            actionButton(ns("totask"), "", icon = icon("save"), style="color: black;")%>%
                                 bsPop("Add to SPS task", placement = "bottom",
                                       "Send the workflow to SPS workflow module manager so you can run it.")
                         )

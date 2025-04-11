@@ -109,11 +109,20 @@
 
 .step-box-control > button {
     width: 4rem;
-    margin: -5px 0;
+    margin: -20px 0;
     font-size: 4rem;
     top: 0;
     border: none;
-    background-color: transparent;
+    background-color: transparent !important;
+    &:active {
+        box-shadow: unset;
+        -webkit-box-shadow: unset;
+        -moz-box-shadow: unset;
+        -o-box-shadow: unset;
+    }
+    &:focus-visible, &:focus {
+        outline: none !important;
+    }
 }
 
 .step-box-control > button[disabled] {
