@@ -371,10 +371,7 @@ spsOptDefaults <- function(app_path = getwd()){
 #' @rdname spsOptDefaults
 #' @param show_legend bool, show the color legend?
 #' @importFrom crayon green blue make_style chr
-#'
-#' @return
 #' @export
-#'
 spsOptions <- function(app_path = getwd(), show_legend = TRUE){
     if(!file.exists(glue("{app_path}/config/sps_options.yaml"))) {
         spserror(glue("{app_path}/config/sps_options.yaml does not exist"))
@@ -590,16 +587,18 @@ checkModulePkgs_internal <- function(module_name, pkgs, mol_title){
                 BiocManager::install(c("{missing_str}"))\n
                 '
             ))
+            return(glue(
+                '
+                ```r
+                if (!requireNamespace("BiocManager", quietly=TRUE))
+                    install.packages("BiocManager")
+                BiocManager::install(c("{missing_str}"))
+                ```
+                '
+            ))
+        } else {
+            return(character(0))
         }
-        glue(
-        '
-        ```r
-        if (!requireNamespace("BiocManager", quietly=TRUE))
-            install.packages("BiocManager")
-        BiocManager::install(c("{missing_str}"))
-        ```
-        '
-        )
     } else NULL
 }
 

@@ -7,13 +7,7 @@ $(function(){
     });
     var svg = $("#welcome-svg > svg");
     svg.removeAttr("height").removeAttr("width");
-    //$("#sps_header_logo").fadeIn(2000);
-    //hoverLogo(document.querySelector("#sps_header_logo"));
-    VanillaTilt.init(document.querySelector("#sps_header_logo > g"), {
-      "full-page-listening": true,
-      glare: true,
-      max: 45
-    });
+    $("#sps_header_logo").fadeIn(2000);
   })();
 
 

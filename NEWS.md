@@ -1,3 +1,20 @@
+# systemPipeShiny 1.18.0
+## Major Change
+- Update to systemPipeR 2.12 and systemPipeRdata 2.10
+- Add support for Single Cell RNAseq, BLAST, and Cheminformatics workflows
+  which are new in systemPipeR. 
+
+## Minor Change
+- use `esquisse_container` instead of `esquisseContainer` due to the new version of {esquisse}.
+
+## Bug Fix
+- Fix shiny 1.10 update that caused some buttons not working.
+- Fix welcome page logo animation not working, now remove the animation.
+- Fix checkModulePkgs_internal had wrong logic when all packages are installed.
+  Now return the correct value.
+
+
+
 # systemPipeShiny 1.9.04
 
 ## Major Change
