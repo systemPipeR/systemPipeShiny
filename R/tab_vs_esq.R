@@ -116,7 +116,7 @@ vs_esqUI <- function(id) {
                         esquisse::esquisse_ui(
                             id = ns("esq"),
                             header = FALSE,
-                            container = esquisse::esquisseContainer(height = "700px")
+                            container = esquisse::esquisse_container(height = "700px")
                         )
                     ),
                     div(
