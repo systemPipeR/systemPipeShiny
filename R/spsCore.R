@@ -590,16 +590,18 @@ checkModulePkgs_internal <- function(module_name, pkgs, mol_title){
                 BiocManager::install(c("{missing_str}"))\n
                 '
             ))
+            return(glue(
+                '
+                ```r
+                if (!requireNamespace("BiocManager", quietly=TRUE))
+                    install.packages("BiocManager")
+                BiocManager::install(c("{missing_str}"))
+                ```
+                '
+            ))
+        } else {
+            return(character(0))
         }
-        glue(
-        '
-        ```r
-        if (!requireNamespace("BiocManager", quietly=TRUE))
-            install.packages("BiocManager")
-        BiocManager::install(c("{missing_str}"))
-        ```
-        '
-        )
     } else NULL
 }
 
