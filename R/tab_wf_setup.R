@@ -75,10 +75,18 @@ wf_setupUI <- function(id){
                     selectizeInput(
                         inputId = ns("choose_wf"),
                         label = "Choose a workflow template",
-                        choices = c(Example="eg", RNAseq="rnaseq", Varseq="varseq",
-                                    Riboseq="riboseq", Chipseq="chipseq", `Empty workflow (start from scratch)`="new",
-                                    `Upload custom workflows`="exist"
-                                    ),
+                        choices = c(
+                            Example="eg",
+                            RNAseq="rnaseq",
+                            Varseq="varseq",
+                            Riboseq="riboseq",
+                            Chipseq="chipseq",
+                            `Single Cell RNAseq`="SPscrna",
+                            BLAST="SPblast",
+                            `Cheminformatics Drug Similarity`="SPcheminfo",
+                            `Empty workflow (start from scratch)`="new",
+                            `Upload custom workflows`="exist"
+                        ),
                         options = list(style = "btn-primary")
                     )
                 ),
@@ -153,8 +161,8 @@ wf_setupUI <- function(id){
                         If the required command
                         line tools are not installed, the workflow will fail. Please
                         make sure you install them and the path is exported."),
-                HTML("<li>Current version of SPS (>= 1.6) is compatible with the latest
-                     SPR (>= 2.2.0) and SPRdata (>=1.24.0). Make sure you install the
+                HTML("<li>Current version of SPS (>= 1.17) is compatible with the latest
+                     SPR (>= 2.12.0) and SPRdata (>=2.10.0). Make sure you install the
                      correct versions.
                      </li>")
             ),
@@ -350,6 +358,7 @@ wf_setupServer <- function(id, shared){
                 "new" = normalizePath(file.path(final_env_path, "targets.txt")),
                 "exist" = wf_targets_path(),
                 "eg" = normalizePath(file.path(final_env_path, "targets.txt")),
+                "SPblast" = normalizePath(file.path(final_env_path, "targets_blast.txt")),
                 normalizePath(file.path(final_env_path, "targetsPE.txt"))
             ), blocking_level = "error")
             updateProgressBar(session, "gen_wf_pg", 4, 6, title = "update project info - workflow file")
@@ -359,6 +368,9 @@ wf_setupServer <- function(id, shared){
                 "varseq" = normalizePath(file.path(final_env_path, "systemPipeVARseq.Rmd")),
                 "riboseq" = normalizePath(file.path(final_env_path, "systemPipeRIBOseq.Rmd")),
                 "chipseq" = normalizePath(file.path(final_env_path, "systemPipeChIPseq.Rmd")),
+                "SPscrna" = normalizePath(file.path(final_env_path, "SPscrna.Rmd")),
+                "SPblast" = normalizePath(file.path(final_env_path, "SPblast.Rmd")),
+                "SPcheminfo" = normalizePath(file.path(final_env_path, "SPcheminfo.Rmd")),
                 "exist" = wf_wf_path(),
                 "eg" = normalizePath(file.path(final_env_path, "systemPipeExample.Rmd")),
                 "new" = normalizePath(file.path(final_env_path, "new.Rmd"))
@@ -406,6 +418,19 @@ wf_setupServer <- function(id, shared){
         observeEvent(input$confirm_next, {
             req(input$confirm_next)
             shinyjs::runjs("$('#wf-wf_panel-1-heading > h4').trigger('click');")
+            if (input$choose_wf %in% c("SPscrna", "SPcheminfo")) {
+                shinyWidgets::sendSweetAlert(
+                    session = session,
+                    type = "info",
+                    title = "No need of targets",
+                    html = TRUE,
+                    text = h4(
+                        tags$b("Single Cell and Cheminformatics workflows"),
+                        " do not require a targets file. You can directly click
+                        'Add to task' to skip the targets preparation step."
+                    )
+                )
+            }
         })
     }
     moduleServer(id, module)
