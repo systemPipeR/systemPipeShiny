@@ -58,35 +58,35 @@ db$accMatch("user", "user", role = "admin", match_role = TRUE)
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{spsAccount$new()}}
-\item \href{#method-accList}{\code{spsAccount$accList()}}
-\item \href{#method-accAdd}{\code{spsAccount$accAdd()}}
-\item \href{#method-accRemove}{\code{spsAccount$accRemove()}}
-\item \href{#method-accPassChange}{\code{spsAccount$accPassChange()}}
-\item \href{#method-accRoleChange}{\code{spsAccount$accRoleChange()}}
-\item \href{#method-accMatch}{\code{spsAccount$accMatch()}}
-\item \href{#method-clone}{\code{spsAccount$clone()}}
+\item \href{#method-spsaccount-new}{\code{spsAccount$new()}}
+\item \href{#method-spsaccount-accList}{\code{spsAccount$accList()}}
+\item \href{#method-spsaccount-accAdd}{\code{spsAccount$accAdd()}}
+\item \href{#method-spsaccount-accRemove}{\code{spsAccount$accRemove()}}
+\item \href{#method-spsaccount-accPassChange}{\code{spsAccount$accPassChange()}}
+\item \href{#method-spsaccount-accRoleChange}{\code{spsAccount$accRoleChange()}}
+\item \href{#method-spsaccount-accMatch}{\code{spsAccount$accMatch()}}
+\item \href{#method-spsaccount-clone}{\code{spsAccount$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb">}\href{../../systemPipeShiny/html/spsDb.html#method-createDb}{\code{systemPipeShiny::spsDb$createDb()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel">}\href{../../systemPipeShiny/html/spsDb.html#method-queryDel}{\code{systemPipeShiny::spsDb$queryDel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert">}\href{../../systemPipeShiny/html/spsDb.html#method-queryInsert}{\code{systemPipeShiny::spsDb$queryInsert()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate">}\href{../../systemPipeShiny/html/spsDb.html#method-queryUpdate}{\code{systemPipeShiny::spsDb$queryUpdate()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue">}\href{../../systemPipeShiny/html/spsDb.html#method-queryValue}{\code{systemPipeShiny::spsDb$queryValue()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp">}\href{../../systemPipeShiny/html/spsDb.html#method-queryValueDp}{\code{systemPipeShiny::spsDb$queryValueDp()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="decrypt">}\href{../../systemPipeShiny/html/spsEncryption.html#method-decrypt}{\code{systemPipeShiny::spsEncryption$decrypt()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="encrypt">}\href{../../systemPipeShiny/html/spsEncryption.html#method-encrypt}{\code{systemPipeShiny::spsEncryption$encrypt()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyChange">}\href{../../systemPipeShiny/html/spsEncryption.html#method-keyChange}{\code{systemPipeShiny::spsEncryption$keyChange()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyGet">}\href{../../systemPipeShiny/html/spsEncryption.html#method-keyGet}{\code{systemPipeShiny::spsEncryption$keyGet()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-createDb'><code>systemPipeShiny::spsDb$createDb()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryDel'><code>systemPipeShiny::spsDb$queryDel()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryInsert'><code>systemPipeShiny::spsDb$queryInsert()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryUpdate'><code>systemPipeShiny::spsDb$queryUpdate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValue'><code>systemPipeShiny::spsDb$queryValue()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValueDp'><code>systemPipeShiny::spsDb$queryValueDp()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="decrypt"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-decrypt'><code>systemPipeShiny::spsEncryption$decrypt()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="encrypt"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-encrypt'><code>systemPipeShiny::spsEncryption$encrypt()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyChange"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-keyChange'><code>systemPipeShiny::spsEncryption$keyChange()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyGet"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-keyGet'><code>systemPipeShiny::spsEncryption$keyGet()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-spsaccount-new"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-new}{}}}
 \subsection{Method \code{new()}}{
 initialize a new SPS account container
 \subsection{Usage}{
@@ -95,8 +95,8 @@ initialize a new SPS account container
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-accList"></a>}}
-\if{latex}{\out{\hypertarget{method-accList}{}}}
+\if{html}{\out{<a id="method-spsaccount-accList"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-accList}{}}}
 \subsection{Method \code{accList()}}{
 list all accounts of the app. Returns a dataframe
 \subsection{Usage}{
@@ -114,8 +114,8 @@ list all accounts of the app. Returns a dataframe
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-accAdd"></a>}}
-\if{latex}{\out{\hypertarget{method-accAdd}{}}}
+\if{html}{\out{<a id="method-spsaccount-accAdd"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-accAdd}{}}}
 \subsection{Method \code{accAdd()}}{
 add an account to use the app
 \subsection{Usage}{
@@ -137,8 +137,8 @@ add an account to use the app
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-accRemove"></a>}}
-\if{latex}{\out{\hypertarget{method-accRemove}{}}}
+\if{html}{\out{<a id="method-spsaccount-accRemove"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-accRemove}{}}}
 \subsection{Method \code{accRemove()}}{
 remove an account
 \subsection{Usage}{
@@ -156,8 +156,8 @@ remove an account
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-accPassChange"></a>}}
-\if{latex}{\out{\hypertarget{method-accPassChange}{}}}
+\if{html}{\out{<a id="method-spsaccount-accPassChange"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-accPassChange}{}}}
 \subsection{Method \code{accPassChange()}}{
 change password of an account
 \subsection{Usage}{
@@ -177,8 +177,8 @@ change password of an account
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-accRoleChange"></a>}}
-\if{latex}{\out{\hypertarget{method-accRoleChange}{}}}
+\if{html}{\out{<a id="method-spsaccount-accRoleChange"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-accRoleChange}{}}}
 \subsection{Method \code{accRoleChange()}}{
 change the role of an account
 \subsection{Usage}{
@@ -198,8 +198,8 @@ change the role of an account
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-accMatch"></a>}}
-\if{latex}{\out{\hypertarget{method-accMatch}{}}}
+\if{html}{\out{<a id="method-spsaccount-accMatch"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-accMatch}{}}}
 \subsection{Method \code{accMatch()}}{
 Try to see if the account name exists and has the right
 password and role type, useful for login authentification.
@@ -230,8 +230,8 @@ password and role type, useful for login authentification.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-spsaccount-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

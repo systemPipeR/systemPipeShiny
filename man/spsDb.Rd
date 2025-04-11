@@ -41,19 +41,19 @@ mydb$queryDel("sps_meta", WHERE = "value = '234'")
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{spsDb$new()}}
-\item \href{#method-createDb}{\code{spsDb$createDb()}}
-\item \href{#method-queryValue}{\code{spsDb$queryValue()}}
-\item \href{#method-queryValueDp}{\code{spsDb$queryValueDp()}}
-\item \href{#method-queryUpdate}{\code{spsDb$queryUpdate()}}
-\item \href{#method-queryDel}{\code{spsDb$queryDel()}}
-\item \href{#method-queryInsert}{\code{spsDb$queryInsert()}}
-\item \href{#method-clone}{\code{spsDb$clone()}}
+\item \href{#method-spsDb-new}{\code{spsDb$new()}}
+\item \href{#method-spsDb-createDb}{\code{spsDb$createDb()}}
+\item \href{#method-spsDb-queryValue}{\code{spsDb$queryValue()}}
+\item \href{#method-spsDb-queryValueDp}{\code{spsDb$queryValueDp()}}
+\item \href{#method-spsDb-queryUpdate}{\code{spsDb$queryUpdate()}}
+\item \href{#method-spsDb-queryDel}{\code{spsDb$queryDel()}}
+\item \href{#method-spsDb-queryInsert}{\code{spsDb$queryInsert()}}
+\item \href{#method-spsDb-clone}{\code{spsDb$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-spsDb-new"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-new}{}}}
 \subsection{Method \code{new()}}{
 initialize a new class object
 \subsection{Usage}{
@@ -62,8 +62,8 @@ initialize a new class object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-createDb"></a>}}
-\if{latex}{\out{\hypertarget{method-createDb}{}}}
+\if{html}{\out{<a id="method-spsDb-createDb"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-createDb}{}}}
 \subsection{Method \code{createDb()}}{
 Create a SPS database
 \subsection{Usage}{
@@ -81,8 +81,8 @@ if not exists}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queryValue"></a>}}
-\if{latex}{\out{\hypertarget{method-queryValue}{}}}
+\if{html}{\out{<a id="method-spsDb-queryValue"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-queryValue}{}}}
 \subsection{Method \code{queryValue()}}{
 Query database
 \subsection{Usage}{
@@ -107,8 +107,8 @@ query result, usually a dataframe
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queryValueDp"></a>}}
-\if{latex}{\out{\hypertarget{method-queryValueDp}{}}}
+\if{html}{\out{<a id="method-spsDb-queryValueDp"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-queryValueDp}{}}}
 \subsection{Method \code{queryValueDp()}}{
 Query database with \link{dplyr} grammar
 
@@ -141,8 +141,8 @@ query result, usually a tibble
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queryUpdate"></a>}}
-\if{latex}{\out{\hypertarget{method-queryUpdate}{}}}
+\if{html}{\out{<a id="method-spsDb-queryUpdate"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-queryUpdate}{}}}
 \subsection{Method \code{queryUpdate()}}{
 update(modify) the value in db
 \subsection{Usage}{
@@ -166,8 +166,8 @@ update(modify) the value in db
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queryDel"></a>}}
-\if{latex}{\out{\hypertarget{method-queryDel}{}}}
+\if{html}{\out{<a id="method-spsDb-queryDel"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-queryDel}{}}}
 \subsection{Method \code{queryDel()}}{
 delete value in db
 \subsection{Usage}{
@@ -187,8 +187,8 @@ delete value in db
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queryInsert"></a>}}
-\if{latex}{\out{\hypertarget{method-queryInsert}{}}}
+\if{html}{\out{<a id="method-spsDb-queryInsert"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-queryInsert}{}}}
 \subsection{Method \code{queryInsert()}}{
 Insert value to db
 \subsection{Usage}{
@@ -209,8 +209,8 @@ all columns in a vector.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-spsDb-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

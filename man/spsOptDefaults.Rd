@@ -16,8 +16,6 @@ spsOptions(app_path = getwd(), show_legend = TRUE)
 }
 \value{
 cat to console SPS option values
-
-
 }
 \description{
 Make sure you have created the app directory and it

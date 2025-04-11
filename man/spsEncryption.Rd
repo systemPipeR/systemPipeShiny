@@ -36,29 +36,29 @@ readLines('test_decpt.txt')
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{spsEncryption$new()}}
-\item \href{#method-keyChange}{\code{spsEncryption$keyChange()}}
-\item \href{#method-keyGet}{\code{spsEncryption$keyGet()}}
-\item \href{#method-encrypt}{\code{spsEncryption$encrypt()}}
-\item \href{#method-decrypt}{\code{spsEncryption$decrypt()}}
-\item \href{#method-clone}{\code{spsEncryption$clone()}}
+\item \href{#method-spsEncryption-new}{\code{spsEncryption$new()}}
+\item \href{#method-spsEncryption-keyChange}{\code{spsEncryption$keyChange()}}
+\item \href{#method-spsEncryption-keyGet}{\code{spsEncryption$keyGet()}}
+\item \href{#method-spsEncryption-encrypt}{\code{spsEncryption$encrypt()}}
+\item \href{#method-spsEncryption-decrypt}{\code{spsEncryption$decrypt()}}
+\item \href{#method-spsEncryption-clone}{\code{spsEncryption$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb">}\href{../../systemPipeShiny/html/spsDb.html#method-createDb}{\code{systemPipeShiny::spsDb$createDb()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel">}\href{../../systemPipeShiny/html/spsDb.html#method-queryDel}{\code{systemPipeShiny::spsDb$queryDel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert">}\href{../../systemPipeShiny/html/spsDb.html#method-queryInsert}{\code{systemPipeShiny::spsDb$queryInsert()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate">}\href{../../systemPipeShiny/html/spsDb.html#method-queryUpdate}{\code{systemPipeShiny::spsDb$queryUpdate()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue">}\href{../../systemPipeShiny/html/spsDb.html#method-queryValue}{\code{systemPipeShiny::spsDb$queryValue()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp">}\href{../../systemPipeShiny/html/spsDb.html#method-queryValueDp}{\code{systemPipeShiny::spsDb$queryValueDp()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-createDb'><code>systemPipeShiny::spsDb$createDb()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryDel'><code>systemPipeShiny::spsDb$queryDel()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryInsert'><code>systemPipeShiny::spsDb$queryInsert()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryUpdate'><code>systemPipeShiny::spsDb$queryUpdate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValue'><code>systemPipeShiny::spsDb$queryValue()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValueDp'><code>systemPipeShiny::spsDb$queryValueDp()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-spsEncryption-new"></a>}}
+\if{latex}{\out{\hypertarget{method-spsEncryption-new}{}}}
 \subsection{Method \code{new()}}{
 initialize a new class container
 \subsection{Usage}{
@@ -67,8 +67,8 @@ initialize a new class container
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-keyChange"></a>}}
-\if{latex}{\out{\hypertarget{method-keyChange}{}}}
+\if{html}{\out{<a id="method-spsEncryption-keyChange"></a>}}
+\if{latex}{\out{\hypertarget{method-spsEncryption-keyChange}{}}}
 \subsection{Method \code{keyChange()}}{
 Change encryption key of a SPS project
 \subsection{Usage}{
@@ -86,8 +86,8 @@ Change encryption key of a SPS project
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-keyGet"></a>}}
-\if{latex}{\out{\hypertarget{method-keyGet}{}}}
+\if{html}{\out{<a id="method-spsEncryption-keyGet"></a>}}
+\if{latex}{\out{\hypertarget{method-spsEncryption-keyGet}{}}}
 \subsection{Method \code{keyGet()}}{
 Get encryption key from db of a SPS project
 \subsection{Usage}{
@@ -103,8 +103,8 @@ Get encryption key from db of a SPS project
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-encrypt"></a>}}
-\if{latex}{\out{\hypertarget{method-encrypt}{}}}
+\if{html}{\out{<a id="method-spsEncryption-encrypt"></a>}}
+\if{latex}{\out{\hypertarget{method-spsEncryption-encrypt}{}}}
 \subsection{Method \code{encrypt()}}{
 Encrypt raw data or a file with key from a SPS project
 \subsection{Usage}{
@@ -131,8 +131,8 @@ Encrypt raw data or a file with key from a SPS project
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-decrypt"></a>}}
-\if{latex}{\out{\hypertarget{method-decrypt}{}}}
+\if{html}{\out{<a id="method-spsEncryption-decrypt"></a>}}
+\if{latex}{\out{\hypertarget{method-spsEncryption-decrypt}{}}}
 \subsection{Method \code{decrypt()}}{
 Decrypt raw data or a file with key from a SPS project
 \subsection{Usage}{
@@ -159,8 +159,8 @@ Decrypt raw data or a file with key from a SPS project
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-spsEncryption-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-spsEncryption-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

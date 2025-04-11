@@ -14,21 +14,22 @@ spsEzUI(
 
 spsEzServer(
   plot_code,
-  example_data_path = system.file(package = "systemPipeShiny", "app", "data",
-    "iris.csv"),
+  example_data_path = system.file(package = "systemPipeShiny", "app", "data", "iris.csv"),
   other_server_code = ""
 )
 }
 \arguments{
 \item{desc}{character string, length 1 in markdown format. Tab description
 and instructions. You can make type it in multiple lines but in only one
-string (one pair of quotes). e.g.\preformatted{"
+string (one pair of quotes). e.g.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{"
 # some desc
 ## second line,
 - bullet 1
 - bullet 2
 "
-}}
+}\if{html}{\out{</div>}}}
 
 \item{tab_title}{string, tab title}
 

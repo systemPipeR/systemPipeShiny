@@ -148,7 +148,6 @@ spsServer <- function(tabs, server_expr, mod_missings, sps_env, guide, mainUI) {
 #'
 #' @param session shiny session
 #' @noRd
-#' @return
 #' @importFrom shinyWidgets sendSweetAlert
 spsWarnings <- function(session, shared){
     sps_warnings <- list()
