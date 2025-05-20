@@ -1,3 +1,6 @@
+if(!interactive()) skip("Skip on checks")
+skip_on_bioc()
+skip_on_cran()
 temp_dir <- tempdir()
 spsUtil::quiet(systemPipeShiny::spsInit(app_path = temp_dir,
                                                 project_name = "test_tabs",
