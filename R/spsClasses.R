@@ -25,6 +25,7 @@ NULL
 #'
 #' One instance of this class is created by the [spsAccount] super class in
 #' *global.R*, normal users don't need to change anything.
+#' @return An R6 class generator; use `$new()` to create an instance.
 #' @export
 #' @examples
 #' dir.create("config", showWarnings = FALSE)
@@ -275,6 +276,7 @@ spsDb <- R6::R6Class("spsDb",
 #'
 #' This class is required to run a SPS app. This class needs to be initialized
 #' global level. This has already been written in *global.R* for you.
+#' @return An R6 class generator; use `$new()` to create an instance.
 #' @export
 #' @examples
 #' dir.create("config", showWarnings = FALSE)
@@ -462,6 +464,7 @@ spsEncryption <- R6::R6Class(
 #' "admin"  with password "admin" are create for you.
 #'
 #' For app deployment, PLEASE create your own accounts and DELETE the default ones.
+#' @return An R6 class generator; use `$new()` to create an instance.
 #' @export
 #' @examples
 #' dir.create("config", showWarnings = FALSE)

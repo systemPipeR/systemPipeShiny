@@ -23,129 +23,175 @@ import(drawer)
 import(shiny)
 import(spsComps)
 import(spsUtil)
-importFrom(DT,DTOutput)
-importFrom(DT,datatable)
-importFrom(DT,renderDT)
+importFrom(DT,
+  DTOutput,
+  datatable,
+  renderDT
+)
 importFrom(R6,R6Class)
-importFrom(RSQLite,SQLite)
-importFrom(RSQLite,dbClearResult)
-importFrom(RSQLite,dbConnect)
-importFrom(RSQLite,dbDisconnect)
-importFrom(RSQLite,dbGetQuery)
-importFrom(RSQLite,dbGetRowsAffected)
-importFrom(RSQLite,dbListTables)
-importFrom(RSQLite,dbSendStatement)
-importFrom(RSQLite,dbWriteTable)
-importFrom(assertthat,assert_that)
-importFrom(assertthat,is.writeable)
-importFrom(assertthat,not_empty)
-importFrom(crayon,blue)
-importFrom(crayon,chr)
-importFrom(crayon,green)
-importFrom(crayon,make_style)
-importFrom(dplyr,as_tibble)
-importFrom(dplyr,collect)
-importFrom(dplyr,count)
-importFrom(dplyr,filter)
-importFrom(dplyr,pull)
-importFrom(dplyr,slice)
-importFrom(dplyr,tbl)
-importFrom(dplyr,tibble)
-importFrom(dplyr,tribble)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,aes_string)
-importFrom(ggplot2,coord_fixed)
-importFrom(ggplot2,coord_flip)
-importFrom(ggplot2,geom_bar)
-importFrom(ggplot2,geom_point)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,ggsave)
-importFrom(ggplot2,ggtitle)
-importFrom(glue,glue)
-importFrom(glue,glue_collapse)
+importFrom(RSQLite,
+  SQLite,
+  dbClearResult,
+  dbConnect,
+  dbDisconnect,
+  dbGetQuery,
+  dbGetRowsAffected,
+  dbListTables,
+  dbSendStatement,
+  dbWriteTable
+)
+importFrom(assertthat,
+  assert_that,
+  is.writeable,
+  not_empty
+)
+importFrom(crayon,
+  blue,
+  chr,
+  green,
+  make_style
+)
+importFrom(dplyr,
+  as_tibble,
+  collect,
+  count,
+  filter,
+  pull,
+  slice,
+  tbl,
+  tibble,
+  tribble
+)
+importFrom(ggplot2,
+  aes,
+  aes_string,
+  coord_fixed,
+  coord_flip,
+  geom_bar,
+  geom_point,
+  ggplot,
+  ggsave,
+  ggtitle
+)
+importFrom(glue,
+  glue,
+  glue_collapse
+)
 importFrom(htmltools,doRenderTags)
 importFrom(magrittr,"%>%")
 importFrom(methods,is)
-importFrom(openssl,decrypt_envelope)
-importFrom(openssl,encrypt_envelope)
-importFrom(openssl,rsa_keygen)
-importFrom(plotly,ggplotly)
-importFrom(plotly,plotlyOutput)
-importFrom(plotly,renderPlotly)
-importFrom(rlang,enexpr)
-importFrom(rlang,enquo)
-importFrom(rlang,eval_tidy)
-importFrom(rlang,parse_expr)
-importFrom(rstudioapi,isAvailable)
-importFrom(rstudioapi,navigateToFile)
+importFrom(openssl,
+  decrypt_envelope,
+  encrypt_envelope,
+  rsa_keygen
+)
+importFrom(plotly,
+  ggplotly,
+  plotlyOutput,
+  renderPlotly
+)
+importFrom(rlang,
+  enexpr,
+  enquo,
+  eval_tidy,
+  parse_expr
+)
+importFrom(rstudioapi,
+  isAvailable,
+  navigateToFile
+)
 importFrom(shiny,validate)
-importFrom(shinyAce,aceEditor)
-importFrom(shinyAce,is.empty)
-importFrom(shinyAce,updateAceEditor)
-importFrom(shinyFiles,getVolumes)
-importFrom(shinyFiles,parseFilePaths)
-importFrom(shinyFiles,shinyFileChoose)
-importFrom(shinyFiles,shinyFilesButton)
-importFrom(shinyWidgets,actionBttn)
-importFrom(shinyWidgets,confirmSweetAlert)
-importFrom(shinyWidgets,materialSwitch)
-importFrom(shinyWidgets,pickerInput)
-importFrom(shinyWidgets,progressBar)
-importFrom(shinyWidgets,radioGroupButtons)
-importFrom(shinyWidgets,sendSweetAlert)
-importFrom(shinyWidgets,updateProgressBar)
-importFrom(shinyWidgets,updateRadioGroupButtons)
-importFrom(shinyWidgets,useSweetAlert)
-importFrom(shinydashboard,dashboardBody)
-importFrom(shinydashboard,menuItem)
-importFrom(shinydashboard,menuSubItem)
-importFrom(shinydashboard,sidebarMenu)
-importFrom(shinydashboard,sidebarSearchForm)
-importFrom(shinydashboard,tabItem)
-importFrom(shinydashboard,tabItems)
-importFrom(shinydashboard,valueBox)
-importFrom(shinydashboardPlus,box)
-importFrom(shinydashboardPlus,dashboardHeader)
-importFrom(shinydashboardPlus,dashboardPage)
-importFrom(shinydashboardPlus,dashboardSidebar)
-importFrom(shinydashboardPlus,userBox)
+importFrom(shinyAce,
+  aceEditor,
+  is.empty,
+  updateAceEditor
+)
+importFrom(shinyFiles,
+  getVolumes,
+  parseFilePaths,
+  shinyFileChoose,
+  shinyFilesButton
+)
+importFrom(shinyWidgets,
+  actionBttn,
+  confirmSweetAlert,
+  materialSwitch,
+  pickerInput,
+  progressBar,
+  radioGroupButtons,
+  sendSweetAlert,
+  updateProgressBar,
+  updateRadioGroupButtons,
+  useSweetAlert
+)
+importFrom(shinydashboard,
+  dashboardBody,
+  menuItem,
+  menuSubItem,
+  sidebarMenu,
+  sidebarSearchForm,
+  tabItem,
+  tabItems,
+  valueBox
+)
+importFrom(shinydashboardPlus,
+  box,
+  dashboardHeader,
+  dashboardPage,
+  dashboardSidebar,
+  userBox
+)
 importFrom(shinyjqui,jqui_resizable)
-importFrom(shinyjs,disable)
-importFrom(shinyjs,disabled)
-importFrom(shinyjs,enable)
-importFrom(shinyjs,hide)
-importFrom(shinyjs,removeClass)
-importFrom(shinyjs,runjs)
-importFrom(shinyjs,show)
-importFrom(shinyjs,toggleClass)
-importFrom(shinyjs,toggleState)
-importFrom(shinyjs,useShinyjs)
-importFrom(shinytoastr,toastr_error)
-importFrom(shinytoastr,toastr_info)
-importFrom(shinytoastr,toastr_success)
-importFrom(shinytoastr,toastr_warning)
-importFrom(stats,cutree)
-importFrom(stats,na.omit)
-importFrom(stats,relevel)
-importFrom(stringr,str_detect)
-importFrom(stringr,str_extract)
-importFrom(stringr,str_pad)
-importFrom(stringr,str_remove)
-importFrom(stringr,str_remove_all)
-importFrom(stringr,str_replace)
-importFrom(stringr,str_replace_all)
-importFrom(stringr,str_sort)
-importFrom(stringr,str_split)
-importFrom(stringr,str_which)
-importFrom(styler,style_file)
-importFrom(styler,tidyverse_style)
+importFrom(shinyjs,
+  disable,
+  disabled,
+  enable,
+  hide,
+  removeClass,
+  runjs,
+  show,
+  toggleClass,
+  toggleState,
+  useShinyjs
+)
+importFrom(shinytoastr,
+  toastr_error,
+  toastr_info,
+  toastr_success,
+  toastr_warning
+)
+importFrom(stats,
+  cutree,
+  na.omit,
+  relevel
+)
+importFrom(stringr,
+  str_detect,
+  str_extract,
+  str_pad,
+  str_remove,
+  str_remove_all,
+  str_replace,
+  str_replace_all,
+  str_sort,
+  str_split,
+  str_which
+)
+importFrom(styler,
+  style_file,
+  tidyverse_style
+)
 importFrom(tibble,column_to_rownames)
-importFrom(utils,capture.output)
-importFrom(utils,menu)
-importFrom(utils,packageVersion)
-importFrom(utils,read.delim)
-importFrom(utils,write.csv)
-importFrom(vroom,col_character)
-importFrom(vroom,cols)
-importFrom(vroom,vroom)
+importFrom(utils,
+  capture.output,
+  menu,
+  packageVersion,
+  read.delim,
+  write.csv
+)
+importFrom(vroom,
+  col_character,
+  cols,
+  vroom
+)
 importFrom(yaml,yaml.load_file)

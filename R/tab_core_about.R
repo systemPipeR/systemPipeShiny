@@ -85,8 +85,8 @@ core_aboutUI <- function(id){
             collapsible = TRUE,
             width = 12,
             style = "height: 500px; overflow-Y: auto;",
-            if(checkUrl("https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/NEWS.md")){
-                markdown(readLines("https://raw.githubusercontent.com/systemPipeR/systemPipeShiny/master/NEWS.md"))
+            if(file.exists(system.file("NEWS.md", package = "systemPipeShiny"))){
+                markdown(readLines(system.file("NEWS.md", package = "systemPipeShiny")))
             } else {
                 div(
                     h3("Cannot load SPS updates"),
