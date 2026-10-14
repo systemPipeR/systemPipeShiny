@@ -86,7 +86,7 @@ wfUI <- function(id){
         hexPanel(ns("poweredby"), "THIS TAB IS POWERED BY:",
                  hex_imgs = c(
                      "img/sps_small.png",
-                     "https://raw.githubusercontent.com/systemPipeR/systemPipeR.github.io/main/static/images/systemPipeR.png",
+                     "img/spr.png",
                      "img/cwl.png"
                  ),
                  hex_titles = c("SystemPipeShiny", "SystemPipeR", "Common Workflow Language"),

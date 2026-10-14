@@ -3,6 +3,9 @@
 \name{spsEncryption}
 \alias{spsEncryption}
 \title{SPS encryption functions}
+\value{
+An R6 class generator; use \verb{$new()} to create an instance.
+}
 \description{
 Methods in this class can help admin to encrypt files been output from sps.
 For now it is only used to encypt and decrypt snapshots.
@@ -31,148 +34,151 @@ my_ecpt$decrypt("test.bin", "test_decpt.txt", overwrite = TRUE)
 readLines('test_decpt.txt')
 }
 \section{Super class}{
-\code{\link[systemPipeShiny:spsDb]{systemPipeShiny::spsDb}} -> \code{spsEncryption}
+\code{\link[systemPipeShiny:spsDb]{spsDb}} -> \code{spsEncryption}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-spsEncryption-new}{\code{spsEncryption$new()}}
-\item \href{#method-spsEncryption-keyChange}{\code{spsEncryption$keyChange()}}
-\item \href{#method-spsEncryption-keyGet}{\code{spsEncryption$keyGet()}}
-\item \href{#method-spsEncryption-encrypt}{\code{spsEncryption$encrypt()}}
-\item \href{#method-spsEncryption-decrypt}{\code{spsEncryption$decrypt()}}
-\item \href{#method-spsEncryption-clone}{\code{spsEncryption$clone()}}
+  \itemize{
+    \item \href{#method-spsEncryption-initialize}{\code{spsEncryption$new()}}
+    \item \href{#method-spsEncryption-keyChange}{\code{spsEncryption$keyChange()}}
+    \item \href{#method-spsEncryption-keyGet}{\code{spsEncryption$keyGet()}}
+    \item \href{#method-spsEncryption-encrypt}{\code{spsEncryption$encrypt()}}
+    \item \href{#method-spsEncryption-decrypt}{\code{spsEncryption$decrypt()}}
+    \item \href{#method-spsEncryption-clone}{\code{spsEncryption$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-createDb'><code>systemPipeShiny::spsDb$createDb()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryDel'><code>systemPipeShiny::spsDb$queryDel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryInsert'><code>systemPipeShiny::spsDb$queryInsert()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryUpdate'><code>systemPipeShiny::spsDb$queryUpdate()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValue'><code>systemPipeShiny::spsDb$queryValue()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValueDp'><code>systemPipeShiny::spsDb$queryValueDp()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-createDb'><code>spsDb$createDb()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryDel'><code>spsDb$queryDel()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryInsert'><code>spsDb$queryInsert()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryUpdate'><code>spsDb$queryUpdate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValue'><code>spsDb$queryValue()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValueDp'><code>spsDb$queryValueDp()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-spsEncryption-new"></a>}}
-\if{latex}{\out{\hypertarget{method-spsEncryption-new}{}}}
-\subsection{Method \code{new()}}{
-initialize a new class container
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsEncryption$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-spsEncryption-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-spsEncryption-initialize}{}}}
+\subsection{\code{spsEncryption$new()}}{
+  initialize a new class container
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsEncryption$new()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsEncryption-keyChange"></a>}}
 \if{latex}{\out{\hypertarget{method-spsEncryption-keyChange}{}}}
-\subsection{Method \code{keyChange()}}{
-Change encryption key of a SPS project
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsEncryption$keyChange(confirm = FALSE, db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsEncryption$keyChange()}}{
+  Change encryption key of a SPS project
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsEncryption$keyChange(confirm = FALSE, db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{confirm, }}{bool, confirm that you understand the consequence}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{confirm, }}{bool, confirm that you understand the consequence}
-
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsEncryption-keyGet"></a>}}
 \if{latex}{\out{\hypertarget{method-spsEncryption-keyGet}{}}}
-\subsection{Method \code{keyGet()}}{
-Get encryption key from db of a SPS project
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsEncryption$keyGet(db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsEncryption$keyGet()}}{
+  Get encryption key from db of a SPS project
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsEncryption$keyGet(db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsEncryption-encrypt"></a>}}
 \if{latex}{\out{\hypertarget{method-spsEncryption-encrypt}{}}}
-\subsection{Method \code{encrypt()}}{
-Encrypt raw data or a file with key from a SPS project
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsEncryption$encrypt(
+\subsection{\code{spsEncryption$encrypt()}}{
+  Encrypt raw data or a file with key from a SPS project
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsEncryption$encrypt(
   data,
   out_path = NULL,
   overwrite = FALSE,
   db_name = "config/sps.db"
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{raw vector or a file path}
+      \item{\code{out_path}}{if provided, encrypted data will be write to a file}
+      \item{\code{overwrite}}{if \code{out_path} file exists, overwrite?}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{raw vector or a file path}
-
-\item{\code{out_path}}{if provided, encrypted data will be write to a file}
-
-\item{\code{overwrite}}{if \code{out_path} file exists, overwrite?}
-
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsEncryption-decrypt"></a>}}
 \if{latex}{\out{\hypertarget{method-spsEncryption-decrypt}{}}}
-\subsection{Method \code{decrypt()}}{
-Decrypt raw data or a file with key from a SPS project
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsEncryption$decrypt(
+\subsection{\code{spsEncryption$decrypt()}}{
+  Decrypt raw data or a file with key from a SPS project
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsEncryption$decrypt(
   data,
   out_path = NULL,
   overwrite = FALSE,
   db_name = "config/sps.db"
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{raw vector or a file path}
+      \item{\code{out_path}}{if provided, encrypted data will be write to a file}
+      \item{\code{overwrite}}{if \code{out_path} file exists, overwrite?}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{raw vector or a file path}
-
-\item{\code{out_path}}{if provided, encrypted data will be write to a file}
-
-\item{\code{overwrite}}{if \code{out_path} file exists, overwrite?}
-
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsEncryption-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-spsEncryption-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsEncryption$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{spsEncryption$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsEncryption$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

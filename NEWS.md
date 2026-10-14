@@ -1,3 +1,12 @@
+# systemPipeShiny 1.23.1
+
+## Bug Fix
+- Fix BiocCheck ERROR "Avoid references to external hosting platforms": the About tab
+  now reads the installed `NEWS.md`, and module tabs use the bundled systemPipeR logo.
+- Fix BiocCheck WARNINGs: the vignette no longer sets a global `eval=FALSE`, and the R6
+  class man pages now have a Value section.
+- Regenerate documentation with roxygen2 8.1.1.
+
 # systemPipeShiny 1.18.0
 ## Major Change
 - Update to systemPipeR 2.12 and systemPipeRdata 2.10

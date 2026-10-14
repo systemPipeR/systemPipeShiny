@@ -3,6 +3,9 @@
 \name{spsDb}
 \alias{spsDb}
 \title{SPS database functions}
+\value{
+An R6 class generator; use \verb{$new()} to create an instance.
+}
 \description{
 Initiate this container at global level.
 Methods in this class can help admin to
@@ -40,189 +43,192 @@ mydb$queryDel("sps_meta", WHERE = "value = '234'")
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-spsDb-new}{\code{spsDb$new()}}
-\item \href{#method-spsDb-createDb}{\code{spsDb$createDb()}}
-\item \href{#method-spsDb-queryValue}{\code{spsDb$queryValue()}}
-\item \href{#method-spsDb-queryValueDp}{\code{spsDb$queryValueDp()}}
-\item \href{#method-spsDb-queryUpdate}{\code{spsDb$queryUpdate()}}
-\item \href{#method-spsDb-queryDel}{\code{spsDb$queryDel()}}
-\item \href{#method-spsDb-queryInsert}{\code{spsDb$queryInsert()}}
-\item \href{#method-spsDb-clone}{\code{spsDb$clone()}}
-}
+  \itemize{
+    \item \href{#method-spsDb-initialize}{\code{spsDb$new()}}
+    \item \href{#method-spsDb-createDb}{\code{spsDb$createDb()}}
+    \item \href{#method-spsDb-queryValue}{\code{spsDb$queryValue()}}
+    \item \href{#method-spsDb-queryValueDp}{\code{spsDb$queryValueDp()}}
+    \item \href{#method-spsDb-queryUpdate}{\code{spsDb$queryUpdate()}}
+    \item \href{#method-spsDb-queryDel}{\code{spsDb$queryDel()}}
+    \item \href{#method-spsDb-queryInsert}{\code{spsDb$queryInsert()}}
+    \item \href{#method-spsDb-clone}{\code{spsDb$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-spsDb-new"></a>}}
-\if{latex}{\out{\hypertarget{method-spsDb-new}{}}}
-\subsection{Method \code{new()}}{
-initialize a new class object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-spsDb-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-spsDb-initialize}{}}}
+\subsection{\code{spsDb$new()}}{
+  initialize a new class object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$new()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsDb-createDb"></a>}}
 \if{latex}{\out{\hypertarget{method-spsDb-createDb}{}}}
-\subsection{Method \code{createDb()}}{
-Create a SPS database
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$createDb(db_name = "config/sps.db")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{db_name}}{database path, you need to
+\subsection{\code{spsDb$createDb()}}{
+  Create a SPS database
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$createDb(db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{db_name}}{database path, you need to
 manually create parent directory
 if not exists}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsDb-queryValue"></a>}}
 \if{latex}{\out{\hypertarget{method-spsDb-queryValue}{}}}
-\subsection{Method \code{queryValue()}}{
-Query database
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$queryValue(table, SELECT = "*", WHERE = "1", db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsDb$queryValue()}}{
+  Query database
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$queryValue(table, SELECT = "*", WHERE = "1", db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{table}}{table name}
+      \item{\code{SELECT}}{SQL select grammar}
+      \item{\code{WHERE}}{SQL where grammar}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    query result, usually a dataframe
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{table}}{table name}
-
-\item{\code{SELECT}}{SQL select grammar}
-
-\item{\code{WHERE}}{SQL where grammar}
-
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-query result, usually a dataframe
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsDb-queryValueDp"></a>}}
 \if{latex}{\out{\hypertarget{method-spsDb-queryValueDp}{}}}
-\subsection{Method \code{queryValueDp()}}{
-Query database with \link{dplyr} grammar
+\subsection{\code{spsDb$queryValueDp()}}{
+  Query database with \link[dplyr:dplyr]{dplyr} grammar
 
 Only supports simple selections, like comparison, \%in\%, \code{between()},
 \code{is.na()}, etc. Advanced selections like wildcard,
 using outside dplyr functions like \verb{[stringr::str_detect()]},
 \verb{[base::grepl()]} are not supported.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$queryValueDp(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$queryValueDp(
   table,
   dp_expr = "select(., everything())",
   db_name = "config/sps.db"
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{table}}{table name}
-
-\item{\code{dp_expr}}{dplyr chained expression, must use '.' in first
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{table}}{table name}
+      \item{\code{dp_expr}}{dplyr chained expression, must use '.' in first
 component of the chain expression}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    query result, usually a tibble
+  }
+}
 
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-query result, usually a tibble
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsDb-queryUpdate"></a>}}
 \if{latex}{\out{\hypertarget{method-spsDb-queryUpdate}{}}}
-\subsection{Method \code{queryUpdate()}}{
-update(modify) the value in db
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$queryUpdate(table, value, col, WHERE = "1", db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsDb$queryUpdate()}}{
+  update(modify) the value in db
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$queryUpdate(table, value, col, WHERE = "1", db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{table}}{table name}
+      \item{\code{value}}{new value}
+      \item{\code{col}}{which column}
+      \item{\code{WHERE}}{SQL where statement, conditions to select rows}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{table}}{table name}
-
-\item{\code{value}}{new value}
-
-\item{\code{col}}{which column}
-
-\item{\code{WHERE}}{SQL where statement, conditions to select rows}
-
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsDb-queryDel"></a>}}
 \if{latex}{\out{\hypertarget{method-spsDb-queryDel}{}}}
-\subsection{Method \code{queryDel()}}{
-delete value in db
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$queryDel(table, WHERE = "1", db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsDb$queryDel()}}{
+  delete value in db
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$queryDel(table, WHERE = "1", db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{table}}{table name}
+      \item{\code{WHERE}}{SQL where statement, conditions to select rows}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{table}}{table name}
-
-\item{\code{WHERE}}{SQL where statement, conditions to select rows}
-
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsDb-queryInsert"></a>}}
 \if{latex}{\out{\hypertarget{method-spsDb-queryInsert}{}}}
-\subsection{Method \code{queryInsert()}}{
-Insert value to db
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$queryInsert(table, value, db_name = "config/sps.db")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{table}}{table name}
-
-\item{\code{value}}{new values for the entire row, collect all values from
+\subsection{\code{spsDb$queryInsert()}}{
+  Insert value to db
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$queryInsert(table, value, db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{table}}{table name}
+      \item{\code{value}}{new values for the entire row, collect all values from
 all columns in a vector.}
+      \item{\code{db_name}}{database path}
+    }
+    \if{html}{\out{</div>}}
+  }
+}
 
-\item{\code{db_name}}{database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsDb-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-spsDb-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsDb$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{spsDb$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsDb$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

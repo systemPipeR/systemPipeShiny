@@ -54,7 +54,7 @@ by the developer. If the developer does not provide the dataset either,
 it will return a 8-row empty tibble.
 }
 \details{
-This is function is wrapped by the \code{\link[=shinyCatch]{shinyCatch()}} function, so it
+This is function is wrapped by the \code{\link[spsComps:shinyCatch]{shinyCatch()}} function, so it
 will show loading information both on console and on UI. This function
 prevents loading file errors to crash the Shiny app, so any kind of file upload will not
 crash the app. To show message on UI, \code{spsDepend("toastr")} must be used in Shiny UI

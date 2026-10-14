@@ -18,3 +18,14 @@ _pkgdown\.yml
 ^index.md$
 ^inst/depend
 ^inst/remote_resouce
+^AGENTS\.md$
+^CLAUDE\.md$
+^GEMINI\.md$
+^spec\.md$
+^Plans\.md$
+^plans$
+^\.claude$
+^\.codex$
+^\.cursor$
+^\.codegraph$
+^\.mcp\.json$

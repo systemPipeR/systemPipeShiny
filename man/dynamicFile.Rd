@@ -78,8 +78,8 @@ similar behavior as \link[shiny:fileInput]{shiny::fileInput}.
 \details{
 To setup the option:
 
-The \code{local} mode uses functions from \link{shinyFiles} so it will reach file system
-on the \strong{server end}. Although the latest \link{shinyFiles} limits users to only
+The \code{local} mode uses functions from \link[shinyFiles:shinyFiles]{shinyFiles} so it will reach file system
+on the \strong{server end}. Although the latest \link[shinyFiles:shinyFiles]{shinyFiles} limits users to only
 specified server end location (folder), there is still some \strong{risk}. That's why
 it is named "local", you are encouraged to run the app on your local computer.
 The advantage of "local" is: for some very large files, it does not upload and

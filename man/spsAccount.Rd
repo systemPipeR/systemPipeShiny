@@ -3,6 +3,9 @@
 \name{spsAccount}
 \alias{spsAccount}
 \title{SPS account management functions}
+\value{
+An R6 class generator; use \verb{$new()} to create an instance.
+}
 \description{
 Initiate this container at global level.
 Methods in this class can help admins to
@@ -53,197 +56,198 @@ db$accMatch("user", "user", role = "user", match_role = TRUE)
 db$accMatch("user", "user", role = "admin", match_role = TRUE)
 }
 \section{Super classes}{
-\code{\link[systemPipeShiny:spsDb]{systemPipeShiny::spsDb}} -> \code{\link[systemPipeShiny:spsEncryption]{systemPipeShiny::spsEncryption}} -> \code{spsaccount}
+\code{\link[systemPipeShiny:spsDb]{spsDb}} -> \code{\link[systemPipeShiny:spsEncryption]{spsEncryption}} -> \code{spsaccount}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-spsaccount-new}{\code{spsAccount$new()}}
-\item \href{#method-spsaccount-accList}{\code{spsAccount$accList()}}
-\item \href{#method-spsaccount-accAdd}{\code{spsAccount$accAdd()}}
-\item \href{#method-spsaccount-accRemove}{\code{spsAccount$accRemove()}}
-\item \href{#method-spsaccount-accPassChange}{\code{spsAccount$accPassChange()}}
-\item \href{#method-spsaccount-accRoleChange}{\code{spsAccount$accRoleChange()}}
-\item \href{#method-spsaccount-accMatch}{\code{spsAccount$accMatch()}}
-\item \href{#method-spsaccount-clone}{\code{spsAccount$clone()}}
+  \itemize{
+    \item \href{#method-spsaccount-initialize}{\code{spsaccount$new()}}
+    \item \href{#method-spsaccount-accList}{\code{spsaccount$accList()}}
+    \item \href{#method-spsaccount-accAdd}{\code{spsaccount$accAdd()}}
+    \item \href{#method-spsaccount-accRemove}{\code{spsaccount$accRemove()}}
+    \item \href{#method-spsaccount-accPassChange}{\code{spsaccount$accPassChange()}}
+    \item \href{#method-spsaccount-accRoleChange}{\code{spsaccount$accRoleChange()}}
+    \item \href{#method-spsaccount-accMatch}{\code{spsaccount$accMatch()}}
+    \item \href{#method-spsaccount-clone}{\code{spsaccount$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-createDb'><code>systemPipeShiny::spsDb$createDb()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryDel'><code>systemPipeShiny::spsDb$queryDel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryInsert'><code>systemPipeShiny::spsDb$queryInsert()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryUpdate'><code>systemPipeShiny::spsDb$queryUpdate()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValue'><code>systemPipeShiny::spsDb$queryValue()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValueDp'><code>systemPipeShiny::spsDb$queryValueDp()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="decrypt"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-decrypt'><code>systemPipeShiny::spsEncryption$decrypt()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="encrypt"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-encrypt'><code>systemPipeShiny::spsEncryption$encrypt()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyChange"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-keyChange'><code>systemPipeShiny::spsEncryption$keyChange()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyGet"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-keyGet'><code>systemPipeShiny::spsEncryption$keyGet()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="createDb"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-createDb'><code>spsDb$createDb()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryDel"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryDel'><code>spsDb$queryDel()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryInsert"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryInsert'><code>spsDb$queryInsert()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryUpdate"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryUpdate'><code>spsDb$queryUpdate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValue"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValue'><code>spsDb$queryValue()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsDb" data-id="queryValueDp"><a href='../../systemPipeShiny/html/spsDb.html#method-spsDb-queryValueDp'><code>spsDb$queryValueDp()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="decrypt"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-decrypt'><code>spsEncryption$decrypt()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="encrypt"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-encrypt'><code>spsEncryption$encrypt()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyChange"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-keyChange'><code>spsEncryption$keyChange()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="systemPipeShiny" data-topic="spsEncryption" data-id="keyGet"><a href='../../systemPipeShiny/html/spsEncryption.html#method-spsEncryption-keyGet'><code>spsEncryption$keyGet()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-spsaccount-new"></a>}}
-\if{latex}{\out{\hypertarget{method-spsaccount-new}{}}}
-\subsection{Method \code{new()}}{
-initialize a new SPS account container
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-spsaccount-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-spsaccount-initialize}{}}}
+\subsection{\code{spsaccount$new()}}{
+  initialize a new SPS account container
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$new()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsaccount-accList"></a>}}
 \if{latex}{\out{\hypertarget{method-spsaccount-accList}{}}}
-\subsection{Method \code{accList()}}{
-list all accounts of the app. Returns a dataframe
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$accList(include_pass = FALSE, db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsaccount$accList()}}{
+  list all accounts of the app. Returns a dataframe
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$accList(include_pass = FALSE, db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{include_pass}}{bool, include password hash column?}
+      \item{\code{db_name}}{SPS database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{include_pass}}{bool, include password hash column?}
-
-\item{\code{db_name}}{SPS database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsaccount-accAdd"></a>}}
 \if{latex}{\out{\hypertarget{method-spsaccount-accAdd}{}}}
-\subsection{Method \code{accAdd()}}{
-add an account to use the app
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$accAdd(acc_name, acc_pass, role = "user", db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsaccount$accAdd()}}{
+  add an account to use the app
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$accAdd(acc_name, acc_pass, role = "user", db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acc_name}}{string, account name}
+      \item{\code{acc_pass}}{string, account password}
+      \item{\code{role}}{string, what kind role is this user, one of "user", "admin"}
+      \item{\code{db_name}}{SPS database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acc_name}}{string, account name}
-
-\item{\code{acc_pass}}{string, account password}
-
-\item{\code{role}}{string, what kind role is this user, one of "user", "admin"}
-
-\item{\code{db_name}}{SPS database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsaccount-accRemove"></a>}}
 \if{latex}{\out{\hypertarget{method-spsaccount-accRemove}{}}}
-\subsection{Method \code{accRemove()}}{
-remove an account
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$accRemove(acc_name, db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsaccount$accRemove()}}{
+  remove an account
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$accRemove(acc_name, db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acc_name}}{string, account name}
+      \item{\code{db_name}}{SPS database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acc_name}}{string, account name}
-
-\item{\code{db_name}}{SPS database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsaccount-accPassChange"></a>}}
 \if{latex}{\out{\hypertarget{method-spsaccount-accPassChange}{}}}
-\subsection{Method \code{accPassChange()}}{
-change password of an account
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$accPassChange(acc_name, acc_pass, db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsaccount$accPassChange()}}{
+  change password of an account
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$accPassChange(acc_name, acc_pass, db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acc_name}}{string, account name}
+      \item{\code{acc_pass}}{string, account new password}
+      \item{\code{db_name}}{SPS database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acc_name}}{string, account name}
-
-\item{\code{acc_pass}}{string, account new password}
-
-\item{\code{db_name}}{SPS database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsaccount-accRoleChange"></a>}}
 \if{latex}{\out{\hypertarget{method-spsaccount-accRoleChange}{}}}
-\subsection{Method \code{accRoleChange()}}{
-change the role of an account
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$accRoleChange(acc_name, role, db_name = "config/sps.db")}\if{html}{\out{</div>}}
+\subsection{\code{spsaccount$accRoleChange()}}{
+  change the role of an account
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$accRoleChange(acc_name, role, db_name = "config/sps.db")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acc_name}}{string, account name}
+      \item{\code{role}}{string, one of "user" or "admin"}
+      \item{\code{db_name}}{SPS database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acc_name}}{string, account name}
-
-\item{\code{role}}{string, one of "user" or "admin"}
-
-\item{\code{db_name}}{SPS database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsaccount-accMatch"></a>}}
 \if{latex}{\out{\hypertarget{method-spsaccount-accMatch}{}}}
-\subsection{Method \code{accMatch()}}{
-Try to see if the account name exists and has the right
+\subsection{\code{spsaccount$accMatch()}}{
+  Try to see if the account name exists and has the right
 password and role type, useful for login authentification.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$accMatch(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$accMatch(
   acc_name,
   acc_pass,
   role = "user",
   match_role = FALSE,
   db_name = "config/sps.db"
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acc_name}}{string, account name}
+      \item{\code{acc_pass}}{string, account new password}
+      \item{\code{role}}{string, one of "user" or "admin"}
+      \item{\code{match_role}}{bool, also verify the account role type?}
+      \item{\code{db_name}}{SPS database path}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acc_name}}{string, account name}
-
-\item{\code{acc_pass}}{string, account new password}
-
-\item{\code{role}}{string, one of "user" or "admin"}
-
-\item{\code{match_role}}{bool, also verify the account role type?}
-
-\item{\code{db_name}}{SPS database path}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-spsaccount-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-spsaccount-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{spsAccount$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{spsaccount$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{spsaccount$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
