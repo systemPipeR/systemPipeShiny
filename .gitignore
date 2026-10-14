@@ -16,3 +16,7 @@ docs/reference/SPS_prepro*
 docs/reference/SPS_tabinfo*
 SPS_20*
 .github/r-depends.rds
+# AI / planning files (local only)
+.claude/
+Plans.md
+plans/
