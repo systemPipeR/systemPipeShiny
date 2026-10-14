@@ -45,6 +45,7 @@ The exported functions in `NAMESPACE` are the public contract. Changing a functi
 - The app project scaffold (`inst/app`) and `config/sps_options.yaml` must stay in sync with `spsOptDefaults()`.
 - Tests under `tests/testthat` must skip, not fail, when the session is non-interactive and an interactive dependency is missing.
 - Credentials and DB keys are never committed. The SQLite DB is created at `spsInit()` time.
+- R code in `R/` never references raw files on external hosting platforms (`raw.githubusercontent.com`, GitLab, Bitbucket, Dropbox). BiocCheck treats these as an ERROR. Ship the asset in `inst/` instead, or read the installed copy (e.g. `system.file("NEWS.md", package = "systemPipeShiny")`).
 
 ## Quality gates
 

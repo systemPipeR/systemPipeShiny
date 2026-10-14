@@ -39,7 +39,7 @@ Rscript -e 'BiocCheck::BiocCheck(".")'                 # Bioconductor rules
 
 - Roxygen comments are the source of truth for docs and `NAMESPACE`. Run `document()` after changing exports.
 - Keep module-only packages in `Suggests`, and guard them at runtime (see `spec.md` Invariants).
-- Any user-visible change gets a `NEWS.md` entry. Never bump `Version:` in `DESCRIPTION` by hand, because Bioconductor manages it.
+- Any user-visible change gets a `NEWS.md` entry. Bump only the `z` in `x.y.z` (e.g. 1.23.0 → 1.23.1) when pushing to Bioconductor, or the builders won't propagate the change. Never change `x` or `y`; Bioconductor bumps `y` at release time.
 - Follow the existing style: 4-space indents, `snake_case` internals, `camelCase` exported `sps*` functions.
 - Keep AI files (`AGENTS.md`, `CLAUDE.md`, `spec.md`, `Plans.md`, `.claude/`, …) out of the build by adding them to `.Rbuildignore`.
 - Don't commit or push unless asked. PRs target `devel` on GitHub (`origin`).
